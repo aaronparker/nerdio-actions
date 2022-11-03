@@ -1,5 +1,5 @@
 #description: Configures Windows roles, features and capabilities
-#execution mode: Combined
+#execution mode: IndividualWithRestart
 #tags: Roles, Features, Capabilities
 <#
     .SYNOPSIS
