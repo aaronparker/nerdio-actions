@@ -1,16 +1,8 @@
-#description: Configures Windows roles, features and capabilities
+#description: Configures Windows roles, features and capabilities. Enable/disable Windows roles and features
 #execution mode: IndividualWithRestart
 #tags: Roles, Features, Capabilities
-<#
-    .SYNOPSIS
-        Enable/disable Windows roles and features and set language/regional settings.
-#>
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "", Justification="Outputs progress to the pipeline log")]
-[CmdletBinding()]
-param ()
 
 #region Script logic
-
 # Run tasks
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     "Microsoft Windows Server*" {

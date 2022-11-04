@@ -1,19 +1,13 @@
 #description: Reenables Windows settings post image creation
 #execution mode: Combined
 #tags: Image
-<#
-    .SYNOPSIS
-        Finalise image
-#>
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "", Justification = "Outputs progress to the pipeline log")]
-[CmdletBinding()]
-param ()
+[System.String] $Path = "$env:SystemDrive\Apps"
 
 # Re-enable Defender
-Write-Host "Enable Windows Defender real time scan"
+Write-Verbose -Message "Enable Windows Defender real time scan"
 Set-MpPreference -DisableRealtimeMonitoring $false
 
-Write-Host "Enable Windows Store updates"
+Write-Verbose -Message "Enable Windows Store updates"
 reg delete HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableWindowsConsumerFeatures /f
 reg delete HKLM\Software\Policies\Microsoft\WindowsStore /v AutoDownload /f
 

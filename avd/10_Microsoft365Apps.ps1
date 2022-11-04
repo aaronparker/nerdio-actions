@@ -1,27 +1,14 @@
 #description: Installs the latest Microsoft 365 Apps Current channel, x64 with shared computer licensing
 #execution mode: Combined
 #tags: Evergreen, Microsoft 365 Apps
-#Requires -Modules Evergreen
-<#
-    .SYNOPSIS
-        Install evergreen core applications.
-#>
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "", Justification = "Outputs progress to the pipeline log")]
-[CmdletBinding()]
-param (
-    [Parameter(Mandatory = $False)]
-    [System.String] $LogPath = "$env:SystemRoot\Logs\M365Apps",
+[System.String] $LogPath = "$env:SystemRoot\Logs\M365Apps"
 
-    [Parameter(Mandatory = $False)]
-    [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Office",
+[System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Office"
 
-    [Parameter(Mandatory = $False)]
-    [ValidateSet("BetaChannel", "CurrentPreview", "Current", "MonthlyEnterprise", "PerpetualVL2021", "SemiAnnualPreview", "SemiAnnual", "PerpetualVL2019")]
-    [System.String] $Channel = "Current"
-)
+#[ValidateSet("BetaChannel", "CurrentPreview", "Current", "MonthlyEnterprise", "PerpetualVL2021", "SemiAnnualPreview", "SemiAnnual", "PerpetualVL2019")]
+[System.String] $Channel = "Current"
 
 #region Script logic
-
 # Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 New-Item -Path $LogPath -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
@@ -71,12 +58,12 @@ $OfficeXml = @"
 "@
 
 # Get Office version
-Write-Host "Microsoft 365 Apps: $Channel"
+Write-Verbose -Message "Microsoft 365 Apps: $Channel"
 $App = Get-EvergreenApp -Name "Microsoft365Apps" | Where-Object { $_.Channel -eq $Channel } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Download Office package, Setup fails to exit, so wait 9-10 mins for Office install to complete
-Write-Host "Installing Microsoft 365 Apps: $($App.Version)."
+Write-Verbose -Message "Installing Microsoft 365 Apps: $($App.Version)."
 $XmlFile = Join-Path -Path $Path -ChildPath "Office.xml"
 Out-File -FilePath $XmlFile -InputObject $OfficeXml -Encoding "utf8"
 
@@ -93,8 +80,8 @@ $Output = [PSCustomObject] @{
     Path     = $OutFile.FullName
     ExitCode = $result.ExitCode
 }
-Write-Host -InputObject $Output
+Write-Verbose -Message -InputObject $Output
 Pop-Location
 
-Write-Host "Complete: Microsoft 365 Apps."
+Write-Verbose -Message "Complete: Microsoft 365 Apps."
 #endregion

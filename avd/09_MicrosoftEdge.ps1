@@ -1,33 +1,22 @@
 #description: Installs the latest Microsoft Edge
 #execution mode: Combined
 #tags: Evergreen, Edge
-#Requires -Modules Evergreen
-<#
-    .SYNOPSIS
-        Install evergreen core applications.
-#>
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "", Justification = "Outputs progress to the pipeline log")]
-[CmdletBinding()]
-param (
-    [Parameter(Mandatory = $False)]
-    [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Edge"
-)
+[System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Edge"
 
 #region Script logic
-
 # Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
-Write-Host "Microsoft Edge"
+Write-Verbose -Message "Microsoft Edge"
 $App = Get-EvergreenApp -Name "MicrosoftEdge" | Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Stable" -and $_.Release -eq "Enterprise" } `
 | Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1
 
 # Download
-Write-Host "Microsoft Edge: $($App.Version)."
+Write-Verbose -Message "Microsoft Edge: $($App.Version)."
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Install
-Write-Host "Installing Microsoft Edge"
+Write-Verbose -Message "Installing Microsoft Edge"
 $params = @{
     FilePath     = "$env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package $($OutFile.FullName) /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true"
@@ -40,10 +29,10 @@ $Output = [PSCustomObject] @{
     Path     = $OutFile.FullName
     ExitCode = $result.ExitCode
 }
-Write-Host -InputObject $Output
+Write-Verbose -Message -InputObject $Output
 
 # Post install configuration
-Write-Host "Post-install config"
+Write-Verbose -Message "Post-install config"
 $prefs = @{
     "homepage"               = "https://www.office.com"
     "homepage_is_newtabpage" = $False
@@ -70,5 +59,5 @@ $services = "edgeupdate", "edgeupdatem", "MicrosoftEdgeElevationService"
 foreach ($service in $services) { Get-Service -Name $service | Set-Service -StartupType "Disabled" }
 foreach ($task in (Get-ScheduledTask -TaskName *Edge*)) { Unregister-ScheduledTask -TaskName $Task -Confirm:$False -ErrorAction SilentlyContinue }
 
-Write-Host "Complete: Microsoft Edge."
+Write-Verbose -Message "Complete: Microsoft Edge."
 #endregion

@@ -1,16 +1,7 @@
-#description: Installs Windows language support
+#description: Installs Windows language support. Set language/regional settings
 #execution mode: Combined
 #tags: Language
-<#
-    .SYNOPSIS
-        Set language/regional settings.
-#>
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "", Justification = "Outputs progress to the pipeline log")]
-[CmdletBinding()]
-param (
-    [Parameter(Mandatory = $False)]
-    [System.String] $Language = "en-AU"
-)
+[System.String] $Language = "en-AU"
 
 try {
     $params = @{

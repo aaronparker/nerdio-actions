@@ -1,16 +1,6 @@
 #description: Syspreps the machine
 #execution mode: IndividualWithRestart
 #tags: Evergreen, Sysprep
-<#
-    .SYNOPSIS
-        Sysprep image.
-#>
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "", Justification = "Outputs progress to the pipeline log")]
-[CmdletBinding()]
-param (
-    [Parameter(Mandatory = $False)]
-    [System.String] $Path = "$env:SystemDrive\Apps"
-)
 
 #region Functions
 function Get-InstalledApplication () {
@@ -36,13 +26,13 @@ function Get-InstalledApplication () {
 # Determine whether the Citrix Virtual Desktop Agent is installed
 $CitrixVDA = Get-InstalledApplication | Where-Object { $_.DisplayName -like "*Machine Identity Service Agent*" }
 if ($Null -ne $CitrixVDA) {
-    Write-Host "Citrix Virtual Desktop agent detected, skipping Sysprep."
+    Write-Verbose -Message "Citrix Virtual Desktop agent detected, skipping Sysprep."
 }
 else {
 
     # Sysprep
     #region Prepare
-    Write-Host "Run Sysprep"
+    Write-Verbose -Message "Run Sysprep"
     if (Get-Service -Name "RdAgent" -ErrorAction "SilentlyContinue") { Set-Service -Name "RdAgent" -StartupType "Disabled" }
     if (Get-Service -Name "WindowsAzureTelemetryService" -ErrorAction "SilentlyContinue") { Set-Service -Name "WindowsAzureTelemetryService" -StartupType "Disabled" }
     if (Get-Service -Name "WindowsAzureGuestAgent" -ErrorAction "SilentlyContinue") { Set-Service -Name "WindowsAzureGuestAgent" -StartupType "Disabled" }
@@ -73,5 +63,5 @@ else {
     Write-Output $imageState.ImageState
     #endregion
 
-    Write-Host "Complete: Sysprep."
+    Write-Verbose -Message "Complete: Sysprep."
 }
