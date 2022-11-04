@@ -3,72 +3,54 @@
 #tags: Roles, Features, Capabilities
 
 #region Script logic
-# Run tasks
-switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
-    "Microsoft Windows Server*" {
-        # Add / Remove roles and features (requires reboot at end of deployment)
+# Add / Remove roles and features (requires reboot at end of deployment)
+try {
+    $params = @{
+        FeatureName   = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client", `
+            "FaxServicesClientPackage", "WindowsMediaPlayer", "MicrosoftWindowsPowerShellV2Root", `
+            "MicrosoftWindowsPowerShellV2"
+        Online        = $true
+        NoRestart     = $true
+        WarningAction = "Continue"
+        ErrorAction   = "Continue"
+    }
+    Disable-WindowsOptionalFeature @params
+}
+catch {
+    Write-Warning -Message " ERR: Failed to set feature state with: $($_.Exception.Message)."
+}
+
+try {
+    $params = @{
+        Name                   = "Media.WindowsMediaPlayer~~~~0.0.12.0", "XPS.Viewer~~~~0.0.1.0", `
+            "App.Support.QuickAssist~~~~0.0.1.0", "MathRecognizer~~~~0.0.1.0", `
+            "Browser.InternetExplorer~~~~0.0.11.0", "Print.Fax.Scan~~~~0.0.1.0"
+        IncludeManagementTools = $true
+        WarningAction          = "Continue"
+        ErrorAction            = "Continue"
+    }
+    Uninstall-WindowsFeature @params
+}
+catch {
+    Write-Warning -Message " ERR: Failed to set feature state with: $($_.Exception.Message)."
+}
+
+# Enable services
+if ((Get-WindowsFeature -Name "RDS-RD-Server").InstallState -eq "Installed") {
+    foreach ($service in "Audiosrv", "WSearch") {
         try {
             $params = @{
-                FeatureName   = "Printing-XPSServices-Features"
-                Online        = $true
-                NoRestart     = $true
+                Name          = $service
+                StartupType   = "Automatic"
                 WarningAction = "Continue"
                 ErrorAction   = "Continue"
             }
-            Disable-WindowsOptionalFeature @params
+            Set-Service @params
         }
         catch {
-            Write-Warning -Message " ERR: Failed to set feature state with: $($_.Exception.Message)."
+            Write-Warning -Message " ERR: Failed to set service properties with: $($_.Exception.Message)."
         }
-
-        try {
-            $params = @{
-                Name                   = "EnhancedStorage", "PowerShell-ISE"
-                IncludeManagementTools = $true
-                WarningAction          = "Continue"
-                ErrorAction            = "Continue"
-            }
-            Uninstall-WindowsFeature @params
-        }
-        catch {
-            Write-Warning -Message " ERR: Failed to set feature state with: $($_.Exception.Message)."
-        }
-
-        $params = @{
-            Name          = "RDS-RD-Server", "Server-Media-Foundation", "Search-Service", "NET-Framework-Core", "Remote-Assistance"
-            WarningAction = "Continue"
-            ErrorAction   = "Continue"
-        }
-        Install-WindowsFeature @params
-
-        # Enable services
-        if ((Get-WindowsFeature -Name "RDS-RD-Server").InstallState -eq "Installed") {
-            foreach ($service in "Audiosrv", "WSearch") {
-                try {
-                    $params = @{
-                        Name          = $service
-                        StartupType   = "Automatic"
-                        WarningAction = "Continue"
-                        ErrorAction   = "Continue"
-                    }
-                    Set-Service @params
-                }
-                catch {
-                    Write-Warning -Message " ERR: Failed to set service properties with: $($_.Exception.Message)."
-                }
-            }
-        }
-        break
-    }
-    "Microsoft Windows 1* Enterprise for Virtual Desktops" {
-        break
-    }
-    "Microsoft Windows 1* Enterprise" {
-        break
-    }
-    "Microsoft Windows 1*" {
-        break
-    }
-    default {
     }
 }
+
+
