@@ -20,11 +20,7 @@ $params = @{
     Wait         = $True
     PassThru     = $True
 }
-$result = Start-Process @params
-$Output = [PSCustomObject] @{
-    Path     = $OutFile.FullName
-    ExitCode = $result.ExitCode
-}
+Start-Process @params
 #endregion
 
 #region Boot Loader
@@ -39,11 +35,7 @@ $params = @{
     Wait         = $True
     PassThru     = $True
 }
-$result = Start-Process @params
-$Output = [PSCustomObject] @{
-    Path     = $OutFile.FullName
-    ExitCode = $result.ExitCode
-}
+Start-Process @params
 #endregion
 
 #region Infra agent
@@ -57,10 +49,6 @@ $params = @{
     Wait         = $True
     PassThru     = $True
 }
-$result = Start-Process @params
-$Output = [PSCustomObject] @{
-    Path     = $OutFile.FullName
-    ExitCode = $result.ExitCode
-}
+Start-Process @params
 #>
 #endregion
