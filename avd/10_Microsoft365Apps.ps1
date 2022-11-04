@@ -1,8 +1,6 @@
 #description: Installs the latest Microsoft 365 Apps Current channel, x64 with shared computer licensing
 #execution mode: Combined
 #tags: Evergreen, Microsoft 365 Apps
-[System.String] $LogPath = "$env:SystemRoot\Logs\M365Apps"
-
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Office"
 
 #[ValidateSet("BetaChannel", "CurrentPreview", "Current", "MonthlyEnterprise", "PerpetualVL2021", "SemiAnnualPreview", "SemiAnnual", "PerpetualVL2019")]
@@ -11,7 +9,6 @@
 #region Script logic
 # Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
-New-Item -Path $LogPath -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
 # Run tasks/install apps
 $OfficeXml = @"
@@ -58,12 +55,10 @@ $OfficeXml = @"
 "@
 
 # Get Office version
-Write-Verbose -Message "Microsoft 365 Apps: $Channel"
 $App = Get-EvergreenApp -Name "Microsoft365Apps" | Where-Object { $_.Channel -eq $Channel } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Download Office package, Setup fails to exit, so wait 9-10 mins for Office install to complete
-Write-Verbose -Message "Installing Microsoft 365 Apps: $($App.Version)."
 $XmlFile = Join-Path -Path $Path -ChildPath "Office.xml"
 Out-File -FilePath $XmlFile -InputObject $OfficeXml -Encoding "utf8"
 
@@ -75,13 +70,6 @@ $params = @{
     PassThru     = $True
 }
 Push-Location -Path $Path
-$result = Start-Process @params
-$Output = [PSCustomObject] @{
-    Path     = $OutFile.FullName
-    ExitCode = $result.ExitCode
-}
-Write-Verbose -Message -InputObject $Output
+Start-Process @params
 Pop-Location
-
-Write-Verbose -Message "Complete: Microsoft 365 Apps."
 #endregion

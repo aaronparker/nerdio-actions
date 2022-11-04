@@ -7,16 +7,13 @@
 #region Script logic
 # Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
-Write-Verbose -Message "Microsoft FSLogix Apps agent"
 
 # Download
 $App = Get-EvergreenApp -Name "MicrosoftFSLogixApps" | Where-Object { $_.Channel -eq "Production" } | Select-Object -First 1
-Write-Verbose -Message "Microsoft FSLogix Apps agent: $($App.Version)."
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Unpack
 try {
-    Write-Verbose -Message "Unpacking: $($OutFile.FullName)."
     Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 }
 catch {
@@ -30,19 +27,12 @@ foreach ($file in "FSLogixAppsSetup.exe", "FSLogixAppsRuleEditorSetup.exe") {
         Write-Verbose -Message "Installing: $($installer.FullName)."
         $params = @{
             FilePath     = $installer.FullName
-            ArgumentList = "/install /quiet /norestart"
+            ArgumentList = "/install /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftFSLogixApps.log`""
             NoNewWindow  = $True
             Wait         = $True
             PassThru     = $True
         }
-        $result = Start-Process @params
-        $Output = [PSCustomObject] @{
-            Path     = $OutFile.FullName
-            ExitCode = $result.ExitCode
-        }
-        Write-Verbose -Message -InputObject $Output
+        Start-Process @params
     }
 }
-
-Write-Verbose -Message "Complete: Microsoft FSLogix Apps."
 #endregion

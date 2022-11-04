@@ -7,32 +7,23 @@
 # Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
-Write-Verbose -Message "Microsoft Edge"
 $App = Get-EvergreenApp -Name "MicrosoftEdge" | Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Stable" -and $_.Release -eq "Enterprise" } `
 | Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1
 
 # Download
-Write-Verbose -Message "Microsoft Edge: $($App.Version)."
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Install
-Write-Verbose -Message "Installing Microsoft Edge"
 $params = @{
     FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-    ArgumentList = "/package $($OutFile.FullName) /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true"
+    ArgumentList = "/package $($OutFile.FullName) /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftEdge.log`""
     NoNewWindow  = $True
     Wait         = $True
     PassThru     = $True
 }
-$result = Start-Process @params
-$Output = [PSCustomObject] @{
-    Path     = $OutFile.FullName
-    ExitCode = $result.ExitCode
-}
-Write-Verbose -Message -InputObject $Output
+Start-Process @params
 
 # Post install configuration
-Write-Verbose -Message "Post-install config"
 $prefs = @{
     "homepage"               = "https://www.office.com"
     "homepage_is_newtabpage" = $False
@@ -58,6 +49,4 @@ Remove-Item -Path "$env:Public\Desktop\Microsoft Edge*.lnk" -Force -ErrorAction 
 $services = "edgeupdate", "edgeupdatem", "MicrosoftEdgeElevationService"
 foreach ($service in $services) { Get-Service -Name $service | Set-Service -StartupType "Disabled" }
 foreach ($task in (Get-ScheduledTask -TaskName *Edge*)) { Unregister-ScheduledTask -TaskName $Task -Confirm:$False -ErrorAction SilentlyContinue }
-
-Write-Verbose -Message "Complete: Microsoft Edge."
 #endregion

@@ -8,28 +8,21 @@
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
 # Run tasks/install apps
-Write-Verbose -Message "Microsoft Teams"
 $App = Get-EvergreenApp -Name "MicrosoftTeams" | Where-Object { $_.Architecture -eq "x64" -and $_.Ring -eq "General" -and $_.Type -eq "msi" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Install
-Write-Verbose -Message "Installing Microsoft Teams: $($App.Version)."
 REG add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f 2> $Null
 REG add "HKLM\SOFTWARE\Citrix\PortICA" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f 2> $Null
 
 $params = @{
     FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-    ArgumentList = "/package $($OutFile.FullName) OPTIONS=`"noAutoStart=true`" ALLUSER=1 ALLUSERS=1 /quiet"
+    ArgumentList = "/package $($OutFile.FullName) OPTIONS=`"noAutoStart=true`" ALLUSER=1 ALLUSERS=1 /quiet /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftTeams.log`""
     NoNewWindow  = $True
     Wait         = $True
     PassThru     = $True
 }
-$result = Start-Process @params
-$Output = [PSCustomObject] @{
-    Path     = $OutFile.FullName
-    ExitCode = $result.ExitCode
-}
-Write-Verbose -Message -InputObject $Output
+Start-Process @params
 
 # Teams JSON files
 $ConfigFiles = @((Join-Path -Path "${env:ProgramFiles(x86)}\Teams Installer" -ChildPath "setup.json"),

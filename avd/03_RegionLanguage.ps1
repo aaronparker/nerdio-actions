@@ -9,7 +9,6 @@ try {
         CopyToSettings  = $True
         ExcludeFeatures = $False
     }
-    Write-Verbose -Message "Install language: $Language."
     if ($PSCmdlet.ShouldProcess($Language, "Install-Language")) {
         Install-Language @params | Out-Null
     }
@@ -23,7 +22,6 @@ try {
         Language = $Language
         PassThru = $False
     }
-    Write-Verbose -Message "Set system language: $Language."
     if ($PSCmdlet.ShouldProcess($Language, "Set-SystemPreferredUILanguage")) {
         Set-SystemPreferredUILanguage @params
     }

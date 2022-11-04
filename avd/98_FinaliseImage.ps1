@@ -4,10 +4,8 @@
 [System.String] $Path = "$env:SystemDrive\Apps"
 
 # Re-enable Defender
-Write-Verbose -Message "Enable Windows Defender real time scan"
 Set-MpPreference -DisableRealtimeMonitoring $false
 
-Write-Verbose -Message "Enable Windows Store updates"
 reg delete HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableWindowsConsumerFeatures /f
 reg delete HKLM\Software\Policies\Microsoft\WindowsStore /v AutoDownload /f
 

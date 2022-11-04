@@ -5,12 +5,8 @@
 
 #region Script logic
 # Run tasks/install apps
-Write-Verbose -Message "Microsoft Visual C++ Redistributables"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
-Write-Verbose -Message "Downloading Microsoft Visual C++ Redistributables"
 Save-VcRedist -VcList (Get-VcList) -Path $Path > $Null
-
-Write-Verbose -Message "Installing Microsoft Visual C++ Redistributables"
 Install-VcRedist -VcList (Get-VcList) -Path $Path -Silent | Out-Null
 #endregion
