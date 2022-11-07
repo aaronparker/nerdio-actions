@@ -32,36 +32,38 @@ else {
 
     # Sysprep
     #region Prepare
-    Write-Verbose -Message "Run Sysprep"
-    if (Get-Service -Name "RdAgent" -ErrorAction "SilentlyContinue") { Set-Service -Name "RdAgent" -StartupType "Disabled" }
-    if (Get-Service -Name "WindowsAzureTelemetryService" -ErrorAction "SilentlyContinue") { Set-Service -Name "WindowsAzureTelemetryService" -StartupType "Disabled" }
-    if (Get-Service -Name "WindowsAzureGuestAgent" -ErrorAction "SilentlyContinue") { Set-Service -Name "WindowsAzureGuestAgent" -StartupType "Disabled" }
-    Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\SysPrepExternal\\Generalize' -Name '*'
-    #endregion
+    try {
+        if (Get-Service -Name "RdAgent" -ErrorAction "SilentlyContinue") { Set-Service -Name "RdAgent" -StartupType "Disabled" }
+        if (Get-Service -Name "WindowsAzureTelemetryService" -ErrorAction "SilentlyContinue") { Set-Service -Name "WindowsAzureTelemetryService" -StartupType "Disabled" }
+        if (Get-Service -Name "WindowsAzureGuestAgent" -ErrorAction "SilentlyContinue") { Set-Service -Name "WindowsAzureGuestAgent" -StartupType "Disabled" }
+        Remove-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\SysPrepExternal\\Generalize' -Name '*'
+        #endregion
 
-    #region Sysprep
-    $RegPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\State"
-    $params = @{
-        FilePath     = "$env:SystemRoot\System32\Sysprep\Sysprep.exe"
-        ArgumentList = "/oobe /generalize /quiet /quit"
-        NoNewWindow  = $True
-        Wait         = $False
-        PassThru     = $True
-    }
-    Start-Process @params
-    while ($True) {
-        $imageState = Get-ItemProperty $RegPath | Select-Object ImageState
-        if ($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') {
-            Write-Output $imageState.ImageState
-            Start-Sleep -s 10
+        #region Sysprep
+        $RegPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\State"
+        $params = @{
+            FilePath     = "$env:SystemRoot\System32\Sysprep\Sysprep.exe"
+            ArgumentList = "/oobe /generalize /quiet /quit"
+            NoNewWindow  = $True
+            Wait         = $False
+            PassThru     = $True
         }
-        else {
-            break
+        Start-Process @params
+        while ($True) {
+            $imageState = Get-ItemProperty $RegPath | Select-Object ImageState
+            if ($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') {
+                Write-Output $imageState.ImageState
+                Start-Sleep -s 10
+            }
+            else {
+                break
+            }
         }
+        $imageState = Get-ItemProperty $RegPath | Select-Object -Property "ImageState"
+        Write-Output $imageState.ImageState
+        #endregion
     }
-    $imageState = Get-ItemProperty $RegPath | Select-Object -Property "ImageState"
-    Write-Output $imageState.ImageState
-    #endregion
-
-    Write-Verbose -Message "Complete: Sysprep."
+    catch {
+        throw $_.Exception.Message
+    }
 }

@@ -8,10 +8,11 @@
 
 #region Script logic
 # Create target folder
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+try {
+    New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
-# Run tasks/install apps
-$OfficeXml = @"
+    # Run tasks/install apps
+    $OfficeXml = @"
 <Configuration ID="a39b1c70-558d-463b-b3d4-9156ddbcbb05">
     <Add OfficeClientEdition="64" Channel="$Channel" MigrateArch="TRUE">
         <Product ID="O365ProPlusRetail">
@@ -54,22 +55,26 @@ $OfficeXml = @"
 </Configuration>
 "@
 
-# Get Office version
-$App = Get-EvergreenApp -Name "Microsoft365Apps" | Where-Object { $_.Channel -eq $Channel } | Select-Object -First 1
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+    # Get Office version
+    $App = Get-EvergreenApp -Name "Microsoft365Apps" | Where-Object { $_.Channel -eq $Channel } | Select-Object -First 1
+    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-# Download Office package, Setup fails to exit, so wait 9-10 mins for Office install to complete
-$XmlFile = Join-Path -Path $Path -ChildPath "Office.xml"
-Out-File -FilePath $XmlFile -InputObject $OfficeXml -Encoding "utf8"
+    # Download Office package, Setup fails to exit, so wait 9-10 mins for Office install to complete
+    $XmlFile = Join-Path -Path $Path -ChildPath "Office.xml"
+    Out-File -FilePath $XmlFile -InputObject $OfficeXml -Encoding "utf8"
 
-$params = @{
-    FilePath     = $OutFile.FullName
-    ArgumentList = "/configure $XmlFile"
-    NoNewWindow  = $True
-    Wait         = $True
-    PassThru     = $True
+    $params = @{
+        FilePath     = $OutFile.FullName
+        ArgumentList = "/configure $XmlFile"
+        NoNewWindow  = $True
+        Wait         = $True
+        PassThru     = $True
+    }
+    Push-Location -Path $Path
+    Start-Process @params
+    Pop-Location
 }
-Push-Location -Path $Path
-Start-Process @params
-Pop-Location
+catch {
+    throw $_.Exception.Message
+}
 #endregion

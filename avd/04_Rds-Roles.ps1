@@ -17,7 +17,7 @@ try {
     Disable-WindowsOptionalFeature @params
 }
 catch {
-    Write-Warning -Message " ERR: Failed to set feature state with: $($_.Exception.Message)."
+    throw $_.Exception.Message
 }
 
 try {
@@ -32,7 +32,7 @@ try {
     Uninstall-WindowsFeature @params
 }
 catch {
-    Write-Warning -Message " ERR: Failed to set feature state with: $($_.Exception.Message)."
+    throw $_.Exception.Message
 }
 
 # Enable services
@@ -48,9 +48,7 @@ if ((Get-WindowsFeature -Name "RDS-RD-Server").InstallState -eq "Installed") {
             Set-Service @params
         }
         catch {
-            Write-Warning -Message " ERR: Failed to set service properties with: $($_.Exception.Message)."
+            throw $_.Exception.Message
         }
     }
 }
-
-

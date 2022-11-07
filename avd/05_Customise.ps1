@@ -14,7 +14,7 @@ try {
     .\Install-Defaults.ps1
 }
 catch {
-    Write-Warning -Message " ERR: $($Script.FullName) error with: $($_.Exception.Message)."
+    throw "$($Script.FullName) error with: $($_.Exception.Message)."
 }
 finally {
     Pop-Location

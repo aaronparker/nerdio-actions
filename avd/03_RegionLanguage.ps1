@@ -14,7 +14,7 @@ try {
     }
 }
 catch {
-    throw $_
+    throw $_.Exception.Message
 }
 
 try {
@@ -27,5 +27,5 @@ try {
     }
 }
 catch {
-    throw $_
+    throw $_.Exception.Message
 }

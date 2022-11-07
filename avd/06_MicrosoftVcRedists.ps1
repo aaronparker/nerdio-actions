@@ -5,8 +5,13 @@
 
 #region Script logic
 # Run tasks/install apps
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+try {
+    New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
-Save-VcRedist -VcList (Get-VcList) -Path $Path > $Null
-Install-VcRedist -VcList (Get-VcList) -Path $Path -Silent | Out-Null
+    Save-VcRedist -VcList (Get-VcList) -Path $Path > $Null
+    Install-VcRedist -VcList (Get-VcList) -Path $Path -Silent | Out-Null
+}
+catch {
+    throw $_.Exception.Message
+}
 #endregion

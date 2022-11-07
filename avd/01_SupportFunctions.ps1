@@ -26,13 +26,18 @@ foreach ($module in "Evergreen", "VcRedist") {
         Select-Object -First 1
     $publishedModule = Find-Module -Name $module -ErrorAction "SilentlyContinue"
     if (($Null -eq $installedModule) -or ([System.Version]$publishedModule.Version -gt [System.Version]$installedModule.Version)) {
-        $params = @{
-            Name               = $module
-            SkipPublisherCheck = $true
-            Force              = $true
-            ErrorAction        = "Stop"
+        try {
+            $params = @{
+                Name               = $module
+                SkipPublisherCheck = $true
+                Force              = $true
+                ErrorAction        = "Stop"
+            }
+            Install-Module @params
         }
-        Install-Module @params
+        catch {
+            throw $_.Exception.Message
+        }
     }
 }
 #endregion
