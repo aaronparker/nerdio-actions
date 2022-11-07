@@ -1,4 +1,4 @@
-#description: Installs the Evergreen and VcRedist PowerShell modules
+#description: Installs PowerShell modules required for building AVD images (Evergreen, VcRedist, PSWindowsUpdate, etc.)
 #execution mode: Combined
 #tags: Evergreen, VcRedist, modules
 
@@ -20,7 +20,7 @@ foreach ($Repository in "PSGallery") {
 
 # Install the Evergreen module; https://github.com/aaronparker/Evergreen
 # Install the VcRedist module; https://docs.stealthpuppy.com/vcredist/
-foreach ($module in "Evergreen", "VcRedist") {
+foreach ($module in "Evergreen", "VcRedist", "PSWindowsUpdate") {
     $installedModule = Get-Module -Name $module -ListAvailable -ErrorAction "SilentlyContinue" | `
         Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | `
         Select-Object -First 1

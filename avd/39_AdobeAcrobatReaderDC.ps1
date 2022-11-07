@@ -1,6 +1,7 @@
 #description: Installs the latest Adobe Acrobat Reader MUI x64 customised for VDI
 #execution mode: Combined
 #tags: Evergreen, Adobe
+#Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Adobe\AcrobatReaderDC"
 
 [System.String] $Architecture = "x64"

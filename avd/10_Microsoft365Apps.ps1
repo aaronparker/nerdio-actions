@@ -1,6 +1,7 @@
 #description: Installs the latest Microsoft 365 Apps Current channel, x64 with shared computer licensing
 #execution mode: Combined
 #tags: Evergreen, Microsoft 365 Apps
+#Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Office"
 
 #[ValidateSet("BetaChannel", "CurrentPreview", "Current", "MonthlyEnterprise", "PerpetualVL2021", "SemiAnnualPreview", "SemiAnnual", "PerpetualVL2019")]

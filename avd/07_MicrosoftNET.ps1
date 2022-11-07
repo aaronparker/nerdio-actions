@@ -1,6 +1,7 @@
 #description: Installs the Microsoft .NET Desktop Runtime
 #execution mode: Combined
 #tags: Evergreen, .NET
+#Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\NET"
 
 #region Script logic

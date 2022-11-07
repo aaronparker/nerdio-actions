@@ -1,6 +1,7 @@
 #description: Installs Windows Customised Defaults
 #execution mode: Combined
 #tags: Evergreen, Default profile, Customisation
+#Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\image-customise"
 
 #region Script logic

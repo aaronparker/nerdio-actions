@@ -1,6 +1,7 @@
 #description: Installs the supported Microsoft Visual C++ Redistributables
 #execution mode: Combined
 #tags: VcRedist
+#Requires -Modules VcRedist
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\VcRedist"
 
 #region Script logic

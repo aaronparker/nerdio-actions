@@ -1,6 +1,7 @@
 #description: Installs the latest Microsoft Edge
 #execution mode: Combined
 #tags: Evergreen, Edge
+#Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Edge"
 
 #region Script logic

@@ -1,6 +1,7 @@
 #description: Installs Windows Updates
 #execution mode: IndividualWithRestart
 #tags: Update
+#Requires -Modules PSWindowsUpdate
 
 #region Restart if running in a 32-bit session
 if (!([System.Environment]::Is64BitProcess)) {
@@ -24,9 +25,6 @@ try {
     REG DELETE "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /f
 
     # Install updates
-    Install-PackageProvider -Name "NuGet" -MinimumVersion 2.8.5.208 -Force
-    Set-PSRepository -Name "PSGallery" -InstallationPolicy "Trusted"
-    Install-Module -Name "PSWindowsUpdate" -Force
     Import-Module -Name "PSWindowsUpdate"
     Install-WindowsUpdate -AcceptAll -MicrosoftUpdate -IgnoreReboot
 }

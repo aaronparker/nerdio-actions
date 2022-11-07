@@ -1,6 +1,7 @@
 #description: Installs the latest Microsoft OneDrive for use on Windows 10/11 multi-session or Windows Server
 #execution mode: Combined
 #tags: Evergreen, OneDrive
+#Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\OneDrive"
 
 #region Script logic
