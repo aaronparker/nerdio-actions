@@ -63,7 +63,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
         catch {
             throw $_.Exception.Message
         }
-        
+
         try {
             $params = @{
                 Name                   = "Media.WindowsMediaPlayer~~~~0.0.12.0", "XPS.Viewer~~~~0.0.1.0", `
