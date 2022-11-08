@@ -1,6 +1,7 @@
 name: Test Azure Virtual Desktop image scripts
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 1 15 * *' #Run on the 15th of each month
     
