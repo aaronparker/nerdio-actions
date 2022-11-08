@@ -77,3 +77,9 @@ jobs:
         run: |
           Write-Host "Run: 98_FinaliseImage.ps1"
           .\98_FinaliseImage.ps1
+
+      - name: List installed apps
+        shell: powershell
+        working-directory: "${{ github.workspace }}\\support"
+        run: |
+          .\Get-Installed.ps1
