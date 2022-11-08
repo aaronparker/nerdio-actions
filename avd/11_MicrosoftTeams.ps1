@@ -22,7 +22,7 @@ try {
         ArgumentList = "/package $($OutFile.FullName) OPTIONS=`"noAutoStart=true`" ALLUSER=1 ALLUSERS=1 /quiet /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftTeams.log`""
         NoNewWindow  = $True
         Wait         = $True
-        PassThru     = $True
+        PassThru     = $False
     }
     Start-Process @params
 

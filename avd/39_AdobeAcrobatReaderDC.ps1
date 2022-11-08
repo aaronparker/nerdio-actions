@@ -27,7 +27,7 @@ try {
         ArgumentList = $ArgumentList
         NoNewWindow  = $True
         Wait         = $True
-        PassThru     = $True
+        PassThru     = $False
     }
     Start-Process @params
 

@@ -27,7 +27,7 @@ try {
                 ArgumentList = "/install /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftFSLogixApps.log`""
                 NoNewWindow  = $True
                 Wait         = $True
-                PassThru     = $True
+                PassThru     = $False
             }
             Start-Process @params
         }

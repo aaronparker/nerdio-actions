@@ -46,7 +46,7 @@ else {
             ArgumentList = "/oobe /generalize /quiet /quit"
             NoNewWindow  = $True
             Wait         = $False
-            PassThru     = $True
+            PassThru     = $False
         }
         Start-Process @params
         while ($True) {

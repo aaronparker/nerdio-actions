@@ -20,7 +20,7 @@ try {
         ArgumentList = "/silent /ALLUSERS /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftOneDrive.log`""
         NoNewWindow  = $True
         Wait         = $False
-        PassThru     = $True
+        PassThru     = $False
     }
     Start-Process @params
     do {

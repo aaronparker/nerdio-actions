@@ -69,7 +69,7 @@ try {
         ArgumentList = "/configure $XmlFile"
         NoNewWindow  = $True
         Wait         = $True
-        PassThru     = $True
+        PassThru     = $False
     }
     Push-Location -Path $Path
     Start-Process @params

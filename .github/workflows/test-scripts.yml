@@ -65,8 +65,8 @@ jobs:
           Write-Host "Run: 12_MicrosoftOneDrive.ps1"
           .\12_MicrosoftOneDrive.ps1
 
-          Write-Host "Run: 14_Wvd-Agents.ps1"
-          .\14_Wvd-Agents.ps1
+          Write-Host "Run: 14_Avd-Agents.ps1"
+          .\14_Avd-Agents.ps1
 
           Write-Host "Run: 39_AdobeAcrobatReaderDC.ps1"
           .\39_AdobeAcrobatReaderDC.ps1

@@ -21,7 +21,7 @@ try {
         ArgumentList = "/package $($OutFile.FullName) /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftEdge.log`""
         NoNewWindow  = $True
         Wait         = $True
-        PassThru     = $True
+        PassThru     = $False
     }
     Start-Process @params
 

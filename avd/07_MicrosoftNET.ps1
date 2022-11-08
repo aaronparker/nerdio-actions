@@ -16,7 +16,7 @@ try {
         FilePath     = $OutFile.FullName
         ArgumentList = "/install /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\Microsoft.NET.log`""
         NoNewWindow  = $True
-        PassThru     = $True
+        PassThru     = $False
         Wait         = $True
     }
     Start-Process @params

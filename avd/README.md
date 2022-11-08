@@ -15,7 +15,7 @@ Scripts for customising Windows 10/11 Enterprise and Enterprise multi-session im
 * `10_Microsoft365Apps.ps1` - Installs the Microsoft 365 Apps (includes an embedded configuration.xml)
 * `11_MicrosoftTeams.ps1` - Installs Microsoft Teams per-machine
 * `12_MicrosoftOneDrive.ps1` - Installs Microsoft OneDrive per-machine
-* `14_Wvd-Agents.ps1` - Installs the Azure Virtual Desktop agents
+* `14_Avd-Agents.ps1` - Installs the Azure Virtual Desktop agents
 * `39_AdobeAcrobatReaderDC.ps1` - Installs Adobe Acrobat Reader DC MUI 64-bit
 * `98_FinaliseImage.ps1` - Finalises the image post install and update
-* `99_Sysprep-Image.ps1` - Syspreps the image, only if the Citrix VDA is not installed
+* `99_Sysprep-Image.ps1` - Runs Sysprep on the image, only if the Citrix VDA is not installed
