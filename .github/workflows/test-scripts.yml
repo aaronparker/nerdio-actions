@@ -1,0 +1,38 @@
+name: Test Azure Virtual Desktop image scripts
+
+on:
+  schedule:
+    - cron: '0 1 15 * *' #Run on the 15th of each month
+    
+permissions:
+  contents: read
+
+jobs:
+  build:
+    permissions:
+      contents: read # for actions/checkout to fetch code
+
+    name: Test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run scripts
+        shell: powershell
+        run: |
+          .\avd\00_Rds-PrepImage.ps1
+          .\avd\01_SupportFunctions.ps1
+          .\avd\02_WindowsUpdate.ps1
+          #.\avd\03_RegionLanguage.ps1
+          .\avd\04_Rds-Roles.ps1
+          .\avd\05_Customise.ps1
+          .\avd\06_MicrosoftVcRedists.ps1
+          .\avd\07_MicrosoftNET.ps1
+          .\avd\08_MicrosoftFSLogixApps.ps1
+          .\avd\09_MicrosoftEdge.ps1
+          .\avd\10_Microsoft365Apps.ps1
+          .\avd\11_MicrosoftTeams.ps1
+          .\avd\12_MicrosoftOneDrive.ps1
+          .\avd\14_Wvd-Agents.ps1
+          .\avd\39_AdobeAcrobatReaderDC.ps1
+          .\avd\98_FinaliseImage.ps1
