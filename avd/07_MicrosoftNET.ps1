@@ -10,16 +10,18 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 
 try {
     # Download
-    $App = Get-EvergreenApp -Name "Microsoft.NET" | Where-Object { $_.Installer -eq "windowsdesktop" -and $_.Architecture -eq "x64" -and $_.Channel -eq "LTS" } | Select-Object -First 1
+    $App = Get-EvergreenApp -Name "Microsoft.NET" | Where-Object { $_.Installer -eq "windowsdesktop" -and $_.Architecture -eq "x64" -and $_.Channel -match "LTS|Current" }
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-    $params = @{
-        FilePath     = $OutFile.FullName
-        ArgumentList = "/install /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\Microsoft.NET.log`""
-        NoNewWindow  = $True
-        PassThru     = $False
-        Wait         = $True
+    foreach ($file in $OutFile) {
+        $params = @{
+            FilePath     = $file.FullName
+            ArgumentList = "/install /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\Microsoft.NET.log`""
+            NoNewWindow  = $True
+            PassThru     = $False
+            Wait         = $True
+        }
+        $result = Start-Process @params
     }
-    $result = Start-Process @params
 }
 catch {
     throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
