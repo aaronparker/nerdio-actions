@@ -7,29 +7,36 @@
 
 #region Script logic
 # Create target folder
-try {
-    New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
-    # Download
+try {
+    # Download and unpack
     $App = Get-EvergreenApp -Name "MicrosoftFSLogixApps" | Where-Object { $_.Channel -eq "Production" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-
-    # Unpack
     Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
+}
+catch {
+    throw $_.Exception.Message
+}
 
+try {
     # Install
     foreach ($file in "FSLogixAppsSetup.exe", "FSLogixAppsRuleEditorSetup.exe") {
         $Installers = Get-ChildItem -Path $Path -Recurse -Include $file | Where-Object { $_.Directory -match "x64" }
         foreach ($installer in $Installers) {
-            Write-Verbose -Message "Installing: $($installer.FullName)."
-            $params = @{
-                FilePath     = $installer.FullName
-                ArgumentList = "/install /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftFSLogixApps.log`""
-                NoNewWindow  = $True
-                Wait         = $True
-                PassThru     = $False
+            try {
+                $params = @{
+                    FilePath     = $installer.FullName
+                    ArgumentList = "/install /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftFSLogixApps.log`""
+                    NoNewWindow  = $True
+                    Wait         = $True
+                    PassThru     = $False
+                }
+                $result = Start-Process @params
             }
-            Start-Process @params
+            catch {
+                throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+            }
         }
     }
 }

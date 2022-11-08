@@ -10,11 +10,12 @@
 
 #region Script logic
 # Create target folder
-try {
-    New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
-    # Run tasks/install apps
-    # Enforce settings with GPO: https://www.adobe.com/devnet-docs/acrobatetk/tools/AdminGuide/gpo.html
+# Run tasks/install apps
+# Enforce settings with GPO: https://www.adobe.com/devnet-docs/acrobatetk/tools/AdminGuide/gpo.html
+    
+try {
     # Download Reader installer and updater
     $Reader = Get-EvergreenApp -Name "AdobeAcrobatReaderDC" | Where-Object { $_.Language -eq $Language -and $_.Architecture -eq $Architecture } | `
         Select-Object -First 1
@@ -29,16 +30,16 @@ try {
         Wait         = $True
         PassThru     = $False
     }
-    Start-Process @params
+    $result = Start-Process @params
+}
+catch {
+    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+}
 
-    # Configure update tasks
-    try {
-        Get-Service -Name "AdobeARMservice" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
-        Get-ScheduledTask "Adobe Acrobat Update Task*" | Unregister-ScheduledTask -Confirm:$False -ErrorAction "SilentlyContinue"
-    }
-    catch {
-        Write-Warning -Message "`tERR: $($_.Exception.Message)."
-    }
+# Configure update tasks
+try {
+    Get-Service -Name "AdobeARMservice" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
+    Get-ScheduledTask "Adobe Acrobat Update Task*" | Unregister-ScheduledTask -Confirm:$False -ErrorAction "SilentlyContinue"
 }
 catch {
     throw $_.Exception.Message

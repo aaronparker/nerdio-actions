@@ -6,9 +6,9 @@
 
 #region Script logic
 # Create target folder
-try {
-    New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
+try {
     # Run tasks/install apps
     $App = Get-EvergreenApp -Name "MicrosoftOneDrive" | Where-Object { $_.Ring -eq "Production" -and $_.Type -eq "Exe" -and $_.Architecture -eq "AMD64" } | `
         Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1
@@ -22,13 +22,13 @@ try {
         Wait         = $False
         PassThru     = $False
     }
-    Start-Process @params
+    $result = Start-Process @params
     do {
         Start-Sleep -Seconds 10
     } while (Get-Process -Name "OneDriveSetup" -ErrorAction "SilentlyContinue")
     Get-Process -Name "OneDrive" -ErrorAction "SilentlyContinue" | Stop-Process -Force -ErrorAction "SilentlyContinue"
 }
 catch {
-    throw $_.Exception.Message
+    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
 }
 #endregion

@@ -5,10 +5,10 @@
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\VcRedist"
 
 #region Script logic
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+
 # Run tasks/install apps
 try {
-    New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
-
     Save-VcRedist -VcList (Get-VcList) -Path $Path > $Null
     Install-VcRedist -VcList (Get-VcList) -Path $Path -Silent | Out-Null
 }

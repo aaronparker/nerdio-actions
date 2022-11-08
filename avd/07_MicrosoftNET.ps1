@@ -6,9 +6,9 @@
 
 #region Script logic
 # Create target folder
-try {
-    New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
+try {
     # Download
     $App = Get-EvergreenApp -Name "Microsoft.NET" | Where-Object { $_.Installer -eq "windowsdesktop" -and $_.Architecture -eq "x64" -and $_.Channel -eq "LTS" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
@@ -19,9 +19,9 @@ try {
         PassThru     = $False
         Wait         = $True
     }
-    Start-Process @params
+    $result = Start-Process @params
 }
 catch {
-    throw $_.Exception.Message
+    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
 }
 #endregion

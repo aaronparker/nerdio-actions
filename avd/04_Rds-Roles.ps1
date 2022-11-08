@@ -81,6 +81,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
 
         break
     }
+
     default {
     }
 }

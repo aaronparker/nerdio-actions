@@ -9,9 +9,9 @@
 
 #region Script logic
 # Create target folder
-try {
-    New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
+try {
     # Run tasks/install apps
     $OfficeXml = @"
 <Configuration ID="a39b1c70-558d-463b-b3d4-9156ddbcbb05">
@@ -55,15 +55,19 @@ try {
     <Display Level="None" AcceptEULA="TRUE" />
 </Configuration>
 "@
+    $XmlFile = Join-Path -Path $Path -ChildPath "Office.xml"
+    Out-File -FilePath $XmlFile -InputObject $OfficeXml -Encoding "utf8"
+}
+catch {
+    throw $_.Exception.Message
+}
 
+try {
     # Get Office version
     $App = Get-EvergreenApp -Name "Microsoft365Apps" | Where-Object { $_.Channel -eq $Channel } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
     # Download Office package, Setup fails to exit, so wait 9-10 mins for Office install to complete
-    $XmlFile = Join-Path -Path $Path -ChildPath "Office.xml"
-    Out-File -FilePath $XmlFile -InputObject $OfficeXml -Encoding "utf8"
-
     $params = @{
         FilePath     = $OutFile.FullName
         ArgumentList = "/configure $XmlFile"
@@ -72,10 +76,10 @@ try {
         PassThru     = $False
     }
     Push-Location -Path $Path
-    Start-Process @params
+    $result = Start-Process @params
     Pop-Location
 }
 catch {
-    throw $_.Exception.Message
+    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
 }
 #endregion

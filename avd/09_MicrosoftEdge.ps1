@@ -6,15 +6,19 @@
 
 #region Script logic
 # Create target folder
-try {
-    New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
+try {
+    # Download
     $App = Get-EvergreenApp -Name "MicrosoftEdge" | Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Stable" -and $_.Release -eq "Enterprise" } `
     | Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1
-
-    # Download
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+}
+catch {
+    throw $_.Exception.Message
+}
 
+try {
     # Install
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
@@ -23,8 +27,13 @@ try {
         Wait         = $True
         PassThru     = $False
     }
-    Start-Process @params
+    $result = Start-Process @params
+}
+catch {
+    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+}
 
+try {
     # Post install configuration
     $prefs = @{
         "homepage"               = "https://www.office.com"
@@ -48,10 +57,6 @@ try {
     }
     $prefs | ConvertTo-Json | Set-Content -Path "${Env:ProgramFiles(x86)}\Microsoft\Edge\Application\master_preferences" -Force -Encoding "utf8"
     Remove-Item -Path "$env:Public\Desktop\Microsoft Edge*.lnk" -Force -ErrorAction "SilentlyContinue"
-
-    # $services = "edgeupdate", "edgeupdatem", "MicrosoftEdgeElevationService"
-    # foreach ($service in $services) { Get-Service -Name $service | Set-Service -StartupType "Disabled" }
-    # foreach ($task in (Get-ScheduledTask -TaskName *Edge*)) { Unregister-ScheduledTask -TaskName $Task -Confirm:$False -ErrorAction SilentlyContinue }
 }
 catch {
     throw $_.Exception.Message

@@ -6,9 +6,9 @@
 
 #region Script logic
 # Create target folder
-try {
-    New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
 
+try {
     # Run tasks/install apps
     $App = Get-EvergreenApp -Name "MicrosoftTeams" | Where-Object { $_.Architecture -eq "x64" -and $_.Ring -eq "General" -and $_.Type -eq "msi" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
@@ -24,7 +24,7 @@ try {
         Wait         = $True
         PassThru     = $False
     }
-    Start-Process @params
+    $result = Start-Process @params
 
     # Teams JSON files
     $ConfigFiles = @((Join-Path -Path "${env:ProgramFiles(x86)}\Teams Installer" -ChildPath "setup.json"),
@@ -48,6 +48,6 @@ try {
     REG delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" /v "Teams" /f 2> $Null
 }
 catch {
-    throw $_.Exception.Message
+    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
 }
 #endregion
