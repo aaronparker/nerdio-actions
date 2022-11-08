@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run scripts
+      - name: Run first script batch
         shell: powershell
         working-directory: "${{ github.workspace }}\\avd"
         run: |
@@ -40,6 +40,10 @@ jobs:
           Write-Host "Run: 05_Customise.ps1"
           .\05_Customise.ps1
 
+      - name: Run second script batch
+        shell: powershell
+        working-directory: "${{ github.workspace }}\\avd"
+        run: |
           Write-Host "Run: 06_MicrosoftVcRedists.ps1"
           .\06_MicrosoftVcRedists.ps1
 
@@ -67,5 +71,9 @@ jobs:
           Write-Host "Run: 39_AdobeAcrobatReaderDC.ps1"
           .\39_AdobeAcrobatReaderDC.ps1
 
+      - name: Run third script batch
+        shell: powershell
+        working-directory: "${{ github.workspace }}\\avd"
+        run: |
           Write-Host "Run: 98_FinaliseImage.ps1"
           .\98_FinaliseImage.ps1
