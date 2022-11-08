@@ -7,7 +7,7 @@ param ()
 
 #region Functions
 function Get-InstalledSoftware {
-    [OutputType([System.Management.Automation.PSObject])]
+    [OutputType([System.Object[]])]
     [CmdletBinding()]
     param ()
 
