@@ -1,7 +1,14 @@
 #description: Installs Windows language support. Set language/regional settings
 #execution mode: Combined
 #tags: Language
-[System.String] $Language = "en-AU"
+
+# Use variables in Nerdio Manager to pass a system language
+if ($null -eq $SecureVars.OSLanguage) {
+    [System.String] $Language = "en-AU"
+}
+else {
+    [System.String] $Language = $SecureVars.OSLanguage
+}
 
 try {
     $params = @{
