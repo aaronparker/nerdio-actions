@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 1 15 * *' #Run on the 15th of each month
-    
+
 permissions:
   contents: read
 
@@ -22,35 +22,50 @@ jobs:
         shell: powershell
         working-directory: "${{ github.workspace }}\\avd"
         run: |
-          Write-Host "00_Rds-PrepImage.ps1"
+          Write-Host "Run: 00_Rds-PrepImage.ps1"
           .\00_Rds-PrepImage.ps1
-          Write-Host "01_SupportFunctions.ps1"
+
+          Write-Host "Run: 01_SupportFunctions.ps1"
           .\01_SupportFunctions.ps1
-          #Write-Host "02_WindowsUpdate.ps1"
+
+          #Write-Host "Run: 02_WindowsUpdate.ps1"
           #.\02_WindowsUpdate.ps1
-          #Write-Host "03_RegionLanguage.ps1"
+
+          #Write-Host "Run: 03_RegionLanguage.ps1"
           #.\03_RegionLanguage.ps1
-          Write-Host "04_Rds-Roles.ps1"
+
+          Write-Host "Run: 04_Rds-Roles.ps1"
           .\04_Rds-Roles.ps1
-          Write-Host "05_Customise.ps1"
+
+          Write-Host "Run: 05_Customise.ps1"
           .\05_Customise.ps1
-          Write-Host "06_MicrosoftVcRedists.ps1"
+
+          Write-Host "Run: 06_MicrosoftVcRedists.ps1"
           .\06_MicrosoftVcRedists.ps1
-          Write-Host "07_MicrosoftNET.ps1"
+
+          Write-Host "Run: 07_MicrosoftNET.ps1"
           .\07_MicrosoftNET.ps1
-          Write-Host "08_MicrosoftFSLogixApps.ps1"
+
+          Write-Host "Run: 08_MicrosoftFSLogixApps.ps1"
           .\08_MicrosoftFSLogixApps.ps1
-          Write-Host "09_MicrosoftEdge.ps1"
+
+          Write-Host "Run: 09_MicrosoftEdge.ps1"
           .\09_MicrosoftEdge.ps1
-          Write-Host "10_Microsoft365Apps.ps1"
+
+          Write-Host "Run: 10_Microsoft365Apps.ps1"
           .\10_Microsoft365Apps.ps1
-          Write-Host "11_MicrosoftTeams.ps1"
+
+          Write-Host "Run: 11_MicrosoftTeams.ps1"
           .\11_MicrosoftTeams.ps1
-          Write-Host "12_MicrosoftOneDrive.ps1"
+
+          Write-Host "Run: 12_MicrosoftOneDrive.ps1"
           .\12_MicrosoftOneDrive.ps1
-          Write-Host "14_Wvd-Agents.ps1"
+
+          Write-Host "Run: 14_Wvd-Agents.ps1"
           .\14_Wvd-Agents.ps1
-          Write-Host "39_AdobeAcrobatReaderDC.ps1"
+
+          Write-Host "Run: 39_AdobeAcrobatReaderDC.ps1"
           .\39_AdobeAcrobatReaderDC.ps1
-          Write-Host "98_FinaliseImage.ps1"
+
+          Write-Host "Run: 98_FinaliseImage.ps1"
           .\98_FinaliseImage.ps1
