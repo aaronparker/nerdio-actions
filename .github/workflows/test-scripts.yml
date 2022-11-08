@@ -1,4 +1,4 @@
-name: Test Azure Virtual Desktop image scripts
+name: Test AVD image scripts
 
 on:
   workflow_dispatch:
@@ -20,20 +20,21 @@ jobs:
 
       - name: Run scripts
         shell: powershell
+        working-directory: "${{ github.workspace }}\\avd"
         run: |
-          .\avd\00_Rds-PrepImage.ps1
-          .\avd\01_SupportFunctions.ps1
-          .\avd\02_WindowsUpdate.ps1
-          #.\avd\03_RegionLanguage.ps1
-          .\avd\04_Rds-Roles.ps1
-          .\avd\05_Customise.ps1
-          .\avd\06_MicrosoftVcRedists.ps1
-          .\avd\07_MicrosoftNET.ps1
-          .\avd\08_MicrosoftFSLogixApps.ps1
-          .\avd\09_MicrosoftEdge.ps1
-          .\avd\10_Microsoft365Apps.ps1
-          .\avd\11_MicrosoftTeams.ps1
-          .\avd\12_MicrosoftOneDrive.ps1
-          .\avd\14_Wvd-Agents.ps1
-          .\avd\39_AdobeAcrobatReaderDC.ps1
-          .\avd\98_FinaliseImage.ps1
+          .\00_Rds-PrepImage.ps1
+          .\01_SupportFunctions.ps1
+          #.\02_WindowsUpdate.ps1
+          #.\03_RegionLanguage.ps1
+          .\04_Rds-Roles.ps1
+          .\05_Customise.ps1
+          .\06_MicrosoftVcRedists.ps1
+          .\07_MicrosoftNET.ps1
+          .\08_MicrosoftFSLogixApps.ps1
+          .\09_MicrosoftEdge.ps1
+          .\10_Microsoft365Apps.ps1
+          .\11_MicrosoftTeams.ps1
+          .\12_MicrosoftOneDrive.ps1
+          .\14_Wvd-Agents.ps1
+          .\39_AdobeAcrobatReaderDC.ps1
+          .\98_FinaliseImage.ps1
