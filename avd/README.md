@@ -18,7 +18,6 @@ Scripts for customising Windows 10/11 Enterprise and Enterprise multi-session im
 * `14_Avd-Agents.ps1` - Installs the Azure Virtual Desktop agents
 * `39_AdobeAcrobatReaderDC.ps1` - Installs Adobe Acrobat Reader DC MUI 64-bit
 * `98_FinaliseImage.ps1` - Finalises the image post install and update
-* `99_Sysprep-Image.ps1` - Runs Sysprep on the image, only if the Citrix VDA is not installed
 
 Once run on the target VM, the VM or image should have the following applications installed:
 
