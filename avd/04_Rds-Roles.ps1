@@ -5,6 +5,7 @@
 #region Script logic
 # Add / Remove roles and features (requires reboot at end of deployment)
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
+    #region Windows Server
     "Microsoft Windows Server*" {
         try {
             $params = @{
@@ -45,9 +46,51 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             throw $_.Exception.Message
         }
 
+        # Enable services
+        if ((Get-WindowsFeature -Name "RDS-RD-Server").InstallState -eq "Installed") {
+            foreach ($service in "Audiosrv", "WSearch") {
+                try {
+                    $params = @{
+                        Name          = $service
+                        StartupType   = "Automatic"
+                        WarningAction = "SilentlyContinue"
+                        ErrorAction   = "SilentlyContinue"
+                    }
+                    Set-Service @params
+                }
+                catch {
+                    throw $_.Exception.Message
+                }
+            }
+        }
+
         break
     }
-    "Microsoft Windows 1* Enterprise for Virtual Desktops|Microsoft Windows 1* Enterprise|Microsoft Windows 1*" {
+    #endregion
+
+    #region Windows 11
+    "Microsoft Windows 11* Enterprise for Virtual Desktops|Microsoft Windows 11* Enterprise|Microsoft Windows 11*" {
+        try {
+            $params = @{
+                FeatureName   = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client", `
+                    "WindowsMediaPlayer", "MicrosoftWindowsPowerShellV2Root", "MicrosoftWindowsPowerShellV2"
+                Online        = $true
+                NoRestart     = $true
+                WarningAction = "SilentlyContinue"
+                ErrorAction   = "SilentlyContinue"
+            }
+            Disable-WindowsOptionalFeature @params
+        }
+        catch {
+            throw $_.Exception.Message
+        }
+
+        break
+    }
+    #endregion
+
+    #region Windows 10
+    "Microsoft Windows 10* Enterprise for Virtual Desktops|Microsoft Windows 10* Enterprise|Microsoft Windows 10*" {
         try {
             $params = @{
                 FeatureName   = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client", `
@@ -81,25 +124,8 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
 
         break
     }
+    #endregion
 
     default {
-    }
-}
-
-# Enable services
-if ((Get-WindowsFeature -Name "RDS-RD-Server").InstallState -eq "Installed") {
-    foreach ($service in "Audiosrv", "WSearch") {
-        try {
-            $params = @{
-                Name          = $service
-                StartupType   = "Automatic"
-                WarningAction = "SilentlyContinue"
-                ErrorAction   = "SilentlyContinue"
-            }
-            Set-Service @params
-        }
-        catch {
-            throw $_.Exception.Message
-        }
     }
 }
