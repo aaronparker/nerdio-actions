@@ -17,6 +17,7 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 
 try {
     # Download Reader installer and updater
+    Import-Module -Name "Evergreen" -Force
     $Reader = Get-EvergreenApp -Name "AdobeAcrobatReaderDC" | Where-Object { $_.Language -eq $Language -and $_.Architecture -eq $Architecture } | `
         Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $Reader -CustomPath $Path -WarningAction "SilentlyContinue"

@@ -10,6 +10,7 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 
 try {
     # Run tasks/install apps
+    Import-Module -Name "Evergreen" -Force
     $App = Get-EvergreenApp -Name "MicrosoftTeams" | Where-Object { $_.Architecture -eq "x64" -and $_.Ring -eq "General" -and $_.Type -eq "msi" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 

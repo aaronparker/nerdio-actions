@@ -9,6 +9,7 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 
 # Run tasks/install apps
 try {
+    Import-Module -Name "VcRedist" -Force
     Save-VcRedist -VcList (Get-VcList) -Path $Path > $Null
     Install-VcRedist -VcList (Get-VcList) -Path $Path -Silent | Out-Null
 }
