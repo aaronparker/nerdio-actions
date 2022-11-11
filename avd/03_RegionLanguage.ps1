@@ -36,3 +36,17 @@ try {
 catch {
     throw $_.Exception.Message
 }
+
+try {
+    $GeoId = @{
+        "en-US" = 244
+        "en-GB" = 242
+        "en-AU" = 12
+    }
+    Import-Module -Name "International"
+    Set-WinSystemLocale -SystemLocale $Language
+    Set-WinHomeLocation -GeoId $GeoId.$Language
+}
+catch {
+    throw $_.Exception.Message
+}
