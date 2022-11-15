@@ -21,7 +21,8 @@ try {
         Save-EvergreenApp -CustomPath $Path
     Expand-Archive -Path $Installer.FullName -DestinationPath $Path -Force
     Push-Location -Path $Path
-    .\Install-Defaults.ps1 -Language $Language
+    . .\Install-Defaults.ps1 -Language $Language
+    Pop-Location
 }
 catch {
     throw $_.Exception.Message

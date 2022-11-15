@@ -28,7 +28,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     #endregion
 
     #region Windows 10
-    "Microsoft Windows 1* Enterprise*" {
+    "Microsoft Windows 1* Enterprise*|Microsoft Windows 1* Pro*" {
         $SharedComputerLicensing = 0
         break
     }

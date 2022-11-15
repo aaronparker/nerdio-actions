@@ -56,7 +56,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     #endregion
 
     #region Windows 11
-    "Microsoft Windows 11 Enterprise*" {
+    "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*" {
         try {
             $params = @{
                 FeatureName   = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client", "MicrosoftWindowsPowerShellV2Root", "MicrosoftWindowsPowerShellV2"
@@ -76,7 +76,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     #endregion
 
     #region Windows 10
-    "Microsoft Windows 10 Enterprise*" {
+    "Microsoft Windows 10 Enterprise*|Microsoft Windows 10 Pro*" {
         try {
             $params = @{
                 FeatureName   = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client", `
