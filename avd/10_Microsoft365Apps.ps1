@@ -5,11 +5,40 @@
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Office"
 
 #[ValidateSet("BetaChannel", "CurrentPreview", "Current", "MonthlyEnterprise", "PerpetualVL2021", "SemiAnnualPreview", "SemiAnnual", "PerpetualVL2019")]
-[System.String] $Channel = "Current"
+[System.String] $Channel = "MonthlyEnterprise"
 
 #region Script logic
 # Create target folder
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+
+switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
+    #region Windows Server
+    "Microsoft Windows Server*" {
+        $SharedComputerLicensing = 1
+        break
+    }
+    #endregion
+
+    #region Windows 10/11 multi-session
+    "Microsoft Windows 10 Enterprise for Virtual Desktops|Microsoft Windows 11 Enterprise multi-session" {
+        $SharedComputerLicensing = 1
+        break
+    }
+    #endregion
+
+    #region Windows 10
+    "Microsoft Windows 1* Enterprise*" {
+        $SharedComputerLicensing = 0
+        break
+    }
+    #endregion
+
+    default {
+        $SharedComputerLicensing = 1
+    }
+}
+
 
 try {
     # Run tasks/install apps
@@ -27,7 +56,7 @@ try {
             <ExcludeApp ID="Teams" />
         </Product>
     </Add>
-    <Property Name="SharedComputerLicensing" Value="1" />
+    <Property Name="SharedComputerLicensing" Value="$SharedComputerLicensing" />
     <Property Name="PinIconsToTaskbar" Value="FALSE" />
     <Property Name="SCLCacheOverride" Value="0" />
     <Property Name="AUTOACTIVATE" Value="0" />
@@ -72,9 +101,9 @@ try {
     $params = @{
         FilePath     = $OutFile.FullName
         ArgumentList = "/configure $XmlFile"
-        NoNewWindow  = $True
-        Wait         = $True
-        PassThru     = $False
+        NoNewWindow  = $true
+        Wait         = $true
+        PassThru     = $false
     }
     Push-Location -Path $Path
     $result = Start-Process @params

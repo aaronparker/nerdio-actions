@@ -7,7 +7,7 @@
 
 #region Script logic
 # Create target folder
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Download and unpack
@@ -29,9 +29,9 @@ try {
                 $params = @{
                     FilePath     = $installer.FullName
                     ArgumentList = "/install /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftFSLogixApps.log`""
-                    NoNewWindow  = $True
-                    Wait         = $True
-                    PassThru     = $False
+                    NoNewWindow  = $true
+                    Wait         = $true
+                    PassThru     = $false
                 }
                 $result = Start-Process @params
             }

@@ -6,7 +6,7 @@
 
 #region Script logic
 # Create target folder
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Run tasks/install apps
 #region RTC service
@@ -19,9 +19,9 @@ try {
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftWvdRtcService.log`""
-        NoNewWindow  = $True
-        Wait         = $True
-        PassThru     = $False
+        NoNewWindow  = $true
+        Wait         = $true
+        PassThru     = $false
     }
     $result = Start-Process @params
 }
@@ -40,9 +40,9 @@ $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction 
 $params = @{
     FilePath     = "$env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" /quiet `"$env:ProgramData\NerdioManager\Logs\MicrosoftWvdBootLoader.log`""
-    NoNewWindow  = $True
-    Wait         = $True
-    PassThru     = $False
+    NoNewWindow  = $true
+    Wait         = $true
+    PassThru     = $false
 }
 $params
 Start-Process @params
@@ -61,9 +61,9 @@ $OutFile = Save-EvergreenApp -InputObject $App -Path $Path -WarningAction "Silen
 $params = @{
     FilePath     = "$env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package $($OutFile.FullName) /quiet `"$env:ProgramData\NerdioManager\Logs\MicrosoftWvdInfraAgent.log`""
-    NoNewWindow  = $True
-    Wait         = $True
-    PassThru     = $False
+    NoNewWindow  = $true
+    Wait         = $true
+    PassThru     = $false
 }
 Start-Process @params
 }

@@ -23,19 +23,6 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
 
         try {
             $params = @{
-                Name                   = "EnhancedStorage", "PowerShell-ISE"
-                IncludeManagementTools = $true
-                WarningAction          = "SilentlyContinue"
-                ErrorAction            = "SilentlyContinue"
-            }
-            Uninstall-WindowsFeature @params
-        }
-        catch {
-            $_.Exception.Message
-        }
-
-        try {
-            $params = @{
                 Name          = "RDS-RD-Server", "Server-Media-Foundation", "Search-Service", "NET-Framework-Core", "Remote-Assistance"
                 WarningAction = "SilentlyContinue"
                 ErrorAction   = "SilentlyContinue"
@@ -43,7 +30,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             Install-WindowsFeature @params
         }
         catch {
-            throw $_.Exception.Message
+            $_.Exception.Message
         }
 
         # Enable services
@@ -59,7 +46,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
                     Set-Service @params
                 }
                 catch {
-                    throw $_.Exception.Message
+                    $_.Exception.Message
                 }
             }
         }
@@ -69,11 +56,10 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     #endregion
 
     #region Windows 11
-    "Microsoft Windows 11* Enterprise for Virtual Desktops|Microsoft Windows 11* Enterprise|Microsoft Windows 11*" {
+    "Microsoft Windows 11 Enterprise*" {
         try {
             $params = @{
-                FeatureName   = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client", `
-                    "WindowsMediaPlayer", "MicrosoftWindowsPowerShellV2Root", "MicrosoftWindowsPowerShellV2"
+                FeatureName   = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client", "MicrosoftWindowsPowerShellV2Root", "MicrosoftWindowsPowerShellV2"
                 Online        = $true
                 NoRestart     = $true
                 WarningAction = "SilentlyContinue"
@@ -82,7 +68,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             Disable-WindowsOptionalFeature @params
         }
         catch {
-            throw $_.Exception.Message
+            $_.Exception.Message
         }
 
         break
@@ -90,7 +76,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     #endregion
 
     #region Windows 10
-    "Microsoft Windows 10* Enterprise for Virtual Desktops|Microsoft Windows 10* Enterprise|Microsoft Windows 10*" {
+    "Microsoft Windows 10 Enterprise*" {
         try {
             $params = @{
                 FeatureName   = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client", `
@@ -104,7 +90,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             Disable-WindowsOptionalFeature @params
         }
         catch {
-            throw $_.Exception.Message
+            $_.Exception.Message
         }
 
         try {
@@ -119,7 +105,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             Uninstall-WindowsFeature @params
         }
         catch {
-            throw $_.Exception.Message
+            $_.Exception.Message
         }
 
         break

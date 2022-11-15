@@ -25,7 +25,7 @@ foreach ($module in "Evergreen", "VcRedist", "PSWindowsUpdate") {
         Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | `
         Select-Object -First 1
     $publishedModule = Find-Module -Name $module -ErrorAction "SilentlyContinue"
-    if (($Null -eq $installedModule) -or ([System.Version]$publishedModule.Version -gt [System.Version]$installedModule.Version)) {
+    if (($null -eq $installedModule) -or ([System.Version]$publishedModule.Version -gt [System.Version]$installedModule.Version)) {
         try {
             $params = @{
                 Name               = $module

@@ -13,7 +13,8 @@ else {
 }
 
 #region Script logic
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
 try {
     $Installer = Get-EvergreenApp -Name "stealthpuppyWindowsCustomisedDefaults" | Where-Object { $_.Type -eq "zip" } | `
         Select-Object -First 1 | `
@@ -23,7 +24,7 @@ try {
     .\Install-Defaults.ps1 -Language $Language
 }
 catch {
-    throw "$($Script.FullName) error with: $($_.Exception.Message)."
+    throw $_.Exception.Message
 }
 finally {
     Pop-Location

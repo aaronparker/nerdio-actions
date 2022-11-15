@@ -6,7 +6,7 @@
 
 #region Script logic
 # Create target folder
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Download
@@ -24,9 +24,9 @@ try {
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package $($OutFile.FullName) /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftEdge.log`""
-        NoNewWindow  = $True
-        Wait         = $True
-        PassThru     = $False
+        NoNewWindow  = $true
+        Wait         = $true
+        PassThru     = $false
     }
     $result = Start-Process @params
 }
@@ -38,22 +38,22 @@ try {
     # Post install configuration
     $prefs = @{
         "homepage"               = "https://www.office.com"
-        "homepage_is_newtabpage" = $False
+        "homepage_is_newtabpage" = $false
         "browser"                = @{
-            "show_home_button" = $True
+            "show_home_button" = $true
         }
         "distribution"           = @{
-            "skip_first_run_ui"              = $True
-            "show_welcome_page"              = $False
-            "import_search_engine"           = $False
-            "import_history"                 = $False
-            "do_not_create_any_shortcuts"    = $False
-            "do_not_create_taskbar_shortcut" = $False
-            "do_not_create_desktop_shortcut" = $True
-            "do_not_launch_chrome"           = $True
-            "make_chrome_default"            = $True
-            "make_chrome_default_for_user"   = $True
-            "system_level"                   = $True
+            "skip_first_run_ui"              = $true
+            "show_welcome_page"              = $false
+            "import_search_engine"           = $false
+            "import_history"                 = $false
+            "do_not_create_any_shortcuts"    = $false
+            "do_not_create_taskbar_shortcut" = $false
+            "do_not_create_desktop_shortcut" = $true
+            "do_not_launch_chrome"           = $true
+            "make_chrome_default"            = $true
+            "make_chrome_default_for_user"   = $true
+            "system_level"                   = $true
         }
     }
     $prefs | ConvertTo-Json | Set-Content -Path "${Env:ProgramFiles(x86)}\Microsoft\Edge\Application\master_preferences" -Force -Encoding "utf8"

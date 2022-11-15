@@ -6,7 +6,7 @@
 
 #region Script logic
 # Create target folder
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Run tasks/install apps
@@ -18,10 +18,10 @@ try {
     # Install
     $params = @{
         FilePath     = $OutFile.FullName
-        ArgumentList = "/silent /ALLUSERS /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftOneDrive.log`""
-        NoNewWindow  = $True
-        Wait         = $False
-        PassThru     = $False
+        ArgumentList = "/silent /allusers"
+        NoNewWindow  = $true
+        Wait         = $false
+        PassThru     = $false
     }
     $result = Start-Process @params
     do {

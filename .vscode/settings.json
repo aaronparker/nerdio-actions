@@ -3,11 +3,14 @@
         "ALLUSER",
         "Audiosrv",
         "AUTOACTIVATE",
+        "CHROMEEXT",
+        "DISABLEDESKTOPSHORTCUT",
         "DONOTCREATEDESKTOPSHORTCUT",
         "DWORD",
         "Hotfixes",
         "Lync",
         "Nerdio",
+        "THUMBNAILPREVIEW",
         "windowsdesktop"
     ]
 }

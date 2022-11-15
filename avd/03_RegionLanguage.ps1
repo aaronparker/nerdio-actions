@@ -2,51 +2,58 @@
 #execution mode: Combined
 #tags: Language
 
-# Use variables in Nerdio Manager to pass a system language
-if ($null -eq $SecureVars.OSLanguage) {
-    [System.String] $Language = "en-AU"
-}
-else {
-    [System.String] $Language = $SecureVars.OSLanguage
-}
+# Only run if the LanguagePackManagement module is installed
+if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
 
-try {
-    $params = @{
-        Language        = $Language
-        CopyToSettings  = $True
-        ExcludeFeatures = $False
+    # Use variables in Nerdio Manager to pass a system language
+    if ($null -eq $SecureVars.OSLanguage) {
+        [System.String] $Language = "en-AU"
     }
-    if ($PSCmdlet.ShouldProcess($Language, "Install-Language")) {
-        Install-Language @params | Out-Null
+    else {
+        [System.String] $Language = $SecureVars.OSLanguage
     }
-}
-catch {
-    throw $_.Exception.Message
-}
 
-try {
-    $params = @{
-        Language = $Language
-        PassThru = $False
+    try {
+        $params = @{
+            Language        = $Language
+            CopyToSettings  = $true
+            ExcludeFeatures = $false
+        }
+        if ($PSCmdlet.ShouldProcess($Language, "Install-Language")) {
+            Install-Language @params | Out-Null
+        }
     }
-    if ($PSCmdlet.ShouldProcess($Language, "Set-SystemPreferredUILanguage")) {
-        Set-SystemPreferredUILanguage @params
+    catch {
+        throw $_.Exception.Message
     }
-}
-catch {
-    throw $_.Exception.Message
-}
 
-try {
-    $GeoId = @{
-        "en-US" = 244
-        "en-GB" = 242
-        "en-AU" = 12
+    try {
+        $params = @{
+            Language = $Language
+            PassThru = $false
+        }
+        if ($PSCmdlet.ShouldProcess($Language, "Set-SystemPreferredUILanguage")) {
+            Set-SystemPreferredUILanguage @params
+        }
     }
-    Import-Module -Name "International"
-    Set-WinSystemLocale -SystemLocale $Language
-    Set-WinHomeLocation -GeoId $GeoId.$Language
-}
-catch {
-    throw $_.Exception.Message
+    catch {
+        throw $_.Exception.Message
+    }
+
+    try {
+        $GeoId = @{
+            "en-US" = 244
+            "en-GB" = 242
+            "en-AU" = 12
+            "en-NZ" = 183
+            "en-CA" = 39
+            "ph-PH" = 201
+        }
+        Import-Module -Name "International"
+        Set-WinSystemLocale -SystemLocale $Language
+        Set-WinHomeLocation -GeoId $GeoId.$Language
+    }
+    catch {
+        throw $_.Exception.Message
+    }
 }

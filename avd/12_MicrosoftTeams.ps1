@@ -6,7 +6,7 @@
 
 #region Script logic
 # Create target folder
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Run tasks/install apps
@@ -15,15 +15,15 @@ try {
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
     # Install
-    REG add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f 2> $Null
-    REG add "HKLM\SOFTWARE\Citrix\PortICA" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f 2> $Null
+    reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f | Out-Null
+    reg add "HKLM\SOFTWARE\Citrix\PortICA" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f | Out-Null
 
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package $($OutFile.FullName) OPTIONS=`"noAutoStart=true`" ALLUSER=1 ALLUSERS=1 /quiet /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftTeams.log`""
-        NoNewWindow  = $True
-        Wait         = $True
-        PassThru     = $False
+        NoNewWindow  = $true
+        Wait         = $true
+        PassThru     = $false
     }
     $result = Start-Process @params
 
@@ -46,7 +46,7 @@ try {
     }
 
     # Delete the registry auto-start
-    REG delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" /v "Teams" /f 2> $Null
+    reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" /v "Teams" /f | Out-Null
 }
 catch {
     throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"

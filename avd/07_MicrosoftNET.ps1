@@ -6,7 +6,7 @@
 
 #region Script logic
 # Create target folder
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" > $Null
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Download
@@ -17,9 +17,9 @@ try {
         $params = @{
             FilePath     = $file.FullName
             ArgumentList = "/install /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\Microsoft.NET.log`""
-            NoNewWindow  = $True
-            PassThru     = $False
-            Wait         = $True
+            NoNewWindow  = $true
+            PassThru     = $false
+            Wait         = $true
         }
         $result = Start-Process @params
     }
