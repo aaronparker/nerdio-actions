@@ -34,8 +34,8 @@ jobs:
           #Write-Host "Run: 03_RegionLanguage.ps1"
           #.\03_RegionLanguage.ps1
 
-          Write-Host "Run: 04_Rds-Roles.ps1"
-          .\04_Rds-Roles.ps1
+          Write-Host "04_RolesFeatures.ps1"
+          .\04_RolesFeatures.ps1
 
           Write-Host "Run: 05_Customise.ps1"
           .\05_Customise.ps1
@@ -59,14 +59,14 @@ jobs:
           Write-Host "Run: 10_Microsoft365Apps.ps1"
           .\10_Microsoft365Apps.ps1
 
-          Write-Host "Run: 11_MicrosoftTeams.ps1"
-          .\11_MicrosoftTeams.ps1
+          Write-Host "Run: 11_MicrosoftOneDrive.ps1"
+          .\11_MicrosoftOneDrive.ps1
 
-          Write-Host "Run: 12_MicrosoftOneDrive.ps1"
-          .\12_MicrosoftOneDrive.ps1
+          Write-Host "Run: 12_MicrosoftTeams.ps1"
+          .\12_MicrosoftTeams.ps1
 
-          #Write-Host "Run: 14_Avd-Agents.ps1"
-          #.\14_Avd-Agents.ps1
+          #Write-Host "Run: 13_Avd-Agents.ps1"
+          #.\13_Avd-Agents.ps1
 
           Write-Host "Run: 39_AdobeAcrobatReaderDC.ps1"
           .\39_AdobeAcrobatReaderDC.ps1
@@ -75,8 +75,8 @@ jobs:
         shell: powershell
         working-directory: "${{ github.workspace }}\\avd"
         run: |
-          Write-Host "Run: 98_FinaliseImage.ps1"
-          .\98_FinaliseImage.ps1
+          Write-Host "Run: 99_FinaliseImage.ps1"
+          .\99_FinaliseImage.ps1
 
       - name: List installed apps
         shell: powershell
