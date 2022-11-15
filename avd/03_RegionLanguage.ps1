@@ -19,9 +19,7 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
             CopyToSettings  = $true
             ExcludeFeatures = $false
         }
-        if ($PSCmdlet.ShouldProcess($Language, "Install-Language")) {
-            Install-Language @params | Out-Null
-        }
+        Install-Language @params | Out-Null
     }
     catch {
         throw $_.Exception.Message
@@ -32,9 +30,7 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
             Language = $Language
             PassThru = $false
         }
-        if ($PSCmdlet.ShouldProcess($Language, "Set-SystemPreferredUILanguage")) {
-            Set-SystemPreferredUILanguage @params
-        }
+        Set-SystemPreferredUILanguage @params
     }
     catch {
         throw $_.Exception.Message
