@@ -1,4 +1,4 @@
-#description: Installs the latest Microsoft Teams for use on Windows 10/11 multi-session or Windows Server
+#description: Installs the latest Microsoft Teams per-machine for use on Windows 10/11 multi-session or Windows Server
 #execution mode: Combined
 #tags: Evergreen, Teams
 #Requires -Modules Evergreen
@@ -9,12 +9,35 @@
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
-    # Run tasks/install apps
+    # Download Teams
     Import-Module -Name "Evergreen" -Force
     $App = Get-EvergreenApp -Name "MicrosoftTeams" | Where-Object { $_.Architecture -eq "x64" -and $_.Ring -eq "General" -and $_.Type -eq "msi" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+}
+catch {
+    throw $_
+}
 
-    # Install
+try {
+    # Uninstall the existing Teams
+    $TeamsExe = "${env:ProgramFiles(x86)}\Microsoft\Teams\current\Teams.exe"
+    if (Test-Path -Path $TeamsExe) {
+        $params = @{
+            FilePath     = "$env:SystemRoot\System32\msiexec.exe"
+            ArgumentList = "/x $($OutFile.FullName) /quiet /log `"$env:ProgramData\NerdioManager\Logs\UninstallMicrosoftTeams.log`""
+            NoNewWindow  = $true
+            Wait         = $true
+            PassThru     = $false
+        }
+        $result = Start-Process @params
+    }
+}
+catch {
+    throw $_
+}
+
+try {    
+    # Install Teams
     reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f | Out-Null
     reg add "HKLM\SOFTWARE\Citrix\PortICA" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f | Out-Null
 
