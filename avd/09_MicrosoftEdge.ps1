@@ -1,4 +1,4 @@
-#description: Installs the latest Microsoft Edge
+#description: Installs the latest Microsoft Edge and Microsoft Edge WebView2
 #execution mode: Combined
 #tags: Evergreen, Edge
 #Requires -Modules Evergreen
@@ -8,6 +8,7 @@
 # Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
+#region Edge
 try {
     # Download
     Import-Module -Name "Evergreen" -Force
@@ -61,5 +62,33 @@ try {
 }
 catch {
     throw $_.Exception.Message
+}
+#endregion
+
+#region Edge WebView2
+try {
+    # Download
+    Import-Module -Name "Evergreen" -Force
+    $App = Get-EvergreenApp -Name "MicrosoftEdgeWebView2" | Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Stable" } `
+    | Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1
+    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+}
+catch {
+    throw $_.Exception.Message
+}
+
+try {
+    # Install
+    $params = @{
+        FilePath     = $OutFile.FullName
+        ArgumentList = "/silent /install"
+        NoNewWindow  = $true
+        Wait         = $true
+        PassThru     = $false
+    }
+    $result = Start-Process @params
+}
+catch {
+    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
 }
 #endregion
