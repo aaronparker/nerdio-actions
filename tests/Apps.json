@@ -50,11 +50,6 @@
         "Installed": "Teams Machine-Wide Installer"
     },
     {
-        "Name": "MicrosoftWvdRtcService",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftWvdRtcService\" | Select-Object -First 1",
-        "Installed": "Remote Desktop WebRTC Redirector Service"
-    },
-    {
         "Name": "Microsoft365Apps",
         "Filter": "Get-EvergreenApp -Name \"Microsoft365Apps\" | Where-Object { $_.Channel -eq \"MonthlyEnterprise\" } | Select-Object -First 1",
         "Installed": "Microsoft 365 Apps for enterprise"
