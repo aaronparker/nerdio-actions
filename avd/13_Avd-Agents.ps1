@@ -14,7 +14,12 @@ try {
     Import-Module -Name "Evergreen" -Force
     $App = Get-EvergreenApp -Name "MicrosoftWvdRtcService" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+}
+catch {
+    throw $_
+}
 
+try {
     # Install RTC
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
@@ -35,7 +40,12 @@ try {
     Import-Module -Name "Evergreen" -Force
     $App = Get-EvergreenApp -Name "MicrosoftWvdMultimediaRedirection" | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+}
+catch {
+    throw $_
+}
 
+try {
     # Install MMR
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"

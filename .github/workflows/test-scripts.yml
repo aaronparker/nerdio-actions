@@ -68,8 +68,8 @@ jobs:
           Write-Host "Run: 12_MicrosoftTeams.ps1"
           .\12_MicrosoftTeams.ps1
 
-          #Write-Host "Run: 13_Avd-Agents.ps1"
-          #.\13_Avd-Agents.ps1
+          Write-Host "Run: 13_Avd-Agents.ps1"
+          .\13_Avd-Agents.ps1
 
           Write-Host "Run: 39_AdobeAcrobatReaderDC.ps1"
           .\39_AdobeAcrobatReaderDC.ps1
