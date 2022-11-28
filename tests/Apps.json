@@ -1,0 +1,37 @@
+[
+    {
+        "Name": "MicrosoftFSLogixApps",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftFSLogixApps\" | Where-Object { $_.Channel -eq \"Production\" } | Select-Object -First 1",
+        "Installed": "Microsoft FSLogix Apps"
+    },
+    {
+        "Name": "MicrosoftFSLogixAppsRuleEditor",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftFSLogixApps\" | Where-Object { $_.Channel -eq \"Production\" } | Select-Object -First 1",
+        "Installed": "Microsoft FSLogix Apps RuleEditor"
+    },
+    {
+        "Name": "MicrosoftEdge",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftEdge\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"Stable\" -and $_.Release -eq \"Enterprise\" } | Sort-Object -Property \"Version\" -Descending | Select-Object -First 1",
+        "Installed": "Microsoft Edge"
+    },
+    {
+        "Name": "MicrosoftOneDrive",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftOneDrive\" | Where-Object { $_.Ring -eq \"Production\" -and $_.Type -eq \"Exe\" -and $_.Architecture -eq \"AMD64\" } | Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1",
+        "Installed": "Microsoft OneDrive"
+    },
+    {
+        "Name": "MicrosoftTeams",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftTeams\" | Where-Object { $_.Ring -eq \"General\" -and $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "Teams Machine-Wide Installer"
+    },
+    {
+        "Name": "Microsoft365Apps",
+        "Filter": "Get-EvergreenApp -Name \"Microsoft365Apps\" | Where-Object { $_.Channel -eq \"Current\" } | Select-Object -First 1",
+        "Installed": "Office 16 Click-to-Run Licensing Component"
+    },
+    {
+        "Name": "AdobeAcrobatReaderDC",
+        "Filter": "Get-EvergreenApp -Name \"AdobeAcrobatReaderDC\" | Where-Object { $_.Language -eq \"English\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Installed": "Adobe Acrobat DC (64-bit)"
+    }
+]
