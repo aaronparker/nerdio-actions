@@ -98,7 +98,7 @@ jobs:
           $Config.CodeCoverage.Enabled = $false
           $Config.TestResult.Enabled = $true
           $Config.TestResult.OutputFormat = "NUnitXml"
-          $Config.TestResult.OutputPath = ".\tests\TestResults.xml""
+          $Config.TestResult.OutputPath = ".\tests\TestResults.xml"
           Invoke-Pester -Configuration $Config
 
       # Upload test results
