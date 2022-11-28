@@ -1,4 +1,4 @@
-name: Test AVD image scripts
+name: 'Test AVD image scripts'
 
 on:
   workflow_dispatch:
@@ -91,13 +91,25 @@ jobs:
         shell: powershell
         working-directory: "${{ github.workspace }}"
         run: |
-          .\tests\Run.ps1
+          .\tests\Install-Pester.ps1
+          $Config = [PesterConfiguration]::Default
+          $Config.Run.Path = ".\tests"
+          $Config.Run.PassThru = $true
+          $Config.CodeCoverage.Enabled = $false
+          $Config.TestResult.Enabled = $true
+          $Config.TestResult.OutputFormat = "NUnitXml"
+          $Config.TestResult.OutputPath = ".\tests\TestResults.xml""
+          Invoke-Pester -Configuration $Config
 
-      - name: Report tests
-        id: report-tests
-        uses: zyborg/pester-tests-report@v1
+      # Upload test results
+      - uses: actions/upload-artifact@v2
         with:
-          test_results_path: "${{ github.workspace }}\\tests\\TestResults.xml"
-          report_name: script-tests
-          report_title: Script Tests
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          name: test-results
+          path: "${{ github.workspace }}\\tests\\TestResults.xml"
+
+      # Publish test results
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        if: always()
+        with:
+          nunit_files: "${{ github.workspace }}\\tests\\TestResults.xml"

@@ -36,23 +36,3 @@ foreach ($module in "Pester") {
         }
     }
 }
-
-# Pester
-Import-Module -Name "Pester" -Force
-if ([System.String]::IsNullOrWhiteSpace($env:GITHUB_WORKSPACE)) {
-    $Path = $PWD.Path
-}
-else {
-    $Path = $env:GITHUB_WORKSPACE
-}
-$TestResults = "$Path\tests\TestResults.xml"
-
-# Invoke Pester tests
-$Config = [PesterConfiguration]::Default
-$Config.Run.Path = ".\tests"
-$Config.Run.PassThru = $true
-$Config.CodeCoverage.Enabled = $false
-$Config.TestResult.Enabled = $true
-$Config.TestResult.OutputFormat = "NUnitXml"
-$Config.TestResult.OutputPath = $TestResults
-Invoke-Pester -Configuration $Config
