@@ -12,8 +12,14 @@ name: PSScriptAnalyzer
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'avd/*.ps1'
+      - 'tests/*.ps1'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'avd/*.ps1'
+      - 'tests/*.ps1'
   schedule:
     - cron: '25 4 * * 4'
 
