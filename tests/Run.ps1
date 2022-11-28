@@ -39,7 +39,13 @@ foreach ($module in "Pester") {
 
 # Pester
 Import-Module -Name "Pester" -Force
-$TestResults = "$projectRoot\tests\TestResults.xml"
+if ([System.String]::IsNullOrWhiteSpace($env:GITHUB_WORKSPACE)) {
+    $Path = $PWD.Path
+}
+else {
+    $Path = $env:GITHUB_WORKSPACE
+}
+$TestResults = "$Path\tests\TestResults.xml"
 
 # Invoke Pester tests
 $Config = [PesterConfiguration]::Default
