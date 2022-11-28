@@ -10,9 +10,34 @@
         "Installed": "Microsoft FSLogix Apps RuleEditor"
     },
     {
+        "Name": "Microsoft.NET",
+        "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"LTS\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Installed": "Microsoft Windows Desktop Runtime - 6"
+    },
+    {
+        "Name": "Microsoft.NET",
+        "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"Current\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Installed": "Microsoft Windows Desktop Runtime - 7"
+    },
+    {
+        "Name": "MicrosoftVcRedist2022x64",
+        "Filter": "Get-VcList -Release \"2022\" -Architecture \"x64\"",
+        "Installed": "Microsoft Visual C.*2015-2022 Redistributable.*x64"
+    },
+    {
+        "Name": "MicrosoftVcRedist2022x86",
+        "Filter": "Get-VcList -Release \"2022\" -Architecture \"x86\"",
+        "Installed": "Microsoft Visual C.*2015-2022 Redistributable.*x86"
+    },
+    {
         "Name": "MicrosoftEdge",
         "Filter": "Get-EvergreenApp -Name \"MicrosoftEdge\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"Stable\" -and $_.Release -eq \"Enterprise\" } | Sort-Object -Property \"Version\" -Descending | Select-Object -First 1",
-        "Installed": "Microsoft Edge"
+        "Installed": "(^Microsoft Edge$)"
+    },
+    {
+        "Name": "MicrosoftEdgeWebView2Runtime",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftEdgeWebView2Runtime\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"Stable\" } | Sort-Object -Property \"Version\" -Descending | Select-Object -First 1",
+        "Installed": "Microsoft Edge WebView2 Runtime"
     },
     {
         "Name": "MicrosoftOneDrive",
@@ -25,13 +50,18 @@
         "Installed": "Teams Machine-Wide Installer"
     },
     {
+        "Name": "MicrosoftWvdRtcService",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftWvdRtcService\" | Select-Object -First 1",
+        "Installed": "Remote Desktop WebRTC Redirector Service"
+    },
+    {
         "Name": "Microsoft365Apps",
-        "Filter": "Get-EvergreenApp -Name \"Microsoft365Apps\" | Where-Object { $_.Channel -eq \"Current\" } | Select-Object -First 1",
-        "Installed": "Office 16 Click-to-Run Licensing Component"
+        "Filter": "Get-EvergreenApp -Name \"Microsoft365Apps\" | Where-Object { $_.Channel -eq \"MonthlyEnterprise\" } | Select-Object -First 1",
+        "Installed": "Microsoft 365 Apps for enterprise"
     },
     {
         "Name": "AdobeAcrobatReaderDC",
-        "Filter": "Get-EvergreenApp -Name \"AdobeAcrobatReaderDC\" | Where-Object { $_.Language -eq \"English\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
-        "Installed": "Adobe Acrobat DC (64-bit)"
+        "Filter": "Get-EvergreenApp -Name \"AdobeAcrobatReaderDC\" | Where-Object { $_.Language -eq \"MUI\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Installed": "Adobe Acrobat.*64-bit"
     }
 ]

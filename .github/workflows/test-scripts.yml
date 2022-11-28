@@ -86,3 +86,9 @@ jobs:
         working-directory: "${{ github.workspace }}\\support"
         run: |
           .\Get-Installed.ps1
+
+      - name: Test with Pester
+        shell: powershell
+        working-directory: "${{ github.workspace }}"
+        run: |
+          .\tests\Run.ps1

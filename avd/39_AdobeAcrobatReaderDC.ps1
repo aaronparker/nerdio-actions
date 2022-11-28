@@ -3,9 +3,7 @@
 #tags: Evergreen, Adobe
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Adobe\AcrobatReaderDC"
-
 [System.String] $Architecture = "x64"
-
 [System.String] $Language = "MUI"
 
 #region Script logic
@@ -21,7 +19,12 @@ try {
     $Reader = Get-EvergreenApp -Name "AdobeAcrobatReaderDC" | Where-Object { $_.Language -eq $Language -and $_.Architecture -eq $Architecture } | `
         Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $Reader -CustomPath $Path -WarningAction "SilentlyContinue"
+}
+catch {
+    throw $_
+}
 
+try {
     # Install Adobe Acrobat Reader
     $ArgumentList = "-sfx_nu /sALL /rps /l /msi EULA_ACCEPT=YES ENABLE_CHROMEEXT=0 DISABLE_BROWSER_INTEGRATION=1 ENABLE_OPTIMIZATION=YES ADD_THUMBNAILPREVIEW=0 DISABLEDESKTOPSHORTCUT=1 /log `"$env:ProgramData\NerdioManager\Logs\AdobeAcrobatReaderDC.log`""
     $params = @{
