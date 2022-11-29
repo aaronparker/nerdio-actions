@@ -11,6 +11,12 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 try {
     Import-Module -Name "VcRedist" -Force
     Save-VcRedist -VcList (Get-VcList) -Path $Path | Out-Null
+}
+catch {
+    throw $_
+}
+
+try {
     Install-VcRedist -VcList (Get-VcList) -Path $Path -Silent | Out-Null
 }
 catch {

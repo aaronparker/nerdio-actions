@@ -36,7 +36,7 @@ try {
     }
 }
 catch {
-    throw $_
+    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
 }
 
 try {
@@ -44,39 +44,46 @@ try {
         # Teams is installed
     }
     else {
-        # Install Teams
-        reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f | Out-Null
-        reg add "HKLM\SOFTWARE\Citrix\PortICA" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f | Out-Null
+        try {
+            # Install Teams
+            reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f | Out-Null
+            reg add "HKLM\SOFTWARE\Citrix\PortICA" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f | Out-Null
 
-        $params = @{
-            FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-            ArgumentList = "/package $($OutFile.FullName) OPTIONS=`"noAutoStart=true`" ALLUSER=1 ALLUSERS=1 /quiet /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftTeams.log`""
-            NoNewWindow  = $true
-            Wait         = $true
-            PassThru     = $false
+            $params = @{
+                FilePath     = "$env:SystemRoot\System32\msiexec.exe"
+                ArgumentList = "/package $($OutFile.FullName) OPTIONS=`"noAutoStart=true`" ALLUSER=1 ALLUSERS=1 /quiet /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftTeams.log`""
+                NoNewWindow  = $true
+                Wait         = $true
+                PassThru     = $false
+            }
+            $result = Start-Process @params
         }
-        $result = Start-Process @params
+        catch {
+            throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+        }
+    }
 
-        # Teams JSON files
-        $ConfigFiles = @((Join-Path -Path "${env:ProgramFiles(x86)}\Teams Installer" -ChildPath "setup.json"),
-    (Join-Path -Path "${env:ProgramFiles(x86)}\Microsoft\Teams" -ChildPath "setup.json"))
-
-        # Read the file and convert from JSON
-        foreach ($Path in $ConfigFiles) {
-            if (Test-Path -Path $Path) {
-                try {
+    if (Test-Path -Path $TeamsExe) {
+        # Teams is installed
+    }
+    else {
+        try {
+            # Teams JSON files; Read the file and convert from JSON
+            $ConfigFiles = @((Join-Path -Path "${env:ProgramFiles(x86)}\Teams Installer" -ChildPath "setup.json"), (Join-Path -Path "${env:ProgramFiles(x86)}\Microsoft\Teams" -ChildPath "setup.json"))
+            foreach ($Path in $ConfigFiles) {
+                if (Test-Path -Path $Path) {
                     $Json = Get-Content -Path $Path | ConvertFrom-Json
                     $Json.noAutoStart = $true
                     $Json | ConvertTo-Json | Set-Content -Path $Path -Force
                 }
-                catch {
-                    Write-Warning -Message "`tERR: Failed to set Teams autostart file: $Path."
-                }
             }
-        }
 
-        # Delete the registry auto-start
-        reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" /v "Teams" /f | Out-Null
+            # Delete the registry auto-start
+            reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" /v "Teams" /f | Out-Null
+        }
+        catch {
+            throw $_.Exception.Message
+        }
     }
 }
 catch {

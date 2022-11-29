@@ -17,7 +17,7 @@ try {
     Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 try {

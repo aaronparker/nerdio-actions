@@ -3,10 +3,11 @@
 #tags: Image
 [System.String] $Path = "$env:SystemDrive\Apps"
 
-# Re-enable Defender
 try {
+    # Re-enable Defender
     Set-MpPreference -DisableRealtimeMonitoring $false
 
+    # Remove policies
     reg delete HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableWindowsConsumerFeatures /f
     reg delete HKLM\Software\Policies\Microsoft\WindowsStore /v AutoDownload /f
 

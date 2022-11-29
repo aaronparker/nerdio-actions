@@ -8,16 +8,9 @@ on:
   schedule:
     - cron: '0 1 15 * *' #Run on the 15th of each month
 
-# permissions:
-#   checks: write
-#   pull-requests: write
-
 jobs:
-  build:
-    # permissions:
-    #   contents: read # for actions/checkout to fetch code
-
-    name: Test
+  test:
+    name: Tests
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -104,14 +97,15 @@ jobs:
           Invoke-Pester -Configuration $Config
 
       # Upload test results
-      - uses: actions/upload-artifact@v3
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
         with:
           name: test-results
           path: "${{ github.workspace }}\\tests\\TestResults.xml"
 
       # Publish test results
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action/composite@v3
         if: always()
         with:
           nunit_files: "${{ github.workspace }}\\tests\\TestResults.xml"
