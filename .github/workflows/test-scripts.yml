@@ -98,14 +98,14 @@ jobs:
 
       # Upload test results
       - name: Upload test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: "${{ github.workspace }}\\tests\\TestResults.xml"
 
       # Publish test results
       - name: Publish test results
-        uses: EnricoMi/publish-unit-test-result-action/composite@v3
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always()
         with:
           nunit_files: "${{ github.workspace }}\\tests\\TestResults.xml"
