@@ -23,7 +23,7 @@ try {
     # Uninstall the existing Teams
     if (Test-Path -Path $TeamsExe) {
         $File = Get-ChildItem -Path $TeamsExe
-        if ([System.Version]$File.VersionInfo.ProductVersion -lt [System.Version]$App.Version) {
+        if ([System.Version]$File.VersionInfo.ProductVersion -le [System.Version]$App.Version) {
             $params = @{
                 FilePath     = "$env:SystemRoot\System32\msiexec.exe"
                 ArgumentList = "/x $($OutFile.FullName) /quiet /log `"$env:ProgramData\NerdioManager\Logs\UninstallMicrosoftTeams.log`""
@@ -32,6 +32,11 @@ try {
                 PassThru     = $false
             }
             $result = Start-Process @params
+
+            $Folders = "${env:ProgramFiles(x86)}\Microsoft\Teams", `
+                "${env:ProgramFiles(x86)}\Microsoft\TeamsMeetingAddin", `
+                "${env:ProgramFiles(x86)}\Microsoft\TeamsPresenceAddin"
+            Remove-Item -Path $Folders -Recurse -Force -ErrorAction "Ignore"
         }
     }
 }
@@ -47,8 +52,6 @@ try {
         try {
             # Install Teams
             reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f | Out-Null
-            reg add "HKLM\SOFTWARE\Citrix\PortICA" /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f | Out-Null
-
             $params = @{
                 FilePath     = "$env:SystemRoot\System32\msiexec.exe"
                 ArgumentList = "/package $($OutFile.FullName) OPTIONS=`"noAutoStart=true`" ALLUSER=1 ALLUSERS=1 /quiet /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftTeams.log`""
