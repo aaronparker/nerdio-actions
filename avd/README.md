@@ -13,9 +13,9 @@ Scripts for customising Windows 10/11 Enterprise and Enterprise multi-session im
 * `08_MicrosoftNET.ps1` - Installs the Microsoft .NET Windows Desktop Runtime
 * `09_MicrosoftFSLogixApps.ps1` - Install the Microsoft FSLogix Apps agent
 * `10_MicrosoftEdge.ps1` - Installs Microsoft Edge - not required for Windows 10 2004+
-* `12_Microsoft365Apps.ps1` - Installs the Microsoft 365 Apps (includes an embedded configuration.xml)
-* `13_MicrosoftOneDrive.ps1` - Installs Microsoft OneDrive per-machine
-* `14_MicrosoftTeams.ps1` - Installs Microsoft Teams per-machine
+* `11_MicrosoftOneDrive.ps1` - Installs Microsoft OneDrive per-machine
+* `12_MicrosoftTeams.ps1` - Installs Microsoft Teams per-machine
+* `20_Microsoft365Apps.ps1` - Installs the Microsoft 365 Apps (includes an embedded configuration.xml)
 * `39_AdobeAcrobatReaderDC.ps1` - Installs Adobe Acrobat Reader DC MUI 64-bit
 * `99_FinaliseImage.ps1` - Finalises the image post install and update
 

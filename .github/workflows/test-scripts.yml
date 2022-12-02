@@ -56,14 +56,14 @@ jobs:
           Write-Host "Run: 09_MicrosoftEdge.ps1"
           .\10_MicrosoftEdge.ps1
 
-          Write-Host "Run: 10_Microsoft365Apps.ps1"
-          .\11_Microsoft365Apps.ps1
-
           Write-Host "Run: 11_MicrosoftOneDrive.ps1"
-          .\12_MicrosoftOneDrive.ps1
+          .\11_MicrosoftOneDrive.ps1
 
           Write-Host "Run: 12_MicrosoftTeams.ps1"
-          .\13_MicrosoftTeams.ps1
+          .\12_MicrosoftTeams.ps1
+
+          Write-Host "Run: 10_Microsoft365Apps.ps1"
+          .\20_Microsoft365Apps.ps1
 
       - name: Run third script batch
         shell: powershell
