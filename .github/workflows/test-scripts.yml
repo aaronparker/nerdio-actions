@@ -29,7 +29,7 @@ jobs:
           #.\02_WindowsUpdate.ps1
 
           #Write-Host "Run: 03_RegionLanguage.ps1"
-          #.\03_RegionLanguage.ps1
+          .\03_RegionLanguage.ps1
 
           Write-Host "04_RolesFeatures.ps1"
           .\04_RolesFeatures.ps1
@@ -44,34 +44,34 @@ jobs:
           Write-Host "Run: 06_MicrosoftVcRedists.ps1"
           .\06_MicrosoftVcRedists.ps1
 
-          Write-Host "Run: 07_MicrosoftNET.ps1"
-          .\07_MicrosoftNET.ps1
+          #Write-Host "Run: 13_Avd-Agents.ps1"
+          #.\07_Avd-Agents.ps1
 
           Write-Host "Run: 08_MicrosoftFSLogixApps.ps1"
           .\08_MicrosoftFSLogixApps.ps1
 
+          Write-Host "Run: 07_MicrosoftNET.ps1"
+          .\09_MicrosoftNET.ps1
+
           Write-Host "Run: 09_MicrosoftEdge.ps1"
-          .\09_MicrosoftEdge.ps1
+          .\10_MicrosoftEdge.ps1
 
           Write-Host "Run: 10_Microsoft365Apps.ps1"
-          .\10_Microsoft365Apps.ps1
+          .\11_Microsoft365Apps.ps1
 
           Write-Host "Run: 11_MicrosoftOneDrive.ps1"
-          .\11_MicrosoftOneDrive.ps1
+          .\12_MicrosoftOneDrive.ps1
 
           Write-Host "Run: 12_MicrosoftTeams.ps1"
-          .\12_MicrosoftTeams.ps1
-
-          #Write-Host "Run: 13_Avd-Agents.ps1"
-          #.\13_Avd-Agents.ps1
-
-          Write-Host "Run: 39_AdobeAcrobatReaderDC.ps1"
-          .\39_AdobeAcrobatReaderDC.ps1
+          .\13_MicrosoftTeams.ps1
 
       - name: Run third script batch
         shell: powershell
         working-directory: "${{ github.workspace }}\\avd"
         run: |
+          Write-Host "Run: 39_AdobeAcrobatReaderDC.ps1"
+          .\39_AdobeAcrobatReaderDC.ps1
+
           Write-Host "Run: 99_FinaliseImage.ps1"
           .\99_FinaliseImage.ps1
 
