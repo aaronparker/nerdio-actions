@@ -1,6 +1,6 @@
 #description: Installs the latest Microsoft Teams per-machine for use on Windows 10/11 multi-session or Windows Server
 #execution mode: Combined
-#tags: Evergreen, Teams
+#tags: Evergreen, Teams, Microsoft
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Teams"
 [System.String] $TeamsExe = "${env:ProgramFiles(x86)}\Microsoft\Teams\current\Teams.exe"
@@ -26,7 +26,7 @@ try {
         if ([System.Version]$File.VersionInfo.ProductVersion -le [System.Version]$App.Version) {
             $params = @{
                 FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-                ArgumentList = "/x $($OutFile.FullName) /quiet /log `"$env:ProgramData\NerdioManager\Logs\UninstallMicrosoftTeams.log`""
+                ArgumentList = "/x `"$($OutFile.FullName)`" /quiet /log `"$env:ProgramData\NerdioManager\Logs\UninstallMicrosoftTeams.log`""
                 NoNewWindow  = $true
                 Wait         = $true
                 PassThru     = $false

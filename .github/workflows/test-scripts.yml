@@ -72,6 +72,9 @@ jobs:
           Write-Host "Run: 39_AdobeAcrobatReaderDC.ps1"
           .\39_AdobeAcrobatReaderDC.ps1
 
+          Write-Host "Run: 40_ZoomMeetings.ps1"
+          .\40_ZoomMeetings.ps1
+
           Write-Host "Run: 99_FinaliseImage.ps1"
           .\99_FinaliseImage.ps1
 

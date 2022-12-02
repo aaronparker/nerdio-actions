@@ -1,6 +1,6 @@
 #description: Installs the latest Adobe Acrobat Reader MUI x64 customised for VDI
 #execution mode: Combined
-#tags: Evergreen, Adobe
+#tags: Evergreen, Adobe, Microsoft
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Adobe\AcrobatReaderDC"
 [System.String] $Architecture = "x64"
@@ -14,11 +14,11 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 # Enforce settings with GPO: https://www.adobe.com/devnet-docs/acrobatetk/tools/AdminGuide/gpo.html
 
 try {
-    # Download Reader installer and updater
+    # Download Reader installer
     Import-Module -Name "Evergreen" -Force
-    $Reader = Get-EvergreenApp -Name "AdobeAcrobatReaderDC" | Where-Object { $_.Language -eq $Language -and $_.Architecture -eq $Architecture } | `
+    $App = Get-EvergreenApp -Name "AdobeAcrobatReaderDC" | Where-Object { $_.Language -eq $Language -and $_.Architecture -eq $Architecture } | `
         Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $Reader -CustomPath $Path -WarningAction "SilentlyContinue"
+    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
     throw $_
