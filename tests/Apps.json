@@ -58,5 +58,10 @@
         "Name": "AdobeAcrobatReaderDC",
         "Filter": "Get-EvergreenApp -Name \"AdobeAcrobatReaderDC\" | Where-Object { $_.Language -eq \"MUI\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
         "Installed": "Adobe Acrobat.*64-bit"
+    },
+    {
+        "Name": "Zoom",
+        "Filter": "Zoom Client for VDI",
+        "Installed": "Zoom Client for VDI"
     }
 ]

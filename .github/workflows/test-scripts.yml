@@ -75,6 +75,24 @@ jobs:
           Write-Host "Run: 40_ZoomMeetings.ps1"
           .\40_ZoomMeetings.ps1
 
+          Write-Host "Run: 41_FoxitPDReader.ps1"
+          .\41_FoxitPDReader.ps1
+
+          Write-Host "Run: 42_GoogleChrome.ps1"
+          .\42_GoogleChrome.ps1
+
+          Write-Host "Run: 43_NotepadPlusPlus.ps1"
+          .\43_NotepadPlusPlus.ps1
+
+          Write-Host "Run: 44_pdfforgePDFCreator.ps1"
+          .\44_pdfforgePDFCreator.ps1
+
+          Write-Host "Run: 45_VLCMediaPlayer.ps1"
+          .\45_VLCMediaPlayer.ps1
+
+          Write-Host "Run: 46_7Zip.ps1"
+          .\46_7Zip.ps1
+
           Write-Host "Run: 99_FinaliseImage.ps1"
           .\99_FinaliseImage.ps1
 
