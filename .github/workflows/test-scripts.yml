@@ -90,8 +90,8 @@ jobs:
           Write-Host "Run: 45_VLCMediaPlayer.ps1"
           .\45_VLCMediaPlayer.ps1
 
-          Write-Host "Run: 46_7Zip.ps1"
-          .\46_7Zip.ps1
+          #Write-Host "Run: 46_7Zip.ps1"
+          #.\46_7Zip.ps1
 
           Write-Host "Run: 99_FinaliseImage.ps1"
           .\99_FinaliseImage.ps1
