@@ -81,14 +81,14 @@ try {
                     $Json | ConvertTo-Json | Set-Content -Path $Path -Force
                 }
             }
-
-            # Delete the registry auto-start
-            reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" /v "Teams" /f | Out-Null
         }
         catch {
             throw $_.Exception.Message
         }
     }
+
+    # Delete the registry auto-start
+    reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" /v "Teams" /f | Out-Null
 }
 catch {
     throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
