@@ -3,7 +3,7 @@
 #tags: Image, Prep
 
 try {
-    if ((Get-MpPreference).DisableRealtimeMonitoring -eq $true) {
+    if ((Get-MpPreference).DisableRealtimeMonitoring -eq $false) {
         # Microsoft Defender (may not work on current versions)
         Set-MpPreference -DisableRealtimeMonitoring $true
     }

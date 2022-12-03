@@ -4,12 +4,16 @@
 [System.String] $Path = "$env:SystemDrive\Apps"
 
 try {
-    # Re-enable Defender
-    Set-MpPreference -DisableRealtimeMonitoring $false
+    if ((Get-MpPreference).DisableRealtimeMonitoring -eq $true) {
+        # Re-enable Defender
+        Set-MpPreference -DisableRealtimeMonitoring $false
+    }
 
-    # Remove policies
-    reg delete HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableWindowsConsumerFeatures /f
-    reg delete HKLM\Software\Policies\Microsoft\WindowsStore /v AutoDownload /f
+    if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft Windows 1*") {
+        # Remove policies
+        reg delete HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableWindowsConsumerFeatures /f
+        reg delete HKLM\Software\Policies\Microsoft\WindowsStore /v AutoDownload /f
+    }
 
     # Remove C:\Apps folder
     if (Test-Path -Path $Path) { Remove-Item -Path $Path -Recurse -Force -ErrorAction "SilentlyContinue" }
