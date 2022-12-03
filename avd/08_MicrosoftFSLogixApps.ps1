@@ -6,8 +6,8 @@
 
 
 #region Script logic
-# Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Download and unpack
@@ -44,4 +44,6 @@ try {
 catch {
     throw $_.Exception.Message
 }
+
+Remove-Item -Path "$Env:ProgramData\Microsoft\Windows\Start Menu\FSLogix\FSLogix Apps Online Help.lnk" -Force -ErrorAction "Ignore"
 #endregion

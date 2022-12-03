@@ -1,12 +1,12 @@
-#description: Installs the latest Notepad++ 64-bit
+#description: Installs the latest Notepad++ 64-bit with automatic updates disabled.
 #execution mode: Combined
 #tags: Evergreen, Zoom
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\NotepadPlusPlus"
 
 #region Script logic
-# Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -29,5 +29,20 @@ try {
 }
 catch {
     throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+}
+
+try {
+    # Disable updater
+    $UpdaterPath = "$Env:ProgramFiles\Notepad++\updater"
+    $RenamePath = "$Env:ProgramFiles\Notepad++\updater.disabled"
+    if (Test-Path -Path $UpdaterPath) {
+        if (Test-Path -Path $RenamePath) {
+            Remove-Item -Path $RenamePath -Recurse -Force -ErrorAction "SilentlyContinue"
+        }
+        Rename-Item -Path $UpdaterPath -NewName "updater.disabled" -Force -ErrorAction "SilentlyContinue"
+    }
+}
+catch {
+    throw $_.Exception.Message
 }
 #endregion

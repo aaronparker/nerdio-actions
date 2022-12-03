@@ -5,8 +5,8 @@
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\OneDrive"
 
 #region Script logic
-# Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Run tasks/install apps

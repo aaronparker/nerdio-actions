@@ -5,8 +5,8 @@
 [System.String] $Path = "$env:SystemDrive\Apps\PDFForge\PDFCreator"
 
 #region Script logic
-# Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -20,7 +20,7 @@ catch {
 try {
     $params = @{
         FilePath     = $OutFile.FullName
-        ArgumentList = "/ForceInstall /VERYSILENT /LANG=English /NORESTART"
+        ArgumentList = "/VerySilent /Lang=en /NoIcons /COMPONENTS=None"
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $false
@@ -30,4 +30,7 @@ try {
 catch {
     throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
 }
+
+$Shortcuts = @("$Env:Public\Desktop\PDF Architect 9.lnk", "$Env:Public\Desktop\PDFCreator.lnk")
+Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 #endregion

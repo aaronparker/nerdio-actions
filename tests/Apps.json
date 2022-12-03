@@ -60,8 +60,13 @@
         "Installed": "Adobe Acrobat.*64-bit"
     },
     {
-        "Name": "Zoom",
-        "Filter": "Zoom Client for VDI",
-        "Installed": "Zoom Client for VDI"
+        "Name": "FoxitPDFReader",
+        "Filter": "Get-EvergreenApp -Name \"FoxitReader\" | Where-Object { $_.Language -eq \"English\" } | Select-Object -First 1",
+        "Installed": "Foxit PDF Reader"
+    },
+    {
+        "Name": "GoogleChrome",
+        "Filter": "Get-EvergreenApp -Name \"GoogleChrome\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"stable\" } | Select-Object -First 1",
+        "Installed": "Google Chrome"
     }
 ]

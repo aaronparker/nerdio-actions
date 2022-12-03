@@ -4,9 +4,12 @@
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Google\Chrome"
 
+# Configure policies for roaming and cache
+# https://cloud.google.com/blog/products/chrome-enterprise/configuring-chrome-browser-in-your-vdi-environment
+
 #region Script logic
-# Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -62,8 +65,17 @@ try {
             "verbose_logging"                           = $true
         }
     }
-    $prefs | ConvertTo-Json | Set-Content -Path "${Env:ProgramFiles(x86)}\Google\Chrome\Application\master_preferences" -Force -Encoding "utf8"
+    $prefs | ConvertTo-Json | Set-Content -Path "$Env:ProgramFiles\Google\Chrome\Application\master_preferences" -Force -Encoding "utf8"
     Remove-Item -Path "$Env:Public\Desktop\Google Chrome.lnk" -Force -ErrorAction "Ignore"
+}
+catch {
+    throw $_.Exception.Message
+}
+
+try {
+    # Disable update tasks - assuming we're installing on a gold image or updates will be managed
+    Get-Service -Name "gupdate*" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
+    Get-ScheduledTask -TaskName "GoogleUpdateTaskMachine*" | Unregister-ScheduledTask -Confirm:$false -ErrorAction "SilentlyContinue"
 }
 catch {
     throw $_.Exception.Message

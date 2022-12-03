@@ -5,8 +5,8 @@
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Avd"
 
 #region Script logic
-# Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Run tasks/install apps
 #region Microsoft Remote Desktop WebRTC Redirector Service

@@ -1,4 +1,4 @@
-#description: Installs the latest Microsoft 365 Apps Current channel, x64 with shared computer licensing
+#description: Installs the latest Microsoft 365 Apps Current channel, 64-bit with shared computer licensing and updates disabled
 #execution mode: Combined
 #tags: Evergreen, Microsoft 365 Apps, Microsoft
 #Requires -Modules Evergreen
@@ -8,10 +8,9 @@
 [System.String] $Channel = "MonthlyEnterprise"
 
 #region Script logic
-# Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-
+# Determine whether we should install with shared computer licensing
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     #region Windows Server
     "Microsoft Windows Server*" {
@@ -41,7 +40,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
 
 
 try {
-    # Run tasks/install apps
+    # Set the Microsoft 365 Apps configuration
     $OfficeXml = @"
 <Configuration ID="a39b1c70-558d-463b-b3d4-9156ddbcbb05">
     <Add OfficeClientEdition="64" Channel="$Channel" MigrateArch="TRUE">
@@ -54,6 +53,7 @@ try {
             <ExcludeApp ID="Publisher" />
             <ExcludeApp ID="Bing" />
             <ExcludeApp ID="Teams" />
+            <ExcludeApp ID="OneDrive" />
         </Product>
     </Add>
     <Property Name="SharedComputerLicensing" Value="$SharedComputerLicensing" />
@@ -84,6 +84,41 @@ try {
     <Display Level="None" AcceptEULA="TRUE" />
 </Configuration>
 "@
+
+    # If we're running in GitHub Actions, strip the config back to bare minimum
+    if ($Env:GITHUB_ACTIONS -eq $true) {
+        $OfficeXml = @"
+<Configuration ID="a39b1c70-558d-463b-b3d4-9156ddbcbb05">
+            <Add OfficeClientEdition="64" Channel="$Channel" MigrateArch="TRUE">
+                <Product ID="O365ProPlusRetail">
+                    <Language ID="MatchOS" />
+                    <Language ID="MatchPreviousMSI" />
+                    <ExcludeApp ID="Excel" />
+                    <ExcludeApp ID="PowerPoint" />
+                    <ExcludeApp ID="Outlook" />
+                    <ExcludeApp ID="OneNote" />
+                    <ExcludeApp ID="Access" />
+                    <ExcludeApp ID="Groove" />
+                    <ExcludeApp ID="Lync" />
+                    <ExcludeApp ID="Publisher" />
+                    <ExcludeApp ID="Bing" />
+                    <ExcludeApp ID="Teams" />
+                    <ExcludeApp ID="OneDrive" />
+                </Product>
+            </Add>
+            <Property Name="SharedComputerLicensing" Value="$SharedComputerLicensing" />
+            <Property Name="PinIconsToTaskbar" Value="FALSE" />
+            <Property Name="SCLCacheOverride" Value="0" />
+            <Property Name="AUTOACTIVATE" Value="0" />
+            <Property Name="FORCEAPPSHUTDOWN" Value="TRUE" />
+            <Property Name="DeviceBasedLicensing" Value="0" />
+            <Updates Enabled="FALSE" />
+            <RemoveMSI />
+            <Display Level="None" AcceptEULA="TRUE" />
+        </Configuration>
+"@
+    }
+
     $XmlFile = Join-Path -Path $Path -ChildPath "Office.xml"
     Out-File -FilePath $XmlFile -InputObject $OfficeXml -Encoding "utf8"
 }
@@ -111,5 +146,8 @@ try {
 }
 catch {
     throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+}
+finally {
+    Pop-Location
 }
 #endregion

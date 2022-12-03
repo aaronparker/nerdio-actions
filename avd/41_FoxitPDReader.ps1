@@ -7,6 +7,7 @@
 #region Script logic
 # Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -20,7 +21,7 @@ catch {
 try {
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package `"$($OutFile.FullName)`" AUTO_UPDATE=0 NOTINSTALLUPDATE=1 MAKEDEFAULT=0 LAUNCHCHECKDEFAULT=0 VIEW_IN_BROWSER=0 DESKTOP_SHORTCUT=0 STARTMENU_SHORTCUT_UNINSTALL=0 DISABLE_UNINSTALL_SURVEY=1 ALLUSERS=1 /log `"$env:ProgramData\NerdioManager\Logs\FoxitReader.log`""
+        ArgumentList = "/package `"$($OutFile.FullName)`" AUTO_UPDATE=0 NOTINSTALLUPDATE=1 MAKEDEFAULT=0 LAUNCHCHECKDEFAULT=0 VIEW_IN_BROWSER=0 DESKTOP_SHORTCUT=0 STARTMENU_SHORTCUT_UNINSTALL=0 DISABLE_UNINSTALL_SURVEY=1 ALLUSERS=1 /quiet /log `"$env:ProgramData\NerdioManager\Logs\FoxitReader.log`""
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $false
@@ -29,5 +30,13 @@ try {
 }
 catch {
     throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+}
+
+try {
+    # Disable update tasks - assuming we're installing on a gold image or updates will be managed
+    Get-Service -Name "FoxitReaderUpdateService*" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
+}
+catch {
+    throw $_.Exception.Message
 }
 #endregion
