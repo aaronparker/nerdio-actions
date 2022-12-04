@@ -1,6 +1,6 @@
 <#
     .SYNOPSIS
-        Use Pester to validate application files
+        Use Pester to validate application files and services etc.
 #>
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingInvokeExpression", "")]
@@ -91,5 +91,15 @@ Describe -Name "Microsoft 365 Apps" {
         It "Should have protocolhandler.exe installed" {
             "$Env:ProgramFiles\Microsoft Office\root\Office16\protocolhandler.exe" | Should -Exist
         }
+    }
+}
+
+Describe -Name "Microsoft Teams" {
+    It "Should have written 'Teams Installer\setup.json'" {
+        "${env:ProgramFiles(x86)}\Teams Installer\setup.json" | Should -Exist
+    }
+
+    It "Should have written 'Teams\setup.json'" {
+        "${env:ProgramFiles(x86)}\Microsoft\Teams\setup.json" | Should -Exist
     }
 }

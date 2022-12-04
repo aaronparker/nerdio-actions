@@ -88,7 +88,7 @@ Describe -Name "Validate installed <App.Name>" -ForEach $Applications {
     }
 
     Context "Validate <App.Installed> is installed" {
-        It "Should be a valid object" {
+        It "Should be installed" {
             $Installed | Should -Not -BeNullOrEmpty
         }
     }
