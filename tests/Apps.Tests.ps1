@@ -20,7 +20,7 @@ BeforeDiscovery {
 }
 
 # Per script tests
-Describe -Name "Validate installed <App.Name>" -ForEach $Applications {
+Describe -Name "Validate <App.Name>" -ForEach $Applications {
     BeforeAll {
 
         #region Functions
@@ -85,17 +85,30 @@ Describe -Name "Validate installed <App.Name>" -ForEach $Applications {
         $App = $_
         $Latest = Invoke-Expression -Command $App.Filter
         $Installed = $InstalledSoftware | Where-Object { $_.Name -match $App.Installed } | Select-Object -First 1
+
+        # Create an array from the App's Files property
+        $Files = $_.Files
     }
 
-    Context "Validate <App.Installed> is installed" {
+    Context "Validate application is installed: <App.Name>" {
         It "Should be installed" {
             $Installed | Should -Not -BeNullOrEmpty
         }
     }
 
-    Context "Validate <App.Installed> version" {
+    Context "Validate installed version of: <App.Name>" {
         It "Should be the current version or better" {
             [System.Version]$Installed.Version | Should -BeGreaterOrEqual ([System.Version]$Latest.Version)
+        }
+    }
+
+    Context "Applications files" -ForEach $Files {
+        BeforeAll {
+            $File = $_
+        }
+
+        It "Should exist: <File>" {
+            $File | Should -Exist
         }
     }
 }

@@ -35,8 +35,8 @@ Describe -Name "Shortcuts" -ForEach $Shortcuts {
         $Shortcut = $_
     }
 
-    Context "Validate that the shortcut has been deleted: <Shortcut>." {
-        It "Should have deleted the shortcut: <Shortcut>" {
+    Context "Validate the shortcut does not exist." {
+        It "Should not exist: <Shortcut>" {
             $Shortcut | Should -Not -Exist
         }
     }
@@ -48,8 +48,8 @@ Describe -Name "Services" -ForEach $Services {
         $Service = $_
     }
 
-    Context "Validate that the service has been disabled: <Service>." {
-        It "Should have disabled the service: <Service>" {
+    Context "Validate the service has been disabled." {
+        It "Should be disabled: <Service>" {
             (Get-Service -Name $Service).StartType | Should -Be "Disabled"
         }
     }
@@ -57,10 +57,6 @@ Describe -Name "Services" -ForEach $Services {
 
 Describe -Name "Microsoft Edge" {
     Context "Application preferences" {
-        It "Should have written master_preferences" {
-            "${Env:ProgramFiles(x86)}\Microsoft\Edge\Application\master_preferences" | Should -Exist
-        }
-
         It "Should have written the correct content to master_preferences" {
             (Get-Content -Path "${Env:ProgramFiles(x86)}\Microsoft\Edge\Application\master_preferences" | ConvertFrom-Json).homepage | Should -BeExactly "https://www.office.com"
         }
@@ -69,38 +65,8 @@ Describe -Name "Microsoft Edge" {
 
 Describe -Name "Google Chrome" {
     Context "Application preferences" {
-        It "Should have written master_preferences" {
-            "$Env:ProgramFiles\Google\Chrome\Application\master_preferences" | Should -Exist
-        }
-
         It "Should have written the correct content to master_preferences" {
             (Get-Content -Path "$Env:ProgramFiles\Google\Chrome\Application\master_preferences" | ConvertFrom-Json).homepage | Should -BeExactly "https://www.office.com"
         }
-    }
-}
-
-Describe -Name "Microsoft 365 Apps" {
-    Context "Installed executables" {
-        It "Should have WINWORD.EXE installed" {
-            "$Env:ProgramFiles\Microsoft Office\root\Office16\WINWORD.EXE" | Should -Exist
-        }
-
-        It "Should have officeappguardwin32.exe installed" {
-            "$Env:ProgramFiles\Microsoft Office\root\Office16\officeappguardwin32.exe" | Should -Exist
-        }
-
-        It "Should have protocolhandler.exe installed" {
-            "$Env:ProgramFiles\Microsoft Office\root\Office16\protocolhandler.exe" | Should -Exist
-        }
-    }
-}
-
-Describe -Name "Microsoft Teams" {
-    It "Should have written 'Teams Installer\setup.json'" {
-        "${env:ProgramFiles(x86)}\Teams Installer\setup.json" | Should -Exist
-    }
-
-    It "Should have written 'Teams\setup.json'" {
-        "${env:ProgramFiles(x86)}\Microsoft\Teams\setup.json" | Should -Exist
     }
 }

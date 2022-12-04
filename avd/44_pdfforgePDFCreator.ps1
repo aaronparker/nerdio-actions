@@ -32,6 +32,8 @@ catch {
 }
 
 Start-Sleep -Seconds 10
-$Shortcuts = @("$Env:Public\Desktop\PDF Architect 9.lnk", "$Env:Public\Desktop\PDFCreator.lnk")
+$Shortcuts = @("$Env:Public\Desktop\PDF Architect 9.lnk",
+    "$Env:Public\Desktop\PDFCreator.lnk",
+    "$Env:ProgramFiles\PDFCreator\PDF Architect\architect-setup.exe")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 #endregion
