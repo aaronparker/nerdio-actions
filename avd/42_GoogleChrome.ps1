@@ -66,7 +66,8 @@ try {
         }
     }
     $prefs | ConvertTo-Json | Set-Content -Path "$Env:ProgramFiles\Google\Chrome\Application\master_preferences" -Force -Encoding "utf8"
-    Remove-Item -Path "$Env:Public\Desktop\Google Chrome.lnk" -Force -ErrorAction "Ignore"
+    $Shortcuts = @("$Env:Public\Desktop\Google Chrome.lnk")
+    Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 }
 catch {
     throw $_.Exception.Message
@@ -75,6 +76,7 @@ catch {
 try {
     # Disable update tasks - assuming we're installing on a gold image or updates will be managed
     Get-Service -Name "gupdate*" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
+    Get-Service -Name "GoogleChromeElevationService" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
     Get-ScheduledTask -TaskName "GoogleUpdateTaskMachine*" | Unregister-ScheduledTask -Confirm:$false -ErrorAction "SilentlyContinue"
 }
 catch {

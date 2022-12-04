@@ -45,5 +45,7 @@ catch {
     throw $_.Exception.Message
 }
 
-Remove-Item -Path "$Env:ProgramData\Microsoft\Windows\Start Menu\FSLogix\FSLogix Apps Online Help.lnk" -Force -ErrorAction "Ignore"
+Start-Sleep -Seconds 10
+$Shortcuts = @("$Env:ProgramData\Microsoft\Windows\Start Menu\FSLogix\FSLogix Apps Online Help.lnk")
+Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 #endregion

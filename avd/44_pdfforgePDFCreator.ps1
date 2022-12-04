@@ -31,6 +31,7 @@ catch {
     throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
 }
 
+Start-Sleep -Seconds 10
 $Shortcuts = @("$Env:Public\Desktop\PDF Architect 9.lnk", "$Env:Public\Desktop\PDFCreator.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 #endregion

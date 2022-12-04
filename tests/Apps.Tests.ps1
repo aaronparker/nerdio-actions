@@ -16,7 +16,6 @@ BeforeDiscovery {
     else {
         $Path = $env:GITHUB_WORKSPACE
     }
-    #Write-Host "Read input file: $([System.IO.Path]::Combine($Path, "tests", "Apps.json"))."
     $Applications = Get-Content -Path $([System.IO.Path]::Combine($Path, "tests", "Apps.json")) | ConvertFrom-Json
 }
 

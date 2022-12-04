@@ -31,6 +31,7 @@ catch {
     throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
 }
 
+Start-Sleep -Seconds 10
 $Shortcuts = @("$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\VideoLAN website.lnk",
     "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\Release Notes.lnk",
     "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\Documentation.lnk",

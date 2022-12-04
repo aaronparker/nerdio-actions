@@ -63,7 +63,8 @@ try {
         }
     }
     $prefs | ConvertTo-Json | Set-Content -Path "${Env:ProgramFiles(x86)}\Microsoft\Edge\Application\master_preferences" -Force -Encoding "utf8"
-    Remove-Item -Path "$env:Public\Desktop\Microsoft Edge*.lnk" -Force -ErrorAction "SilentlyContinue"
+    $Shortcuts = @("$env:Public\Desktop\Microsoft Edge*.lnk")
+    Remove-Item -Path $Shortcuts -Force -ErrorAction "SilentlyContinue"
 }
 catch {
     throw $_.Exception.Message

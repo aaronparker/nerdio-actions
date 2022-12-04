@@ -8,6 +8,50 @@
 param()
 
 BeforeDiscovery {
+    $Shortcuts = @("$Env:ProgramData\Microsoft\Windows\Start Menu\FSLogix\FSLogix Apps Online Help.lnk",
+        "$env:Public\Desktop\Microsoft Edge*.lnk",
+        "$Env:ProgramData\Microsoft\Windows\Start Menu\FSLogix\FSLogix Apps Online Help.lnk",
+        "$Env:Public\Desktop\Google Chrome.lnk",
+        "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\VideoLAN website.lnk",
+        "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\Release Notes.lnk",
+        "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\Documentation.lnk",
+        "$Env:Public\Desktop\VLC media player.lnk",
+        "$Env:Public\Desktop\PDF Architect 9.lnk",
+        "$Env:Public\Desktop\PDFCreator.lnk"
+    )
+
+    $Services = @(
+        "AdobeARMservice",
+        "FoxitReaderUpdateService",
+        "gupdate",
+        "gupdatem"
+    )
+}
+
+Describe -Name "Shortcuts" -ForEach $Shortcuts {
+    BeforeAll {
+        # Renaming the automatic $_ variable
+        $Shortcut = $_
+    }
+
+    Context "Validate that the shortcut has been deleted: <Shortcut>." {
+        It "Should have deleted the shortcut: <Shortcut>" {
+            $Shortcut | Should -Not -Exist
+        }
+    }
+}
+
+Describe -Name "Shortcuts" -ForEach $Services {
+    BeforeAll {
+        # Renaming the automatic $_ variable
+        $Service = $_
+    }
+
+    Context "Validate that the service has been disabled: <Service>." {
+        It "Should have disabled the service: <Service>" {
+            (Get-Service -Name $Service).StartType | Should -Be "Disabled"
+        }
+    }
 }
 
 Describe -Name "Microsoft Edge" {
@@ -49,11 +93,3 @@ Describe -Name "Microsoft 365 Apps" {
         }
     }
 }
-
-# Describe -Name "General" {
-#     Context "Shortcuts" {
-#         It "Should have no shortcuts on the public desktop" {
-#             "$Env:Public\Desktop\*.lnk" | Should -Not -Exist
-#         }
-#     }
-# }
