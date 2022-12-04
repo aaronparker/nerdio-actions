@@ -17,7 +17,8 @@ BeforeDiscovery {
         "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\Documentation.lnk",
         "$Env:Public\Desktop\VLC media player.lnk",
         "$Env:Public\Desktop\PDF Architect 9.lnk",
-        "$Env:Public\Desktop\PDFCreator.lnk"
+        "$Env:Public\Desktop\PDFCreator.lnk",
+        "$Env:Public\Desktop\Zoom VDI.lnk"
     )
 
     $Services = @(
@@ -41,7 +42,7 @@ Describe -Name "Shortcuts" -ForEach $Shortcuts {
     }
 }
 
-Describe -Name "Shortcuts" -ForEach $Services {
+Describe -Name "Services" -ForEach $Services {
     BeforeAll {
         # Renaming the automatic $_ variable
         $Service = $_

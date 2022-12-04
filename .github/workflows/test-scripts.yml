@@ -93,8 +93,8 @@ jobs:
           #Write-Host "Run: 46_7Zip.ps1"
           #.\46_7Zip.ps1
 
-          Write-Host "Run: 99_FinaliseImage.ps1"
-          .\99_FinaliseImage.ps1
+          Write-Host "Run: 99_CleanupImage.ps1"
+          .\99_CleanupImage.ps1
 
       - name: List installed apps
         shell: powershell
