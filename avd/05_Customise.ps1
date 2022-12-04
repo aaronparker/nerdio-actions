@@ -4,13 +4,21 @@
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\image-customise"
 
-# Use variables in Nerdio Manager to pass a system language
+#region Use Secure variables in Nerdio Manager to pass variables
 if ($null -eq $SecureVars.OSLanguage) {
     [System.String] $Language = "en-AU"
 }
 else {
     [System.String] $Language = $SecureVars.OSLanguage
 }
+
+if ($null -eq $SecureVars.AppxMode) {
+    $AppxMode = "Block"
+}
+else {
+    $AppxMode = $SecureVars.AppxMode
+}
+#endregion
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
@@ -21,7 +29,7 @@ try {
         Save-EvergreenApp -CustomPath $Path
     Expand-Archive -Path $Installer.FullName -DestinationPath $Path -Force
     Push-Location -Path $Path
-    . .\Install-Defaults.ps1 -Language $Language
+    . .\Install-Defaults.ps1 -Language $Language -AppxMode $AppxMode
     Pop-Location
 }
 catch {

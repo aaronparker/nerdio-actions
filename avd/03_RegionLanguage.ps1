@@ -5,13 +5,14 @@
 # Only run if the LanguagePackManagement module is installed
 if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
 
-    # Use variables in Nerdio Manager to pass a system language
+    #region Use Secure variables in Nerdio Manager to pass a system language
     if ($null -eq $SecureVars.OSLanguage) {
         [System.String] $Language = "en-AU"
     }
     else {
         [System.String] $Language = $SecureVars.OSLanguage
     }
+    #endregion
 
     try {
         $params = @{

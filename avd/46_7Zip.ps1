@@ -1,4 +1,4 @@
-#description: Installs the latest 7-Zip
+#description: Installs the latest 7-Zip 64-bit
 #execution mode: Combined
 #tags: Evergreen, 7-Zip
 #Requires -Modules Evergreen

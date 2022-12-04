@@ -1,4 +1,4 @@
-#description: Installs the latest VLC media player
+#description: Installs the latest VLC media player 64-bit
 #execution mode: Combined
 #tags: Evergreen, VLC
 #Requires -Modules Evergreen
