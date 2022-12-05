@@ -27,6 +27,7 @@ jobs:
 
       - name: Run dependencies scripts
         shell: powershell
+        if: always()
         working-directory: "${{ github.workspace }}\\avd"
         run: |
           $Scripts = Get-ChildItem -Include "1*.ps1" -Recurse -Exclude "101_Avd-Agents.ps1"
@@ -37,6 +38,7 @@ jobs:
 
       - name: Run Microsoft apps scripts
         shell: powershell
+        if: always()
         working-directory: "${{ github.workspace }}\\avd"
         run: |
           $Scripts = Get-ChildItem -Include "2*.ps1" -Recurse
@@ -47,6 +49,7 @@ jobs:
 
       - name: Run 3rd party apps scripts
         shell: powershell
+        if: always()
         working-directory: "${{ github.workspace }}\\avd"
         run: |
           $Scripts = Get-ChildItem -Include "4*.ps1" -Recurse
@@ -57,6 +60,7 @@ jobs:
 
       - name: Run clean up scripts
         shell: powershell
+        if: always()
         working-directory: "${{ github.workspace }}\\avd"
         run: |
           $Scripts = Get-ChildItem -Include "9*.ps1" -Recurse
@@ -67,12 +71,14 @@ jobs:
 
       - name: List installed apps
         shell: powershell
+        if: always()
         working-directory: "${{ github.workspace }}\\support"
         run: |
           .\Get-Installed.ps1
 
       - name: Test with Pester
         shell: powershell
+        if: always()
         working-directory: "${{ github.workspace }}"
         run: |
           .\tests\Install-Pester.ps1
@@ -90,6 +96,7 @@ jobs:
       # Upload test results
       - name: Upload test results
         uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: test-results
           path: "${{ github.workspace }}\\tests\\TestResults.xml"
