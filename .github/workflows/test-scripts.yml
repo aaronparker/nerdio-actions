@@ -19,23 +19,11 @@ jobs:
         shell: powershell
         working-directory: "${{ github.workspace }}\\avd"
         run: |
-          Write-Host "Run: 00_Rds-PrepImage.ps1"
-          .\000_Rds-PrepImage.ps1
-
-          Write-Host "Run: 01_SupportFunctions.ps1"
-          .\011_SupportFunctions.ps1
-
-          #Write-Host "Run: 02_WindowsUpdate.ps1"
-          #.\012_WindowsUpdate.ps1
-
-          #Write-Host "Run: 03_RegionLanguage.ps1"
-          .\013_RegionLanguage.ps1
-
-          Write-Host "04_RolesFeatures.ps1"
-          .\014_RolesFeatures.ps1
-
-          Write-Host "Run: 05_Customise.ps1"
-          .\015_Customise.ps1
+          Get-ChildItem -Include "0*.ps1"
+          foreach ($Script in $Scripts) {
+              Write-Host "Run: $($Script.Name)"
+              & $Script.FullName
+          }
 
       - name: Run dependencies scripts
         shell: powershell
@@ -67,12 +55,15 @@ jobs:
               & $Script.FullName
           }
 
-      - name: Run clean up script
+      - name: Run clean up scripts
         shell: powershell
         working-directory: "${{ github.workspace }}\\avd"
         run: |
-          Write-Host "Run: 99_CleanupImage.ps1"
-          .\99_CleanupImage.ps1
+          Get-ChildItem -Include "9*.ps1" -Recurse
+          foreach ($Script in $Scripts) {
+              Write-Host "Run: $($Script.Name)"
+              & $Script.FullName
+          }
 
       - name: List installed apps
         shell: powershell
