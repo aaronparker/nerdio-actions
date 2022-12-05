@@ -119,15 +119,8 @@ Describe -Name "Validate <App.Name>" -ForEach $Applications {
     }
 
     Context "Validate installed version" {
-        if ($Latest.Version -match "(\d+(\.\d+){1,4}).*") {
-            It "Should be the current version or better" {
-                [System.Version]$Installed.Version | Should -BeGreaterOrEqual ([System.Version]$Latest.Version)
-            }
-        }
-        else {
-            It "Should be the current version or better" -Skip {
-                [System.Version]$Installed.Version | Should -BeGreaterOrEqual ([System.Version]$Latest.Version)
-            }
+        It "Should be the current version or better" {
+            [System.Version]$Installed.Version | Should -BeGreaterOrEqual ([System.Version]$Latest.Version)
         }
     }
 }
