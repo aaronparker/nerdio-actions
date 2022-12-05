@@ -19,7 +19,7 @@ jobs:
         shell: powershell
         working-directory: "${{ github.workspace }}\\avd"
         run: |
-          $Scripts = Get-ChildItem -Include "0*.ps1" -Recurse
+          $Scripts = Get-ChildItem -Include "0*.ps1" -Recurse -Exclude "012_WindowsUpdate.ps1"
           foreach ($Script in $Scripts) {
               Write-Host "Run: $($Script.Name)"
               & $Script.FullName
