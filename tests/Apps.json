@@ -219,5 +219,13 @@
             "C:\\Users\\Public\\Desktop\\WebEx.lnk"
         ],
         "ServicesDisabled": []
+    },
+    {
+        "Name": "7Zip",
+        "Filter": "",
+        "Installed": "7-Zip.*(x64)",
+        "FilesExist": [],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
     }
 ]
