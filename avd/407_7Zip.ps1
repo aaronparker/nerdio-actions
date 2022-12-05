@@ -8,14 +8,16 @@
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-# try {
+try {
     Import-Module -Name "Evergreen" -Force
     $App = Get-EvergreenApp -Name "7Zip" | Where-Object { $_.Architecture -eq "x64" -and $_.Type -eq "msi" } | Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-# }
-# catch {
-#     throw $_
-# }
+    #$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+    $OutFile = Join-Path -Path $Path -ChildPath $(Split-Path -Path $App.URI -Leaf)
+    Invoke-WebRequest -Uri $App.URI -OutFile $OutFile -UseBasicParsing
+}
+catch {
+    throw $_
+}
 
 try {
     $params = @{
