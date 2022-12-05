@@ -209,5 +209,15 @@
             "C:\\Users\\Public\\Desktop\\Zoom VDI.lnk"
         ],
         "ServicesDisabled": []
+    },
+    {
+        "Name": "CiscoWebEx",
+        "Filter": "$InstalledSoftware | Where-Object { $_.Name -match \"WebEx\" } | Select-Object -First 1",
+        "Installed": "WebEx",
+        "FilesExist": [],
+        "ShortcutsNotExist": [
+            "C:\\Users\\Public\\Desktop\\WebEx.lnk"
+        ],
+        "ServicesDisabled": []
     }
 ]

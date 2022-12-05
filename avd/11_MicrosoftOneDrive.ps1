@@ -30,7 +30,7 @@ try {
     }
     $result = Start-Process @params
     do {
-        Start-Sleep -Seconds 10
+        Start-Sleep -Seconds 5
     } while (Get-Process -Name "OneDriveSetup" -ErrorAction "SilentlyContinue")
     Get-Process -Name "OneDrive" -ErrorAction "SilentlyContinue" | Stop-Process -Force -ErrorAction "SilentlyContinue"
 }

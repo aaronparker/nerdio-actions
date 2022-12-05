@@ -31,7 +31,7 @@ catch {
     throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
 }
 
-Start-Sleep -Seconds 10
+Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\PDF Architect 9.lnk",
     "$Env:Public\Desktop\PDFCreator.lnk",
     "$Env:ProgramFiles\PDFCreator\PDF Architect\architect-setup.exe")
