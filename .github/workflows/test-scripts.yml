@@ -15,84 +15,62 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run first script batch
+      - name: Run support scripts
         shell: powershell
         working-directory: "${{ github.workspace }}\\avd"
         run: |
           Write-Host "Run: 00_Rds-PrepImage.ps1"
-          .\00_Rds-PrepImage.ps1
+          .\000_Rds-PrepImage.ps1
 
           Write-Host "Run: 01_SupportFunctions.ps1"
-          .\01_SupportFunctions.ps1
+          .\011_SupportFunctions.ps1
 
           #Write-Host "Run: 02_WindowsUpdate.ps1"
-          #.\02_WindowsUpdate.ps1
+          #.\012_WindowsUpdate.ps1
 
           #Write-Host "Run: 03_RegionLanguage.ps1"
-          .\03_RegionLanguage.ps1
+          .\013_RegionLanguage.ps1
 
           Write-Host "04_RolesFeatures.ps1"
-          .\04_RolesFeatures.ps1
+          .\014_RolesFeatures.ps1
 
           Write-Host "Run: 05_Customise.ps1"
-          .\05_Customise.ps1
+          .\015_Customise.ps1
 
-      - name: Run second script batch
+      - name: Run dependencies scripts
         shell: powershell
         working-directory: "${{ github.workspace }}\\avd"
         run: |
-          Write-Host "Run: 06_MicrosoftVcRedists.ps1"
-          .\06_MicrosoftVcRedists.ps1
+          Get-ChildItem -Include "1*.ps1" -Recurse -Exclude "101_Avd-Agents.ps1"
+          foreach ($Script in $Scripts) {
+              Write-Host "Run: $($Script.Name)"
+              & $Script.FullName
+          }
 
-          #Write-Host "Run: 07_Avd-Agents.ps1"
-          #.\07_Avd-Agents.ps1
-
-          Write-Host "Run: 08_MicrosoftFSLogixApps.ps1"
-          .\08_MicrosoftFSLogixApps.ps1
-
-          Write-Host "Run: 09_MicrosoftNET.ps1"
-          .\09_MicrosoftNET.ps1
-
-          Write-Host "Run: 10_MicrosoftEdge.ps1"
-          .\10_MicrosoftEdge.ps1
-
-          Write-Host "Run: 11_MicrosoftOneDrive.ps1"
-          .\11_MicrosoftOneDrive.ps1
-
-          Write-Host "Run: 12_MicrosoftTeams.ps1"
-          .\12_MicrosoftTeams.ps1
-
-          Write-Host "Run: 20_Microsoft365Apps.ps1"
-          .\20_Microsoft365Apps.ps1
-
-      - name: Run third script batch
+      - name: Run Microsoft apps scripts
         shell: powershell
         working-directory: "${{ github.workspace }}\\avd"
         run: |
-          Write-Host "Run: 39_AdobeAcrobatReaderDC.ps1"
-          .\39_AdobeAcrobatReaderDC.ps1
+          Get-ChildItem -Include "2*.ps1" -Recurse
+          foreach ($Script in $Scripts) {
+              Write-Host "Run: $($Script.Name)"
+              & $Script.FullName
+          }
 
-          Write-Host "Run: 40_ZoomMeetings.ps1"
-          .\40_ZoomMeetings.ps1
+      - name: Run 3rd party apps scripts
+        shell: powershell
+        working-directory: "${{ github.workspace }}\\avd"
+        run: |
+          Get-ChildItem -Include "4*.ps1" -Recurse
+          foreach ($Script in $Scripts) {
+              Write-Host "Run: $($Script.Name)"
+              & $Script.FullName
+          }
 
-          Write-Host "Run: 41_FoxitPDReader.ps1"
-          .\41_FoxitPDReader.ps1
-
-          Write-Host "Run: 42_GoogleChrome.ps1"
-          .\42_GoogleChrome.ps1
-
-          Write-Host "Run: 43_NotepadPlusPlus.ps1"
-          .\43_NotepadPlusPlus.ps1
-
-          Write-Host "Run: 44_pdfforgePDFCreator.ps1"
-          .\44_pdfforgePDFCreator.ps1
-
-          Write-Host "Run: 45_VLCMediaPlayer.ps1"
-          .\45_VLCMediaPlayer.ps1
-
-          #Write-Host "Run: 46_7Zip.ps1"
-          #.\46_7Zip.ps1
-
+      - name: Run clean up script
+        shell: powershell
+        working-directory: "${{ github.workspace }}\\avd"
+        run: |
           Write-Host "Run: 99_CleanupImage.ps1"
           .\99_CleanupImage.ps1
 
