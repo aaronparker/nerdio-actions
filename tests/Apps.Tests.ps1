@@ -17,12 +17,20 @@ BeforeDiscovery {
         $Path = $env:GITHUB_WORKSPACE
     }
     $Applications = Get-Content -Path $([System.IO.Path]::Combine($Path, "tests", "Apps.json")) | ConvertFrom-Json
+
+    # Import module
+    Import-Module -Name "Evergreen" -Force
 }
 
 # Per script tests
 Describe -Name "Validate <App.Name>" -ForEach $Applications {
-    BeforeAll {
+    BeforeDiscovery {
+        $FilesExist = $_.FilesExist
+        $ShortcutsNotExist = $_.ShortcutsNotExist
+        $ServicesDisabled = $_.ServicesDisabled
+    }
 
+    BeforeAll {
         #region Functions
         function Get-InstalledSoftware {
             [OutputType([System.Object[]])]
@@ -79,36 +87,47 @@ Describe -Name "Validate <App.Name>" -ForEach $Applications {
 
         # Get the Software list; Output the installed software to the pipeline for Packer output
         $InstalledSoftware = Get-InstalledSoftware | Sort-Object -Property "Publisher", "Version"
-        Import-Module -Name "Evergreen" -Force
 
         # Get details for the current application
         $App = $_
         $Latest = Invoke-Expression -Command $App.Filter
         $Installed = $InstalledSoftware | Where-Object { $_.Name -match $App.Installed } | Select-Object -First 1
-
-        # Create an array from the App's Files property
-        $Files = $_.Files
     }
 
-    Context "Validate application is installed: <App.Name>" {
+    Context "Applications files" -ForEach $FilesExist {
+        It "Should exist: <_>" {
+            $_ | Should -Exist
+        }
+    }
+
+    Context "Validate shortcut does not exist." -ForEach $ShortcutsNotExist {
+        It "Should not exist: <_>" {
+            $_ | Should -Not -Exist
+        }
+    }
+
+    Context "Validate service has been disabled." -ForEach $ServicesDisabled {
+        It "Should be disabled: <_>" {
+            (Get-Service -Name $_).StartType | Should -Be "Disabled"
+        }
+    }
+
+    Context "Validate application is installed" {
         It "Should be installed" {
             $Installed | Should -Not -BeNullOrEmpty
         }
     }
 
-    Context "Validate installed version of: <App.Name>" {
-        It "Should be the current version or better" {
-            [System.Version]$Installed.Version | Should -BeGreaterOrEqual ([System.Version]$Latest.Version)
+    Context "Validate installed version" {
+        if ($Latest.Version -match "(\d+(\.\d+){1,4}).*") {
+            It "Should be the current version or better" {
+                [System.Version]$Installed.Version | Should -BeGreaterOrEqual ([System.Version]$Latest.Version)
+            }
         }
-    }
-
-    Context "Applications files" -ForEach $Files {
-        BeforeAll {
-            $File = $_
-        }
-
-        It "Should exist: <File>" {
-            $File | Should -Exist
+        else {
+            It "Should be the current version or better" -Skip {
+                [System.Version]$Installed.Version | Should -BeGreaterOrEqual ([System.Version]$Latest.Version)
+            }
         }
     }
 }

@@ -112,6 +112,7 @@ jobs:
           $Config.Run.Path = ".\tests"
           $Config.Run.PassThru = $true
           $Config.CodeCoverage.Enabled = $false
+          $Config.Output.Verbosity = "Detailed"
           $Config.TestResult.Enabled = $true
           $Config.TestResult.OutputFormat = "NUnitXml"
           $Config.TestResult.OutputPath = ".\tests\TestResults.xml"
