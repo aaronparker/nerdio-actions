@@ -1,20 +1,17 @@
-#description: Installs the latest 7-Zip 64-bit
+#description: Installs the latest 7-Zip ZS 64-bit
 #execution mode: Combined
 #tags: Evergreen, 7-Zip
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\7Zip"
+[System.String] $Path = "$env:SystemDrive\Apps\7ZipZS"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "7Zip" | Where-Object { $_.Architecture -eq "x64" -and $_.Type -eq "msi" } | Select-Object -First 1
-    #$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-    $OutFile = Join-Path -Path $Path -ChildPath $(Split-Path -Path $App.URI -Leaf)
-    Invoke-WebRequest -Uri $App.URI -OutFile $OutFile -UseBasicParsing
+    $App = Get-EvergreenApp -Name "7ZipZS" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
+    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
     throw $_
@@ -22,8 +19,8 @@ catch {
 
 try {
     $params = @{
-        FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 /quiet /log `"$env:ProgramData\NerdioManager\Logs\7Zip.log`""
+        FilePath     = $OutFile.FullName
+        ArgumentList = "/S"
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $false
