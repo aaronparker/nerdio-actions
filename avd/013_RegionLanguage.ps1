@@ -1,6 +1,6 @@
 #description: Installs Windows language support. Set language/regional settings
 #execution mode: Combined
-#tags: Language
+#tags: Language, Image
 
 #region Use Secure variables in Nerdio Manager to pass a system language
 if ($null -eq $SecureVars.OSLanguage) {

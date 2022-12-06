@@ -1,6 +1,6 @@
-#description: Preps a RDS/WVD image for customisation.
+#description: Preps a RDS / AVD image for customisation.
 #execution mode: Combined
-#tags: Image, Prep
+#tags: Image
 
 try {
     if ((Get-MpPreference).DisableRealtimeMonitoring -eq $false) {

@@ -1,6 +1,6 @@
-#description: Uninstalls Adobe Acrobat products
+#description: Uninstalls Notepad++
 #execution mode: Combined
-#tags: Uninstall, Adobe, Acrobat
+#tags: Uninstall, Notepad++
 
 #region Functions
 function Get-InstalledSoftware {
@@ -33,11 +33,11 @@ function Get-InstalledSoftware {
 New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
-    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Adobe Acrobat*" }
+    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Notepad\+\+*" }
     foreach ($App in $Apps) {
         $params = @{
-            FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-            ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\UninstallAdobeAcrobat$($App.Version).log`""
+            FilePath     = [Regex]::Match($App.UninstallString, '\"(.*)\"').Captures.Groups[1].Value
+            ArgumentList = "/S"
             NoNewWindow  = $True
             PassThru     = $True
             Wait         = $True

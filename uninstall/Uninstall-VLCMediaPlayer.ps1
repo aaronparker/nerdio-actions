@@ -1,6 +1,6 @@
-#description: Uninstalls Adobe Acrobat products
+#description: Uninstalls VLC media player
 #execution mode: Combined
-#tags: Uninstall, Adobe, Acrobat
+#tags: Uninstall, VLC, PDF
 
 #region Functions
 function Get-InstalledSoftware {
@@ -33,11 +33,11 @@ function Get-InstalledSoftware {
 New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
-    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Adobe Acrobat*" }
+    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "VLC media player*" }
     foreach ($App in $Apps) {
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-            ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\UninstallAdobeAcrobat$($App.Version).log`""
+            ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\UninstallVLCMediaPlayer$($App.Version).log`""
             NoNewWindow  = $True
             PassThru     = $True
             Wait         = $True

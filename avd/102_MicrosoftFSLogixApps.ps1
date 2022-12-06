@@ -1,6 +1,6 @@
 #description: Installs the latest Microsoft FSLogix Apps agent
 #execution mode: Combined
-#tags: Evergreen, FSLogix, Microsoft
+#tags: Evergreen, Microsoft, FSLogix
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\FSLogix"
 

@@ -1,6 +1,6 @@
 #description: Installs the latest Microsoft 365 Apps for Enterprise, Current channel, 64-bit with shared computer licensing and updates disabled
 #execution mode: Combined
-#tags: Evergreen, Microsoft 365 Apps, Microsoft
+#tags: Evergreen, Microsoft, Microsoft 365 Apps
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Office"
 

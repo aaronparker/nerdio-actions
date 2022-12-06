@@ -1,6 +1,6 @@
 #description: Installs PowerShell modules required for building AVD images (Evergreen, VcRedist, PSWindowsUpdate, etc.)
 #execution mode: Combined
-#tags: Evergreen, VcRedist, modules
+#tags: Evergreen, VcRedist, Image
 
 #region Script logic
 # Trust the PSGallery for modules

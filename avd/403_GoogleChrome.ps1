@@ -1,6 +1,6 @@
 #description: Installs the latest Google Chrome 64-bit with automatic updates disabled
 #execution mode: Combined
-#tags: Evergreen, Google Chrome, Google
+#tags: Evergreen, Google, Chrome
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Google\Chrome"
 

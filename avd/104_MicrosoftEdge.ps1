@@ -1,6 +1,6 @@
 #description: Installs the latest Microsoft Edge and Microsoft Edge WebView2
 #execution mode: Combined
-#tags: Evergreen, Edge, Microsoft
+#tags: Evergreen, Microsoft, Edge
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Edge"
 [System.String] $EdgeExe = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"

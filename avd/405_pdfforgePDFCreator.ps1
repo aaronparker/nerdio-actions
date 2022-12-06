@@ -1,6 +1,6 @@
 #description: Installs the latest PDFForge PDFCreator
 #execution mode: Combined
-#tags: Evergreen, PDFForge PDFCreator, PDF
+#tags: Evergreen, PDFForge, PDFCreator, PDF
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\PDFForge\PDFCreator"
 

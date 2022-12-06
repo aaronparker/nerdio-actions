@@ -1,6 +1,6 @@
 #description: Installs Windows Updates
 #execution mode: IndividualWithRestart
-#tags: Update
+#tags: Update, Image
 #Requires -Modules PSWindowsUpdate
 
 try {

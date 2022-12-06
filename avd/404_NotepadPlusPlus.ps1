@@ -1,6 +1,6 @@
 #description: Installs the latest Notepad++ 64-bit with automatic updates disabled.
 #execution mode: Combined
-#tags: Evergreen, Zoom
+#tags: Evergreen, Notepad++
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\NotepadPlusPlus"
 

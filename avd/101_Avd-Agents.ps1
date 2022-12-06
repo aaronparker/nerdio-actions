@@ -1,6 +1,6 @@
 #description: Installs the latest Microsoft Azure Virtual Desktop agents
 #execution mode: Combined
-#tags: Evergreen, AVD, Microsoft
+#tags: Evergreen, Microsoft, AVD
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Avd"
 

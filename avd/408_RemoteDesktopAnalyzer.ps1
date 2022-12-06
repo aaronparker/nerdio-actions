@@ -1,6 +1,6 @@
 #description: Downloads the Remote Display Analyzer to 'C:\Program Files\RemoteDisplayAnalyzer'
 #execution mode: Combined
-#tags: Evergreen, Remote Display Analyzer
+#tags: Evergreen, Remote Display Analyzer, Tools
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:ProgramFiles\RemoteDisplayAnalyzer"
 

@@ -1,6 +1,6 @@
-#description: Uninstalls Adobe Acrobat products
+#description: Uninstalls 7Zip ZS
 #execution mode: Combined
-#tags: Uninstall, Adobe, Acrobat
+#tags: Uninstall, 7Zip ZS
 
 #region Functions
 function Get-InstalledSoftware {
@@ -33,11 +33,20 @@ function Get-InstalledSoftware {
 New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
-    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Adobe Acrobat*" }
+    Get-Process -ErrorAction "SilentlyContinue" | `
+        Where-Object { $_.Path -like "$env:ProgramFiles\7-Zip-Zstandard\*" } | `
+        Stop-Process -Force -ErrorAction "SilentlyContinue"
+}
+catch {
+    Write-Warning -Message "Failed to processes."
+}
+
+try {
+    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "7-Zip ZS*" }
     foreach ($App in $Apps) {
         $params = @{
-            FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-            ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\UninstallAdobeAcrobat$($App.Version).log`""
+            FilePath     = [Regex]::Match($App.UninstallString, '\"(.*)\"').Captures.Groups[1].Value
+            ArgumentList = "/S"
             NoNewWindow  = $True
             PassThru     = $True
             Wait         = $True
@@ -49,6 +58,9 @@ catch {
     throw $_
 }
 finally {
+    if ($result.ExitCode -eq 0) {
+        Remove-Item -Path "$env:ProgramFiles\7-Zip-Zstandard" -Recurse -Force -ErrorAction "Ignore"
+    }
     exit $result.ExitCode
 }
 #endregion
