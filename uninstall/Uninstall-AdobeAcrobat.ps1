@@ -1,6 +1,6 @@
-#description: Uninstalls the Microsoft FSLogix Apps agent
-#execution mode: IndividualWithRestart
-#tags: Uninstall, Microsoft, FSLogix
+#description: Uninstalls Adobe Acrobat products
+#execution mode: Combined
+#tags: Uninstall, Adobe, Acrobat
 
 #region Functions
 function Get-InstalledSoftware {
@@ -33,28 +33,11 @@ function Get-InstalledSoftware {
 New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
-    # Stop services
-    Stop-Service -Name "frxsvc", "frxccds" -Force -ErrorAction "Stop"
-}
-catch {
-    throw $_
-}
-
-try {
-    Get-Process -ErrorAction "SilentlyContinue" | `
-        Where-Object { $_.Path -like "$env:ProgramFiles\FSLogix\Apps\*" } | `
-        Stop-Process -Force -ErrorAction "SilentlyContinue"
-}
-catch {
-    Write-Warning -Message "Failed to processes."
-}
-
-try {
-    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft FSLogix Apps*" }
+    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Adobe Acrobat*" }
     foreach ($App in $Apps) {
         $params = @{
-            FilePath     = [Regex]::Match($App.UninstallString, '\"(.*)\"').Captures.Groups[1].Value
-            ArgumentList = "/uninstall /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\UninstallMicrosoftFSLogixApps$($App.Version).log`""
+            FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
+            ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\AdobeAcrobat$($App.Version).log`""
             NoNewWindow  = $True
             PassThru     = $True
             Wait         = $True
@@ -66,8 +49,6 @@ catch {
     throw $_
 }
 finally {
-    if ($result.ExitCode -eq 0) {
-        Remove-Item -Path "$env:ProgramFiles\FSLogix" -Recurse -Force -ErrorAction "Ignore"
-    }
     exit $result.ExitCode
 }
+#endregion

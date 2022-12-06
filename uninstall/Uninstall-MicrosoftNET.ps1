@@ -1,6 +1,6 @@
-#description: Uninstalls the Microsoft .NET Windows Desktop runtimes
+#description: Uninstalls the Microsoft .NET Windows Desktop Runtime
 #execution mode: Combined
-#tags: Uninstall, .NET, Microsoft
+#tags: Uninstall, Microsoft, .NET
 
 #region Functions
 function Get-InstalledSoftware {
