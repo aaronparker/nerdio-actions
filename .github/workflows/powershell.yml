@@ -14,11 +14,13 @@ on:
     branches: [ "main" ]
     paths:
       - 'avd/*.ps1'
+      - 'uninstall/*.ps1'
       - 'tests/*.ps1'
   pull_request:
     branches: [ "main" ]
     paths:
       - 'avd/*.ps1'
+      - 'uninstall/*.ps1'
       - 'tests/*.ps1'
   schedule:
     - cron: '25 4 * * 4'
