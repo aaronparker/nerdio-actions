@@ -4,6 +4,9 @@ PowerShell scripts for integration with [Scripted Actions in Nerdio Manager](htt
 
     Note: this code is provided as-is, without warranty or support of any kind.
 
+* `/avd` - scripts for building a Windows 10/11 pooled desktop (single session or multi-session). Can be used to build an image or run against already deployed session hosts
+* `/uninstall` - scripts for uninstalling applications
+
 ## PSScriptAnalyzer results
 
 [![PSScriptAnalyzer](https://github.com/aaronparker/nerdio-actions/actions/workflows/powershell.yml/badge.svg)](https://github.com/aaronparker/nerdio-actions/actions/workflows/powershell.yml)
