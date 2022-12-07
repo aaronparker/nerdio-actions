@@ -13,6 +13,16 @@ try {
         reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v "DisableWindowsConsumerFeatures" /d 1 /t "REG_DWORD" /f | Out-Null
         reg add HKLM\Software\Policies\Microsoft\WindowsStore /v "AutoDownload" /d 2 /t "REG_DWORD" /f | Out-Null
     }
+
+    New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+    $params = @{
+        FilePath     = "$Env:SystemRoot\System32\compact.exe"
+        ArgumentList = "/C /S `"$env:ProgramData\NerdioManager\Logs`""
+        NoNewWindow  = $true
+        Wait         = $true
+        PassThru     = $false
+    }
+    Start-Process @params
 }
 catch {
     throw $_.Exception.Message
