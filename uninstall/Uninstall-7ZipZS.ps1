@@ -38,7 +38,7 @@ try {
         Stop-Process -Force -ErrorAction "SilentlyContinue"
 }
 catch {
-    Write-Warning -Message "Failed to processes."
+    Write-Warning -Message "Failed to stop processes."
 }
 
 try {

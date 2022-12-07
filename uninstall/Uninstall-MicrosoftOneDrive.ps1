@@ -1,5 +1,5 @@
-#description: Uninstalls the Microsoft FSLogix Apps agent
-#execution mode: IndividualWithRestart
+#description: Uninstalls Microsoft OneDrive
+#execution mode: Combined
 #tags: Uninstall, Microsoft, FSLogix
 
 #region Functions
@@ -33,16 +33,8 @@ function Get-InstalledSoftware {
 New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
-    # Stop services
-    Stop-Service -Name "frxsvc", "frxccds" -Force -ErrorAction "Ignore"
-}
-catch {
-    Write-Warning -Message "Failed to stop services with error: $($_.Exception.Message)"
-}
-
-try {
     Get-Process -ErrorAction "SilentlyContinue" | `
-        Where-Object { $_.Path -like "$env:ProgramFiles\FSLogix\Apps\*" } | `
+        Where-Object { $_.Path -like "$env:ProgramFiles\Microsoft OneDrive\*" } | `
         Stop-Process -Force -ErrorAction "SilentlyContinue"
 }
 catch {
@@ -50,11 +42,11 @@ catch {
 }
 
 try {
-    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft FSLogix Apps*" }
+    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft OneDrive*" }
     foreach ($App in $Apps) {
         $params = @{
-            FilePath     = [Regex]::Match($App.UninstallString, '\"(.*)\"').Captures.Groups[1].Value
-            ArgumentList = "/uninstall /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\UninstallMicrosoftFSLogixApps$($App.Version).log`""
+            FilePath     = [Regex]::Match($App.UninstallString, '^(.*.exe)\s').Captures.Groups[1].Value
+            ArgumentList = "/uninstall /allusers /quiet /norestart"
             NoNewWindow  = $True
             PassThru     = $True
             Wait         = $True
@@ -67,7 +59,7 @@ catch {
 }
 finally {
     if ($result.ExitCode -eq 0) {
-        Remove-Item -Path "$env:ProgramFiles\FSLogix" -Recurse -Force -ErrorAction "Ignore"
+        Remove-Item -Path "$env:ProgramFiles\Microsoft OneDrive" -Recurse -Force -ErrorAction "Ignore"
     }
     exit $result.ExitCode
 }
