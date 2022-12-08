@@ -10,18 +10,19 @@
 name: PSScriptAnalyzer
 
 on:
-  push:
-    branches: [ "main" ]
-    paths:
-      - 'avd/*.ps1'
-      - 'uninstall/*.ps1'
-      - 'tests/*.ps1'
-  pull_request:
-    branches: [ "main" ]
-    paths:
-      - 'avd/*.ps1'
-      - 'uninstall/*.ps1'
-      - 'tests/*.ps1'
+  # push:
+  #   branches: [ "main" ]
+  #   paths:
+  #     - 'avd/*.ps1'
+  #     - 'uninstall/*.ps1'
+  #     - 'tests/*.ps1'
+  # pull_request:
+  #   branches: [ "main" ]
+  #   paths:
+  #     - 'avd/*.ps1'
+  #     - 'uninstall/*.ps1'
+  #     - 'tests/*.ps1'
+  workflow_dispatch:
   schedule:
     - cron: '25 4 * * 4'
 
@@ -44,7 +45,7 @@ jobs:
         with:
           # Check https://github.com/microsoft/action-psscriptanalyzer for more info about the options.
           # The below set up runs PSScriptAnalyzer to your entire repository and runs some basic security rules.
-          path: ./
+          path: "./"
           recurse: true
           # Include your own basic security rules. Removing this option will run all the rules
           # includeRule: '"PSAvoidGlobalAliases", "PSAvoidUsingConvertToSecureStringWithPlainText"'
