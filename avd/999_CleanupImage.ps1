@@ -17,6 +17,14 @@ try {
 
     # Remove C:\Apps folder
     if (Test-Path -Path $Path) { Remove-Item -Path $Path -Recurse -Force -ErrorAction "SilentlyContinue" }
+
+    # Remove logs older than 30 days
+    $Files = @(
+    Get-ChildItem -Path "$env:ProgramData\NerdioManager\Logs" -Include "*.*" -Recurse | `
+        Where-Object { ($_.LastWriteTime -lt (Get-Date).AddDays(-30)) -and ($_.psIsContainer -eq $false)
+    }
+    Remove-Item -Path $Files -Force -ErrorAction "Ignore"
+)
 }
 catch {
     throw $_.Exception.Message

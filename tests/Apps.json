@@ -219,5 +219,23 @@
             "C:\\Users\\Public\\Desktop\\WebEx.lnk"
         ],
         "ServicesDisabled": []
+    },
+    {
+        "Name": "MicrosoftPowerToys",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftPowerToys\" | Where-Object { $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Installed": "PowerToys*",
+        "FilesExist": [
+            "C:\\Program Files\\PowerToys\\PowerToys.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "ImageGlass",
+        "Filter": "Get-EvergreenApp -Name \"ImageGlass\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "ImageGlass",
+        "FilesExist": [],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
     }
 ]

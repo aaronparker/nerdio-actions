@@ -1,6 +1,6 @@
-#description: Uninstalls VLC media player
+#description: Uninstalls the Microsoft Visual Studio Code
 #execution mode: Combined
-#tags: Uninstall, VLC
+#tags: Uninstall, Microsoft, Visual Studio Code
 
 #region Functions
 function Get-InstalledSoftware {
@@ -33,11 +33,11 @@ function Get-InstalledSoftware {
 New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
-    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "VLC media player*" }
+    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Visual Studio Code*" }
     foreach ($App in $Apps) {
         $params = @{
-            FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-            ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\UninstallVLCMediaPlayer$($App.Version).log`""
+            FilePath     = [Regex]::Match($App.UninstallString, '\"(.*)\"').Captures.Groups[1].Value
+            ArgumentList = "/VERYSILENT /NOCLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /NORESTART /SP- /SUPPRESSMSGBOXES"
             NoNewWindow  = $True
             PassThru     = $True
             Wait         = $True

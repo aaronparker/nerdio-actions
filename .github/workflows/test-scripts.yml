@@ -108,3 +108,14 @@ jobs:
         if: always()
         with:
           nunit_files: "${{ github.workspace }}\\tests\\TestResults.xml"
+
+      - name: Run uninstall scripts
+        shell: powershell
+        if: always()
+        working-directory: "${{ github.workspace }}\\uninstall"
+        run: |
+          $Scripts = Get-ChildItem -Include "9*.ps1" -Recurse
+          foreach ($Script in $Scripts) {
+              Write-Host "Run: $($Script.Name)"
+              & $Script.FullName
+          }
