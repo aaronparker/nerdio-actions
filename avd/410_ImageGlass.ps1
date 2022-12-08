@@ -18,9 +18,10 @@ catch {
 }
 
 try {
+    $LogFile = "$env:ProgramData\NerdioManager\Logs\ImageGlass$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package `"$($OutFile.FullName)`" RUNAPPLICATION=0 ALLUSERS=1 /quiet /log `"$env:ProgramData\NerdioManager\Logs\ImageGlass.log`""
+        ArgumentList = "/package `"$($OutFile.FullName)`" RUNAPPLICATION=0 ALLUSERS=1 /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $false

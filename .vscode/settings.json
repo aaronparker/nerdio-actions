@@ -14,5 +14,6 @@
         "THUMBNAILPREVIEW",
         "windowsdesktop",
         "zyborg"
-    ]
+    ],
+    "pester.autoRunOnSave": false
 }

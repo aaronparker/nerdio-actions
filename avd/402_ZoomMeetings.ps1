@@ -19,9 +19,10 @@ catch {
 }
 
 try {
+    $LogFile = "$env:ProgramData\NerdioManager\Logs\ZoomMeetings$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 zSilentStart=false zNoDesktopShortCut=true /quiet /log `"$env:ProgramData\NerdioManager\Logs\ZoomMeetings.log`""
+        ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 zSilentStart=false zNoDesktopShortCut=true /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $false

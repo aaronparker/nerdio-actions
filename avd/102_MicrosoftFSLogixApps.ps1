@@ -24,11 +24,12 @@ try {
     # Install
     foreach ($file in "FSLogixAppsSetup.exe", "FSLogixAppsRuleEditorSetup.exe") {
         $Installers = Get-ChildItem -Path $Path -Recurse -Include $file | Where-Object { $_.Directory -match "x64" }
-        foreach ($installer in $Installers) {
+        foreach ($Installer in $Installers) {
             try {
+                $LogFile = "$env:ProgramData\NerdioManager\Logs\$($Installer.Name)$($App.Version).log" -replace " ", ""
                 $params = @{
-                    FilePath     = $installer.FullName
-                    ArgumentList = "/install /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftFSLogixApps.log`""
+                    FilePath     = $Installer.FullName
+                    ArgumentList = "/install /quiet /norestart /log $LogFile"
                     NoNewWindow  = $true
                     Wait         = $true
                     PassThru     = $false

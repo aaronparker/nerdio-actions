@@ -18,9 +18,10 @@ catch {
 }
 
 try {
+    $LogFile = "$env:ProgramData\NerdioManager\Logs\MicrosoftPowerToys$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = $OutFile.FullName
-        ArgumentList = "-silent -log `"$env:ProgramData\NerdioManager\Logs\MicrosoftPowerToys.log`""
+        ArgumentList = "-silent -log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $false

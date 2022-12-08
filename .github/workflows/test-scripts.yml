@@ -83,7 +83,7 @@ jobs:
         working-directory: "${{ github.workspace }}"
         run: |
           .\tests\Install-Pester.ps1
-          Import-Module -Name "Pester" -Force
+          Import-Module -Name "Pester", "Evergreen", "VcRedist" -Force -ErrorAction "Stop"
           $Config = [PesterConfiguration]::Default
           $Config.Run.Path = ".\tests"
           $Config.Run.PassThru = $true
@@ -114,7 +114,7 @@ jobs:
         if: always()
         working-directory: "${{ github.workspace }}\\uninstall"
         run: |
-          $Scripts = Get-ChildItem -Include "9*.ps1" -Recurse
+          $Scripts = Get-ChildItem -Include "Uninstall*.ps1" -Recurse
           foreach ($Script in $Scripts) {
               Write-Host "Run: $($Script.Name)"
               & $Script.FullName

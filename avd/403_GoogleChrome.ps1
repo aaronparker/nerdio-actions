@@ -21,9 +21,10 @@ catch {
 }
 
 try {
+    $LogFile = "$env:ProgramData\NerdioManager\Logs\GoogleChrome$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 /quiet /log `"$env:ProgramData\NerdioManager\Logs\GoogleChrome.log`""
+        ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $false

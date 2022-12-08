@@ -18,9 +18,10 @@ catch {
 }
 
 try {
+    $LogFile = "$env:ProgramData\NerdioManager\Logs\MicrosoftVisualStudioCode$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = $OutFile.FullName
-        ArgumentList = "/VERYSILENT /NOCLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /NORESTART /SP- /SUPPRESSMSGBOXES /MERGETASKS=!runcode /LOG=`"$env:ProgramData\NerdioManager\Logs\MicrosoftVisualStudioCode.log`""
+        ArgumentList = "/VERYSILENT /NOCLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /NORESTART /SP- /SUPPRESSMSGBOXES /MERGETASKS=!runcode /LOG=$LogFile"
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $false

@@ -18,9 +18,10 @@ catch {
 }
 
 try {
+    $LogFile = "$env:ProgramData\NerdioManager\Logs\VlcMediaPlayer$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 /quiet /log `"$env:ProgramData\NerdioManager\Logs\VlcMediaPlayer.log`""
+        ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $false

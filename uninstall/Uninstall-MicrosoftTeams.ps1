@@ -35,9 +35,10 @@ New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Forc
 try {
     $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Teams Machine-Wide Installer*" }
     foreach ($App in $Apps) {
+        $LogFile = "$env:ProgramData\NerdioManager\Logs\UninstallMicrosoftTeams$($App.Version).log" -replace " ", ""
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-            ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log `"$env:ProgramData\NerdioManager\Logs\UninstallMicrosoftTeams$($App.Version).log`""
+            ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log $LogFile"
             NoNewWindow  = $True
             PassThru     = $True
             Wait         = $True

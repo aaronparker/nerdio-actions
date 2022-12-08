@@ -21,9 +21,10 @@ catch {
 
 try {
     # Install RTC
+    $LogFile = "$env:ProgramData\NerdioManager\Logs\MicrosoftWvdRtcService$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftWvdRtcService.log`""
+        ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $false
@@ -47,9 +48,10 @@ catch {
 
 try {
     # Install MMR
+    $LogFile = "$env:ProgramData\NerdioManager\Logs\MicrosoftWvdMultimediaRedirection$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log `"$env:ProgramData\NerdioManager\Logs\MicrosoftWvdMultimediaRedirection.log`""
+        ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $false
