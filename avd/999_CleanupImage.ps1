@@ -11,8 +11,8 @@ try {
 
     if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft Windows 1*") {
         # Remove policies
-        reg delete HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableWindowsConsumerFeatures /f
-        reg delete HKLM\Software\Policies\Microsoft\WindowsStore /v AutoDownload /f
+        reg delete "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableWindowsConsumerFeatures" /f
+        reg delete "HKLM\Software\Policies\Microsoft\WindowsStore" /v "AutoDownload" /f
     }
 
     # Remove C:\Apps folder
@@ -23,9 +23,6 @@ catch {
 }
 
 # Remove logs older than 30 days
-$Files = @(
-    Get-ChildItem -Path "$env:ProgramData\NerdioManager\Logs" -Include "*.*" -Recurse | `
-        Where-Object { ($_.LastWriteTime -lt (Get-Date).AddDays(-30)) -and ($_.psIsContainer -eq $false)
-    }
-)
-Remove-Item -Path $Files.FullName -Force -ErrorAction "Ignore"
+Get-ChildItem -Path "$env:ProgramData\NerdioManager\Logs" -Include "*.*" -Recurse | `
+    Where-Object { ($_.LastWriteTime -lt (Get-Date).AddDays(-30)) -and ($_.psIsContainer -eq $false) } | `
+    Remove-Item -Force -ErrorAction "Ignore"

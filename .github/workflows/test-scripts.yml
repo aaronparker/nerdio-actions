@@ -77,14 +77,16 @@ jobs:
         run: |
           . .\Get-Installed.ps1
           $params = @{
-              Path              = ".\InstalledApplications.csv"
+              Path              = "$env:GITHUB_WORKSPACE\support\InstalledApplications.csv"
               Encoding          = "Utf8"
               NoTypeInformation = $true
+              Verbose           = $true
           }
           Get-InstalledSoftware | Export-Csv @params
 
       - name: Upload installed apps list
         uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: installed-applications
           path: "${{ github.workspace }}\\support\\InstalledApplications.csv"
