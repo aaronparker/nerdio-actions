@@ -31,13 +31,12 @@ catch {
     throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
 }
 
-if ($result.ExitCode -eq 0) {
-    # Disable features that aren't suitable for VDI
-    reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityAwake" /d 0 /t "REG_DWORD" /f | Out-Null
-    reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityHostsFileEditor" /d 0 /t "REG_DWORD" /f | Out-Null
-    reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileExplorerPDFThumbnails" /d 0 /t "REG_DWORD" /f | Out-Null
-    reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileExplorerSTLThumbnails" /d 0 /t "REG_DWORD" /f | Out-Null
-    reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileExplorerSVGThumbnails" /d 0 /t "REG_DWORD" /f | Out-Null
-    reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileExplorerGcodeThumbnails" /d 0 /t "REG_DWORD" /f | Out-Null
-}
+# Disable features that aren't suitable for VDI
+reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityAwake" /d 0 /t "REG_DWORD" /f | Out-Null
+reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityHostsFileEditor" /d 0 /t "REG_DWORD" /f | Out-Null
+reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileExplorerPDFThumbnails" /d 0 /t "REG_DWORD" /f | Out-Null
+reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileExplorerSTLThumbnails" /d 0 /t "REG_DWORD" /f | Out-Null
+reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileExplorerSVGThumbnails" /d 0 /t "REG_DWORD" /f | Out-Null
+reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileExplorerGcodeThumbnails" /d 0 /t "REG_DWORD" /f | Out-Null
 #endregion
+ 
