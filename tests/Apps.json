@@ -74,11 +74,9 @@
     },
     {
         "Name": "MicrosoftEdgeWebView2Runtime",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftEdgeWebView2Runtime\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"Stable\" } | Sort-Object -Property \"Version\" -Descending | Select-Object -First 1",
+        "Filter": "$InstalledSoftware | Where-Object { $_.Name -match \"MicrosoftEdgeWebView2Runtime\" } | Select-Object -First 1",
         "Installed": "Microsoft Edge WebView2 Runtime",
-        "FilesExist": [
-            "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
-        ],
+        "FilesExist": [],
         "ShortcutsNotExist": [],
         "ServicesDisabled": []
     },
@@ -169,20 +167,6 @@
             "C:\\Program Files\\Notepad++\\notepad++.exe"
         ],
         "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "PDFForgePDFCreator",
-        "Filter": "Get-EvergreenApp -Name \"PDFForgePDFCreator\" | Select-Object -First 1",
-        "Installed": "PDFCreator",
-        "FilesExist": [
-            "C:\\Program Files\\PDFCreator\\PrinterHelper.exe",
-            "C:\\Program Files\\PDFCreator\\PDFCreator.exe"
-        ],
-        "ShortcutsNotExist": [
-            "C:\\Users\\Public\\Desktop\\PDF Architect 9.lnk",
-            "C:\\Users\\Public\\Desktop\\PDFCreator.lnk"
-        ],
         "ServicesDisabled": []
     },
     {

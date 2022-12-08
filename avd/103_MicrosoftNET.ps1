@@ -20,8 +20,8 @@ catch {
 
 try {
     foreach ($file in $OutFile) {
+        $LogFile = "$env:ProgramData\NerdioManager\Logs\Microsoft.NET.log" -replace " ", ""
         $params = @{
-            $LogFile = "$env:ProgramData\NerdioManager\Logs\Microsoft.NET$($App.Version).log" -replace " ", ""
             FilePath     = $file.FullName
             ArgumentList = "/install /quiet /norestart /log $LogFile"
             NoNewWindow  = $true

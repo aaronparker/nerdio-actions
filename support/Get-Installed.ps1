@@ -56,4 +56,7 @@ function Get-InstalledSoftware {
 #endregion
 
 # Get the Software list; Output the installed software to the pipeline
-Write-Output -InputObject (Get-InstalledSoftware | Sort-Object -Property "Name" | Format-Table -AutoSize)
+Get-InstalledSoftware | `
+    Sort-Object -Property "Name" | `
+    Select-Object -Property "Name", "Version", "Publisher" | `
+    Format-Table -AutoSize
