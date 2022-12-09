@@ -53,7 +53,7 @@ jobs:
         if: always()
         working-directory: "${{ github.workspace }}\\avd"
         run: |
-          $Scripts = Get-ChildItem -Include "4*.ps1" -Recurse -Exclude "401_FoxitPDReader.ps1"
+          $Scripts = Get-ChildItem -Include "4*.ps1" -Recurse #-Exclude "401_FoxitPDReader.ps1"
           foreach ($Script in $Scripts) {
               Write-Host "Run: $($Script.Name)"
               & $Script.FullName
