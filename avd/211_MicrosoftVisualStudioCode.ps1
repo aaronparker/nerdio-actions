@@ -10,7 +10,7 @@ New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Forc
 
 try {
     Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "MicrosoftVisualStudioCode" | Where-Object { $_.Architecture -eq "x64" -and $_.Platform -eq "win32-x64" -and $_.Channel -eq "Stable" } | Select-Object -First 1
+    $App = Invoke-EvergreenApp -Name "MicrosoftVisualStudioCode" | Where-Object { $_.Architecture -eq "x64" -and $_.Platform -eq "win32-x64" -and $_.Channel -eq "Stable" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {

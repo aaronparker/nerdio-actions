@@ -10,7 +10,7 @@ New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Forc
 
 try {
     Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "RDAnalyzer" | Select-Object -First 1
+    $App = Invoke-EvergreenApp -Name "RDAnalyzer" | Select-Object -First 1
     Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -WarningAction "SilentlyContinue" | Out-Null
 }
 catch {

@@ -12,7 +12,7 @@ New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Forc
 #region Microsoft Remote Desktop WebRTC Redirector Service
 try {
     Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "MicrosoftWvdRtcService" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
+    $App = Invoke-EvergreenApp -Name "MicrosoftWvdRtcService" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
@@ -39,7 +39,7 @@ catch {
 #region Microsoft Azure Virtual Desktop Multimedia Redirection Extensions
 try {
     Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "MicrosoftWvdMultimediaRedirection" | Select-Object -First 1
+    $App = Invoke-EvergreenApp -Name "MicrosoftWvdMultimediaRedirection" | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
@@ -68,7 +68,7 @@ catch {
 #region Boot Loader
 <#
 try {
-$App = Get-EvergreenApp -Name "MicrosoftWvdBootLoader" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
+$App = Invoke-EvergreenApp -Name "MicrosoftWvdBootLoader" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Install
@@ -91,7 +91,7 @@ catch {
 #region Infra agent
 <#
 try {
-$App = Get-EvergreenApp -Name "MicrosoftWvdInfraAgent" | Where-Object { $_.Architecture -eq "x64" }
+$App = Invoke-EvergreenApp -Name "MicrosoftWvdInfraAgent" | Where-Object { $_.Architecture -eq "x64" }
 $OutFile = Save-EvergreenApp -InputObject $App -Path $Path -WarningAction "SilentlyContinue"
 $params = @{
     FilePath     = "$env:SystemRoot\System32\msiexec.exe"

@@ -1,8 +1,8 @@
-#description: Installs the latest VLC media player 64-bit
+#description: Installs the latest version of draw.io
 #execution mode: Combined
-#tags: Evergreen, VLC
+#tags: Evergreen, draw.io
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\VLC\MediaPlayer"
+[System.String] $Path = "$env:SystemDrive\Apps\draw.io"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
@@ -10,7 +10,7 @@ New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Forc
 
 try {
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "VideoLanVlcPlayer" | Where-Object { $_.Architecture -eq "x64" -and $_.Type -eq "MSI" } | Select-Object -First 1
+    $App = Invoke-EvergreenApp -Name "diagrams.net" | Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
@@ -18,7 +18,7 @@ catch {
 }
 
 try {
-    $LogFile = "$env:ProgramData\NerdioManager\Logs\VlcMediaPlayer$($App.Version).log" -replace " ", ""
+    $LogFile = "$env:ProgramData\NerdioManager\Logs\diagrams.net$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 /quiet /log $LogFile"
@@ -33,9 +33,6 @@ catch {
 }
 
 Start-Sleep -Seconds 5
-$Shortcuts = @("$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\VideoLAN website.lnk",
-    "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\Release Notes.lnk",
-    "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\Documentation.lnk",
-    "$Env:Public\Desktop\VLC media player.lnk")
+$Shortcuts = @("$env:Public\Desktop\draw.io.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 #endregion

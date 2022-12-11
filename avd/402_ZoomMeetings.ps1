@@ -11,7 +11,7 @@ New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Forc
 try {
     # Download Zoom
     Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "Zoom" | Where-Object { $_.Platform -eq "VDI" } | Select-Object -First 1
+    $App = Invoke-EvergreenApp -Name "Zoom" | Where-Object { $_.Platform -eq "VDI" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {

@@ -1,8 +1,8 @@
-#description: Installs the latest VLC media player 64-bit
+#description: Installs the latest version of Mozilla Firefox 64-bit with automatic update disabled
 #execution mode: Combined
-#tags: Evergreen, VLC
+#tags: Evergreen, Mozilla, Firefox
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\VLC\MediaPlayer"
+[System.String] $Path = "$env:SystemDrive\Apps\Mozilla\Firefox"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
@@ -10,7 +10,7 @@ New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Forc
 
 try {
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "VideoLanVlcPlayer" | Where-Object { $_.Architecture -eq "x64" -and $_.Type -eq "MSI" } | Select-Object -First 1
+    $App = Invoke-EvergreenApp -Name "MozillaFirefox" | Where-Object { $_.Channel -eq "LATEST_FIREFOX_VERSION" -and $_.Architecture -eq "x64" -and $_.Language -eq "en-US" -and $_.Type -eq "msi" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
@@ -18,10 +18,10 @@ catch {
 }
 
 try {
-    $LogFile = "$env:ProgramData\NerdioManager\Logs\VlcMediaPlayer$($App.Version).log" -replace " ", ""
+    $LogFile = "$env:ProgramData\NerdioManager\Logs\MozillaFirefox$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 /quiet /log $LogFile"
+        ArgumentList = "/package `"$($OutFile.FullName)`" DESKTOP_SHORTCUT=false TASKBAR_SHORTCUT=false INSTALL_MAINTENANCE_SERVICE=false REMOVE_DISTRIBUTION_DIR=true PREVENT_REBOOT_REQUIRED=true REGISTER_DEFAULT_AGENT=true /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $false
@@ -33,9 +33,6 @@ catch {
 }
 
 Start-Sleep -Seconds 5
-$Shortcuts = @("$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\VideoLAN website.lnk",
-    "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\Release Notes.lnk",
-    "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\Documentation.lnk",
-    "$Env:Public\Desktop\VLC media player.lnk")
+$Shortcuts = @("$env:Public\Desktop\Mozilla Firefox.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 #endregion
