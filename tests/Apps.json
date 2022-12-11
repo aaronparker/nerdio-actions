@@ -236,7 +236,7 @@
     },
     {
         "Name": "MozillaFirefox",
-        "Filter": "Get--EvergreenApp -Name \"MozillaFirefox\" | Where-Object { $_.Channel -eq \"LATEST_FIREFOX_VERSION\" -and $_.Architecture -eq \"x64\" -and $_.Language -eq \"en-US\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Filter": "Get-EvergreenApp -Name \"MozillaFirefox\" | Where-Object { $_.Channel -eq \"LATEST_FIREFOX_VERSION\" -and $_.Architecture -eq \"x64\" -and $_.Language -eq \"en-US\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
         "Installed": "Mozilla Firefox*",
         "FilesExist": [
             "C:\\Program Files\\Mozilla Firefox\\private_browsing.exe",
