@@ -12,7 +12,7 @@ New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Forc
 try {
     # Download and unpack
     # Import-Module -Name "Evergreen" -Force
-    # $App = Get-EvergreenApp -Name "MicrosoftFSLogixApps" | Where-Object { $_.Channel -eq "Production" } | Select-Object -First 1
+    # $App = Invoke-EvergreenApp -Name "MicrosoftFSLogixApps" | Where-Object { $_.Channel -eq "Production" } | Select-Object -First 1
     $App = [PSCustomObject]@{
         Version = "2.9.8308.44092"
         URI = "https://download.microsoft.com/download/5/d/0/5d02445f-18b4-4c94-9f17-e65f06207593/FSLogix_Apps_2.9.8308.44092.zip"
