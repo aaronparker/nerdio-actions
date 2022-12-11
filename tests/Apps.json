@@ -1,7 +1,7 @@
 [
     {
         "Name": "MicrosoftFSLogixApps",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftFSLogixApps\" | Where-Object { $_.Channel -eq \"Production\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"MicrosoftFSLogixApps\" | Where-Object { $_.Channel -eq \"Production\" } | Select-Object -First 1",
         "Installed": "Microsoft FSLogix Apps",
         "FilesExist": [
             "C:\\Program Files\\FSLogix\\Apps\\frx.exe",
@@ -16,7 +16,7 @@
     },
     {
         "Name": "MicrosoftFSLogixAppsRuleEditor",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftFSLogixApps\" | Where-Object { $_.Channel -eq \"Production\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"MicrosoftFSLogixApps\" | Where-Object { $_.Channel -eq \"Production\" } | Select-Object -First 1",
         "Installed": "Microsoft FSLogix Apps RuleEditor",
         "FilesExist": [
             "C:\\Program Files\\FSLogix\\Apps\\RuleEditor.exe"
@@ -26,7 +26,7 @@
     },
     {
         "Name": "Microsoft.NET",
-        "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"LTS\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"LTS\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
         "Installed": "Microsoft Windows Desktop Runtime - 6",
         "FilesExist": [
             "C:\\Program Files\\dotnet\\dotnet.exe"
@@ -36,7 +36,7 @@
     },
     {
         "Name": "Microsoft.NET",
-        "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"Current\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"Current\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
         "Installed": "Microsoft Windows Desktop Runtime - 7",
         "FilesExist": [
             "C:\\Program Files\\dotnet\\dotnet.exe"
@@ -62,7 +62,7 @@
     },
     {
         "Name": "MicrosoftEdge",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftEdge\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"Stable\" -and $_.Release -eq \"Enterprise\" } | Sort-Object -Property \"Version\" -Descending | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"MicrosoftEdge\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"Stable\" -and $_.Release -eq \"Enterprise\" } | Sort-Object -Property \"Version\" -Descending | Select-Object -First 1",
         "Installed": "(^Microsoft Edge$)",
         "FilesExist": [
             "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\master_preferences"
@@ -82,7 +82,7 @@
     },
     {
         "Name": "MicrosoftOneDrive",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftOneDrive\" | Where-Object { $_.Ring -eq \"Production\" -and $_.Type -eq \"Exe\" -and $_.Architecture -eq \"AMD64\" } | Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"MicrosoftOneDrive\" | Where-Object { $_.Ring -eq \"Production\" -and $_.Type -eq \"Exe\" -and $_.Architecture -eq \"AMD64\" } | Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1",
         "Installed": "Microsoft OneDrive",
         "FilesExist": [
             "C:\\Program Files\\Microsoft OneDrive\\OneDrive.exe"
@@ -92,7 +92,7 @@
     },
     {
         "Name": "MicrosoftTeams",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftTeams\" | Where-Object { $_.Ring -eq \"General\" -and $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"MicrosoftTeams\" | Where-Object { $_.Ring -eq \"General\" -and $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
         "Installed": "Teams Machine-Wide Installer",
         "FilesExist": [
             "C:\\Program Files (x86)\\Teams Installer\\setup.json",
@@ -107,7 +107,7 @@
     },
     {
         "Name": "Microsoft365Apps",
-        "Filter": "Get-EvergreenApp -Name \"Microsoft365Apps\" | Where-Object { $_.Channel -eq \"MonthlyEnterprise\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"Microsoft365Apps\" | Where-Object { $_.Channel -eq \"MonthlyEnterprise\" } | Select-Object -First 1",
         "Installed": "Microsoft 365 Apps for enterprise",
         "FilesExist": [
             "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
@@ -119,7 +119,7 @@
     },
     {
         "Name": "AdobeAcrobatReaderDC",
-        "Filter": "Get-EvergreenApp -Name \"AdobeAcrobatReaderDC\" | Where-Object { $_.Language -eq \"MUI\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"AdobeAcrobatReaderDC\" | Where-Object { $_.Language -eq \"MUI\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
         "Installed": "Adobe Acrobat.*64-bit",
         "FilesExist": [
             "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe",
@@ -132,7 +132,7 @@
     },
     {
         "Name": "FoxitPDFReader",
-        "Filter": "Get-EvergreenApp -Name \"FoxitReader\" | Where-Object { $_.Language -eq \"English\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"FoxitReader\" | Where-Object { $_.Language -eq \"English\" } | Select-Object -First 1",
         "Installed": "Foxit PDF Reader",
         "FilesExist": [
             "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Reader\\FoxitPDFReader.exe",
@@ -145,7 +145,7 @@
     },
     {
         "Name": "GoogleChrome",
-        "Filter": "Get-EvergreenApp -Name \"GoogleChrome\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"stable\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"GoogleChrome\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"stable\" } | Select-Object -First 1",
         "Installed": "Google Chrome",
         "FilesExist": [
             "C:\\Program Files\\Google\\Chrome\\Application\\master_preferences",
@@ -161,7 +161,7 @@
     },
     {
         "Name": "NotepadPlusPlus",
-        "Filter": "Get-EvergreenApp -Name \"NotepadPlusPlus\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"exe\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"NotepadPlusPlus\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"exe\" } | Select-Object -First 1",
         "Installed": "Notepad.*(64-bit x64)",
         "FilesExist": [
             "C:\\Program Files\\Notepad++\\notepad++.exe"
@@ -171,7 +171,7 @@
     },
     {
         "Name": "VideoLanVlcPlayer",
-        "Filter": "Get-EvergreenApp -Name \"VideoLanVlcPlayer\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"MSI\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"VideoLanVlcPlayer\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"MSI\" } | Select-Object -First 1",
         "Installed": "VLC media player",
         "FilesExist": [
             "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe"
@@ -206,7 +206,7 @@
     },
     {
         "Name": "MicrosoftPowerToys",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftPowerToys\" | Where-Object { $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"MicrosoftPowerToys\" | Where-Object { $_.Architecture -eq \"x64\" } | Select-Object -First 1",
         "Installed": "PowerToys*",
         "FilesExist": [
             "C:\\Program Files\\PowerToys\\PowerToys.exe"
@@ -216,7 +216,7 @@
     },
     {
         "Name": "ImageGlass",
-        "Filter": "Get-EvergreenApp -Name \"ImageGlass\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"ImageGlass\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
         "Installed": "ImageGlass",
         "FilesExist": [],
         "ShortcutsNotExist": [],
@@ -224,7 +224,7 @@
     },
     {
         "Name": "draw.io",
-        "Filter": "Get-EvergreenApp -Name \"diagrams.net\" | Where-Object { $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"diagrams.net\" | Where-Object { $_.Type -eq \"msi\" } | Select-Object -First 1",
         "Installed": "draw.io*",
         "FilesExist": [
             "C:\\Program Files\\draw.io\\draw.io.exe"
@@ -236,7 +236,7 @@
     },
     {
         "Name": "MozillaFirefox",
-        "Filter": "Get-EvergreenApp -Name \"MozillaFirefox\" | Where-Object { $_.Channel -eq \"LATEST_FIREFOX_VERSION\" -and $_.Architecture -eq \"x64\" -and $_.Language -eq \"en-US\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Filter": "Invoke-EvergreenApp -Name \"MozillaFirefox\" | Where-Object { $_.Channel -eq \"LATEST_FIREFOX_VERSION\" -and $_.Architecture -eq \"x64\" -and $_.Language -eq \"en-US\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
         "Installed": "Mozilla Firefox*",
         "FilesExist": [
             "C:\\Program Files\\Mozilla Firefox\\private_browsing.exe",

@@ -1,4 +1,4 @@
-name: 'Test AVD image scripts'
+name: 'Validate PowerShell code'
 
 on:
   workflow_dispatch:
