@@ -221,5 +221,31 @@
         "FilesExist": [],
         "ShortcutsNotExist": [],
         "ServicesDisabled": []
+    },
+    {
+        "Name": "draw.io",
+        "Filter": "Get-EvergreenApp -Name \"diagrams.net\" | Where-Object { $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "draw.io*",
+        "FilesExist": [
+            "C:\\Program Files\\draw.io\\draw.io.exe"
+        ],
+        "ShortcutsNotExist": [
+            "C:\\Users\\Public\\Desktop\\draw.io.lnk"
+        ],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "MozillaFirefox",
+        "Filter": "Get--EvergreenApp -Name \"MozillaFirefox\" | Where-Object { $_.Channel -eq \"LATEST_FIREFOX_VERSION\" -and $_.Architecture -eq \"x64\" -and $_.Language -eq \"en-US\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "Mozilla Firefox*",
+        "FilesExist": [
+            "C:\\Program Files\\Mozilla Firefox\\private_browsing.exe",
+            "C:\\Program Files\\Mozilla Firefox\\crashreporter.exe",
+            "C:\\Program Files\\Mozilla Firefox\firefox.exe"
+        ],
+        "ShortcutsNotExist": [
+            "C:\\Users\\Public\\Desktop\\Mozilla Firefox.lnk"
+        ],
+        "ServicesDisabled": []
     }
 ]
