@@ -2,94 +2,23 @@ name: 'Test AVD image scripts'
 
 on:
   workflow_dispatch:
-  push:
+  # push:
+  #   paths:
+  #     - 'avd/*.ps1'
+  #     - '.github/workflows/test-scripts.yml'
+  pull_request:
+    branches: [ "main" ]
     paths:
       - 'avd/*.ps1'
-      - '.github/workflows/test-scripts.yml'
-  schedule:
-    - cron: '0 1 15 * *' #Run on the 15th of each month
+      - 'uninstall/*.ps1'
+      - 'tests/*.ps1'
 
 jobs:
   test:
     name: Run tests
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-      - name: Run support scripts
-        shell: powershell
-        working-directory: "${{ github.workspace }}\\avd"
-        run: |
-          $Scripts = Get-ChildItem -Include "0*.ps1" -Recurse -Exclude "012_WindowsUpdate.ps1"
-          foreach ($Script in $Scripts) {
-              Write-Host "Run: $($Script.Name)"
-              & $Script.FullName
-          }
-
-      - name: Run dependencies scripts
-        shell: powershell
-        if: always()
-        working-directory: "${{ github.workspace }}\\avd"
-        run: |
-          $Scripts = Get-ChildItem -Include "1*.ps1" -Recurse -Exclude "101_Avd-Agents.ps1"
-          foreach ($Script in $Scripts) {
-              Write-Host "Run: $($Script.Name)"
-              & $Script.FullName
-          }
-
-      - name: Run Microsoft apps scripts
-        shell: powershell
-        if: always()
-        working-directory: "${{ github.workspace }}\\avd"
-        run: |
-          $Scripts = Get-ChildItem -Include "2*.ps1" -Recurse
-          foreach ($Script in $Scripts) {
-              Write-Host "Run: $($Script.Name)"
-              & $Script.FullName
-          }
-
-      - name: Run 3rd party apps scripts
-        shell: powershell
-        if: always()
-        working-directory: "${{ github.workspace }}\\avd"
-        run: |
-          $Scripts = Get-ChildItem -Include "4*.ps1" -Recurse #-Exclude "401_FoxitPDReader.ps1"
-          foreach ($Script in $Scripts) {
-              Write-Host "Run: $($Script.Name)"
-              & $Script.FullName
-          }
-
-      - name: Run clean up scripts
-        shell: powershell
-        if: always()
-        working-directory: "${{ github.workspace }}\\avd"
-        run: |
-          $Scripts = Get-ChildItem -Include "9*.ps1" -Recurse
-          foreach ($Script in $Scripts) {
-              Write-Host "Run: $($Script.Name)"
-              & $Script.FullName
-          }
-
-      - name: List installed apps
-        shell: powershell
-        if: always()
-        working-directory: "${{ github.workspace }}\\support"
-        run: |
-          . .\Get-Installed.ps1
-          $params = @{
-              Path              = "$env:GITHUB_WORKSPACE\support\InstalledApplications.csv"
-              Encoding          = "Utf8"
-              NoTypeInformation = $true
-              Verbose           = $true
-          }
-          Get-InstalledSoftware | Export-Csv @params
-
-      - name: Upload installed apps list
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: installed-applications
-          path: "${{ github.workspace }}\\support\\InstalledApplications.csv"
 
       - name: Test with Pester
         shell: powershell
@@ -99,7 +28,7 @@ jobs:
           .\tests\Install-Pester.ps1
           Import-Module -Name "Pester", "Evergreen", "VcRedist" -Force -ErrorAction "Stop"
           $Config = [PesterConfiguration]::Default
-          $Config.Run.Path = ".\tests"
+          $Config.Run.Path = ".\tests\Main.Tests.ps1"
           $Config.Run.PassThru = $true
           $Config.CodeCoverage.Enabled = $false
           $Config.Output.Verbosity = "Detailed"
@@ -122,17 +51,6 @@ jobs:
         if: always()
         with:
           nunit_files: "${{ github.workspace }}\\tests\\TestResults.xml"
-
-      - name: Run uninstall scripts
-        shell: powershell
-        if: always()
-        working-directory: "${{ github.workspace }}\\uninstall"
-        run: |
-          $Scripts = Get-ChildItem -Include "Uninstall*.ps1" -Recurse
-          foreach ($Script in $Scripts) {
-              Write-Host "Run: $($Script.Name)"
-              & $Script.FullName
-          }
 
   pssa:
     permissions:

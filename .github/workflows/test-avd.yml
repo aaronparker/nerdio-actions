@@ -5,7 +5,7 @@ on:
   push:
     paths:
       - 'avd/*.ps1'
-      - '.github/workflows/test-scripts.yml'
+      - '.github/workflows/test-avd.yml'
   schedule:
     - cron: '0 1 15 * *' #Run on the 15th of each month
 
