@@ -241,7 +241,7 @@
         "FilesExist": [
             "C:\\Program Files\\Mozilla Firefox\\private_browsing.exe",
             "C:\\Program Files\\Mozilla Firefox\\crashreporter.exe",
-            "C:\\Program Files\\Mozilla Firefox\firefox.exe"
+            "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
         ],
         "ShortcutsNotExist": [
             "C:\\Users\\Public\\Desktop\\Mozilla Firefox.lnk"
