@@ -1,4 +1,4 @@
-name: 'Test AVD image scripts'
+name: 'Validate AVD image scripts'
 
 on:
   workflow_dispatch:
