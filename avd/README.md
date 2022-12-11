@@ -2,7 +2,7 @@
 
 Scripts for customising Windows 10/11 Enterprise and Enterprise multi-session images for use with Azure Virtual Desktop via Nerdio Manager scripted actions. These scripts can be used to update an existing gold image or session host.
 
-* `000_Rds-PrepImage.ps1` - Preps the image for installing updates and applications
+* `000_PrepImage.ps1` - Preps the image for installing updates and applications
 * `011_SupportFunctions.ps1` - Installs [Evergreen](https://stealthpuppy.com/evergreen), [VcRedist](https://vcredist.com) and PSWindowsUpdate PowerShell modules required for installing applications
 * `012_WindowsUpdate.ps1` - Installs Windows updates
 * `013_RegionLanguage.ps1` - Configures regional/language settings. Use [secure variables](https://nmw.zendesk.com/hc/en-us/articles/4731671517335-Scripted-Actions-Global-Secure-Variables) to pass a system language to this script. Sets `en-AU` by default

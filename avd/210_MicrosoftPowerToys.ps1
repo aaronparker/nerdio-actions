@@ -43,4 +43,3 @@ reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileExplor
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileLocksmith" /d 0 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityVideoConferenceMute" /d 0 /t "REG_DWORD" /f | Out-Null
 #endregion
- 
