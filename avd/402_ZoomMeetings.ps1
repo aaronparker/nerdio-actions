@@ -6,7 +6,7 @@
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Download Zoom
@@ -19,7 +19,7 @@ catch {
 }
 
 try {
-    $LogFile = "$env:ProgramData\NerdioManager\Logs\ZoomMeetings$($App.Version).log" -replace " ", ""
+    $LogFile = "$env:ProgramData\Evergreen\Logs\ZoomMeetings$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 zSilentStart=false zNoDesktopShortCut=true /quiet /log $LogFile"

@@ -7,7 +7,7 @@
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Download Teams
@@ -24,7 +24,7 @@ try {
     if (Test-Path -Path $TeamsExe) {
         $File = Get-ChildItem -Path $TeamsExe
         if ([System.Version]$File.VersionInfo.ProductVersion -le [System.Version]$App.Version) {
-            $LogFile = "$env:ProgramData\NerdioManager\Logs\UninstallMicrosoftTeams$($File.VersionInfo.ProductVersion).log" -replace " ", ""
+            $LogFile = "$env:ProgramData\Evergreen\Logs\UninstallMicrosoftTeams$($File.VersionInfo.ProductVersion).log" -replace " ", ""
             $params = @{
                 FilePath     = "$env:SystemRoot\System32\msiexec.exe"
                 ArgumentList = "/x `"$($OutFile.FullName)`" /quiet /log $LogFile"
@@ -53,7 +53,7 @@ else {
         # Install Teams
         New-Item -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Force -ErrorAction "SilentlyContinue" | Out-Null
         New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Name "IsWVDEnvironment" -PropertyType "DWORD" -Value 1 -Force -ErrorAction "SilentlyContinue" | Out-Null
-        $LogFile = $LogFile = "$env:ProgramData\NerdioManager\Logs\MicrosoftTeams$($App.Version).log" -replace " ", ""
+        $LogFile = $LogFile = "$env:ProgramData\Evergreen\Logs\MicrosoftTeams$($App.Version).log" -replace " ", ""
         $params = @{
             FilePath     = "$env:SystemRoot\System32\msiexec.exe"
             ArgumentList = "/package $($OutFile.FullName) OPTIONS=`"noAutoStart=true`" ALLUSER=1 ALLUSERS=1 /quiet /log $LogFile"

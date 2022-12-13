@@ -30,7 +30,7 @@ function Get-InstalledSoftware {
 #endregion
 
 #region Script logic
-New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Stop services
@@ -52,7 +52,7 @@ catch {
 try {
     $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft FSLogix Apps*" }
     foreach ($App in $Apps) {
-        $LogFile = "$env:ProgramData\NerdioManager\Logs\UninstallMicrosoftFSLogixApps$($App.Version).log" -replace " ", ""
+        $LogFile = "$env:ProgramData\Evergreen\Logs\UninstallMicrosoftFSLogixApps$($App.Version).log" -replace " ", ""
         $params = @{
             FilePath     = [Regex]::Match($App.UninstallString, '\"(.*)\"').Captures.Groups[1].Value
             ArgumentList = "/uninstall /quiet /norestart /log $LogFile"

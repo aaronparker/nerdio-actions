@@ -6,7 +6,7 @@
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Download
@@ -20,7 +20,7 @@ catch {
 
 try {
     foreach ($file in $OutFile) {
-        $LogFile = "$env:ProgramData\NerdioManager\Logs\Microsoft.NET.log" -replace " ", ""
+        $LogFile = "$env:ProgramData\Evergreen\Logs\Microsoft.NET.log" -replace " ", ""
         $params = @{
             FilePath     = $file.FullName
             ArgumentList = "/install /quiet /norestart /log $LogFile"

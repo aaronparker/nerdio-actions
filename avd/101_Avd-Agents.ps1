@@ -6,7 +6,7 @@
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Run tasks/install apps
 #region Microsoft Remote Desktop WebRTC Redirector Service
@@ -21,7 +21,7 @@ catch {
 
 try {
     # Install RTC
-    $LogFile = "$env:ProgramData\NerdioManager\Logs\MicrosoftWvdRtcService$($App.Version).log" -replace " ", ""
+    $LogFile = "$env:ProgramData\Evergreen\Logs\MicrosoftWvdRtcService$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"
@@ -48,7 +48,7 @@ catch {
 
 try {
     # Install MMR
-    $LogFile = "$env:ProgramData\NerdioManager\Logs\MicrosoftWvdMultimediaRedirection$($App.Version).log" -replace " ", ""
+    $LogFile = "$env:ProgramData\Evergreen\Logs\MicrosoftWvdMultimediaRedirection$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"
@@ -74,7 +74,7 @@ $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction 
 # Install
 $params = @{
     FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-    ArgumentList = "/package `"$($OutFile.FullName)`" /quiet `"$env:ProgramData\NerdioManager\Logs\MicrosoftWvdBootLoader.log`""
+    ArgumentList = "/package `"$($OutFile.FullName)`" /quiet `"$env:ProgramData\Evergreen\Logs\MicrosoftWvdBootLoader.log`""
     NoNewWindow  = $true
     Wait         = $true
     PassThru     = $false
@@ -95,7 +95,7 @@ $App = Invoke-EvergreenApp -Name "MicrosoftWvdInfraAgent" | Where-Object { $_.Ar
 $OutFile = Save-EvergreenApp -InputObject $App -Path $Path -WarningAction "SilentlyContinue"
 $params = @{
     FilePath     = "$env:SystemRoot\System32\msiexec.exe"
-    ArgumentList = "/package $($OutFile.FullName) /quiet `"$env:ProgramData\NerdioManager\Logs\MicrosoftWvdInfraAgent.log`""
+    ArgumentList = "/package $($OutFile.FullName) /quiet `"$env:ProgramData\Evergreen\Logs\MicrosoftWvdInfraAgent.log`""
     NoNewWindow  = $true
     Wait         = $true
     PassThru     = $false

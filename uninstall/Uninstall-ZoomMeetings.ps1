@@ -30,12 +30,12 @@ function Get-InstalledSoftware {
 #endregion
 
 #region Script logic
-New-Item -Path "$env:ProgramData\NerdioManager\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Zoom*" }
     foreach ($App in $Apps) {
-        $LogFile = "$env:ProgramData\NerdioManager\Logs\UninstallZoomMeetings$($App.Version).log" -replace " ", ""
+        $LogFile = "$env:ProgramData\Evergreen\Logs\UninstallZoomMeetings$($App.Version).log" -replace " ", ""
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
             ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log $LogFile"
