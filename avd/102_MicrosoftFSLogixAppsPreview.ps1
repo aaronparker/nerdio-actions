@@ -9,6 +9,9 @@
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
+# There's no preview right now, so exit the script
+exit 0
+
 try {
     # Download and unpack
     # Import-Module -Name "Evergreen" -Force
