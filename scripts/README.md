@@ -4,7 +4,9 @@
 
 Image scripts for customising Windows 10/11 Enterprise and Enterprise multi-session images for use with Azure Virtual Desktop via Nerdio Manager scripted actions. These scripts can be used to update an existing gold image or session host.
 
-## Core support scripts
+Where supported, application installers will save install logs to `$env:ProgramData\Evergreen\Logs`.
+
+### Core support scripts
 
 * `000_PrepImage.ps1` - Preps the image for installing updates and applications
 * `011_SupportFunctions.ps1` - Installs [Evergreen](https://stealthpuppy.com/evergreen), [VcRedist](https://vcredist.com) and PSWindowsUpdate PowerShell modules required for installing applications
@@ -13,7 +15,7 @@ Image scripts for customising Windows 10/11 Enterprise and Enterprise multi-sess
 * `014_RolesFeatures.ps1` - Enable or disables / removes Windows roles, features and capabilities
 * `015_Customise.ps1` - Installs [Windows Customised Defaults](https://stealthpuppy.com/image-customise). Use [secure variables](https://nmw.zendesk.com/hc/en-us/articles/4731671517335-Scripted-Actions-Global-Secure-Variables) to pass a system language to this script. Sets `en-AU` by default
 
-## Microsoft dependencies
+### Microsoft dependencies
 
 * `100_MicrosoftVcRedists.ps1` - Installs the supported Microsoft Visual C++ Redistributables
 * `101_Avd-Agents.ps1` - Installs Azure Virtual Desktop agents
@@ -21,13 +23,13 @@ Image scripts for customising Windows 10/11 Enterprise and Enterprise multi-sess
 * `103_MicrosoftNET.ps1` - Installs the Microsoft .NET Windows Desktop Runtime
 * `104_MicrosoftEdge.ps1` - Installs Microsoft Edge and Microsoft Edge WebView2 Runtime
 
-## Microsoft applications
+### Microsoft applications
 
 * `200_MicrosoftOneDrive.ps1` - Installs Microsoft OneDrive per-machine
 * `201_MicrosoftTeams.ps1` - Installs Microsoft Teams per-machine (this script will update Teams)
 * `202_Microsoft365Apps.ps1` - Installs the latest Microsoft 365 Apps for Enterprise, Current channel, 64-bit with shared computer licensing and updates disabled (includes an embedded configuration.xml)
 
-## Third party applications
+### Third party applications
 
 * `400_AdobeAcrobatReaderDC.ps1` - Installs the latest Adobe Acrobat Reader MUI 64-bit with automatic updates disabled
 * `401_ZoomMeetings.ps1` - Installs the latest Zoom Meetings VDI client
@@ -40,7 +42,7 @@ Image scripts for customising Windows 10/11 Enterprise and Enterprise multi-sess
 * `408_RemoteDesktopAnalyzer.ps1` - Downloads the Remote Display Analyzer to `C:\Program Files\RemoteDisplayAnalyzer`
 * `409_CiscoWebEx.ps1` - Installs the specified version of Cisco WebEx VDI client with automatic updates disabled. URL to the installer is hard coded in this script.
 
-## Clean up scripts
+### Clean up scripts
 
 * `99_CleanupImage.ps1` - Cleans up the image post install and update (e.g. deletes C:\Apps)
 
@@ -51,3 +53,5 @@ Once run on the target VM, the VM or image should have the following application
 ## Uninstall scripts
 
 Scripts here will uninstall target applications. Run on target session hosts when users are not signed in, as applications will be forcibly uninstalled.
+
+Where supported, uninstall commands will save uninstall logs to `$env:ProgramData\Evergreen\Logs`.
