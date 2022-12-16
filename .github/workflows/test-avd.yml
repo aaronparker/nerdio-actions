@@ -17,7 +17,7 @@ jobs:
 
       - name: Run support scripts
         shell: powershell
-        working-directory: "${{ github.workspace }}\\avd"
+        working-directory: "${{ github.workspace }}\\scripts\\image"
         run: |
           $Scripts = Get-ChildItem -Include "0*.ps1" -Recurse -Exclude "012_WindowsUpdate.ps1"
           foreach ($Script in $Scripts) {
@@ -28,7 +28,7 @@ jobs:
       - name: Run dependencies scripts
         shell: powershell
         if: always()
-        working-directory: "${{ github.workspace }}\\avd"
+        working-directory: "${{ github.workspace }}\\scripts\\image"
         run: |
           $Scripts = Get-ChildItem -Include "1*.ps1" -Recurse -Exclude "101_Avd-Agents.ps1"
           foreach ($Script in $Scripts) {
@@ -39,7 +39,7 @@ jobs:
       - name: Run Microsoft apps scripts
         shell: powershell
         if: always()
-        working-directory: "${{ github.workspace }}\\avd"
+        working-directory: "${{ github.workspace }}\\scripts\\image"
         run: |
           $Scripts = Get-ChildItem -Include "2*.ps1" -Recurse
           foreach ($Script in $Scripts) {
@@ -50,7 +50,7 @@ jobs:
       - name: Run 3rd party apps scripts
         shell: powershell
         if: always()
-        working-directory: "${{ github.workspace }}\\avd"
+        working-directory: "${{ github.workspace }}\\scripts\\image"
         run: |
           $Scripts = Get-ChildItem -Include "4*.ps1" -Recurse #-Exclude "401_FoxitPDReader.ps1"
           foreach ($Script in $Scripts) {
@@ -61,7 +61,7 @@ jobs:
       - name: Run clean up scripts
         shell: powershell
         if: always()
-        working-directory: "${{ github.workspace }}\\avd"
+        working-directory: "${{ github.workspace }}\\scripts\\image"
         run: |
           $Scripts = Get-ChildItem -Include "9*.ps1" -Recurse
           foreach ($Script in $Scripts) {
@@ -125,7 +125,7 @@ jobs:
       - name: Run uninstall scripts
         shell: powershell
         if: always()
-        working-directory: "${{ github.workspace }}\\uninstall"
+        working-directory: "${{ github.workspace }}\\scripts\\uninstall"
         run: |
           $Scripts = Get-ChildItem -Include "Uninstall*.ps1" -Recurse
           foreach ($Script in $Scripts) {
