@@ -1,5 +1,7 @@
 # Azure Virtual Desktop images
 
+## Install scripts
+
 Image scripts for customising Windows 10/11 Enterprise and Enterprise multi-session images for use with Azure Virtual Desktop via Nerdio Manager scripted actions. These scripts can be used to update an existing gold image or session host.
 
 ## Core support scripts
