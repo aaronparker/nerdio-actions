@@ -22,8 +22,8 @@ try {
         Wait         = $true
         PassThru     = $false
     }
-    Start-Process @params
+    Start-Process @params | Out-Null
 }
 catch {
-    throw $_.Exception.Message
+    $_.Exception.Message
 }
