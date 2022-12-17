@@ -247,5 +247,19 @@
             "C:\\Users\\Public\\Desktop\\Mozilla Firefox.lnk"
         ],
         "ServicesDisabled": []
+    },
+    {
+        "Name": "Paint.NET",
+        "Filter": "Invoke-EvergreenApp -Name \"PaintDotNetOfflineInstaller\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.URI -match \"winmsi\" } | Select-Object -First 1",
+        "Installed": "paint.net*",
+        "FilesExist": [
+            "C:\\Program Files\\Mozilla Firefox\\private_browsing.exe",
+            "C:\\Program Files\\Mozilla Firefox\\crashreporter.exe",
+            "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
+        ],
+        "ShortcutsNotExist": [
+            "C:\\Users\\Public\\Desktop\\Paint.NET.lnk"
+        ],
+        "ServicesDisabled": []
     }
 ]
