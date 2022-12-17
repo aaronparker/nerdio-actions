@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'avd/*.ps1'
+      - 'scripts/**.ps1'
   schedule:
     - cron: '0 1 15 * *' #Run on the 15th of each month
 

@@ -9,8 +9,7 @@ on:
   pull_request:
     branches: [ "main" ]
     paths:
-      - 'avd/*.ps1'
-      - 'uninstall/*.ps1'
+      - 'scripts/**.ps1'
       - 'tests/*.ps1'
 
 jobs:
