@@ -13,7 +13,8 @@ New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -E
 try {
     # Download
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "MicrosoftEdge" | Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Stable" -and $_.Release -eq "Enterprise" } | `
+    $App = Invoke-EvergreenApp -Name "MicrosoftEdge" | `
+        Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Stable" -and $_.Release -eq "Enterprise" } | `
         Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }

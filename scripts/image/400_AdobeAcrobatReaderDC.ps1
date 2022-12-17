@@ -16,7 +16,8 @@ New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -E
 try {
     # Download Reader installer
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "AdobeAcrobatReaderDC" | Where-Object { $_.Language -eq $Language -and $_.Architecture -eq $Architecture } | `
+    $App = Invoke-EvergreenApp -Name "AdobeAcrobatReaderDC" | `
+        Where-Object { $_.Language -eq $Language -and $_.Architecture -eq $Architecture } | `
         Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }

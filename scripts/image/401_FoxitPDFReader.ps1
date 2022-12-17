@@ -4,6 +4,15 @@
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Foxit\PDFReader"
 
+#region Use Secure variables in Nerdio Manager to pass a language
+if ($null -eq $SecureVars.FoxitLanguage) {
+    [System.String] $Language = "English"
+}
+else {
+    [System.String] $Language = $SecureVars.FoxitLanguage
+}
+#endregion
+
 #region Script logic
 # Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
@@ -11,7 +20,7 @@ New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -E
 
 try {
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "FoxitReader" | Where-Object { $_.Language -eq "English" } | Select-Object -First 1
+    $App = Invoke-EvergreenApp -Name "FoxitReader" | Where-Object { $_.Language -eq $Language } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {

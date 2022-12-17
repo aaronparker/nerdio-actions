@@ -10,7 +10,8 @@ New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -E
 
 try {
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "PaintDotNetOfflineInstaller" | Where-Object { $_.Architecture -eq "x64" -and $_.URI -match "winmsi" } | Select-Object -First 1
+    $App = Invoke-EvergreenApp -Name "PaintDotNetOfflineInstaller" | `
+        Where-Object { $_.Architecture -eq "x64" -and $_.URI -match "winmsi" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {

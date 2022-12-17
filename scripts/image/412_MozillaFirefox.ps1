@@ -4,13 +4,24 @@
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Mozilla\Firefox"
 
+#region Use Secure variables in Nerdio Manager to pass a language
+if ($null -eq $SecureVars.FirefoxLanguage) {
+    [System.String] $Language = "en-US"
+}
+else {
+    [System.String] $Language = $SecureVars.FirefoxLanguage
+}
+#endregion
+
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "MozillaFirefox" | Where-Object { $_.Channel -eq "LATEST_FIREFOX_VERSION" -and $_.Architecture -eq "x64" -and $_.Language -eq "en-US" -and $_.Type -eq "msi" } | Select-Object -First 1
+    $App = Invoke-EvergreenApp -Name "MozillaFirefox" | `
+        Where-Object { $_.Channel -eq "LATEST_FIREFOX_VERSION" -and $_.Architecture -eq "x64" -and $_.Language -eq $Language -and $_.Type -eq "msi" } | `
+        Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
