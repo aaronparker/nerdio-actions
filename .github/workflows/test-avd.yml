@@ -8,6 +8,10 @@ on:
   schedule:
     - cron: '0 1 15 * *' #Run on the 15th of each month
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Run tests

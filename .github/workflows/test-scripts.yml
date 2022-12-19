@@ -2,15 +2,15 @@ name: 'Validate PowerShell code'
 
 on:
   workflow_dispatch:
-  # push:
-  #   paths:
-  #     - 'avd/*.ps1'
-  #     - '.github/workflows/test-scripts.yml'
   pull_request:
     branches: [ "main" ]
     paths:
       - 'scripts/**.ps1'
       - 'tests/*.ps1'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
