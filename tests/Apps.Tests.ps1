@@ -91,7 +91,10 @@ Describe -Name "Validate <App.Name>" -ForEach $Applications {
         # Get details for the current application
         $App = $_
         $Latest = Invoke-Expression -Command $App.Filter
-        $Installed = $InstalledSoftware | Where-Object { $_.Name -match $App.Installed } | Select-Object -First 1
+        $Installed = $InstalledSoftware | `
+            Where-Object { $_.Name -match $App.Installed } | `
+            Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | `
+            Select-Object -First 1
     }
 
     Context "Applications files" -ForEach $FilesExist {
