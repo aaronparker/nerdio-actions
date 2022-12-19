@@ -1,6 +1,6 @@
 #description: Uninstalls 7Zip ZS
 #execution mode: Combined
-#tags: Uninstall, 7Zip ZS
+#tags: Uninstall, 7Zip
 
 #region Functions
 function Get-InstalledSoftware {

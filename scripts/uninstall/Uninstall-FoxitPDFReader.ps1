@@ -1,6 +1,6 @@
 #description: Uninstalls Foxit PDF Reader
 #execution mode: Combined
-#tags: Uninstall, Foxit, PDF Reader, PDF
+#tags: Uninstall, Foxit, PDF
 
 #region Functions
 function Get-InstalledSoftware {

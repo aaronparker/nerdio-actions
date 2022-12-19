@@ -1,6 +1,6 @@
 #description: Uninstalls Microsoft OneDrive
 #execution mode: Combined
-#tags: Uninstall, Microsoft, FSLogix
+#tags: Uninstall, Microsoft, OneDrive
 
 #region Functions
 function Get-InstalledSoftware {

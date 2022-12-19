@@ -1,6 +1,6 @@
 #description: Uninstalls ImageGlass
 #execution mode: Combined
-#tags: Uninstall, VLC, ImageGlass
+#tags: Uninstall, ImageGlass
 
 #region Functions
 function Get-InstalledSoftware {

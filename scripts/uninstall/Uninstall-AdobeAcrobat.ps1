@@ -1,6 +1,6 @@
 #description: Uninstalls Adobe Acrobat products
 #execution mode: Combined
-#tags: Uninstall, Adobe, Acrobat
+#tags: Uninstall, Adobe, Acrobat, PDF
 
 #region Functions
 function Get-InstalledSoftware {
