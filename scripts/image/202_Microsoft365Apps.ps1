@@ -4,8 +4,16 @@
 #Requires -Modules Evergreen
 [System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Office"
 
-#[ValidateSet("BetaChannel", "CurrentPreview", "Current", "MonthlyEnterprise", "PerpetualVL2021", "SemiAnnualPreview", "SemiAnnual", "PerpetualVL2019")]
-[System.String] $Channel = "MonthlyEnterprise"
+#region Use Secure variables in Nerdio Manager to pass variables
+if ($null -eq $SecureVars.M365Channel) {
+    #[ValidateSet("BetaChannel", "CurrentPreview", "Current", "MonthlyEnterprise", "PerpetualVL2021", "SemiAnnualPreview", "SemiAnnual", "PerpetualVL2019")]
+    [System.String] $Channel = "MonthlyEnterprise"
+}
+else {
+    [System.String] $Channel = $SecureVars.M365Channel
+}
+#endregion
+
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
