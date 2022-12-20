@@ -5,12 +5,9 @@ on:
   pull_request:
     branches: [ "main" ]
     paths:
-      - 'scripts/**.ps1'
+      - 'scripts/image/*.ps1'
+      - 'scripts/uninstall/*.ps1'
       - 'tests/*.ps1'
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   pssa:

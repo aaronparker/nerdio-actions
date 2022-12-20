@@ -4,13 +4,10 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'scripts/**.ps1'
+      - 'scripts/image/*.ps1'
+      - 'scripts/uninstall/*.ps1'
   schedule:
     - cron: '0 1 15 * *' #Run on the 15th of each month
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   pssa:
