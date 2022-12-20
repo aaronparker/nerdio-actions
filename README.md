@@ -7,12 +7,8 @@ PowerShell scripts for integration with [Scripted Actions in Nerdio Manager](htt
 * `/scripts/image` - scripts for building a Windows 10/11 pooled desktop (single session or multi-session). Can be used to build an image or run against already deployed session hosts
 * `/scripts/uninstall` - scripts for uninstalling applications
 
-## PSScriptAnalyzer results
-
-[![PSScriptAnalyzer](https://github.com/aaronparker/nerdio-actions/actions/workflows/powershell.yml/badge.svg)](https://github.com/aaronparker/nerdio-actions/actions/workflows/powershell.yml)
-
-## Script validation results
+## GitHub Actions validation results
 
 Note: these scripts are tested via GitHub Actions on Windows Server 2022.
 
-[![Test Azure Virtual Desktop image scripts](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-scripts.yml/badge.svg)](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-scripts.yml)
+[![Test install scripts](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-avd.yml/badge.svg)](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-avd.yml) [![Validate PowerShell code](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-scripts.yml/badge.svg)](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-scripts.yml)
