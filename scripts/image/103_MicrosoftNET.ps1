@@ -1,4 +1,4 @@
-#description: Installs the Microsoft .NET Desktop Runtime
+#description: Installs the Microsoft .NET Desktop LTS and Current Runtimes
 #execution mode: Combined
 #tags: Evergreen, Microsoft, .NET
 #Requires -Modules Evergreen

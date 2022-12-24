@@ -1,4 +1,4 @@
-#description: Installs the supported Microsoft Visual C++ Redistributables
+#description: Installs the supported Microsoft Visual C++ Redistributables (2012, 2013, 2022)
 #execution mode: Combined
 #tags: VcRedist, Microsoft
 #Requires -Modules VcRedist

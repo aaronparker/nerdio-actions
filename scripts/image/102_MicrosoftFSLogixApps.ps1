@@ -1,4 +1,4 @@
-#description: Installs the latest Microsoft FSLogix Apps agent
+#description: Installs the latest Microsoft FSLogix Apps agent and the FSLogix Apps Rules Editor
 #execution mode: Combined
 #tags: Evergreen, Microsoft, FSLogix
 #Requires -Modules Evergreen

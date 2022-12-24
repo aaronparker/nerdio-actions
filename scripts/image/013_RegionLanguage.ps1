@@ -1,4 +1,4 @@
-#description: Installs Windows language support. Set language/regional settings
+#description: Installs Windows language support and sets language/regional settings
 #execution mode: Combined
 #tags: Language, Image
 
