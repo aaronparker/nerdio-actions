@@ -21,9 +21,9 @@ try {
     $LogFile = "$env:ProgramData\Evergreen\Logs\Greenshot$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = $OutFile.FullName
-        ArgumentList = "/VERYSILENT /NORESTART /LOG=$LogFile"
+        ArgumentList = "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=$LogFile"
         NoNewWindow  = $true
-        Wait         = $true
+        Wait         = $false
         PassThru     = $false
     }
     $result = Start-Process @params
@@ -33,6 +33,9 @@ catch {
 }
 
 Start-Sleep -Seconds 5
+Get-Process -ErrorAction "SilentlyContinue" | `
+    Where-Object { $_.Path -like "$env:ProgramFiles\Greenshot\*" } | `
+    Stop-Process -Force -ErrorAction "SilentlyContinue"
 $Shortcuts = @("$env:Public\Desktop\Greenshot.lnk",
     "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\License.txt.lnk",
     "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\Readme.txt.lnk",
