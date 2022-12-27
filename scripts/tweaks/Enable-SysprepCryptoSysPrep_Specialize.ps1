@@ -2,9 +2,9 @@
 #tags: Sysprep, Image, Preview
 
 <#
-Notes: There is an issue with images created from Active Directory-joined Windows 11 VMs that prevents VMs 
-from booting. This script will remove the CryptoSysPrep_Specialize methods from the Specialize.xml file, 
-which is a workaround for this issue. It is unclear what unforeseen effects this modification may have. 
+Notes: There is an issue with images created from Active Directory-joined Windows 11 VMs that prevents VMs
+from booting. This script will remove the CryptoSysPrep_Specialize methods from the Specialize.xml file,
+which is a workaround for this issue. It is unclear what unforeseen effects this modification may have.
 Nerdio does not recommend using this workaround in a production environment. Microsoft is aware of the
 issue with sysprep and will presumably provide a supported fix in the future.
 #>
