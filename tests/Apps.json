@@ -261,5 +261,20 @@
             "C:\\Users\\Public\\Desktop\\Paint.NET.lnk"
         ],
         "ServicesDisabled": []
+    },
+    {
+        "Name": "Greenshot",
+        "Filter": "Get-EvergreenApp -Name \"Greenshot\" | Where-Object { $_.Architecture -eq \"x86\" -and $_.Uri -match \"Greenshot-INSTALLER-\" } | Select-Object -First 1",
+        "Installed": "Greenshot*",
+        "FilesExist": [
+            "C:\\Program Files\\Greenshot\\Greenshot.exe"
+        ],
+        "ShortcutsNotExist": [
+            "C:\\Users\\Public\\Desktop\\Greenshot.lnk",
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Greenshot\\License.txt.lnk",
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Greenshot\\Readme.txt.lnk",
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Greenshot\\Uninstall Greenshot.lnk"
+        ],
+        "ServicesDisabled": []
     }
 ]
