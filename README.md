@@ -5,10 +5,11 @@ PowerShell scripts for integration with [Scripted Actions in Nerdio Manager](htt
     Note: this code is provided as-is, without warranty or support of any kind.
 
 * `/scripts/image` - scripts for building a Windows 10/11 pooled desktop (single session or multi-session). Can be used to build an image or run against already deployed session hosts
+* `/scripts/tweaks` - scripts for implementing specific configurations and tweaks for gold images or session hosts
 * `/scripts/uninstall` - scripts for uninstalling applications
 
 ## GitHub Actions validation results
 
 Note: these scripts are tested via GitHub Actions on Windows Server 2022.
 
-[![Test install scripts](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-avd.yml/badge.svg)](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-avd.yml) [![Validate PowerShell code](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-scripts.yml/badge.svg)](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-scripts.yml)
+[![Validate scripts](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-avd.yml/badge.svg)](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-avd.yml)
