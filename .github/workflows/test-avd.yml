@@ -8,6 +8,7 @@ on:
       - 'scripts/tweaks/*.ps1'
       - 'scripts/uninstall/*.ps1'
       - 'tests/*.ps1'
+      - '.github/workflows/test-avd.yml'
   schedule:
     - cron: '0 1 15 * *' #Run on the 15th of each month
 
@@ -83,7 +84,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./CodeCoverage-${{ matrix.os }}.xml
+          files: ./CodeCoverage.xml
           verbose: true
 
       - name: List installed apps
