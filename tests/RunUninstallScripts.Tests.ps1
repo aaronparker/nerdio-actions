@@ -24,7 +24,7 @@ BeforeDiscovery {
 Describe -Name "Uninstall scripts" -ForEach $Scripts {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw during execution" {
-            Write-Host "Running: $($_.FullName)"
+            Write-Host "Running: $($_.Name)"
             & $_.FullName
         }
     }

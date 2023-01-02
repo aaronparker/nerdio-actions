@@ -17,7 +17,9 @@ BeforeDiscovery {
         $Path = $env:GITHUB_WORKSPACE
     }
     $Applications = Get-Content -Path $([System.IO.Path]::Combine($Path, "tests", "Apps.json")) | ConvertFrom-Json
+}
 
+BeforeAll {
     # Import module
     Import-Module -Name "Evergreen" -Force
 }

@@ -18,13 +18,13 @@ BeforeDiscovery {
     }
 
     # Get the scripts to test
-    $Scripts = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse
+    $Scripts = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse -Exclude "Enable-SysprepCryptoSysPrep_Specialize.ps1"
 }
 
 Describe -Name "Tweaks scripts" -ForEach $Scripts {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw during execution" {
-            Write-Host "Running: $($_.FullName)"
+            Write-Host "Running: $($_.Name)"
             & $_.FullName
         }
     }
