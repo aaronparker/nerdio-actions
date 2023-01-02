@@ -25,7 +25,7 @@ try {
         ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 zSilentStart=false zNoDesktopShortCut=true /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
-        PassThru     = $false
+        PassThru     = $true
     }
     $result = Start-Process @params
 }

@@ -35,7 +35,7 @@ try {
         ArgumentList = "/package `"$($OutFile.FullName)`" DESKTOP_SHORTCUT=false TASKBAR_SHORTCUT=false INSTALL_MAINTENANCE_SERVICE=false REMOVE_DISTRIBUTION_DIR=true PREVENT_REBOOT_REQUIRED=true REGISTER_DEFAULT_AGENT=true /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
-        PassThru     = $false
+        PassThru     = $true
     }
     $result = Start-Process @params
 }

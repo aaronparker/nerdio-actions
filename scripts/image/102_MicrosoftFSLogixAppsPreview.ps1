@@ -39,7 +39,7 @@ try {
                     ArgumentList = "/install /quiet /norestart /log $LogFile"
                     NoNewWindow  = $true
                     Wait         = $true
-                    PassThru     = $false
+                    PassThru     = $true
                 }
                 $result = Start-Process @params
             }

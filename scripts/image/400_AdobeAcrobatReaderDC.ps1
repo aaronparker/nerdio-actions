@@ -34,7 +34,7 @@ try {
         ArgumentList = $ArgumentList
         NoNewWindow  = $true
         Wait         = $true
-        PassThru     = $false
+        PassThru     = $true
     }
     $result = Start-Process @params
 }

@@ -23,7 +23,7 @@ try {
         ArgumentList = "/VerySilent /Lang=en /NoIcons /COMPONENTS=None"
         NoNewWindow  = $true
         Wait         = $true
-        PassThru     = $false
+        PassThru     = $true
     }
     $result = Start-Process @params
 }

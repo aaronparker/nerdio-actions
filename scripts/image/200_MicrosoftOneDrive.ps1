@@ -27,7 +27,7 @@ try {
         ArgumentList = "/silent /allusers"
         NoNewWindow  = $true
         Wait         = $false
-        PassThru     = $false
+        PassThru     = $true
     }
     $result = Start-Process @params
     do {

@@ -24,7 +24,7 @@ try {
         ArgumentList = "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=$LogFile"
         NoNewWindow  = $true
         Wait         = $false
-        PassThru     = $false
+        PassThru     = $true
     }
     $result = Start-Process @params
 }

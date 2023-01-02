@@ -26,7 +26,7 @@ try {
             FilePath     = $file.FullName
             ArgumentList = "/install /quiet /norestart /log $LogFile"
             NoNewWindow  = $true
-            PassThru     = $false
+            PassThru     = $true
             Wait         = $true
         }
         $result = Start-Process @params

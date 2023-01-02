@@ -33,7 +33,7 @@ try {
             ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true /log $LogFile"
             NoNewWindow  = $true
             Wait         = $true
-            PassThru     = $false
+            PassThru     = $true
         }
         $result = Start-Process @params
     }
@@ -92,7 +92,7 @@ try {
         ArgumentList = "/silent /install"
         NoNewWindow  = $true
         Wait         = $true
-        PassThru     = $false
+        PassThru     = $true
     }
     $result = Start-Process @params
 }

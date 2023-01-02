@@ -58,8 +58,8 @@ try {
                 ArgumentList = "/x `"$($OutFile.FullName)`" /quiet /log $LogFile"
                 NoNewWindow  = $true
                 Wait         = $true
-                PassThru     = $false
-            }
+                PassThru     = $true
+            }   
             $result = Start-Process @params
 
             $Folders = "${env:ProgramFiles(x86)}\Microsoft\Teams", `
@@ -96,7 +96,7 @@ try {
         ArgumentList = "/package $($OutFile.FullName) OPTIONS=`"noAutoStart=true`" ALLUSER=1 ALLUSERS=1 /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
-        PassThru     = $false
+        PassThru     = $true
     }
     $result = Start-Process @params
 }

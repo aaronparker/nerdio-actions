@@ -27,7 +27,7 @@ try {
         ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
-        PassThru     = $false
+        PassThru     = $true
     }
     $result = Start-Process @params
 }
@@ -54,7 +54,7 @@ try {
         ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
-        PassThru     = $false
+        PassThru     = $true
     }
     $result = Start-Process @params
 }
@@ -77,7 +77,7 @@ $params = @{
     ArgumentList = "/package `"$($OutFile.FullName)`" /quiet `"$env:ProgramData\Evergreen\Logs\MicrosoftWvdBootLoader.log`""
     NoNewWindow  = $true
     Wait         = $true
-    PassThru     = $false
+    PassThru     = $true
 }
 $params
 Start-Process @params
@@ -98,7 +98,7 @@ $params = @{
     ArgumentList = "/package $($OutFile.FullName) /quiet `"$env:ProgramData\Evergreen\Logs\MicrosoftWvdInfraAgent.log`""
     NoNewWindow  = $true
     Wait         = $true
-    PassThru     = $false
+    PassThru     = $true
 }
 Start-Process @params
 }

@@ -20,7 +20,7 @@ try {
         ArgumentList = "/C /S `"$env:ProgramData\Evergreen\Logs`""
         NoNewWindow  = $true
         Wait         = $true
-        PassThru     = $false
+        PassThru     = $true
     }
     Start-Process @params | Out-Null
 }

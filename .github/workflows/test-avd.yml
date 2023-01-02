@@ -1,11 +1,13 @@
-name: 'Test install scripts'
+name: "Validate scripts"
 
 on:
   workflow_dispatch:
   push:
     paths:
       - 'scripts/image/*.ps1'
+      - 'scripts/tweaks/*.ps1'
       - 'scripts/uninstall/*.ps1'
+      - 'tests/*.ps1'
   schedule:
     - cron: '0 1 15 * *' #Run on the 15th of each month
 
@@ -23,7 +25,7 @@ jobs:
       - name: Run PSScriptAnalyzer
         uses: microsoft/psscriptanalyzer-action@6b2948b1944407914a58661c49941824d149734f
         with:
-          path: "./"
+          path: "./scripts"
           recurse: true
           output: results.sarif
 
@@ -40,59 +42,49 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run support scripts
-        shell: powershell
-        working-directory: "${{ github.workspace }}\\scripts\\image"
-        run: |
-          $Scripts = Get-ChildItem -Include "0*.ps1" -Recurse -Exclude "012_WindowsUpdate.ps1"
-          foreach ($Script in $Scripts) {
-              Write-Host "Run: $($Script.Name)"
-              & $Script.FullName
-          }
-
-      - name: Run dependencies scripts
+      - name: Test with Pester
         shell: powershell
         if: always()
-        working-directory: "${{ github.workspace }}\\scripts\\image"
+        working-directory: "${{ github.workspace }}"
         run: |
-          $Scripts = Get-ChildItem -Include "1*.ps1" -Recurse -Exclude "101_Avd-Agents.ps1"
-          foreach ($Script in $Scripts) {
-              Write-Host "Run: $($Script.Name)"
-              & $Script.FullName
-          }
+          .\tests\Install-Pester.ps1
+          Import-Module -Name "Pester", "Evergreen", "VcRedist" -Force -ErrorAction "Stop"
 
-      - name: Run Microsoft apps scripts
-        shell: powershell
-        if: always()
-        working-directory: "${{ github.workspace }}\\scripts\\image"
-        run: |
-          $Scripts = Get-ChildItem -Include "2*.ps1" -Recurse
-          foreach ($Script in $Scripts) {
-              Write-Host "Run: $($Script.Name)"
-              & $Script.FullName
-          }
+          $Config = [PesterConfiguration]::Default
+          $Config.Run.Path = "$env:GITHUB_WORKSPACE\tests"
+          $Config.Run.PassThru = $True
+          $Config.CodeCoverage.Enabled = $True
+          $Config.CodeCoverage.Path = "$env:GITHUB_WORKSPACE\scripts"
+          $Config.CodeCoverage.OutputFormat = "JaCoCo"
+          $Config.CodeCoverage.OutputPath = "$env:GITHUB_WORKSPACE\CodeCoverage.xml"
+          $Config.TestResult.Enabled = $True
+          $Config.TestResult.OutputFormat = "NUnitXml"
+          $Config.TestResult.OutputPath = "$env:GITHUB_WORKSPACE\tests\TestResults.xml"
+          Invoke-Pester -Configuration $Config
 
-      - name: Run 3rd party apps scripts
-        shell: powershell
+      # Upload test results
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
         if: always()
-        working-directory: "${{ github.workspace }}\\scripts\\image"
-        run: |
-          $Scripts = Get-ChildItem -Include "4*.ps1" -Recurse #-Exclude "401_FoxitPDReader.ps1"
-          foreach ($Script in $Scripts) {
-              Write-Host "Run: $($Script.Name)"
-              & $Script.FullName
-          }
+        with:
+          name: test-results
+          path: "${{ github.workspace }}\\tests\\TestResults.xml"
 
-      - name: Run clean up scripts
-        shell: powershell
+      # Publish test results
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always()
-        working-directory: "${{ github.workspace }}\\scripts\\image"
-        run: |
-          $Scripts = Get-ChildItem -Include "9*.ps1" -Recurse
-          foreach ($Script in $Scripts) {
-              Write-Host "Run: $($Script.Name)"
-              & $Script.FullName
-          }
+        with:
+          nunit_files: "${{ github.workspace }}\\tests\\TestResults.xml"
+
+      - name: Upload to Codecov
+        id: codecov
+        if: always()
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./CodeCoverage-${{ matrix.os }}.xml
+          verbose: true
 
       - name: List installed apps
         shell: powershell
@@ -114,46 +106,3 @@ jobs:
         with:
           name: installed-applications
           path: "${{ github.workspace }}\\support\\InstalledApplications.csv"
-
-      - name: Test with Pester
-        shell: powershell
-        if: always()
-        working-directory: "${{ github.workspace }}"
-        run: |
-          .\tests\Install-Pester.ps1
-          Import-Module -Name "Pester", "Evergreen", "VcRedist" -Force -ErrorAction "Stop"
-          $Config = [PesterConfiguration]::Default
-          $Config.Run.Path = ".\tests"
-          $Config.Run.PassThru = $true
-          $Config.CodeCoverage.Enabled = $false
-          $Config.Output.Verbosity = "Detailed"
-          $Config.TestResult.Enabled = $true
-          $Config.TestResult.OutputFormat = "NUnitXml"
-          $Config.TestResult.OutputPath = ".\tests\TestResults.xml"
-          Invoke-Pester -Configuration $Config
-
-      # Upload test results
-      - name: Upload test results
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: test-results
-          path: "${{ github.workspace }}\\tests\\TestResults.xml"
-
-      # Publish test results
-      - name: Publish test results
-        uses: EnricoMi/publish-unit-test-result-action/composite@v2
-        if: always()
-        with:
-          nunit_files: "${{ github.workspace }}\\tests\\TestResults.xml"
-
-      - name: Run uninstall scripts
-        shell: powershell
-        if: always()
-        working-directory: "${{ github.workspace }}\\scripts\\uninstall"
-        run: |
-          $Scripts = Get-ChildItem -Include "Uninstall*.ps1" -Recurse
-          foreach ($Script in $Scripts) {
-              Write-Host "Run: $($Script.Name)"
-              & $Script.FullName
-          }
