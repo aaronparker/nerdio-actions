@@ -4,13 +4,6 @@
 #Requires -Modules VcRedist
 
 #region Script logic
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-
-try {
-    Import-Module -Name "VcRedist" -Force
-    Get-InstalledVcRedist | Uninstall-VcRedist -Confirm:$false -ErrorAction "SilentlyContinue"
-}
-catch {
-    Write-Warning -Message "Failed to uninstall with error: $($_.Exception.Message)"
-}
+Import-Module -Name "VcRedist" -Force
+Get-InstalledVcRedist | Uninstall-VcRedist -Confirm:$false -ErrorAction "SilentlyContinue"
 #endregion

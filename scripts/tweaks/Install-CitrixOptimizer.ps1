@@ -11,9 +11,13 @@ New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -E
 # Get the Citrix Optimizer template
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     #region Windows Server
-    "Microsoft Windows Server*" {
-        #$OptimizerTemplate = ""
-        exit 0
+    "Microsoft Windows Server 2022*" {
+        $OptimizerTemplate = "Citrix_Windows_Server_2022_2009.xml"
+        break
+    }
+
+    "Microsoft Windows Server 2019*" {
+        $OptimizerTemplate = "Citrix_Windows_Server_2019_1809.xml"
         break
     }
     #endregion
