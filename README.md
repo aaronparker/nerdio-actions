@@ -12,4 +12,4 @@ PowerShell scripts for integration with [Scripted Actions in Nerdio Manager](htt
 
 Note: these scripts are tested via GitHub Actions on Windows Server 2022.
 
-[![Validate scripts](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-avd.yml/badge.svg)](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-avd.yml)
+[![Validate scripts](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-avd.yml/badge.svg)](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-avd.yml) [![codecov](https://codecov.io/gh/aaronparker/nerdio-actions/branch/main/graph/badge.svg?token=32KRCWIL9R)](https://codecov.io/gh/aaronparker/nerdio-actions)
