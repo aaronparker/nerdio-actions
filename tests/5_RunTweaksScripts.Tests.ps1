@@ -24,8 +24,7 @@ BeforeDiscovery {
 Describe -Name "Tweaks scripts" -ForEach $Scripts {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw during execution" {
-            Write-Host "Running: $($_.Name)"
-            & $_.FullName
+            { & $_.FullName } | Should -Not -Throw
         }
     }
 }

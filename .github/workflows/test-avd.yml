@@ -53,7 +53,7 @@ jobs:
           .\tests\Install-Pester.ps1
           Import-Module -Name "Pester" -Force -ErrorAction "Stop"
 
-          $Config = [PesterConfiguration]::Default
+          $Config = New-PesterConfiguration
           $Config.Run.Path = "$env:GITHUB_WORKSPACE\tests"
           $Config.Run.PassThru = $True
           $Config.CodeCoverage.Enabled = $True
@@ -63,6 +63,7 @@ jobs:
           $Config.TestResult.Enabled = $True
           $Config.TestResult.OutputFormat = "NUnitXml"
           $Config.TestResult.OutputPath = "$env:GITHUB_WORKSPACE\tests\TestResults.xml"
+          $Config.Output.Verbosity = "Detailed"
           Invoke-Pester -Configuration $Config
 
       # Upload test results
@@ -88,20 +89,6 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./CodeCoverage.xml
           verbose: true
-
-      - name: List installed apps
-        shell: powershell
-        if: always()
-        working-directory: "${{ github.workspace }}\\support"
-        run: |
-          . .\Get-Installed.ps1
-          $params = @{
-              Path              = "$env:GITHUB_WORKSPACE\support\InstalledApplications.csv"
-              Encoding          = "Utf8"
-              NoTypeInformation = $true
-              Verbose           = $true
-          }
-          Get-InstalledSoftware | Export-Csv @params
 
       - name: Upload installed apps list
         uses: actions/upload-artifact@v3

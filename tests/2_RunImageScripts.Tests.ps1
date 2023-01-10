@@ -28,7 +28,6 @@ BeforeDiscovery {
 Describe -Name "Support scripts" -ForEach $SupportScripts {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw during execution" {
-            Write-Host "Running: $($_.Name)"
             { & $_.FullName } | Should -Not -Throw
         }
     }
@@ -37,7 +36,6 @@ Describe -Name "Support scripts" -ForEach $SupportScripts {
 Describe -Name "Dependency Scripts" -ForEach $DependencyScripts {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw during execution" {
-            Write-Host "Running: $($_.Name)"
             { & $_.FullName } | Should -Not -Throw
         }
     }
@@ -46,7 +44,6 @@ Describe -Name "Dependency Scripts" -ForEach $DependencyScripts {
 Describe -Name "Microsoft apps scripts" -ForEach $MicrosoftAppsScripts {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw during execution" {
-            Write-Host "Running: $($_.Name)"
             { & $_.FullName } | Should -Not -Throw
         }
     }
@@ -55,7 +52,6 @@ Describe -Name "Microsoft apps scripts" -ForEach $MicrosoftAppsScripts {
 Describe -Name "3rd party apps scripts" -ForEach $3rdPartyScripts {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw during execution" {
-            Write-Host "Running: $($_.Name)"
             { & $_.FullName } | Should -Not -Throw
         }
     }
@@ -64,7 +60,6 @@ Describe -Name "3rd party apps scripts" -ForEach $3rdPartyScripts {
 Describe -Name "Clean up scripts" -ForEach $CleanupScripts {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw during execution" {
-            Write-Host "Running: $($_.Name)"
             { & $_.FullName } | Should -Not -Throw
         }
     }
