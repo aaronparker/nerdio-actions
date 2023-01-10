@@ -33,7 +33,7 @@ Describe -Name "Support scripts" -ForEach $SupportScripts {
     }
 }
 
-Describe -Name "Dependency Scripts" -ForEach $DependencyScripts {
+Describe -Name "Dependency scripts with required modules" -ForEach $DependencyScripts {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw during execution" {
             { & $_.FullName } | Should -Not -Throw
@@ -41,7 +41,7 @@ Describe -Name "Dependency Scripts" -ForEach $DependencyScripts {
     }
 }
 
-Describe -Name "Microsoft apps scripts" -ForEach $MicrosoftAppsScripts {
+Describe -Name "Microsoft apps scripts with required modules" -ForEach $MicrosoftAppsScripts {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw during execution" {
             { & $_.FullName } | Should -Not -Throw
@@ -49,7 +49,7 @@ Describe -Name "Microsoft apps scripts" -ForEach $MicrosoftAppsScripts {
     }
 }
 
-Describe -Name "3rd party apps scripts" -ForEach $3rdPartyScripts {
+Describe -Name "3rd party apps scripts with required modules" -ForEach $3rdPartyScripts {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw during execution" {
             { & $_.FullName } | Should -Not -Throw
@@ -57,7 +57,7 @@ Describe -Name "3rd party apps scripts" -ForEach $3rdPartyScripts {
     }
 }
 
-Describe -Name "Clean up scripts" -ForEach $CleanupScripts {
+Describe -Name "Clean up scripts with required modules" -ForEach $CleanupScripts {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw during execution" {
             { & $_.FullName } | Should -Not -Throw

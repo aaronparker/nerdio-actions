@@ -53,7 +53,7 @@ try {
             ErrorAction  = "Continue"
         }
         $result = Start-Process @params
-    $result.ExitCode
+        $result.ExitCode
     }
 }
 catch {

@@ -4,6 +4,11 @@
 #Requires -Modules VcRedist
 
 #region Script logic
-Import-Module -Name "VcRedist" -Force
-Get-InstalledVcRedist | Uninstall-VcRedist -Confirm:$false -ErrorAction "SilentlyContinue"
+try {
+    Import-Module -Name "VcRedist" -Force
+    Get-InstalledVcRedist | Uninstall-VcRedist -Confirm:$false -ErrorAction "SilentlyContinue"
+}
+catch {
+    throw $_
+}
 #endregion

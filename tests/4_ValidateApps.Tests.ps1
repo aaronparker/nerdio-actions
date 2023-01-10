@@ -185,6 +185,12 @@ AfterAll {
     }
     #endregion
 
+    if ([System.String]::IsNullOrWhiteSpace($env:GITHUB_WORKSPACE)) {
+        $Path = $PWD.Path
+    }
+    else {
+        $Path = $env:GITHUB_WORKSPACE
+    }
     $params = @{
         Path              = "$Path\support\InstalledApplications.csv"
         Encoding          = "Utf8"

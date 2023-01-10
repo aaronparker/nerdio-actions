@@ -19,11 +19,20 @@ BeforeDiscovery {
 
     # Get the scripts to test
     $Scripts = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse
+    $Scripts2 = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse -Exclude @("Uninstall-7ZipZS.ps1", "Uninstall-MicrosoftNET.ps1")
 }
 
-Describe -Name "Uninstall scripts" -ForEach $Scripts {
+Describe -Name "Uninstall scripts with software installed" -ForEach $Scripts {
     Context "The script <_.Name> runs successfully" {
-        It "Should not throw during execution" {
+        It "Should not throw when uninstalling software" {
+            { & $_.FullName } | Should -Not -Throw
+        }
+    }
+}
+
+Describe -Name "Uninstall scripts without software installed" -ForEach $Scripts2 {
+    Context "The script <_.Name> runs successfully" {
+        It "Should not throw with no software installed" {
             { & $_.FullName } | Should -Not -Throw
         }
     }
