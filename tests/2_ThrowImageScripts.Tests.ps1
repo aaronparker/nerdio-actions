@@ -23,24 +23,20 @@ BeforeDiscovery {
     $3rdPartyScripts = Get-ChildItem -Path $Path -Include "4*.ps1" -Recurse
 }
 
-Describe -Name "Dependency scripts without required modules" -ForEach $DependencyScripts {
-    Context "The script <_.Name> throws without required modules installed" {
+Describe "Run application image scripts without required modules installed" {
+    Context "The dependency script <_.Name> throws an error" -ForEach $DependencyScripts {
         It "Should throw during execution" {
             { & $_.FullName } | Should -Throw
         }
     }
-}
 
-Describe -Name "Microsoft apps scripts without required modules" -ForEach $MicrosoftAppsScripts {
-    Context "The script <_.Name> throws without required modules installed" {
+    Context "The Microsoft apps script <_.Name> throws an error" -ForEach $MicrosoftAppsScripts {
         It "Should throw during execution" {
             { & $_.FullName } | Should -Throw
         }
     }
-}
 
-Describe -Name "3rd party apps scripts without required modules" -ForEach $3rdPartyScripts {
-    Context "The script <_.Name> throws without required modules installed" {
+    Context "The 3rd party apps script <_.Name> throws an error" -ForEach $3rdPartyScripts {
         It "Should throw during execution" {
             { & $_.FullName } | Should -Throw
         }

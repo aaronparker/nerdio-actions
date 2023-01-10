@@ -25,41 +25,33 @@ BeforeDiscovery {
     $CleanupScripts = Get-ChildItem -Path $Path -Include "9*.ps1" -Recurse
 }
 
-Describe -Name "Support scripts" -ForEach $SupportScripts {
-    Context "The script <_.Name> runs successfully" {
-        It "Should not throw during execution" {
+Describe "Run application image scripts with required modules installed" {
+    Context "The support script <_.Name> runs successfully" -ForEach $SupportScripts {
+        It "Should not throw" {
             { & $_.FullName } | Should -Not -Throw
         }
     }
-}
 
-Describe -Name "Dependency scripts with required modules" -ForEach $DependencyScripts {
-    Context "The script <_.Name> runs successfully" {
-        It "Should not throw during execution" {
+    Context "The dependency script <_.Name> runs successfully" -ForEach $DependencyScripts {
+        It "Should not throw" {
             { & $_.FullName } | Should -Not -Throw
         }
     }
-}
 
-Describe -Name "Microsoft apps scripts with required modules" -ForEach $MicrosoftAppsScripts {
-    Context "The script <_.Name> runs successfully" {
-        It "Should not throw during execution" {
+    Context "The Microsoft apps script <_.Name> runs successfully" -ForEach $MicrosoftAppsScripts {
+        It "Should not throw" {
             { & $_.FullName } | Should -Not -Throw
         }
     }
-}
 
-Describe -Name "3rd party apps scripts with required modules" -ForEach $3rdPartyScripts {
-    Context "The script <_.Name> runs successfully" {
-        It "Should not throw during execution" {
+    Context "The 3rd party apps script <_.Name> runs successfully" -ForEach $3rdPartyScripts {
+        It "Should not throw" {
             { & $_.FullName } | Should -Not -Throw
         }
     }
-}
 
-Describe -Name "Clean up scripts with required modules" -ForEach $CleanupScripts {
-    Context "The script <_.Name> runs successfully" {
-        It "Should not throw during execution" {
+    Context "The clean-up script <_.Name> runs successfully" -ForEach $CleanupScripts {
+        It "Should not throw" {
             { & $_.FullName } | Should -Not -Throw
         }
     }

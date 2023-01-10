@@ -21,11 +21,11 @@ BeforeDiscovery {
 
 BeforeAll {
     # Import module
-    Import-Module -Name "Evergreen" -Force
+    Import-Module "Evergreen" -Force
 }
 
 # Per script tests
-Describe -Name "Validate <App.Name>" -ForEach $Applications {
+Describe "Validate <App.Name>" -ForEach $Applications {
     BeforeDiscovery {
         $FilesExist = $_.FilesExist
         $ShortcutsNotExist = $_.ShortcutsNotExist
@@ -82,7 +82,7 @@ Describe -Name "Validate <App.Name>" -ForEach $Applications {
                 throw $_.Exception.Message
             }
             finally {
-                Remove-PSDrive -Name "HKU" -ErrorAction "SilentlyContinue" | Out-Null
+                Remove-PSDrive "HKU" -ErrorAction "SilentlyContinue" | Out-Null
             }
         }
         #endregion
@@ -99,20 +99,20 @@ Describe -Name "Validate <App.Name>" -ForEach $Applications {
             Select-Object -First 1
     }
 
-    Context "Applications files" -ForEach $FilesExist {
-        It "Should exist: <_>" {
+    Context "Applications files" {
+        It "Should exist: <_>" -ForEach $FilesExist {
             $_ | Should -Exist
         }
     }
 
-    Context "Validate shortcut does not exist." -ForEach $ShortcutsNotExist {
-        It "Should not exist: <_>" {
+    Context "Validate shortcut does not exist." {
+        It "Should not exist: <_>" -ForEach $ShortcutsNotExist {
             $_ | Should -Not -Exist
         }
     }
 
-    Context "Validate service has been disabled." -ForEach $ServicesDisabled {
-        It "Should be disabled: <_>" {
+    Context "Validate service has been disabled." {
+        It "Should be disabled: <_>" -ForEach $ServicesDisabled {
             (Get-Service -Name $_).StartType | Should -Be "Disabled"
         }
     }
@@ -180,7 +180,7 @@ AfterAll {
             throw $_.Exception.Message
         }
         finally {
-            Remove-PSDrive -Name "HKU" -ErrorAction "SilentlyContinue" | Out-Null
+            Remove-PSDrive "HKU" -ErrorAction "SilentlyContinue" | Out-Null
         }
     }
     #endregion
