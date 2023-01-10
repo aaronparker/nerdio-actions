@@ -2,7 +2,8 @@
 #execution mode: Combined
 #tags: RDP Shortpath, Image, Preview
 <#
-https://docs.microsoft.com/en-us/azure/virtual-desktop/shortpath-public
+This configuration should be implemented via GPO
+https://learn.microsoft.com/en-us/azure/virtual-desktop/configure-rdp-shortpath
 #>
 
 # Add registry keys

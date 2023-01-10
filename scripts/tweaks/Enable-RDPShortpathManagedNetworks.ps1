@@ -2,7 +2,8 @@
 #execution mode: Combined
 #tags: RDP Shortpath, Image
 <#
-https://docs.microsoft.com/en-us/azure/virtual-desktop/shortpath
+This configuration should be implemented via GPO
+https://learn.microsoft.com/en-us/azure/virtual-desktop/configure-rdp-shortpath
 #>
 
 # Add registry keys
@@ -17,12 +18,12 @@ $params = @{
     Group       = "@FirewallAPI.dll,-28752"
     Name        = "RemoteDesktop-UserMode-In-Shortpath-UDP"
     PolicyStore = "PersistentStore"
-    Profile      = "Domain, Private"
+    Profile      = "Domain", "Private"
     Service     = "TermService"
-    Protocol    = "udp"
+    Protocol    = "UDP"
     LocalPort   = 3390
     Program     = "$env:SystemRoot\system32\svchost.exe"
     Enabled     = "true"
-    ErrorAction = "Stop"
+    ErrorAction = "Continue"
 }
 New-NetFirewallRule @params
