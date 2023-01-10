@@ -12,25 +12,17 @@ catch {
     Write-Warning -Message "Failed to stop Greenshot processes."
 }
 
-try {
-    $params = @{
-        FilePath     = "$env:ProgramFiles\Greenshot\unins000.exe"
-        ArgumentList = "/VERYSILENT"
-        NoNewWindow  = $True
-        PassThru     = $True
-        Wait         = $True
-        ErrorAction  = "Continue"
-    }
-    $result = Start-Process @params
-    $result.ExitCode
-    if ($result.ExitCode -eq 0) {
-        Remove-Item -Path "$env:ProgramFiles\Greenshot" -Recurse -Force -ErrorAction "SilentlyContinue"
-    }
+$params = @{
+    FilePath     = "$env:ProgramFiles\Greenshot\unins000.exe"
+    ArgumentList = "/VERYSILENT"
+    NoNewWindow  = $True
+    PassThru     = $True
+    Wait         = $True
+    ErrorAction  = "Continue"
 }
-catch {
-    throw $_
-}
-finally {
-    exit $result.ExitCode
+$result = Start-Process @params
+$result.ExitCode
+if ($result.ExitCode -eq 0) {
+    Remove-Item -Path "$env:ProgramFiles\Greenshot" -Recurse -Force -ErrorAction "SilentlyContinue"
 }
 #endregion

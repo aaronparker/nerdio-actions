@@ -49,28 +49,20 @@ catch {
     Write-Warning -Message "Failed to stop processes."
 }
 
-try {
-    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft FSLogix Apps*" }
-    foreach ($App in $Apps) {
-        $LogFile = "$env:ProgramData\Evergreen\Logs\UninstallMicrosoftFSLogixApps$($App.Version).log" -replace " ", ""
-        $params = @{
-            FilePath     = [Regex]::Match($App.UninstallString, '\"(.*)\"').Captures.Groups[1].Value
-            ArgumentList = "/uninstall /quiet /norestart /log $LogFile"
-            NoNewWindow  = $True
-            PassThru     = $True
-            Wait         = $True
-            ErrorAction  = "Continue"
-        }
-        $result = Start-Process @params
-        $result.ExitCode
+$Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft FSLogix Apps*" }
+foreach ($App in $Apps) {
+    $LogFile = "$env:ProgramData\Evergreen\Logs\UninstallMicrosoftFSLogixApps$($App.Version).log" -replace " ", ""
+    $params = @{
+        FilePath     = [Regex]::Match($App.UninstallString, '\"(.*)\"').Captures.Groups[1].Value
+        ArgumentList = "/uninstall /quiet /norestart /log $LogFile"
+        NoNewWindow  = $True
+        PassThru     = $True
+        Wait         = $True
+        ErrorAction  = "Continue"
     }
+    $result = Start-Process @params
+    $result.ExitCode
 }
-catch {
-    throw $_
-}
-finally {
-    if ($result.ExitCode -eq 0) {
-        Remove-Item -Path "$env:ProgramFiles\FSLogix" -Recurse -Force -ErrorAction "Ignore"
-    }
-    exit $result.ExitCode
+if ($result.ExitCode -eq 0) {
+    Remove-Item -Path "$env:ProgramFiles\FSLogix" -Recurse -Force -ErrorAction "Ignore"
 }

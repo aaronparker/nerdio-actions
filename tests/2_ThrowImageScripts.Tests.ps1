@@ -18,20 +18,10 @@ BeforeDiscovery {
     }
 
     # Get the scripts to test
-    $SupportScripts = Get-ChildItem -Path $Path -Include "0*.ps1" -Recurse
     $DependencyScripts = Get-ChildItem -Path $Path -Include "1*.ps1" -Recurse
     $MicrosoftAppsScripts = Get-ChildItem -Path $Path -Include "2*.ps1" -Recurse
     $3rdPartyScripts = Get-ChildItem -Path $Path -Include "4*.ps1" -Recurse
-    $CleanupScripts = Get-ChildItem -Path $Path -Include "9*.ps1" -Recurse
 }
-
-# Describe -Name "Support scripts without required modules" -ForEach $SupportScripts {
-#     Context "The script <_.Name> throws without required modules installed" {
-#         It "Should throw during execution" {
-#             { & $_.FullName } | Should -Throw
-#         }
-#     }
-# }
 
 Describe -Name "Dependency scripts without required modules" -ForEach $DependencyScripts {
     Context "The script <_.Name> throws without required modules installed" {
@@ -50,14 +40,6 @@ Describe -Name "Microsoft apps scripts without required modules" -ForEach $Micro
 }
 
 Describe -Name "3rd party apps scripts without required modules" -ForEach $3rdPartyScripts {
-    Context "The script <_.Name> throws without required modules installed" {
-        It "Should throw during execution" {
-            { & $_.FullName } | Should -Throw
-        }
-    }
-}
-
-Describe -Name "Clean up scripts without required modules" -ForEach $CleanupScripts {
     Context "The script <_.Name> throws without required modules installed" {
         It "Should throw during execution" {
             { & $_.FullName } | Should -Throw

@@ -25,7 +25,7 @@ BeforeDiscovery {
 Describe -Name "Uninstall scripts with software installed" -ForEach $Scripts {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw when uninstalling software" {
-            { & $_.FullName } | Should -Not -Throw
+            & $_.FullName | Should -Be 0
         }
     }
 }
@@ -33,7 +33,7 @@ Describe -Name "Uninstall scripts with software installed" -ForEach $Scripts {
 Describe -Name "Uninstall scripts without software installed" -ForEach $Scripts2 {
     Context "The script <_.Name> runs successfully" {
         It "Should not throw with no software installed" {
-            { & $_.FullName } | Should -Not -Throw
+            & $_.FullName | Should -Be 0
         }
     }
 }

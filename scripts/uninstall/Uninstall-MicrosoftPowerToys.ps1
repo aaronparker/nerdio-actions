@@ -32,26 +32,18 @@ function Get-InstalledSoftware {
 #region Script logic
 New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
-    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "PowerToys*" }
-    foreach ($App in $Apps) {
-        $LogFile = "$env:ProgramData\Evergreen\Logs\UninstallMicrosoftPowerToys$($App.Version).log" -replace " ", ""
-        $params = @{
-            FilePath     = [Regex]::Match($App.UninstallString, '\"(.*)\"').Captures.Groups[1].Value
-            ArgumentList = "/uninstall /quiet /norestart /log $LogFile"
-            NoNewWindow  = $True
-            PassThru     = $True
-            Wait         = $True
-            ErrorAction  = "Continue"
-        }
-        $result = Start-Process @params
-        $result.ExitCode
+$Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "PowerToys*" }
+foreach ($App in $Apps) {
+    $LogFile = "$env:ProgramData\Evergreen\Logs\UninstallMicrosoftPowerToys$($App.Version).log" -replace " ", ""
+    $params = @{
+        FilePath     = [Regex]::Match($App.UninstallString, '\"(.*)\"').Captures.Groups[1].Value
+        ArgumentList = "/uninstall /quiet /norestart /log $LogFile"
+        NoNewWindow  = $True
+        PassThru     = $True
+        Wait         = $True
+        ErrorAction  = "Continue"
     }
-}
-catch {
-    throw $_
-}
-finally {
-    exit $result.ExitCode
+    $result = Start-Process @params
+    $result.ExitCode
 }
 #endregion

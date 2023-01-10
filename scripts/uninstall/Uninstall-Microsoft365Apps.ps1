@@ -39,28 +39,15 @@ catch {
     throw $_
 }
 
-try {
-    # Install package
-    $params = @{
-        FilePath     = $OutFile.FullName
-        ArgumentList = "/configure $XmlFile"
-        NoNewWindow  = $true
-        Wait         = $true
-        PassThru     = $true
-        ErrorAction  = "Continue"
-    }
-    Push-Location -Path $Path
-    $result = Start-Process @params
-    $result.ExitCode
-    Pop-Location
+# Install package
+$params = @{
+    FilePath     = $OutFile.FullName
+    ArgumentList = "/configure $XmlFile"
+    NoNewWindow  = $true
+    Wait         = $true
+    PassThru     = $true
+    ErrorAction  = "Continue"
 }
-catch {
-    throw $_
-}
-finally {
-    Pop-Location
-    if ($result.ExitCode -eq 0) {
-        if (Test-Path -Path $Path) { Remove-Item -Path $Path -Recurse -Force -ErrorAction "Ignore" }
-    }
-}
+$result = Start-Process @params
+$result.ExitCode
 #endregion
