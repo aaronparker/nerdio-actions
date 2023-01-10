@@ -23,11 +23,13 @@ BeforeDiscovery {
 }
 
 Describe "General project validation" {
-    It "Script <file.Name> should be valid PowerShell" -TestCases $TestCases {
-        param ($File)
-        $contents = Get-Content -Path $File.FullName -ErrorAction "Stop"
-        $errors = $null
-        $null = [System.Management.Automation.PSParser]::Tokenize($contents, [ref]$errors)
-        $errors.Count | Should -Be 0
+    Context "Validate each PowerShell script" {
+        It "Script <file.Name> should be valid PowerShell" -TestCases $TestCases {
+            param ($File)
+            $contents = Get-Content -Path $File.FullName -ErrorAction "Stop"
+            $errors = $null
+            $null = [System.Management.Automation.PSParser]::Tokenize($contents, [ref]$errors)
+            $errors.Count | Should -Be 0
+        }
     }
 }
