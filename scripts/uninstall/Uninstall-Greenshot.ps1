@@ -23,6 +23,8 @@ $params = @{
 $result = Start-Process @params
 $result.ExitCode
 if ($result.ExitCode -eq 0) {
-    Remove-Item -Path "$env:ProgramFiles\Greenshot" -Recurse -Force -ErrorAction "SilentlyContinue"
+    if (Test-Path -Path "$env:ProgramFiles\Greenshot") {
+        Remove-Item -Path "$env:ProgramFiles\Greenshot" -Recurse -Force -ErrorAction "SilentlyContinue"
+    }
 }
 #endregion

@@ -56,6 +56,8 @@ foreach ($App in $Apps) {
 }
 
 if ($result.ExitCode -eq 0) {
-    Remove-Item -Path "$env:ProgramFiles\7-Zip-Zstandard" -Recurse -Force -ErrorAction "Ignore"
+    if (Test-Path -Path "$env:ProgramFiles\7-Zip-Zstandard") {
+        Remove-Item -Path "$env:ProgramFiles\7-Zip-Zstandard" -Recurse -Force -ErrorAction "Ignore"
+    }
 }
 #endregion

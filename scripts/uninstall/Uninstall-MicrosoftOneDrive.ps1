@@ -55,5 +55,7 @@ foreach ($App in $Apps) {
     $result.ExitCode
 }
 if ($result.ExitCode -eq 0) {
-    Remove-Item -Path "$env:ProgramFiles\Microsoft OneDrive" -Recurse -Force -ErrorAction "Ignore"
+    if (Test-Path -Path "$env:ProgramFiles\Microsoft OneDrive") {
+        Remove-Item -Path "$env:ProgramFiles\Microsoft OneDrive" -Recurse -Force -ErrorAction "Ignore"
+    }
 }

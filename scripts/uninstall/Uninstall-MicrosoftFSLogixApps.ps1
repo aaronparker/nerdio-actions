@@ -64,5 +64,7 @@ foreach ($App in $Apps) {
     $result.ExitCode
 }
 if ($result.ExitCode -eq 0) {
-    Remove-Item -Path "$env:ProgramFiles\FSLogix" -Recurse -Force -ErrorAction "Ignore"
+    if (Test-Path -Path "$env:ProgramFiles\FSLogix") {
+        Remove-Item -Path "$env:ProgramFiles\FSLogix" -Recurse -Force -ErrorAction "Ignore"
+    }
 }

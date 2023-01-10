@@ -7,7 +7,6 @@
 try {
     Import-Module -Name "VcRedist" -Force
     Get-InstalledVcRedist | Uninstall-VcRedist -Confirm:$false -ErrorAction "SilentlyContinue"
-    return 0
 }
 catch {
     throw $_
