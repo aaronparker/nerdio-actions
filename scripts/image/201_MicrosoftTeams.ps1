@@ -60,9 +60,9 @@ try {
                 Wait         = $true
                 PassThru     = $true
                 ErrorAction  = "Continue"
-            }   
+            }
             $result = Start-Process @params
-    $result.ExitCode
+            $result.ExitCode
 
             $Folders = "${env:ProgramFiles(x86)}\Microsoft\Teams", `
                 "${env:ProgramFiles(x86)}\Microsoft\TeamsMeetingAddin", `
