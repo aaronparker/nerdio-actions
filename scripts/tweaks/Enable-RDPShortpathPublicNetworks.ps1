@@ -1,4 +1,4 @@
-#description: Enable RDP Shortpath for public networks. Reboot required.
+#description: Enable RDP Shortpath for public networks - reboot required. This configuration should preferably be implemented via GPO.
 #execution mode: Combined
 #tags: RDP Shortpath, Image, Preview
 <#

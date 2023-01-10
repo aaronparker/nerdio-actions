@@ -59,8 +59,10 @@ try {
                 NoNewWindow  = $true
                 Wait         = $true
                 PassThru     = $true
+                ErrorAction  = "Continue"
             }   
             $result = Start-Process @params
+    $result.ExitCode
 
             $Folders = "${env:ProgramFiles(x86)}\Microsoft\Teams", `
                 "${env:ProgramFiles(x86)}\Microsoft\TeamsMeetingAddin", `
@@ -78,12 +80,14 @@ try {
             NoNewWindow  = $True
             PassThru     = $True
             Wait         = $True
+            ErrorAction  = "Continue"
         }
         $result = Start-Process @params
+    $result.ExitCode
     }
 }
 catch {
-    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+    throw $_
 }
 
 try {
@@ -97,11 +101,13 @@ try {
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $true
+        ErrorAction  = "Continue"
     }
     $result = Start-Process @params
+    $result.ExitCode
 }
 catch {
-    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+    throw $_
 }
 
 try {
@@ -116,7 +122,7 @@ try {
     }
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 # Delete the registry auto-start

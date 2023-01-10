@@ -19,8 +19,10 @@ try {
         NoNewWindow  = $True
         PassThru     = $True
         Wait         = $True
+        ErrorAction  = "Continue"
     }
     $result = Start-Process @params
+    $result.ExitCode
     if ($result.ExitCode -eq 0) {
         Remove-Item -Path "$env:ProgramFiles\Greenshot" -Recurse -Force -ErrorAction "SilentlyContinue"
     }

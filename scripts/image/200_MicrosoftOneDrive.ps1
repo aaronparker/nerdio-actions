@@ -28,14 +28,16 @@ try {
         NoNewWindow  = $true
         Wait         = $false
         PassThru     = $true
+        ErrorAction  = "Continue"
     }
     $result = Start-Process @params
+    $result.ExitCode
     do {
         Start-Sleep -Seconds 5
     } while (Get-Process -Name "OneDriveSetup" -ErrorAction "SilentlyContinue")
     Get-Process -Name "OneDrive" -ErrorAction "SilentlyContinue" | Stop-Process -Force -ErrorAction "SilentlyContinue"
 }
 catch {
-    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+    throw $_
 }
 #endregion

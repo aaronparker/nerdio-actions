@@ -12,5 +12,5 @@ try {
     Install-WindowsUpdate -AcceptAll -MicrosoftUpdate -IgnoreReboot
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }

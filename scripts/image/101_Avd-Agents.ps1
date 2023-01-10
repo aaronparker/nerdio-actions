@@ -28,11 +28,14 @@ try {
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $true
+        ErrorAction  = "Continue"
     }
     $result = Start-Process @params
+    $result.ExitCode
+    $result.ExitCode
 }
 catch {
-    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+    throw $_
 }
 #endregion
 
@@ -55,11 +58,13 @@ try {
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $true
+        ErrorAction  = "Continue"
     }
     $result = Start-Process @params
+    $result.ExitCode
 }
 catch {
-    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+    throw $_
 }
 #endregion
 
@@ -78,12 +83,13 @@ $params = @{
     NoNewWindow  = $true
     Wait         = $true
     PassThru     = $true
+    ErrorAction  = "Continue"
 }
 $params
 Start-Process @params
 }
 catch {
-    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+    throw $_
 }
 #>
 #endregion
@@ -99,11 +105,12 @@ $params = @{
     NoNewWindow  = $true
     Wait         = $true
     PassThru     = $true
+    ErrorAction  = "Continue"
 }
 Start-Process @params
 }
 catch {
-    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+    throw $_
 }
 #>
 #endregion

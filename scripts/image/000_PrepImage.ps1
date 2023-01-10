@@ -21,6 +21,7 @@ try {
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $true
+        ErrorAction  = "Continue"
     }
     Start-Process @params | Out-Null
 }

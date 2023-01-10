@@ -33,11 +33,13 @@ try {
                     NoNewWindow  = $true
                     Wait         = $true
                     PassThru     = $true
+                    ErrorAction  = "Continue"
                 }
                 $result = Start-Process @params
+                $result.ExitCode
             }
             catch {
-                throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+                throw $_
             }
         }
     }

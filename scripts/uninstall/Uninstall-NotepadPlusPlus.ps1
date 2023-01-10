@@ -41,8 +41,10 @@ try {
             NoNewWindow  = $True
             PassThru     = $True
             Wait         = $True
+            ErrorAction  = "Continue"
         }
         $result = Start-Process @params
+    $result.ExitCode
     }
 }
 catch {

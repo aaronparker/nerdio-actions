@@ -22,7 +22,7 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
         Install-Language @params | Out-Null
     }
     catch {
-        throw $_.Exception.Message
+        throw $_
     }
 
     try {
@@ -33,7 +33,7 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
         Set-SystemPreferredUILanguage @params
     }
     catch {
-        throw $_.Exception.Message
+        throw $_
     }
 }
 
@@ -51,5 +51,5 @@ try {
     Set-WinHomeLocation -GeoId $GeoId.$Language
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }

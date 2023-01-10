@@ -46,7 +46,6 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     }
 }
 
-
 try {
     # Set the Microsoft 365 Apps configuration
     $OfficeXml = @"
@@ -153,13 +152,15 @@ try {
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $true
+        ErrorAction  = "Continue"
     }
     Push-Location -Path $Path
     $result = Start-Process @params
+    $result.ExitCode
     Pop-Location
 }
 catch {
-    throw "Exit code: $($result.ExitCode); Error: $($_.Exception.Message)"
+    throw $_
 }
 finally {
     Pop-Location
