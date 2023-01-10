@@ -20,32 +20,27 @@ catch {
     throw $_
 }
 
-try {
-    # Install
-    foreach ($file in "FSLogixAppsSetup.exe", "FSLogixAppsRuleEditorSetup.exe") {
-        $Installers = Get-ChildItem -Path $Path -Recurse -Include $file | Where-Object { $_.Directory -match "x64" }
-        foreach ($Installer in $Installers) {
-            try {
-                $LogFile = "$env:ProgramData\Evergreen\Logs\$($Installer.Name)$($App.Version).log" -replace " ", ""
-                $params = @{
-                    FilePath     = $Installer.FullName
-                    ArgumentList = "/install /quiet /norestart /log $LogFile"
-                    NoNewWindow  = $true
-                    Wait         = $true
-                    PassThru     = $true
-                    ErrorAction  = "Continue"
-                }
-                $result = Start-Process @params
-                $result.ExitCode
+# Install
+foreach ($file in "FSLogixAppsSetup.exe", "FSLogixAppsRuleEditorSetup.exe") {
+    $Installers = Get-ChildItem -Path $Path -Recurse -Include $file | Where-Object { $_.Directory -match "x64" }
+    foreach ($Installer in $Installers) {
+        try {
+            $LogFile = "$env:ProgramData\Evergreen\Logs\$($Installer.Name)$($App.Version).log" -replace " ", ""
+            $params = @{
+                FilePath     = $Installer.FullName
+                ArgumentList = "/install /quiet /norestart /log $LogFile"
+                NoNewWindow  = $true
+                Wait         = $true
+                PassThru     = $true
+                ErrorAction  = "Continue"
             }
-            catch {
-                throw $_
-            }
+            $result = Start-Process @params
+            $result.ExitCode
+        }
+        catch {
+            throw $_
         }
     }
-}
-catch {
-    throw $_.Exception.Message
 }
 
 Start-Sleep -Seconds 5

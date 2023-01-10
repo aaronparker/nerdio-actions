@@ -70,9 +70,14 @@ try {
             Remove-Item -Path $Folders -Recurse -Force -ErrorAction "Ignore"
         }
     }
+}
+catch {
+    throw $_
+}
 
-    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Teams Machine-Wide Installer" }
-    foreach ($App in $Apps) {
+$Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Teams Machine-Wide Installer" }
+foreach ($App in $Apps) {
+    try {
         $LogFile = "$env:ProgramData\Evergreen\Logs\UninstallGoogleChrome$($App.Version).log" -replace " ", ""
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -83,11 +88,11 @@ try {
             ErrorAction  = "Continue"
         }
         $result = Start-Process @params
-    $result.ExitCode
+        $result.ExitCode
     }
-}
-catch {
-    throw $_
+    catch {
+        throw $_
+    }
 }
 
 try {

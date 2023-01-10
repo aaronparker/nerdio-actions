@@ -19,8 +19,8 @@ catch {
     throw $_
 }
 
-try {
-    foreach ($file in $OutFile) {
+foreach ($file in $OutFile) {
+    try {
         $LogFile = "$env:ProgramData\Evergreen\Logs\Microsoft.NET.log" -replace " ", ""
         $params = @{
             FilePath     = $file.FullName
@@ -33,8 +33,8 @@ try {
         $result = Start-Process @params
         $result.ExitCode
     }
-}
-catch {
-    throw $_
+    catch {
+        throw $_
+    }
 }
 #endregion
