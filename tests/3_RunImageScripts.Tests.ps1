@@ -26,32 +26,32 @@ BeforeDiscovery {
 }
 
 Describe "Run application image scripts with required modules installed" {
-    Context "The support script <_.Name> runs successfully" -ForEach $SupportScripts {
-        It "Should not throw" {
+    Context "Support scripts run successfully" {
+        It "Should not throw during execution: <_.Name>" -ForEach $SupportScripts {
             { & $_.FullName } | Should -Not -Throw
         }
     }
 
-    Context "The dependency script <_.Name> runs successfully" -ForEach $DependencyScripts {
-        It "Should not throw" {
+    Context "The dependency script runs successfully" {
+        It "Should not throw during execution: <_.Name>" -ForEach $DependencyScripts {
             { & $_.FullName } | Should -Not -Throw
         }
     }
 
-    Context "The Microsoft apps script <_.Name> runs successfully" -ForEach $MicrosoftAppsScripts {
-        It "Should not throw" {
+    Context "The Microsoft apps script runs successfully" {
+        It "Should not throw during execution: <_.Name>" -ForEach $MicrosoftAppsScripts {
             { & $_.FullName } | Should -Not -Throw
         }
     }
 
-    Context "The 3rd party apps script <_.Name> runs successfully" -ForEach $3rdPartyScripts {
-        It "Should not throw" {
+    Context "The 3rd party apps script runs successfully" {
+        It "Should not throw during execution: <_.Name>" -ForEach $3rdPartyScripts {
             { & $_.FullName } | Should -Not -Throw
         }
     }
 
-    Context "The clean-up script <_.Name> runs successfully" -ForEach $CleanupScripts {
-        It "Should not throw" {
+    Context "The clean up script runs successfully" {
+        It "Should not throw during execution: <_.Name>" -ForEach $CleanupScripts {
             { & $_.FullName } | Should -Not -Throw
         }
     }

@@ -22,8 +22,8 @@ BeforeDiscovery {
 }
 
 Describe "Run tweaks scripts" {
-    Context "The script <_.Name> runs successfully" -ForEach $Scripts {
-        It "Should not throw" {
+    Context "The script runs successfully" {
+        It "Should not throw:  <_.Name>" -ForEach $Scripts {
             { & $_.FullName } | Should -Not -Throw
         }
     }

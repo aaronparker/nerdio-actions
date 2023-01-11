@@ -24,20 +24,20 @@ BeforeDiscovery {
 }
 
 Describe "Run application image scripts without required modules installed" {
-    Context "The dependency script <_.Name> throws an error" -ForEach $DependencyScripts {
-        It "Should throw during execution" {
+    Context "The dependency script throws an error" {
+        It "Should throw during execution: <_.Name>" -ForEach $DependencyScripts {
             { & $_.FullName } | Should -Throw
         }
     }
 
-    Context "The Microsoft apps script <_.Name> throws an error" -ForEach $MicrosoftAppsScripts {
-        It "Should throw during execution" {
+    Context "The Microsoft apps script throws an error" {
+        It "Should throw during execution: <_.Name>" -ForEach $MicrosoftAppsScripts {
             { & $_.FullName } | Should -Throw
         }
     }
 
-    Context "The 3rd party apps script <_.Name> throws an error" -ForEach $3rdPartyScripts {
-        It "Should throw during execution" {
+    Context "The 3rd party apps script throws an error" {
+        It "Should throw during execution: <_.Name>" -ForEach $3rdPartyScripts {
             { & $_.FullName } | Should -Throw
         }
     }
