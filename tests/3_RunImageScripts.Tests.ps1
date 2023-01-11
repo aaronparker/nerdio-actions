@@ -23,6 +23,8 @@ BeforeDiscovery {
     $MicrosoftAppsScripts = Get-ChildItem -Path $Path -Include "2*.ps1" -Recurse
     $3rdPartyScripts = Get-ChildItem -Path $Path -Include "4*.ps1" -Recurse #-Exclude "401_FoxitPDReader.ps1"
     $CleanupScripts = Get-ChildItem -Path $Path -Include "9*.ps1" -Recurse
+
+    $2ndRunScripts = Get-ChildItem -Path $Path -Include "201_MicrosoftTeams.ps1" -Recurse
 }
 
 Describe "Run application image scripts with required modules installed" {
@@ -54,5 +56,11 @@ Describe "Run application image scripts with required modules installed" {
         It "Should not throw during execution: <_.Name>" -ForEach $CleanupScripts {
             { & $_.FullName } | Should -Not -Throw
         }
+    }
+}
+
+Describe "Run application image scripts that need a second run" {
+    It "Should not throw during execution: <_.Name>" -ForEach $2ndRunScripts {
+        { & $_.FullName } | Should -Not -Throw
     }
 }
