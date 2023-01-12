@@ -9,7 +9,7 @@ Nerdio does not recommend using this workaround in a production environment. Mic
 issue with sysprep and will presumably provide a supported fix in the future.
 #>
 
-$fileName = "$env:SystemRoot\system32\Sysprep\ActionFiles\Specialize.xml"
+$fileName = "$Env:SystemRoot\system32\Sysprep\ActionFiles\Specialize.xml"
 $NewAcl = Get-Acl -Path $fileName
 
 # Allow system to write

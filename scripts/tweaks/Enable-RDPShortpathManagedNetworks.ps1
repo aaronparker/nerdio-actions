@@ -22,7 +22,7 @@ $params = @{
     Service     = "TermService"
     Protocol    = "UDP"
     LocalPort   = 3390
-    Program     = "$env:SystemRoot\system32\svchost.exe"
+    Program     = "$Env:SystemRoot\system32\svchost.exe"
     Enabled     = "true"
     ErrorAction = "Continue"
 }

@@ -2,11 +2,11 @@
 #execution mode: Combined
 #tags: Evergreen, Microsoft, OneDrive, per-machine
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\Microsoft\OneDrive"
+[System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\OneDrive"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Run tasks/install apps

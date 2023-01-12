@@ -2,7 +2,7 @@
 #execution mode: Combined
 #tags: Evergreen, Foxit, PDF
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\Foxit\PDFReader"
+[System.String] $Path = "$Env:SystemDrive\Apps\Foxit\PDFReader"
 
 #region Use Secure variables in Nerdio Manager to pass a language
 if ($null -eq $SecureVars.FoxitLanguage) {
@@ -16,7 +16,7 @@ else {
 #region Script logic
 # Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -28,9 +28,9 @@ catch {
 }
 
 try {
-    $LogFile = "$env:ProgramData\Evergreen\Logs\FoxitPDFReader$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Evergreen\Logs\FoxitPDFReader$($App.Version).log" -replace " ", ""
     $params = @{
-        FilePath     = "$env:SystemRoot\System32\msiexec.exe"
+        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" AUTO_UPDATE=0 NOTINSTALLUPDATE=1 MAKEDEFAULT=0 LAUNCHCHECKDEFAULT=0 VIEW_IN_BROWSER=0 DESKTOP_SHORTCUT=0 STARTMENU_SHORTCUT_UNINSTALL=0 DISABLE_UNINSTALL_SURVEY=1 ALLUSERS=1 /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true

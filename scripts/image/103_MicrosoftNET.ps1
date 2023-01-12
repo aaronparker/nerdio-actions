@@ -2,11 +2,11 @@
 #execution mode: Combined
 #tags: Evergreen, Microsoft, .NET
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\Microsoft\NET"
+[System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\NET"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Download
@@ -21,7 +21,7 @@ catch {
 
 foreach ($file in $OutFile) {
     try {
-        $LogFile = "$env:ProgramData\Evergreen\Logs\Microsoft.NET.log" -replace " ", ""
+        $LogFile = "$Env:ProgramData\Evergreen\Logs\Microsoft.NET.log" -replace " ", ""
         $params = @{
             FilePath     = $file.FullName
             ArgumentList = "/install /quiet /norestart /log $LogFile"

@@ -2,11 +2,11 @@
 #execution mode: Combined
 #tags: Evergreen, Greenshot
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\Greenshot"
+[System.String] $Path = "$Env:SystemDrive\Apps\Greenshot"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -18,7 +18,7 @@ catch {
 }
 
 try {
-    $LogFile = "$env:ProgramData\Evergreen\Logs\Greenshot$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Evergreen\Logs\Greenshot$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = $OutFile.FullName
         ArgumentList = "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=$LogFile"
@@ -36,11 +36,11 @@ catch {
 
 Start-Sleep -Seconds 5
 Get-Process -ErrorAction "SilentlyContinue" | `
-    Where-Object { $_.Path -like "$env:ProgramFiles\Greenshot\*" } | `
+    Where-Object { $_.Path -like "$Env:ProgramFiles\Greenshot\*" } | `
     Stop-Process -Force -ErrorAction "SilentlyContinue"
-$Shortcuts = @("$env:Public\Desktop\Greenshot.lnk",
-    "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\License.txt.lnk",
-    "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\Readme.txt.lnk",
-    "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\Uninstall Greenshot.lnk")
+$Shortcuts = @("$Env:Public\Desktop\Greenshot.lnk",
+    "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\License.txt.lnk",
+    "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\Readme.txt.lnk",
+    "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\Uninstall Greenshot.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 #endregion

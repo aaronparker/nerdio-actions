@@ -2,11 +2,11 @@
 #execution mode: Combined
 #tags: Evergreen, Microsoft, Visual Studio Code
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\Microsoft\VisualStudioCode"
+[System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\VisualStudioCode"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -19,7 +19,7 @@ catch {
 }
 
 try {
-    $LogFile = "$env:ProgramData\Evergreen\Logs\MicrosoftVisualStudioCode$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Evergreen\Logs\MicrosoftVisualStudioCode$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = $OutFile.FullName
         ArgumentList = "/VERYSILENT /NOCLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /NORESTART /SP- /SUPPRESSMSGBOXES /MERGETASKS=!runcode /LOG=$LogFile"

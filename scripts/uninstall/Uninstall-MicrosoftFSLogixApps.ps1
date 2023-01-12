@@ -30,7 +30,7 @@ function Get-InstalledSoftware {
 #endregion
 
 #region Script logic
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Stop services
@@ -42,7 +42,7 @@ catch {
 
 try {
     Get-Process -ErrorAction "SilentlyContinue" | `
-        Where-Object { $_.Path -like "$env:ProgramFiles\FSLogix\Apps\*" } | `
+        Where-Object { $_.Path -like "$Env:ProgramFiles\FSLogix\Apps\*" } | `
         Stop-Process -Force -ErrorAction "SilentlyContinue"
 }
 catch {
@@ -51,7 +51,7 @@ catch {
 
 $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft FSLogix Apps*" }
 foreach ($App in $Apps) {
-    $LogFile = "$env:ProgramData\Evergreen\Logs\UninstallMicrosoftFSLogixApps$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Evergreen\Logs\UninstallMicrosoftFSLogixApps$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = [Regex]::Match($App.UninstallString, '\"(.*)\"').Captures.Groups[1].Value
         ArgumentList = "/uninstall /quiet /norestart /log $LogFile"
@@ -64,7 +64,7 @@ foreach ($App in $Apps) {
     $result.ExitCode
 }
 if ($result.ExitCode -eq 0) {
-    if (Test-Path -Path "$env:ProgramFiles\FSLogix") {
-        Remove-Item -Path "$env:ProgramFiles\FSLogix" -Recurse -Force -ErrorAction "Ignore"
+    if (Test-Path -Path "$Env:ProgramFiles\FSLogix") {
+        Remove-Item -Path "$Env:ProgramFiles\FSLogix" -Recurse -Force -ErrorAction "Ignore"
     }
 }

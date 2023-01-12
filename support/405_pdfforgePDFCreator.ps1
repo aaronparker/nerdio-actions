@@ -2,11 +2,11 @@
 #execution mode: Combined
 #tags: Evergreen, PDFForge, PDFCreator, PDF
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\PDFForge\PDFCreator"
+[System.String] $Path = "$Env:SystemDrive\Apps\PDFForge\PDFCreator"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force

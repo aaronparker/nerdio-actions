@@ -2,11 +2,11 @@
 #execution mode: Combined
 #tags: Evergreen, 7-Zip
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\7ZipZS"
+[System.String] $Path = "$Env:SystemDrive\Apps\7ZipZS"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force

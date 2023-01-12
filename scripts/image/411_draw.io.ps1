@@ -2,11 +2,11 @@
 #execution mode: Combined
 #tags: Evergreen, draw.io
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\draw.io"
+[System.String] $Path = "$Env:SystemDrive\Apps\draw.io"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -18,9 +18,9 @@ catch {
 }
 
 try {
-    $LogFile = "$env:ProgramData\Evergreen\Logs\diagrams.net$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Evergreen\Logs\diagrams.net$($App.Version).log" -replace " ", ""
     $params = @{
-        FilePath     = "$env:SystemRoot\System32\msiexec.exe"
+        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
@@ -35,6 +35,6 @@ catch {
 }
 
 Start-Sleep -Seconds 5
-$Shortcuts = @("$env:Public\Desktop\draw.io.lnk")
+$Shortcuts = @("$Env:Public\Desktop\draw.io.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 #endregion

@@ -30,11 +30,11 @@ function Get-InstalledSoftware {
 #endregion
 
 #region Script logic
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Get-Process -ErrorAction "SilentlyContinue" | `
-        Where-Object { $_.Path -like "$env:ProgramFiles\7-Zip-Zstandard\*" } | `
+        Where-Object { $_.Path -like "$Env:ProgramFiles\7-Zip-Zstandard\*" } | `
         Stop-Process -Force -ErrorAction "SilentlyContinue"
 }
 catch {
@@ -56,8 +56,8 @@ foreach ($App in $Apps) {
 }
 
 if ($result.ExitCode -eq 0) {
-    if (Test-Path -Path "$env:ProgramFiles\7-Zip-Zstandard") {
-        Remove-Item -Path "$env:ProgramFiles\7-Zip-Zstandard" -Recurse -Force -ErrorAction "Ignore"
+    if (Test-Path -Path "$Env:ProgramFiles\7-Zip-Zstandard") {
+        Remove-Item -Path "$Env:ProgramFiles\7-Zip-Zstandard" -Recurse -Force -ErrorAction "Ignore"
     }
 }
 #endregion

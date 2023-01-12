@@ -10,11 +10,11 @@ param()
 BeforeDiscovery {
 
     # Get the working directory
-    if ([System.String]::IsNullOrWhiteSpace($env:GITHUB_WORKSPACE)) {
+    if ([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE)) {
         $Path = [System.IO.Path]::Combine($PWD.Path, "scripts", "uninstall")
     }
     else {
-        $Path = [System.IO.Path]::Combine($env:GITHUB_WORKSPACE, "scripts", "uninstall")
+        $Path = [System.IO.Path]::Combine($Env:GITHUB_WORKSPACE, "scripts", "uninstall")
     }
 
     # Get the scripts to test

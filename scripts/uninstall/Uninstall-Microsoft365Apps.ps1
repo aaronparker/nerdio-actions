@@ -2,7 +2,7 @@
 #execution mode: Combined
 #tags: Evergreen, Uninstall, Microsoft, Microsoft 365 Apps
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Office"
+[System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Office"
 
 [System.String] $Channel = "MonthlyEnterprise"
 

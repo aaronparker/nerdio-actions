@@ -2,7 +2,7 @@
 #execution mode: Combined
 #tags: Evergreen, Customisation, Language, Image
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\image-customise"
+[System.String] $Path = "$Env:SystemDrive\Apps\image-customise"
 
 #region Use Secure variables in Nerdio Manager to pass variables
 if ($null -eq $SecureVars.OSLanguage) {

@@ -2,12 +2,12 @@
 #execution mode: Combined
 #tags: Evergreen, Microsoft, Edge, WebView2
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Edge"
+[System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Edge"
 [System.String] $EdgeExe = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 #region Edge
 try {
@@ -27,9 +27,9 @@ try {
     if (!(Test-Path -Path $EdgeExe) -or ([System.Version]$File.VersionInfo.ProductVersion -lt [System.Version]$App.Version)) {
 
         # Install
-        $LogFile = "$env:ProgramData\Evergreen\Logs\MicrosoftEdge$($App.Version).log" -replace " ", ""
+        $LogFile = "$Env:ProgramData\Evergreen\Logs\MicrosoftEdge$($App.Version).log" -replace " ", ""
         $params = @{
-            FilePath     = "$env:SystemRoot\System32\msiexec.exe"
+            FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
             ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true /log $LogFile"
             NoNewWindow  = $true
             Wait         = $true
@@ -67,7 +67,7 @@ try {
         }
     }
     $prefs | ConvertTo-Json | Set-Content -Path "${Env:ProgramFiles(x86)}\Microsoft\Edge\Application\master_preferences" -Force -Encoding "utf8"
-    $Shortcuts = @("$env:Public\Desktop\Microsoft Edge*.lnk")
+    $Shortcuts = @("$Env:Public\Desktop\Microsoft Edge*.lnk")
     Remove-Item -Path $Shortcuts -Force -ErrorAction "SilentlyContinue"
 }
 catch {

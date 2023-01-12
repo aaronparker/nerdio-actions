@@ -10,11 +10,11 @@ param()
 BeforeDiscovery {
 
     # Get the list of software to test
-    if ([System.String]::IsNullOrWhiteSpace($env:GITHUB_WORKSPACE)) {
+    if ([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE)) {
         $Path = $PWD.Path
     }
     else {
-        $Path = $env:GITHUB_WORKSPACE
+        $Path = $Env:GITHUB_WORKSPACE
     }
     $Applications = Get-Content -Path $([System.IO.Path]::Combine($Path, "tests", "Apps.json")) | ConvertFrom-Json
 }
@@ -185,11 +185,11 @@ AfterAll {
     }
     #endregion
 
-    if ([System.String]::IsNullOrWhiteSpace($env:GITHUB_WORKSPACE)) {
+    if ([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE)) {
         $Path = $PWD.Path
     }
     else {
-        $Path = $env:GITHUB_WORKSPACE
+        $Path = $Env:GITHUB_WORKSPACE
     }
     $params = @{
         Path              = "$Path\support\InstalledApplications.csv"

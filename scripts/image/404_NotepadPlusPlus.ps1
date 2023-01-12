@@ -2,11 +2,11 @@
 #execution mode: Combined
 #tags: Evergreen, Notepad++
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\NotepadPlusPlus"
+[System.String] $Path = "$Env:SystemDrive\Apps\NotepadPlusPlus"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force

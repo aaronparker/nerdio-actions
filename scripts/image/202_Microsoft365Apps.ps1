@@ -2,7 +2,7 @@
 #execution mode: Combined
 #tags: Evergreen, Microsoft, Microsoft 365 Apps
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Office"
+[System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Office"
 
 #region Use Secure variables in Nerdio Manager to pass variables
 if ($null -eq $SecureVars.M365Channel) {

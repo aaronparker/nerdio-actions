@@ -2,11 +2,11 @@
 #execution mode: Combined
 #tags: Evergreen, Remote Display Analyzer, Tools
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:ProgramFiles\RemoteDisplayAnalyzer"
+[System.String] $Path = "$Env:ProgramFiles\RemoteDisplayAnalyzer"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force

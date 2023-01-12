@@ -2,7 +2,7 @@
 #execution mode: Combined
 #tags: Evergreen, Mozilla, Firefox
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\Mozilla\Firefox"
+[System.String] $Path = "$Env:SystemDrive\Apps\Mozilla\Firefox"
 
 #region Use Secure variables in Nerdio Manager to pass a language
 if ($null -eq $SecureVars.FirefoxLanguage) {
@@ -15,7 +15,7 @@ else {
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -29,9 +29,9 @@ catch {
 }
 
 try {
-    $LogFile = "$env:ProgramData\Evergreen\Logs\MozillaFirefox$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Evergreen\Logs\MozillaFirefox$($App.Version).log" -replace " ", ""
     $params = @{
-        FilePath     = "$env:SystemRoot\System32\msiexec.exe"
+        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" DESKTOP_SHORTCUT=false TASKBAR_SHORTCUT=false INSTALL_MAINTENANCE_SERVICE=false REMOVE_DISTRIBUTION_DIR=true PREVENT_REBOOT_REQUIRED=true REGISTER_DEFAULT_AGENT=true /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
@@ -46,6 +46,6 @@ catch {
 }
 
 Start-Sleep -Seconds 5
-$Shortcuts = @("$env:Public\Desktop\Mozilla Firefox.lnk")
+$Shortcuts = @("$Env:Public\Desktop\Mozilla Firefox.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 #endregion

@@ -2,14 +2,14 @@
 #execution mode: Combined
 #tags: Evergreen, Google, Chrome
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\Google\Chrome"
+[System.String] $Path = "$Env:SystemDrive\Apps\Google\Chrome"
 
 # Configure policies for roaming and cache
 # https://cloud.google.com/blog/products/chrome-enterprise/configuring-chrome-browser-in-your-vdi-environment
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -21,9 +21,9 @@ catch {
 }
 
 try {
-    $LogFile = "$env:ProgramData\Evergreen\Logs\GoogleChrome$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Evergreen\Logs\GoogleChrome$($App.Version).log" -replace " ", ""
     $params = @{
-        FilePath     = "$env:SystemRoot\System32\msiexec.exe"
+        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true

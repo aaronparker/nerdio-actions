@@ -30,11 +30,11 @@ function Get-InstalledSoftware {
 #endregion
 
 #region Script logic
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Adobe Acrobat*" }
 foreach ($App in $Apps) {
-    $LogFile = "$env:ProgramData\Evergreen\Logs\UninstallAdobe$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Evergreen\Logs\UninstallAdobe$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log $LogFile"

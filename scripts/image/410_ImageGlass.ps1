@@ -2,11 +2,11 @@
 #execution mode: Combined
 #tags: Evergreen, ImageGlass
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\ImageGlass"
+[System.String] $Path = "$Env:SystemDrive\Apps\ImageGlass"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -18,9 +18,9 @@ catch {
 }
 
 try {
-    $LogFile = "$env:ProgramData\Evergreen\Logs\ImageGlass$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Evergreen\Logs\ImageGlass$($App.Version).log" -replace " ", ""
     $params = @{
-        FilePath     = "$env:SystemRoot\System32\msiexec.exe"
+        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" RUNAPPLICATION=0 ALLUSERS=1 /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
@@ -35,8 +35,8 @@ catch {
 }
 
 Start-Sleep -Seconds 5
-$Shortcuts = @("$env:Public\Desktop\ImageGlass.lnk",
-    "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\ImageGlass\ImageGlass' LICENSE.lnk",
-    "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\ImageGlass\Uninstall ImageGlass*.lnk")
+$Shortcuts = @("$Env:Public\Desktop\ImageGlass.lnk",
+    "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\ImageGlass\ImageGlass' LICENSE.lnk",
+    "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\ImageGlass\Uninstall ImageGlass*.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 #endregion

@@ -2,11 +2,11 @@
 #execution mode: Combined
 #tags: Evergreen, Microsoft, AVD
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\Microsoft\Avd"
+[System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Avd"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Run tasks/install apps
 #region Microsoft Remote Desktop WebRTC Redirector Service
@@ -21,9 +21,9 @@ catch {
 
 try {
     # Install RTC
-    $LogFile = "$env:ProgramData\Evergreen\Logs\MicrosoftWvdRtcService$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Evergreen\Logs\MicrosoftWvdRtcService$($App.Version).log" -replace " ", ""
     $params = @{
-        FilePath     = "$env:SystemRoot\System32\msiexec.exe"
+        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
@@ -51,9 +51,9 @@ catch {
 
 try {
     # Install MMR
-    $LogFile = "$env:ProgramData\Evergreen\Logs\MicrosoftWvdMultimediaRedirection$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Evergreen\Logs\MicrosoftWvdMultimediaRedirection$($App.Version).log" -replace " ", ""
     $params = @{
-        FilePath     = "$env:SystemRoot\System32\msiexec.exe"
+        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true

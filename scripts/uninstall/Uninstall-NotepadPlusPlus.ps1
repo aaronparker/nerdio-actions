@@ -30,7 +30,7 @@ function Get-InstalledSoftware {
 #endregion
 
 #region Script logic
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Notepad\+\+*" }
 foreach ($App in $Apps) {

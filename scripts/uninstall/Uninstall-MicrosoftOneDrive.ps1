@@ -30,11 +30,11 @@ function Get-InstalledSoftware {
 #endregion
 
 #region Script logic
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Get-Process -ErrorAction "SilentlyContinue" | `
-        Where-Object { $_.Path -like "$env:ProgramFiles\Microsoft OneDrive\*" } | `
+        Where-Object { $_.Path -like "$Env:ProgramFiles\Microsoft OneDrive\*" } | `
         Stop-Process -Force -ErrorAction "SilentlyContinue"
 }
 catch {
@@ -55,7 +55,7 @@ foreach ($App in $Apps) {
     $result.ExitCode
 }
 if ($result.ExitCode -eq 0) {
-    if (Test-Path -Path "$env:ProgramFiles\Microsoft OneDrive") {
-        Remove-Item -Path "$env:ProgramFiles\Microsoft OneDrive" -Recurse -Force -ErrorAction "Ignore"
+    if (Test-Path -Path "$Env:ProgramFiles\Microsoft OneDrive") {
+        Remove-Item -Path "$Env:ProgramFiles\Microsoft OneDrive" -Recurse -Force -ErrorAction "Ignore"
     }
 }

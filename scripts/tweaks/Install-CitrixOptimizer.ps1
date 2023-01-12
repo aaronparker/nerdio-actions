@@ -2,11 +2,11 @@
 #execution mode: Combined
 #tags: Image, Optimise
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\Citrix\Optimizer"
+[System.String] $Path = "$Env:SystemDrive\Apps\Citrix\Optimizer"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Get the Citrix Optimizer template
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
@@ -62,8 +62,8 @@ try {
     $params = @{
         Source          = $Template.FullName
         Mode            = "Execute"
-        OutputLogFolder = "$env:ProgramData\Evergreen\Logs"
-        OutputHtml      = "$env:SystemRoot\Temp\CitrixOptimizer.html"
+        OutputLogFolder = "$Env:ProgramData\Evergreen\Logs"
+        OutputHtml      = "$Env:SystemRoot\Temp\CitrixOptimizer.html"
         Verbose         = $False
     }
     & $OptimizerBin.FullName @params 2> $Null

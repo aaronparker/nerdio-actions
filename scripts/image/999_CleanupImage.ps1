@@ -1,7 +1,7 @@
 #description: Reenables settings, removes application installers, and remove logs older than 30 days post image completion
 #execution mode: Combined
 #tags: Image
-[System.String] $Path = "$env:SystemDrive\Apps"
+[System.String] $Path = "$Env:SystemDrive\Apps"
 
 try {
     if ((Get-MpPreference).DisableRealtimeMonitoring -eq $true) {
@@ -23,6 +23,6 @@ catch {
 }
 
 # Remove logs older than 30 days
-Get-ChildItem -Path "$env:ProgramData\Evergreen\Logs" -Include "*.*" -Recurse | `
+Get-ChildItem -Path "$Env:ProgramData\Evergreen\Logs" -Include "*.*" -Recurse | `
     Where-Object { ($_.LastWriteTime -lt (Get-Date).AddDays(-30)) -and ($_.psIsContainer -eq $false) } | `
     Remove-Item -Force -ErrorAction "Ignore"

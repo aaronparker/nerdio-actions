@@ -2,11 +2,11 @@
 #execution mode: Combined
 #tags: Evergreen, Paint.NET
 #Requires -Modules Evergreen
-[System.String] $Path = "$env:SystemDrive\Apps\Paint.NET"
+[System.String] $Path = "$Env:SystemDrive\Apps\Paint.NET"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -31,9 +31,9 @@ catch {
 
 try {
     $Installer = Get-ChildItem -Path $Path -Include "paint*.msi" -Recurse
-    $LogFile = "$env:ProgramData\Evergreen\Logs\Paint.NET$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Evergreen\Logs\Paint.NET$($App.Version).log" -replace " ", ""
     $params = @{
-        FilePath     = "$env:SystemRoot\System32\msiexec.exe"
+        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($Installer.FullName)`" DESKTOPSHORTCUT=0 CHECKFORUPDATES=0 CHECKFORBETAS=0 /quiet /log $LogFile"
         NoNewWindow  = $true
         Wait         = $true
@@ -48,6 +48,6 @@ catch {
 }
 
 Start-Sleep -Seconds 5
-$Shortcuts = @("$env:Public\Desktop\Paint.NET.lnk")
+$Shortcuts = @("$Env:Public\Desktop\Paint.NET.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 #endregion

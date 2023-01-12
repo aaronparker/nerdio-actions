@@ -5,16 +5,16 @@
 #region Script logic
 try {
     Get-Process -ErrorAction "SilentlyContinue" | `
-        Where-Object { $_.Path -like "$env:ProgramFiles\Greenshot\*" } | `
+        Where-Object { $_.Path -like "$Env:ProgramFiles\Greenshot\*" } | `
         Stop-Process -Force -ErrorAction "SilentlyContinue"
 }
 catch {
     Write-Warning -Message "Failed to stop Greenshot processes."
 }
 
-if (Test-Path -Path "$env:ProgramFiles\Greenshot\unins000.exe") {
+if (Test-Path -Path "$Env:ProgramFiles\Greenshot\unins000.exe") {
     $params = @{
-        FilePath     = "$env:ProgramFiles\Greenshot\unins000.exe"
+        FilePath     = "$Env:ProgramFiles\Greenshot\unins000.exe"
         ArgumentList = "/VERYSILENT"
         NoNewWindow  = $True
         PassThru     = $True
@@ -24,8 +24,8 @@ if (Test-Path -Path "$env:ProgramFiles\Greenshot\unins000.exe") {
     $result = Start-Process @params
     $result.ExitCode
     if ($result.ExitCode -eq 0) {
-        if (Test-Path -Path "$env:ProgramFiles\Greenshot") {
-            Remove-Item -Path "$env:ProgramFiles\Greenshot" -Recurse -Force -ErrorAction "SilentlyContinue"
+        if (Test-Path -Path "$Env:ProgramFiles\Greenshot") {
+            Remove-Item -Path "$Env:ProgramFiles\Greenshot" -Recurse -Force -ErrorAction "SilentlyContinue"
         }
     }
 }

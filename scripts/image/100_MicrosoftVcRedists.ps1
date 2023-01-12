@@ -2,7 +2,7 @@
 #execution mode: Combined
 #tags: VcRedist, Microsoft
 #Requires -Modules VcRedist
-[System.String] $Path = "$env:SystemDrive\Apps\Microsoft\VcRedist"
+[System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\VcRedist"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
