@@ -105,13 +105,13 @@ Describe "Validate <App.Name>" -ForEach $Applications {
         }
     }
 
-    Context "Validate shortcut does not exist." {
+    Context "Validate shortcut does not exist" {
         It "Should not exist: <_>" -ForEach $ShortcutsNotExist {
             $_ | Should -Not -Exist
         }
     }
 
-    Context "Validate service has been disabled." {
+    Context "Validate service has been disabled" {
         It "Should be disabled: <_>" -ForEach $ServicesDisabled {
             (Get-Service -Name $_).StartType | Should -Be "Disabled"
         }
