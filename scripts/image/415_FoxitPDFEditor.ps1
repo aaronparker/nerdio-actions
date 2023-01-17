@@ -56,7 +56,7 @@ catch {
 
 try {
     # Disable update tasks - assuming we're installing on a gold image or updates will be managed
-    Get-Service -Name "FoxitReaderUpdateService*" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
+    Get-Service -Name "FoxitPhantomPDFUpdateService*" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
 }
 catch {
     throw $_.Exception.Message

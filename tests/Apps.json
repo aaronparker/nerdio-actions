@@ -144,6 +144,19 @@
         ]
     },
     {
+        "Name": "FoxitPDFEditor",
+        "Filter": "Invoke-EvergreenApp -Name \"FoxitPDFEditor\" | Where-Object { $_.Language -eq \"English\" } | Select-Object -First 1",
+        "Installed": "Foxit PDF Editor",
+        "FilesExist": [
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Editor\\FoxitPDFEditor.exe",
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Editor\\Activation.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": [
+            "FoxitPhantomPDFUpdateService"
+        ]
+    },
+    {
         "Name": "GoogleChrome",
         "Filter": "Invoke-EvergreenApp -Name \"GoogleChrome\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"stable\" } | Select-Object -First 1",
         "Installed": "Google Chrome",
