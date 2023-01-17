@@ -18,4 +18,11 @@ jobs:
         run: |
             & "$env:GITHUB_WORKSPACE\scripts\image\011_SupportFunctions.ps1"
             Import-Module -Name "Evergreen"
+
+            Write-Host ""
             Get-EvergreenApp -Name "Greenshot" | Format-Table
+
+            [System.String] $Path = "$Env:SystemDrive\Apps\Greenshot"
+            New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+            $App = Get-EvergreenApp -Name "Greenshot" -Verbose | Where-Object { $_.Architecture -eq "x86" -and $_.Uri -match "Greenshot-INSTALLER-*" } | Select-Object -First 1
+            Save-EvergreenApp -InputObject $App -CustomPath $Path -Verbose
