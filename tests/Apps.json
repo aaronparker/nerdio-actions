@@ -280,13 +280,28 @@
         "Filter": "Get-EvergreenApp -Name \"Greenshot\" | Where-Object { $_.Architecture -eq \"x86\" -and $_.Uri -match \"Greenshot-INSTALLER-\" } | Select-Object -First 1",
         "Installed": "Greenshot*",
         "FilesExist": [
-            "C:\\Program Files\\Greenshot\\Greenshot.exe"
+            "C:\\Program Files\\Greenshot\\Greenshot.exe",
+            "C:\\Program Files\\Greenshot\\unins000.exe"
         ],
         "ShortcutsNotExist": [
             "C:\\Users\\Public\\Desktop\\Greenshot.lnk",
             "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Greenshot\\License.txt.lnk",
             "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Greenshot\\Readme.txt.lnk",
             "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Greenshot\\Uninstall Greenshot.lnk"
+        ],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "ShareX",
+        "Filter": "Get-EvergreenApp -Name \"ShareX\" | Where-Object { $_.Type -eq \"exe\" } | Select-Object -First 1",
+        "Installed": "ShareX*",
+        "FilesExist": [
+            "C:\\Program Files\\ShareX\\ShareX.exe",
+            "C:\\Program Files\\ShareX\\unins000.exe"
+        ],
+        "ShortcutsNotExist": [
+            "C:\\Users\\Public\\Desktop\\ShareX.lnk",
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\ShareX\\Uninstall ShareX.lnk"
         ],
         "ServicesDisabled": []
     }
