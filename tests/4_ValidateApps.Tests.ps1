@@ -99,33 +99,25 @@ Describe "Validate <App.Name>" -ForEach $Applications {
             Select-Object -First 1
     }
 
-    Context "Applications files" {
-        It "Should exist: <_>" -ForEach $FilesExist {
-            $_ | Should -Exist
-        }
-    }
-
-    Context "Validate shortcut does not exist" {
-        It "Should not exist: <_>" -ForEach $ShortcutsNotExist {
-            $_ | Should -Not -Exist
-        }
-    }
-
-    Context "Validate service has been disabled" {
-        It "Should be disabled: <_>" -ForEach $ServicesDisabled {
-            (Get-Service -Name $_).StartType | Should -Be "Disabled"
-        }
-    }
-
-    Context "Validate application is installed" {
+    Context "Installed application and configuration tests" {
         It "Should be installed" {
             $Installed | Should -Not -BeNullOrEmpty
         }
-    }
 
-    Context "Validate installed version" {
         It "Should be the current version or better" {
             [System.Version]$Installed.Version | Should -BeGreaterOrEqual ([System.Version]$Latest.Version)
+        }
+
+        It "Should have application file installed: <_>" -ForEach $FilesExist {
+            $_ | Should -Exist
+        }
+
+        It "Should have shortcut deleted or removed: <_>" -ForEach $ShortcutsNotExist {
+            $_ | Should -Not -Exist
+        }
+
+        It "Should have the service disabled: <_>" -ForEach $ServicesDisabled {
+            (Get-Service -Name $_).StartType | Should -Be "Disabled"
         }
     }
 }
