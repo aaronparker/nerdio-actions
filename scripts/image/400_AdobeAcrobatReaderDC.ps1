@@ -28,7 +28,13 @@ catch {
 try {
     # Install Adobe Acrobat Reader
     $LogFile = "$Env:ProgramData\Evergreen\Logs\AdobeAcrobatReaderDC$($App.Version).log" -replace " ", ""
-    $ArgumentList = "-sfx_nu /sALL /rps /l /msi EULA_ACCEPT=YES ENABLE_CHROMEEXT=0 DISABLE_BROWSER_INTEGRATION=1 ENABLE_OPTIMIZATION=YES ADD_THUMBNAILPREVIEW=0 DISABLEDESKTOPSHORTCUT=1 /log $LogFile"
+    $Options = "EULA_ACCEPT=YES
+        ENABLE_CHROMEEXT=0
+        DISABLE_BROWSER_INTEGRATION=1
+        ENABLE_OPTIMIZATION=YES
+        ADD_THUMBNAILPREVIEW=0
+        DISABLEDESKTOPSHORTCUT=1"
+    $ArgumentList = "-sfx_nu /sALL /rps /l /msi $($Options -replace "\s+", " ") /log $LogFile"
     $params = @{
         FilePath     = $OutFile.FullName
         ArgumentList = $ArgumentList

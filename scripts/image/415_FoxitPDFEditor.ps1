@@ -2,7 +2,7 @@
 #execution mode: Combined
 #tags: Evergreen, Foxit, PDF
 #Requires -Modules Evergreen
-[System.String] $Path = "$Env:SystemDrive\Apps\Foxit\PDFReader"
+[System.String] $Path = "$Env:SystemDrive\Apps\Foxit\PDFEditor"
 
 #region Use Secure variables in Nerdio Manager to pass a language
 if ($null -eq $SecureVars.FoxitLanguage) {
@@ -20,7 +20,7 @@ New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -E
 
 try {
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "FoxitReader" | Where-Object { $_.Language -eq $Language } | Select-Object -First 1
+    $App = Invoke-EvergreenApp -Name "FoxitPDFEditor" | Where-Object { $_.Language -eq $Language } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
@@ -28,11 +28,13 @@ catch {
 }
 
 try {
-    $LogFile = "$Env:ProgramData\Evergreen\Logs\FoxitPDFReader$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Evergreen\Logs\FoxitPDFEditor$($App.Version).log" -replace " ", ""
     $Options = "AUTO_UPDATE=0
         NOTINSTALLUPDATE=1
         MAKEDEFAULT=0
         LAUNCHCHECKDEFAULT=0
+        SETDEFAULTPRINTER=0
+        REMOVEGAREADER=0
         VIEW_IN_BROWSER=0
         DESKTOP_SHORTCUT=0
         STARTMENU_SHORTCUT_UNINSTALL=0
