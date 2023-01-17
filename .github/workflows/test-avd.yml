@@ -54,15 +54,15 @@ jobs:
           Import-Module -Name "Pester" -Force -ErrorAction "Stop"
 
           $Config = New-PesterConfiguration
-          $Config.Run.Path = "$env:GITHUB_WORKSPACE\tests"
+          $Config.Run.Path = "$Env:GITHUB_WORKSPACE\tests"
           $Config.Run.PassThru = $True
           $Config.CodeCoverage.Enabled = $True
-          $Config.CodeCoverage.Path = "$env:GITHUB_WORKSPACE\scripts"
+          $Config.CodeCoverage.Path = "$Env:GITHUB_WORKSPACE\scripts"
           $Config.CodeCoverage.OutputFormat = "JaCoCo"
-          $Config.CodeCoverage.OutputPath = "$env:GITHUB_WORKSPACE\CodeCoverage.xml"
+          $Config.CodeCoverage.OutputPath = "$Env:GITHUB_WORKSPACE\CodeCoverage.xml"
           $Config.TestResult.Enabled = $True
           $Config.TestResult.OutputFormat = "NUnitXml"
-          $Config.TestResult.OutputPath = "$env:GITHUB_WORKSPACE\tests\TestResults.xml"
+          $Config.TestResult.OutputPath = "$Env:GITHUB_WORKSPACE\tests\TestResults.xml"
           $Config.Output.Verbosity = "Detailed"
           Invoke-Pester -Configuration $Config
 

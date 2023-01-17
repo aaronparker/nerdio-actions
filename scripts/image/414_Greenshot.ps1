@@ -21,7 +21,7 @@ try {
     $LogFile = "$Env:ProgramData\Evergreen\Logs\Greenshot$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = $OutFile.FullName
-        ArgumentList = "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=$LogFile"
+        ArgumentList = "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /TASKS= /FORCECLOSEAPPLICATIONS /LOGCLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /LOG=$LogFile"
         NoNewWindow  = $true
         Wait         = $false
         PassThru     = $true

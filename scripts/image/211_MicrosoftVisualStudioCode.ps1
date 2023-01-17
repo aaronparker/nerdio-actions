@@ -34,4 +34,9 @@ try {
 catch {
     throw $_
 }
+
+Start-Sleep -Seconds 5
+Get-Process -ErrorAction "SilentlyContinue" | `
+    Where-Object { $_.Path -like "$Env:ProgramFiles\Microsoft VS Code\*" } | `
+    Stop-Process -Force -ErrorAction "SilentlyContinue"
 #endregion

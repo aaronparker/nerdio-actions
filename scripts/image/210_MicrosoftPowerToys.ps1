@@ -44,4 +44,9 @@ reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileExplor
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileExplorerPDFPreview" /d 0 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileLocksmith" /d 0 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityVideoConferenceMute" /d 0 /t "REG_DWORD" /f | Out-Null
+
+Start-Sleep -Seconds 5
+Get-Process -ErrorAction "SilentlyContinue" | `
+    Where-Object { $_.Path -like "$Env:ProgramFiles\PowerToys\*" } | `
+    Stop-Process -Force -ErrorAction "SilentlyContinue"
 #endregion
