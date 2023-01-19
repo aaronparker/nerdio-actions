@@ -2,7 +2,7 @@
 #execution mode: Combined
 #tags: Image, Optimise
 #Requires -Modules Evergreen
-[System.String] $Path = "$Env:SystemDrive\Apps\Citrix\Optimizer"
+[System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Vdot"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null

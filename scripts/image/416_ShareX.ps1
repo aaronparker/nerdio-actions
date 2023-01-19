@@ -34,7 +34,7 @@ catch {
     throw $_
 }
 
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 10
 Get-Process -ErrorAction "SilentlyContinue" | `
     Where-Object { $_.Path -like "$Env:ProgramFiles\ShareX\*" } | `
     Stop-Process -Force -ErrorAction "SilentlyContinue"
