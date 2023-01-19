@@ -56,8 +56,8 @@ catch {
 try {
     # Run Citrix Optimizer
     Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
-    $Template = Get-ChildItem -Path $Path -Recurse -Filter $OptimizerTemplate
-    $OptimizerBin = Get-ChildItem -Path $Path -Recurse -Filter "CtxOptimizerEngine.ps1"
+    $Template = Get-ChildItem -Path $Path -Recurse -Include $OptimizerTemplate
+    $OptimizerBin = Get-ChildItem -Path $Path -Recurse -Include "CtxOptimizerEngine.ps1"
     Push-Location -Path $OptimizerBin.Directory
     $params = @{
         Source          = $Template.FullName
