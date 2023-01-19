@@ -28,8 +28,9 @@ try {
         Select-Object -First 1 | `
         Save-EvergreenApp -CustomPath $Path
     Expand-Archive -Path $Installer.FullName -DestinationPath $Path -Force
-    Push-Location -Path $Path
-    . .\Install-Defaults.ps1 -Language $Language -AppxMode $AppxMode
+    $InstallFile = Get-ChildItem -Path $Path -Recurse -Include "Install-Defaults.ps1"
+    Push-Location -Path $InstallFile.Directory
+    & .\Install-Defaults.ps1 -Language $Language -AppxMode $AppxMode
     Pop-Location
 }
 catch {
