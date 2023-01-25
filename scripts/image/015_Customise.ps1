@@ -1,4 +1,4 @@
-#description: Installs Windows Customised Defaults to customise the image and the default profile
+#description: Installs Windows Customised Defaults to customise the image and the default profile https://stealthpuppy.com/image-customise/
 #execution mode: Combined
 #tags: Evergreen, Customisation, Language, Image
 #Requires -Modules Evergreen
