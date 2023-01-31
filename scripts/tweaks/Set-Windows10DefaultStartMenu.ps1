@@ -4,7 +4,7 @@
 
 #region Use Secure variables in Nerdio Manager to pass variables
 if ($null -eq $SecureVars.StartLayout) {
-    [System.String] $StartLayout = @"
+	[System.String] $StartLayout = @"
 <?xml version="1.0" encoding="utf-8"?>
 <LayoutModificationTemplate xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" 
   xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" 
@@ -38,7 +38,7 @@ if ($null -eq $SecureVars.StartLayout) {
 "@
 }
 else {
-    [System.String] $StartLayout = $SecureVars.StartLayout
+	[System.String] $StartLayoutUrl = $SecureVars.StartLayout
 }
 #endregion
 
@@ -46,15 +46,28 @@ else {
 [System.String] $Path = "$Env:SystemDrive\Apps\StartLayout"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:SystemDrive\Users\Default\AppData\Local\Microsoft\Windows\Shell" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-$params = @{
-    Path        = "$Path\LayoutModification.xml"
-    Value       = $StartLayout
-    Encoding    = "Utf8"
-    NoNewLine   = $true
-    Confirm      = $false
-    Force       = $true
-    ErrorAction = "Stop"
+
+if ([System.String]::IsNullOrEmpty($StartLayoutUrl)) {
+	$params = @{
+		Path        = "$Path\LayoutModification.xml"
+		Value       = $StartLayout
+		Encoding    = "Utf8"
+		NoNewLine   = $true
+		Confirm      = $false
+		Force       = $true
+		ErrorAction = "Stop"
+	}
+	Set-Content @params
 }
-Set-Content @params
+else {
+	$params = @{
+		URI             = $StartLayoutUrl
+		OutFile         = "$Path\LayoutModification.xml"
+		UseBasicParsing = $true
+		ErrorAction     = "Stop"
+	}
+	Invoke-WebRequest @params
+}
+
 Import-StartLayout -LayoutPath "$Path\LayoutModification.xml" -MountPath "$Env:SystemDrive\"
 #endregion
