@@ -1,6 +1,7 @@
 #description: Sets a default Windows 10 Start menu and taskbar layout passed from  Nerdio secure variables
 #execution mode: Combined
 #tags: Image, Start menu, Taskbar
+[System.String] $Path = "$Env:SystemDrive\Apps\StartLayout"
 
 #region Use Secure variables in Nerdio Manager to pass variables
 if ($null -eq $SecureVars.StartLayout) {
@@ -45,9 +46,10 @@ else {
 #endregion
 
 #region Script logic
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:SystemDrive\Users\Default\AppData\Local\Microsoft\Windows\Shell" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 $params = @{
-    Path        = "$Env:SystemDrive\Users\Default\AppData\Local\Microsoft\Windows\Shell\LayoutModification.xml"
+    Path        = "$Path\LayoutModification.xml"
     Value       = $StartLayout
     Encoding    = "Utf8"
     NoNewLine   = $true
@@ -56,4 +58,5 @@ $params = @{
     ErrorAction = "Stop"
 }
 Set-Content @params
+Import-StartLayout -LayoutPath "$Path\LayoutModification.xml" -MountPath "$Env:SystemDrive\"
 #endregion
