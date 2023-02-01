@@ -4,6 +4,7 @@
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Cisco\WebEx"
 
+# https://www.webex.com/downloads/teams-vdi.html
 # https://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cloudCollaboration/wbxt/vdi/wbx-vdi-deployment-guide/wbx-teams-vdi-deployment_chapter_010.html
 
 #region Script logic

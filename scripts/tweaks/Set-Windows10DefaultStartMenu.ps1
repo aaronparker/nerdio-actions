@@ -1,8 +1,9 @@
-#description: Sets a default Windows 10 Start menu and taskbar layout passed from  Nerdio secure variables
+#description: Sets a default Windows 10 Start menu and taskbar layout from a URL passed from  Nerdio secure variables
 #execution mode: Combined
 #tags: Image, Start menu, Taskbar
 
 #region Use Secure variables in Nerdio Manager to pass variables
+# A default Start menu and taskbar layout is included here for local testing
 if ($null -eq $SecureVars.StartLayout) {
 	[System.String] $StartLayout = @"
 <?xml version="1.0" encoding="utf-8"?>
@@ -38,6 +39,7 @@ if ($null -eq $SecureVars.StartLayout) {
 "@
 }
 else {
+	# Host the Start menu and taskbar layout on Azure blob storage
 	[System.String] $StartLayoutUrl = $SecureVars.StartLayout
 }
 #endregion
