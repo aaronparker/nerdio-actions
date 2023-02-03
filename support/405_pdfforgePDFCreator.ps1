@@ -14,7 +14,7 @@ try {
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
-    throw $_
+    throw $_.Exception.Message
 }
 
 try {
@@ -30,7 +30,7 @@ try {
     $result.ExitCode
 }
 catch {
-    throw $_
+    throw $_.Exception.Message
 }
 
 Start-Sleep -Seconds 5

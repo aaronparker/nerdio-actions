@@ -17,7 +17,7 @@ try {
     Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 }
 catch {
-    throw $_
+    throw $_.Exception.Message
 }
 
 # Install
@@ -39,7 +39,7 @@ foreach ($file in "FSLogixAppsSetup.exe", "FSLogixAppsRuleEditorSetup.exe") {
             Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
         }
         catch {
-            throw $_
+            throw $_.Exception.Message
         }
     }
 }

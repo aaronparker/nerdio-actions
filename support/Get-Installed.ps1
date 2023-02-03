@@ -21,7 +21,7 @@ function Get-InstalledSoftware {
             New-PSDrive @params | Out-Null
         }
         catch {
-            throw $_
+            throw $_.Exception.Message
         }
         $UninstallKeys = @(
             "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*",
@@ -41,13 +41,13 @@ function Get-InstalledSoftware {
                     Sort-Object -Property "DisplayName", "Publisher"
             }
             catch {
-                throw $_
+                throw $_.Exception.Message
             }
         }
         return $Apps
     }
     catch {
-        throw $_
+        throw $_.Exception.Message
     }
     finally {
         Remove-PSDrive -Name "HKU" -ErrorAction "Ignore" | Out-Null

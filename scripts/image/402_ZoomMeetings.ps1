@@ -15,7 +15,7 @@ try {
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
-    throw $_
+    throw $_.Exception.Message
 }
 
 try {
@@ -32,6 +32,6 @@ try {
     Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 }
 catch {
-    throw $_
+    throw $_.Exception.Message
 }
 #endregion

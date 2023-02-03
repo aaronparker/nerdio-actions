@@ -13,7 +13,7 @@ try {
     Save-VcRedist -VcList (Get-VcList) -Path $Path | Out-Null
 }
 catch {
-    throw $_
+    throw $_.Exception.Message
 }
 
 try {

@@ -15,6 +15,6 @@ try {
     Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -WarningAction "SilentlyContinue" | Out-Null
 }
 catch {
-    throw $_
+    throw $_.Exception.Message
 }
 #endregion

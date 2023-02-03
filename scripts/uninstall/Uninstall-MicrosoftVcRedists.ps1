@@ -9,6 +9,6 @@ try {
     Get-InstalledVcRedist | Uninstall-VcRedist -Confirm:$false -ErrorAction "SilentlyContinue"
 }
 catch {
-    throw $_
+    throw $_.Exception.Message
 }
 #endregion

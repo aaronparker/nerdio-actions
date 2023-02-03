@@ -22,7 +22,7 @@ function Get-InstalledSoftware {
                 Sort-Object -Property "DisplayName", "Publisher"
         }
         catch {
-            throw $_
+            throw $_.Exception.Message
         }
     }
     return $Apps
