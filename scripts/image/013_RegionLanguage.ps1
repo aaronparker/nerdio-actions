@@ -19,6 +19,7 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
             CopyToSettings  = $true
             ExcludeFeatures = $false
         }
+        Write-Information -MessageData ":: Install language pack for: $Language" -InformationAction "Continue"
         Install-Language @params | Out-Null
     }
     catch {
@@ -30,6 +31,7 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
             Language = $Language
             PassThru = $false
         }
+        Write-Information -MessageData ":: Set system UI language to: $Language" -InformationAction "Continue"
         Set-SystemPreferredUILanguage @params
     }
     catch {
@@ -47,6 +49,7 @@ try {
         "ph-PH" = 201
     }
     Import-Module -Name "International"
+    Write-Information -MessageData ":: Set locale to: $Language" -InformationAction "Continue"
     Set-WinSystemLocale -SystemLocale $Language
     Set-WinHomeLocation -GeoId $GeoId.$Language
 }

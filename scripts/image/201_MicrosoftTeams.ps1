@@ -97,6 +97,7 @@ foreach ($App in $Apps) {
 
 try {
     # Install Teams
+    Write-Information -MessageData ":: Install Microsoft Teams" -InformationAction "Continue"
     New-Item -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Force -ErrorAction "SilentlyContinue" | Out-Null
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Name "IsWVDEnvironment" -PropertyType "DWORD" -Value 1 -Force -ErrorAction "SilentlyContinue" | Out-Null
     $LogFile = $LogFile = "$Env:ProgramData\Evergreen\Logs\MicrosoftTeams$($App.Version).log" -replace " ", ""

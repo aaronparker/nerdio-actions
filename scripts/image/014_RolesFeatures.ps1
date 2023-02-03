@@ -15,6 +15,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
                 WarningAction = "SilentlyContinue"
                 ErrorAction   = "SilentlyContinue"
             }
+            Write-Information -MessageData ":: Disable feature: 'Printing-XPSServices-Features'" -InformationAction "Continue"
             Disable-WindowsOptionalFeature @params
         }
         catch {
@@ -27,6 +28,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
                 WarningAction = "SilentlyContinue"
                 ErrorAction   = "SilentlyContinue"
             }
+            Write-Information -MessageData ":: Install Windows features" -InformationAction "Continue"
             Install-WindowsFeature @params
         }
         catch {
@@ -43,6 +45,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
                         WarningAction = "SilentlyContinue"
                         ErrorAction   = "SilentlyContinue"
                     }
+                    Write-Information -MessageData ":: Set service start to automatic: $service" -InformationAction "Continue"
                     Set-Service @params
                 }
                 catch {
@@ -65,6 +68,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
                 WarningAction = "SilentlyContinue"
                 ErrorAction   = "SilentlyContinue"
             }
+            Write-Information -MessageData ":: Disable Windows optional features" -InformationAction "Continue"
             Disable-WindowsOptionalFeature @params
         }
         catch {
@@ -87,6 +91,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
                 WarningAction = "SilentlyContinue"
                 ErrorAction   = "SilentlyContinue"
             }
+            Write-Information -MessageData ":: Disable Windows optional features" -InformationAction "Continue"
             Disable-WindowsOptionalFeature @params
         }
         catch {
@@ -102,6 +107,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
                 WarningAction          = "SilentlyContinue"
                 ErrorAction            = "SilentlyContinue"
             }
+            Write-Information -MessageData ":: Uninstall Windows optional features" -InformationAction "Continue"
             Uninstall-WindowsFeature @params
         }
         catch {

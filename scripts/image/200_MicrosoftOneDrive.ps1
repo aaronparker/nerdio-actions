@@ -22,6 +22,7 @@ catch {
 
 try {
     # Install
+    Write-Information -MessageData ":: Install Microsoft OneDrive" -InformationAction "Continue"
     $params = @{
         FilePath     = $OutFile.FullName
         ArgumentList = "/silent /allusers"

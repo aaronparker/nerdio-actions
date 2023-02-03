@@ -17,6 +17,7 @@ catch {
 }
 
 try {
+    Write-Information -MessageData ":: Install Microsoft Visual C++ Redistributables" -InformationAction "Continue"
     Install-VcRedist -VcList (Get-VcList) -Path $Path -Silent | Out-Null
 }
 catch {

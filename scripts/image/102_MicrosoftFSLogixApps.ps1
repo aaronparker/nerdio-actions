@@ -21,6 +21,7 @@ catch {
 }
 
 # Install
+Write-Information -MessageData ":: Install Microsoft FSLogix agent" -InformationAction "Continue"
 foreach ($file in "FSLogixAppsSetup.exe", "FSLogixAppsRuleEditorSetup.exe") {
     $Installers = Get-ChildItem -Path $Path -Recurse -Include $file | Where-Object { $_.Directory -match "x64" }
     foreach ($Installer in $Installers) {

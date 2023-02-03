@@ -19,6 +19,7 @@ catch {
     throw $_
 }
 
+Write-Information -MessageData ":: Install Microsoft .NET" -InformationAction "Continue"
 foreach ($file in $OutFile) {
     try {
         $LogFile = "$Env:ProgramData\Evergreen\Logs\Microsoft.NET.log" -replace " ", ""

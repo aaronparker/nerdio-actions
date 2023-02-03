@@ -21,6 +21,7 @@ catch {
 
 try {
     # Install RTC
+    Write-Information -MessageData ":: Install Microsoft Remote Desktop WebRTC Redirector Service" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Evergreen\Logs\MicrosoftWvdRtcService$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -51,6 +52,7 @@ catch {
 
 try {
     # Install MMR
+    Write-Information -MessageData ":: Install Microsoft Azure Virtual Desktop Multimedia Redirection Extensions" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Evergreen\Logs\MicrosoftWvdMultimediaRedirection$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"

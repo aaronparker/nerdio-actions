@@ -146,6 +146,7 @@ catch {
 
 try {
     # Install package
+    Write-Information -MessageData ":: Install Microsoft 365 Apps" -InformationAction "Continue"
     $params = @{
         FilePath     = $OutFile.FullName
         ArgumentList = "/configure $XmlFile"

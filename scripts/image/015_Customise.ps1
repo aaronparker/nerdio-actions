@@ -24,6 +24,7 @@ else {
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
+    Write-Information -MessageData ":: Install Windows Customised Defaults" -InformationAction "Continue"
     $Installer = Invoke-EvergreenApp -Name "stealthpuppyWindowsCustomisedDefaults" | Where-Object { $_.Type -eq "zip" } | `
         Select-Object -First 1 | `
         Save-EvergreenApp -CustomPath $Path

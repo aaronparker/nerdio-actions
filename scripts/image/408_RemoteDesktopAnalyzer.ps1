@@ -9,6 +9,7 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
+    Write-Information -MessageData ":: Download Remote Desktop Analyzer" -InformationAction "Continue"
     Import-Module -Name "Evergreen" -Force
     $App = Invoke-EvergreenApp -Name "RDAnalyzer" | Select-Object -First 1
     Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -WarningAction "SilentlyContinue" | Out-Null

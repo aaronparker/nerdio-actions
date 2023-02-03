@@ -55,6 +55,7 @@ catch {
 
 try {
     # Run Citrix Optimizer
+    Write-Information -MessageData ":: Download and run Citrix Optimizer" -InformationAction "Continue"
     Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
     $Template = Get-ChildItem -Path $Path -Recurse -Include $OptimizerTemplate
     $OptimizerBin = Get-ChildItem -Path $Path -Recurse -Include "CtxOptimizerEngine.ps1"
@@ -64,9 +65,9 @@ try {
         Mode            = "Execute"
         OutputLogFolder = "$Env:ProgramData\Evergreen\Logs"
         OutputHtml      = "$Env:SystemRoot\Temp\CitrixOptimizer.html"
-        Verbose         = $False
+        Verbose         = $false
     }
-    & $OptimizerBin.FullName @params 2> $Null
+    & $OptimizerBin.FullName @params *> $null
     Pop-Location
 }
 catch {

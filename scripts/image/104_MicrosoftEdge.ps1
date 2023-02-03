@@ -27,6 +27,7 @@ try {
     if (!(Test-Path -Path $EdgeExe) -or ([System.Version]$File.VersionInfo.ProductVersion -lt [System.Version]$App.Version)) {
 
         # Install
+        Write-Information -MessageData ":: Install Microsoft Edge" -InformationAction "Continue"
         $LogFile = "$Env:ProgramData\Evergreen\Logs\MicrosoftEdge$($App.Version).log" -replace " ", ""
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -89,6 +90,7 @@ catch {
 
 try {
     # Install
+    Write-Information -MessageData ":: Install Microsoft Edge WebView2" -InformationAction "Continue"
     $params = @{
         FilePath     = $OutFile.FullName
         ArgumentList = "/silent /install"
