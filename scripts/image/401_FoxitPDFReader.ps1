@@ -46,7 +46,7 @@ try {
         ErrorAction  = "Continue"
     }
     $result = Start-Process @params
-    $result.ExitCode
+    Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 }
 catch {
     throw $_

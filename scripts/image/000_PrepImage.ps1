@@ -25,7 +25,7 @@ try {
         PassThru     = $true
         ErrorAction  = "Continue"
     }
-    Start-Process @params | Out-Null
+    Start-Process @params *> $null
 }
 catch {
     $_.Exception.Message

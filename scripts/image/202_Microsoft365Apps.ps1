@@ -157,7 +157,7 @@ try {
     }
     Push-Location -Path $Path
     $result = Start-Process @params
-    $result.ExitCode
+    Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
     Pop-Location
 }
 catch {
