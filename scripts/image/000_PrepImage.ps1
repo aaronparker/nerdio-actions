@@ -15,6 +15,7 @@ try {
         reg add "HKLM\Software\Policies\Microsoft\WindowsStore" /v "AutoDownload" /d 2 /t "REG_DWORD" /f | Out-Null
     }
 
+    # Create logs directory and compress
     Write-Information -MessageData ":: Create and compress: '$Env:ProgramData\Evergreen\Logs'" -InformationAction "Continue"
     New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
     $params = @{

@@ -11,7 +11,15 @@ else {
 }
 #endregion
 
-# Only run if the LanguagePackManagement module is installed
+#region Enable the WinRM rule as a workaround for VM provisioning DSC failure with: "Unable to check the status of the firewall"
+# https://github.com/Azure/RDS-Templates/issues/435
+# https://qiita.com/fujinon1109/items/440c614338fe2535b09e
+Write-Information -MessageData "Enable-NetFirewallRule 'Windows Remote Management'" -InformationAction "Continue"
+Get-NetFirewallRule -DisplayGroup "Windows Remote Management" | Enable-NetFirewallRule
+Enable-PSRemoting -Force
+#endregion
+
+#region Only run if the LanguagePackManagement module is installed
 if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
     try {
         $params = @{
@@ -38,7 +46,9 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
         throw $_.Exception.Message
     }
 }
+#endregion
 
+#region Set the locale
 try {
     $GeoId = @{
         "en-US" = 244
@@ -56,3 +66,4 @@ try {
 catch {
     throw $_.Exception.Message
 }
+#endregion

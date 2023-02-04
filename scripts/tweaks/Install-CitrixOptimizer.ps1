@@ -60,6 +60,7 @@ try {
     $Template = Get-ChildItem -Path $Path -Recurse -Include $OptimizerTemplate
     $OptimizerBin = Get-ChildItem -Path $Path -Recurse -Include "CtxOptimizerEngine.ps1"
     Push-Location -Path $OptimizerBin.Directory
+    Write-Information -MessageData ":: Using template: $($Template.FullName)" -InformationAction "Continue"
     $params = @{
         Source          = $Template.FullName
         Mode            = "Execute"
