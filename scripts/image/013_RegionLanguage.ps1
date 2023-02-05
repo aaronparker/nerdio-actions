@@ -1,4 +1,4 @@
-#description: Installs Windows language support and sets language/regional settings
+#description: Installs Windows language support and sets language/regional settings. Note that this script enables WinRM and PS Remoting to fix an issue with VM deployment using non en-US language packs
 #execution mode: Combined
 #tags: Language, Image
 
