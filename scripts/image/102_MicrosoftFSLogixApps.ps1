@@ -4,6 +4,37 @@
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\FSLogix"
 
+#region Agent history - allow installing a specific version in the event of an issue
+$Versions = @"
+[
+    {
+        "Version": "2.9.8361.52326",
+        "Date": "12/13/2022",
+        "Channel": "Production",
+        "URI": "https://download.microsoft.com/download/0/a/4/0a4c3a18-f6c8-4bcd-91fc-97ce845e2d3e/FSLogix_Apps_2.9.8361.52326.zip"
+    },
+    {
+        "Version": "2.9.8228.50276",
+        "Date": "07/21/2022",
+        "Channel": "Production",
+        "URI": "https://download.microsoft.com/download/d/1/9/d190de51-f1c1-4581-9007-24e5a812d6e9/FSLogix_Apps_2.9.8228.50276.zip"
+    },
+    {
+        "Version": "2.9.8171.14983",
+        "Date": "05/24/2022",
+        "Channel": "Production",
+        "URI": "https://download.microsoft.com/download/e/a/1/ea1bcf0a-e66d-48d2-ac9f-e385e5a7456e/FSLogix_Apps_2.9.8171.14983.zip"
+    },
+    {
+        "Version": "2.9.8111.53415",
+        "Date": "03/25/2022",
+        "Channel": "Production",
+        "URI": "https://download.microsoft.com/download/9/2/5/9257adcf-abdf-4ab3-b37f-416d70682315/FSLogix_Apps_2.9.8111.53415.zip"
+    }
+]
+"@
+#endregion
+
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
@@ -12,7 +43,17 @@ New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -E
 try {
     # Download and unpack
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "MicrosoftFSLogixApps" | Where-Object { $_.Channel -eq "Production" } | Select-Object -First 1
+
+    # Use Secure variables in Nerdio Manager to pass variables
+    if ($null -eq $SecureVars.FSLogixAgentVersion) {
+        # Use Evergreen to find the latest version
+        $App = Invoke-EvergreenApp -Name "MicrosoftFSLogixApps" | Where-Object { $_.Channel -eq "Production" } | Select-Object -First 1
+    }
+    else {
+        # Use the JSON in this script to select a specific version
+        $App = $Versions | ConvertFrom-Json | Where-Object { $_.Version -eq $SecureVars.FSLogixAgentVersion }
+    }
+
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
     Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 }
