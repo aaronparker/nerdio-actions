@@ -4,4 +4,4 @@
 
 # Remove the registry value
 # https://dennisspan.com/solving-keyboard-layout-issues-in-an-ica-or-rdp-session/
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout" /v "IgnoreRemoteKeyboardLayout" /d 0 /t "REG_DWORD" /f | Out-Null
+reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout" /v "IgnoreRemoteKeyboardLayout" /f | Out-Null
