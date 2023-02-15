@@ -58,7 +58,7 @@ try {
     Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 }
 catch {
-    throw $_.Exception.Message
+    Write-Information -MessageData $_.Exception.Message -InformationAction "Continue"
 }
 
 # Install
