@@ -10,4 +10,3 @@ reg add "HKLM\SOFTWARE\Wow6432Node\Adobe\Adobe Acrobat\DC\Installer" /v "Disable
 # Disable update tasks - assuming we're installing on a gold image or updates will be managed
 Get-Service -Name "AdobeARMservice" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
 Get-ScheduledTask -TaskName "Adobe Acrobat Update Task*" | Unregister-ScheduledTask -Confirm:$false -ErrorAction "SilentlyContinue"
-    
