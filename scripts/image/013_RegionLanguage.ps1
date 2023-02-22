@@ -1,5 +1,5 @@
 #description: Installs Windows language support and sets language/regional settings. Note that this script enables WinRM and PS Remoting to fix an issue with VM deployment using non en-US language packs
-#execution mode: Combined
+#execution mode: IndividualWithRestart
 #tags: Language, Image
 
 #region Use Secure variables in Nerdio Manager to pass a system language
