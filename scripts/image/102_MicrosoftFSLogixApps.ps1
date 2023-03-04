@@ -8,6 +8,12 @@
 $Versions = @"
 [
     {
+        "Version": "2.9.8440.42104",
+        "Date": "03/04/2022",
+        "Channel": "Production",
+        "URI": "https://download.microsoft.com/download/c/4/4/c44313c5-f04a-4034-8a22-967481b23975/FSLogix_Apps_2.9.8440.42104.zip"
+    },
+    {
         "Version": "2.9.8361.52326",
         "Date": "12/13/2022",
         "Channel": "Production",
