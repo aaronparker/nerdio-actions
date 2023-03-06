@@ -1,27 +1,13 @@
-<#
-#>
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "", Justification="Outputs progress to the pipeline log")]
-[OutputType([System.Management.Automation.PSObject])]
-[CmdletBinding()]
-param (
-    [Parameter()]
-    [System.String] $Path = "$Env:ProgramData\Evergreen\Reports\$(Get-Date -Format "yyyy-MM-dd")",
+#description: Exports the list of installed applications and updates to JSON files into the image
+#execution mode: Combined
+#tags: Image
 
-    [Parameter()]
-    [System.String] $SoftwareFile = "$Path\InstalledSoftware.json",
-
-    [Parameter()]
-    [System.String] $PackagesFile = "$Path\InstalledPackages.json",
-
-    [Parameter()]
-    [System.String] $HotfixFile = "$Path\InstalledHotfixes.json",
-
-    [Parameter()]
-    [System.String] $FeaturesFile = "$Path\InstalledFeatures.json",
-
-    [Parameter()]
-    [System.String] $CapabilitiesFile = "$Path\InstalledCapabilities.json"
-)
+[System.String] $Path = "$Env:ProgramData\Evergreen\Reports\$(Get-Date -Format "yyyy-MM-dd")"
+[System.String] $SoftwareFile = "$Path\InstalledSoftware.json"
+[System.String] $PackagesFile = "$Path\InstalledPackages.json"
+[System.String] $HotfixFile = "$Path\InstalledHotfixes.json"
+[System.String] $FeaturesFile = "$Path\InstalledFeatures.json"
+[System.String] $CapabilitiesFile = "$Path\InstalledCapabilities.json"
 
 # Create the target directory
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
@@ -58,7 +44,7 @@ function Get-InstalledSoftware {
             $Apps += Get-ItemProperty -Path $Key -Name $propertyNames -ErrorAction "SilentlyContinue" | `
                 . { process { if ($Null -ne $_.DisplayName) { $_ } } } | `
                 Where-Object { $_.SystemComponent -ne 1 } | `
-                Select-Object -Property @{n = "Name"; e = { $_.DisplayName} }, @{n = "Version"; e = { $_.DisplayVersion} }, "Publisher", "UninstallString", @{n = "RegistryPath"; e = { $_.PSPath -replace "Microsoft.PowerShell.Core\\Registry::", "" } }, "PSChildName", "WindowsInstaller", "InstallDate", "InstallSource", "HelpLink", "Language", "EstimatedSize" | `
+                Select-Object -Property @{n = "Name"; e = { $_.DisplayName } }, @{n = "Version"; e = { $_.DisplayVersion } }, "Publisher", "UninstallString", @{n = "RegistryPath"; e = { $_.PSPath -replace "Microsoft.PowerShell.Core\\Registry::", "" } }, "PSChildName", "WindowsInstaller", "InstallDate", "InstallSource", "HelpLink", "Language", "EstimatedSize" | `
                 Sort-Object -Property "DisplayName", "Publisher"
         }
         catch {
