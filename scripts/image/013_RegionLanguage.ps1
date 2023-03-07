@@ -15,8 +15,10 @@ else {
 # https://github.com/Azure/RDS-Templates/issues/435
 # https://qiita.com/fujinon1109/items/440c614338fe2535b09e
 Write-Information -MessageData "Enable-NetFirewallRule 'Windows Remote Management'" -InformationAction "Continue"
+Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Private"
 Get-NetFirewallRule -DisplayGroup "Windows Remote Management" | Enable-NetFirewallRule
 Enable-PSRemoting -Force
+Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Public"
 #endregion
 
 #region Only run if the LanguagePackManagement module is installed
