@@ -4,12 +4,14 @@
         "ALLUSER",
         "Audiosrv",
         "AUTOACTIVATE",
+        "bigendianunicode",
         "captutre",
         "CHROMEEXT",
         "Codecov",
         "DISABLEDESKTOPSHORTCUT",
         "DONOTCREATEDESKTOPSHORTCUT",
         "DWORD",
+        "HKEY",
         "Hotfixes",
         "Lync",
         "Nerdio",
@@ -17,6 +19,7 @@
         "Shortpath",
         "THUMBNAILPREVIEW",
         "windowsdesktop",
+        "Zstandard",
         "zyborg"
     ],
     "pester.autoRunOnSave": false
