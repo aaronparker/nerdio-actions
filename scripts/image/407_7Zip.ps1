@@ -35,6 +35,8 @@ catch {
 
 # Add registry entries for additional file types
 Write-Information -MessageData ":: Importing file type associations" -InformationAction "Continue"
+
+# .7z
 New-Item -Path "HKLM:\SOFTWARE\Classes\.7z" -Force | Out-Null
 New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z" -Force | Out-Null
 New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z\DefaultIcon" -Force | Out-Null
@@ -48,6 +50,21 @@ New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z\shell' 
 New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z\shell\open' -Name '(default)' -Value '' -PropertyType "String" -Force | Out-Null
 New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z\shell\open\command' -Name '(default)' -Value '"C:\Program Files\7-Zip-Zstandard\7zFM.exe" "%1"' -PropertyType "String" -Force | Out-Null
 
+# .z
+New-Item -Path "HKLM:\SOFTWARE\Classes\.z" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.z" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.z\DefaultIcon" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.z\shell" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.z\shell\open" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.z\shell\open\command" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\.z' -Name '(default)' -Value '7-Zip-Zstandard.z' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.z' -Name '(default)' -Value 'z Archive' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.z\DefaultIcon' -Name '(default)' -Value 'C:\Program Files\7-Zip-Zstandard\7z.dll,0' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.z\shell' -Name '(default)' -Value '' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.z\shell\open' -Name '(default)' -Value '' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.z\shell\open\command' -Name '(default)' -Value '"C:\Program Files\7-Zip-Zstandard\7zFM.exe" "%1"' -PropertyType "String" -Force | Out-Null
+
+# .rar
 New-Item -Path "HKLM:\SOFTWARE\Classes\.rar" -Force | Out-Null
 New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar" -Force | Out-Null
 New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar\DefaultIcon" -Force | Out-Null
@@ -61,6 +78,7 @@ New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar\shell'
 New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar\shell\open' -Name '(default)' -Value '' -PropertyType "String" -Force | Out-Null
 New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar\shell\open\command' -Name '(default)' -Value '"C:\Program Files\7-Zip-Zstandard\7zFM.exe" "%1"' -PropertyType "String" -Force | Out-Null
 
+# .zip
 New-Item -Path "HKLM:\SOFTWARE\Classes\.zip" -Force | Out-Null
 New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.zip" -Force | Out-Null
 New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.zip\DefaultIcon" -Force | Out-Null
