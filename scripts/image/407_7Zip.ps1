@@ -5,11 +5,11 @@
 [System.String] $Path = "$Env:SystemDrive\Apps\7ZipZS"
 
 #region Script logic
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path $Path -ItemType "Directory" -Force | Out-Null -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force | Out-Null -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
-    Import-Module -Name "Evergreen" -Force
+    Import-Module -Name "Evergreen" -Force | Out-Null
     $App = Invoke-EvergreenApp -Name "7ZipZS" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
@@ -34,62 +34,43 @@ catch {
 }
 
 # Add registry entries for additional file types
-@"
-Windows Registry Editor Version 5.00
+Write-Information -MessageData ":: Importing file type associations" -InformationAction "Continue"
+New-Item -Path "HKLM:\SOFTWARE\Classes\.7z" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z\DefaultIcon" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z\shell" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z\shell\open" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z\shell\open\command" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\.7z' -Name '(default)' -Value '7-Zip-Zstandard.7z' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z' -Name '(default)' -Value '7z Archive' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z\DefaultIcon' -Name '(default)' -Value 'C:\Program Files\7-Zip-Zstandard\7z.dll,0' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z\shell' -Name '(default)' -Value '' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z\shell\open' -Name '(default)' -Value '' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z\shell\open\command' -Name '(default)' -Value '"C:\Program Files\7-Zip-Zstandard\7zFM.exe" "%1"' -PropertyType "String" -Force | Out-Null
 
-[HKEY_CLASSES_ROOT\.7z]
-@="7-Zip-Zstandard.7z"
+New-Item -Path "HKLM:\SOFTWARE\Classes\.rar" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar\DefaultIcon" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar\shell" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar\shell\open" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar\shell\open\command" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\.rar' -Name '(default)' -Value '7-Zip-Zstandard.rar' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar' -Name '(default)' -Value 'rar Archive' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar\DefaultIcon' -Name '(default)' -Value 'C:\Program Files\7-Zip-Zstandard\7z.dll,3' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar\shell' -Name '(default)' -Value '' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar\shell\open' -Name '(default)' -Value '' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.rar\shell\open\command' -Name '(default)' -Value '"C:\Program Files\7-Zip-Zstandard\7zFM.exe" "%1"' -PropertyType "String" -Force | Out-Null
 
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.7z]
-@="7z Archive"
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.7z\DefaultIcon]
-@="C:\\Program Files\\7-Zip-Zstandard\\7z.dll,0"
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.7z\shell]
-@=""
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.7z\shell\open]
-@=""
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.7z\shell\open\command]
-@="\"C:\\Program Files\\7-Zip-Zstandard\\7zFM.exe\" \"%1\""
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.rar]
-@="rar Archive"
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.rar\DefaultIcon]
-@="C:\\Program Files\\7-Zip-Zstandard\\7z.dll,3"
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.rar\shell]
-@=""
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.rar\shell\open]
-@=""
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.rar\shell\open\command]
-@="\"C:\\Program Files\\7-Zip-Zstandard\\7zFM.exe\" \"%1\""
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.zip]
-@="zip Archive"
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.zip\DefaultIcon]
-@="C:\\Program Files\\7-Zip-Zstandard\\7z.dll,1"
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.zip\shell]
-@=""
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.zip\shell\open]
-@=""
-
-[HKEY_CLASSES_ROOT\7-Zip-Zstandard.zip\shell\open\command]
-@="\"C:\\Program Files\\7-Zip-Zstandard\\7zFM.exe\" \"%1\""
-
-[HKEY_CLASSES_ROOT\.rar]
-@="7-Zip-Zstandard.rar"
-
-[HKEY_CLASSES_ROOT\.zip]
-@="7-Zip-Zstandard.zip"
-"@ | Out-File -FilePath "$Path\FileTypes.reg" -Encoding "bigendianunicode" -Force
-if (Test-Path -Path "$Path\FileTypes.reg") { & "$Env:SystemRoot\System32\reg.exe" import "$Path\FileTypes.reg" /reg:64 }
+New-Item -Path "HKLM:\SOFTWARE\Classes\.zip" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.zip" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.zip\DefaultIcon" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.zip\shell" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.zip\shell\open" -Force | Out-Null
+New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.zip\shell\open\command" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\.zip' -Name '(default)' -Value '7-Zip-Zstandard.zip' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.zip' -Name '(default)' -Value 'zip Archive' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.zip\DefaultIcon' -Name '(default)' -Value 'C:\Program Files\7-Zip-Zstandard\7z.dll,1' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.zip\shell' -Name '(default)' -Value '' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.zip\shell\open' -Name '(default)' -Value '' -PropertyType "String" -Force | Out-Null
+New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.zip\shell\open\command' -Name '(default)' -Value '"C:\Program Files\7-Zip-Zstandard\7zFM.exe" "%1"' -PropertyType "String" -Force | Out-Null
 #endregion
