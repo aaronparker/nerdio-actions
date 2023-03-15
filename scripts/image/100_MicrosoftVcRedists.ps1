@@ -9,16 +9,9 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 
 # Run tasks/install apps
 try {
-    Import-Module -Name "VcRedist" -Force
-    Save-VcRedist -VcList (Get-VcList) -Path $Path | Out-Null
-}
-catch {
-    throw $_.Exception.Message
-}
-
-try {
     Write-Information -MessageData ":: Install Microsoft Visual C++ Redistributables" -InformationAction "Continue"
-    Install-VcRedist -VcList (Get-VcList) -Path $Path -Silent | Out-Null
+    Import-Module -Name "VcRedist" -Force
+    Get-VcList | Save-VcRedist -Path $Path | Install-VcRedist -Silent | Out-Null
 }
 catch {
     throw $_.Exception.Message
