@@ -1,0 +1,39 @@
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+    branches:
+        include: [ main ]
+    paths:
+        include: [ "scripts/**.ps1" ]
+
+pool:
+  vmImage: windows-latest
+
+steps:
+- powershell: |
+    .\tests\Install-Pester.ps1
+    Import-Module -Name "Pester" -Force -ErrorAction "Stop"
+
+    $Config = New-PesterConfiguration
+    $Config.Run.Path = "$(build.sourcesDirectory)\tests"
+    $Config.Run.PassThru = $True
+    $Config.TestResult.Enabled = $True
+    $Config.TestResult.OutputFormat = "NUnitXml"
+    $Config.TestResult.OutputPath = "$(build.sourcesDirectory)\TestResults.xml"
+    $Config.Output.Verbosity = "Detailed"
+    Invoke-Pester -Configuration $Config
+  name: Test
+  displayName: 'Test with Pester'
+  workingDirectory: $(build.sourcesDirectory)
+  errorActionPreference: continue
+
+- publish: "$(build.sourcesDirectory)\\TestResults.xml"
+  artifact: TestResults
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: "NUnit"
+    testResultsFiles: "$(build.sourcesDirectory)\\TestResults.xml"
+    failTaskOnFailedTests: true
+    testRunTitle: "Publish Pester results"
