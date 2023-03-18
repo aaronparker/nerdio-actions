@@ -1,0 +1,40 @@
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+    branches:
+        include: [ main ]
+    paths:
+        include: [ "scripts/**.ps1" ]
+
+pool: 'Azure Virtual Desktop'
+
+steps:
+- powershell: |
+    .\tests\Install-Pester.ps1
+    Import-Module -Name "Pester" -Force -ErrorAction "Stop"
+
+    $Config = New-PesterConfiguration
+    $Config.Run.Path = "$(build.sourcesDirectory)\tests\4_ValidateApps.Tests.ps1"
+    $Config.Run.PassThru = $True
+    $Config.TestResult.Enabled = $True
+    $Config.TestResult.OutputFormat = "NUnitXml"
+    $Config.TestResult.OutputPath = "$(build.sourcesDirectory)\TestResults.xml"
+    $Config.Output.Verbosity = "Detailed"
+    Invoke-Pester -Configuration $Config
+  name: test
+  displayName: 'Validate installed apps'
+  workingDirectory: $(build.sourcesDirectory)
+  errorActionPreference: continue
+  continueOnError: true
+
+- publish: "$(build.sourcesDirectory)\\TestResults.xml"
+  artifact: TestResults
+  continueOnError: true
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: "NUnit"
+    testResultsFiles: "$(build.sourcesDirectory)\\TestResults.xml"
+    failTaskOnFailedTests: true
+    testRunTitle: "Publish Pester results"
