@@ -20,6 +20,7 @@ catch {
     throw $_
 }
 
-# Remove the C:\agents directory
+# Remove the C:\agents directory and the local user account used by the agent service
 Remove-Item -Path $Path -Recurse -Force -ErrorAction "SilentlyContinue"
+Remove-LocalUser -Name $SecureVars.DevOpsUser -Confirm:$false -ErrorAction "SilentlyContinue"
 #endregion

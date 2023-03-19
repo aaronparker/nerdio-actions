@@ -5,7 +5,7 @@
 [System.String] $Path = "$Env:SystemDrive\agents"
 
 # Check that the required variables have been set in Nerdio Manager
-foreach ($Value in "DevOpsUrl", "DevOpsPat", "DevOpsPool") {
+foreach ($Value in "DevOpsUrl", "DevOpsPat", "DevOpsPool", "DevOpsUser", "DevOpsPassword") {
     if ($null -eq $SecureVars.$Value) { throw "$Value is $null" }
 }
 
@@ -25,11 +25,39 @@ catch {
 }
 
 try {
+    # Create the local account that the DevOps Pipelines agent service will run under
+    $params = @{
+        Name                     = $SecureVars.DevOpsUser
+        Password                 = (ConvertTo-SecureString -String $SecureVars.DevOpsPassword -AsPlainText -Force)
+        Description              = "Azure Pipelines agent service for elevated exec."
+        UserMayNotChangePassword = $true
+        Confirm                  = $false
+    }
+    New-LocalUser @params
+    Add-LocalGroupMember -Group "Administrators" -Member $SecureVars.DevOpsUser
+}
+catch {
+    throw $_
+}
+
+try {
     Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
     Push-Location -Path $Path
+
+    # Agent install options
+    $Options = "--unattended
+        --url `"$($SecureVars.DevOpsUrl)`"
+        --auth pat
+        --token `"$($SecureVars.DevOpsPat)`"
+        --pool `"$($SecureVars.DevOpsPool)`"
+        --agent $Env:COMPUTERNAME
+        --runAsService
+        --windowsLogonAccount `"$($SecureVars.DevOpsUser)`"
+        --windowsLogonPassword `"$($SecureVars.DevOpsPassword)`"
+        --replace"
     $params = @{
         FilePath     = "$Path\config.cmd"
-        ArgumentList = "--unattended --url `"$($SecureVars.DevOpsUrl)`" --auth pat --token `"$($SecureVars.DevOpsPat)`" --pool `"$($SecureVars.DevOpsPool)`" --agent $Env:COMPUTERNAME --runAsService --replace"
+        ArgumentList = $($Options -replace "\s+", " ")
         Wait         = $true
         WindowStyle  = "hidden"
     }
