@@ -29,7 +29,7 @@ try {
     Push-Location -Path $Path
     $params = @{
         FilePath     = "$Path\config.cmd"
-        ArgumentList = "--unattended --url $($SecureVars.DevOpsUrl) --auth pat --token `"$($SecureVars.DevOpsPat)`" --pool `"$($SecureVars.DevOpsPool)`" --agent $Env:COMPUTERNAME --runAsService --replace"
+        ArgumentList = "--unattended --url `"$($SecureVars.DevOpsUrl)`" --auth pat --token `"$($SecureVars.DevOpsPat)`" --pool `"$($SecureVars.DevOpsPool)`" --agent $Env:COMPUTERNAME --runAsService --replace"
         Wait         = $true
         WindowStyle  = "hidden"
     }

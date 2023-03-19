@@ -11,7 +11,7 @@ pool: 'Azure Virtual Desktop'
 
 steps:
 - powershell: |
-    .\tests\Install-Pester.ps1
+    #.\tests\Install-Pester.ps1
     Import-Module -Name "Pester" -Force -ErrorAction "Stop"
 
     $Config = New-PesterConfiguration
