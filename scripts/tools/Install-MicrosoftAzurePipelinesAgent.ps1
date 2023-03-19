@@ -60,7 +60,6 @@ try {
         ArgumentList = $($Options -replace "\s+", " ")
         Wait         = $true
         NoNewWindow  = $true
-        WindowStyle  = "hidden"
         PassThru     = $true
     }
     Start-Process @params

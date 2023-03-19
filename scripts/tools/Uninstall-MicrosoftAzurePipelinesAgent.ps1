@@ -12,7 +12,6 @@ try {
         ArgumentList = "remove --unattended --auth pat --token `"$($SecureVars.DevOpsPat)`""
         Wait         = $true
         NoNewWindow  = $true
-        WindowStyle  = "hidden"
         PassThru     = $true
     }
     Start-Process @params
