@@ -6,7 +6,7 @@
 
 # Check that the required variables have been set in Nerdio Manager
 foreach ($Value in "DevOpsUrl", "DevOpsPat", "DevOpsPool") {
-    if ($null -eq $SecureVars.$Value) { throw "$Value is $null"}
+    if ($null -eq $SecureVars.$Value) { throw "$Value is $null" }
 }
 
 #region Script logic
@@ -15,7 +15,9 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 try {
     # Download
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "MicrosoftAzurePipelinesAgent" | Select-Object -First 1
+    $App = Invoke-EvergreenApp -Name "MicrosoftAzurePipelinesAgent" | `
+        Where-Object { $_.Architecture -eq "x64" } | `
+        Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Env:Temp -WarningAction "SilentlyContinue"
 }
 catch {
