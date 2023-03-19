@@ -11,10 +11,11 @@ try {
         FilePath     = "$Path\config.cmd"
         ArgumentList = "remove --unattended --auth pat --token `"$($SecureVars.DevOpsPat)`""
         Wait         = $true
+        NoNewWindow  = $true
         WindowStyle  = "hidden"
+        PassThru     = $true
     }
-    $result = Start-Process @params
-    Write-Information -MessageData ":: Uninstall exit code: $($result.ExitCode)" -InformationAction "Continue"
+    Start-Process @params
 }
 catch {
     throw $_
