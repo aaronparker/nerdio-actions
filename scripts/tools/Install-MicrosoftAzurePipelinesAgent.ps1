@@ -52,8 +52,8 @@ try {
         --pool `"$($SecureVars.DevOpsPool)`"
         --agent $Env:COMPUTERNAME
         --runAsService
-        --windowsLogonAccount $($SecureVars.DevOpsUser)
-        --windowsLogonPassword $($SecureVars.DevOpsPassword)
+        --windowsLogonAccount `"$($SecureVars.DevOpsUser)`"
+        --windowsLogonPassword `"$($SecureVars.DevOpsPassword)`"
         --replace"
     $params = @{
         FilePath     = "$Path\config.cmd"
