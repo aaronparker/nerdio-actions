@@ -1,6 +1,6 @@
 #description: Installs the Microsoft Azure Pipelines agent to enable automated testing via Azure Pipelines. Do not run on production session hosts.
 #execution mode: Combined
-#tags: Evergreen, Testing
+#tags: Evergreen, Testing, DevOps
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\agents"
 
@@ -15,7 +15,7 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 try {
     # Download
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "MicrosoftAzurePipelinesAgent" | `
+    $App = Get-EvergreenApp -Name "MicrosoftAzurePipelinesAgent" | `
         Where-Object { $_.Architecture -eq "x64" } | `
         Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Env:Temp -WarningAction "SilentlyContinue"
@@ -28,10 +28,10 @@ try {
     Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
     Push-Location -Path $Path
     $params = @{
-        FilePath    = "$Path\config.cmd"
-        Arguments   = "--unattended --url $($SecureVars.DevOpsUrl) --auth pat --token `"$($SecureVars.DevOpsPat)`" --pool `"$($SecureVars.DevOpsPool)`" --agent $Env:COMPUTERNAME --runAsService --replace"
-        Wait        = $true
-        WindowStyle = "hidden"
+        FilePath     = "$Path\config.cmd"
+        ArgumentList = "--unattended --url $($SecureVars.DevOpsUrl) --auth pat --token `"$($SecureVars.DevOpsPat)`" --pool `"$($SecureVars.DevOpsPool)`" --agent $Env:COMPUTERNAME --runAsService --replace"
+        Wait         = $true
+        WindowStyle  = "hidden"
     }
     $result = Start-Process @params
     Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
