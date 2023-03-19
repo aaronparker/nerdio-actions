@@ -1,11 +1,11 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-    branches:
-        include: [ main ]
-    paths:
-        include: [ "scripts/**.ps1" ]
+# trigger:
+#     branches:
+#         include: [ main ]
+#     paths:
+#         include: [ "scripts/**.ps1" ]
 
 pool: 'Azure Virtual Desktop'
 
