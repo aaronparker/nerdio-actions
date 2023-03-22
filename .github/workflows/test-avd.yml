@@ -8,7 +8,7 @@ on:
       - 'scripts/tweaks/*.ps1'
       - 'scripts/uninstall/*.ps1'
       - 'tests/*.ps1'
-      - '.github/workflows/test-avd.yml'
+      #- '.github/workflows/test-avd.yml'
   schedule:
     - cron: '0 1 15 * *' #Run on the 15th of each month
 
@@ -49,7 +49,7 @@ jobs:
         shell: powershell
         working-directory: "${{ github.workspace }}"
         run: |
-            .\tests\Install-Pester.ps1
+            .\tests\Install-Modules.ps1
 
       - name: Test with Pester
         shell: powershell
