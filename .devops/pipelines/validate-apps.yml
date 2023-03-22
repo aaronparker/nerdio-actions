@@ -11,7 +11,7 @@ pool: 'Azure Virtual Desktop'
 
 steps:
 - powershell: |
-    .\tests\Install-Pester.ps1
+    .\tests\Install-Modules.ps1
   name: Modules
   displayName: 'Test with PSScriptAnalyzer'
   workingDirectory: $(build.sourcesDirectory)

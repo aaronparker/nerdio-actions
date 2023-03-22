@@ -16,7 +16,7 @@ jobs:
 
   steps:
   - powershell: |
-      .\tests\Install-Pester.ps1
+      .\tests\Install-Modules.ps1
     name: Modules
     displayName: 'Install modules'
     workingDirectory: $(build.sourcesDirectory)
