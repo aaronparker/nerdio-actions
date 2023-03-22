@@ -22,7 +22,7 @@ steps:
     Import-Module -Name "PSScriptAnalyzer" -Force -ErrorAction "Stop"
     $Results = Invoke-ScriptAnalyzer -Path "$(build.sourcesDirectory)\scripts" -Recurse -ReportSummary
     $Results | Select-Object -Property RuleName, Severity, ScriptName, Line | Format-Table -AutoSize
-    $Results | ConvertTo-Csv | Out-File -Path "$(build.sourcesDirectory)\PSScriptAnalyzer.csv" -Encoding utf8
+    $Results | ConvertTo-Csv | Out-File -FilePath "$(build.sourcesDirectory)\PSScriptAnalyzer.csv" -Encoding utf8
   name: PSScriptAnalyzer
   displayName: 'Test with PSScriptAnalyzer'
   workingDirectory: $(build.sourcesDirectory)
