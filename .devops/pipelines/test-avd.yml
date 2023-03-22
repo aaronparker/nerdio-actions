@@ -37,6 +37,10 @@ steps:
     $Config = New-PesterConfiguration
     $Config.Run.Path = "$(build.sourcesDirectory)\tests"
     $Config.Run.PassThru = $True
+    $Config.CodeCoverage.Enabled = $True
+    $Config.CodeCoverage.Path = "$(build.sourcesDirectory)\scripts"
+    $Config.CodeCoverage.OutputFormat = "JaCoCo"
+    $Config.CodeCoverage.OutputPath = "$(build.sourcesDirectory)\CodeCoverage.xml"
     $Config.TestResult.Enabled = $True
     $Config.TestResult.OutputFormat = "NUnitXml"
     $Config.TestResult.OutputPath = "$(build.sourcesDirectory)\TestResults.xml"
@@ -58,3 +62,14 @@ steps:
     testResultsFiles: "$(build.sourcesDirectory)\\TestResults.xml"
     failTaskOnFailedTests: true
     testRunTitle: "Publish Pester results"
+
+# Publish code coverage results v1
+# Publish Cobertura or JaCoCo code coverage results from a build.
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'JaCoCo' # 'Cobertura' | 'JaCoCo'. Required. Code coverage tool. Default: JaCoCo.
+    summaryFileLocation: "$(build.sourcesDirectory)\\CodeCoverage.xml"
+    pathToSources: "$(build.sourcesDirectory)\\scripts"
+    #reportDirectory: # string. Report directory. 
+    #additionalCodeCoverageFiles: # string. Additional files. 
+    #failIfCoverageEmpty: false # boolean. Fail when code coverage results are missing. Default: false.
