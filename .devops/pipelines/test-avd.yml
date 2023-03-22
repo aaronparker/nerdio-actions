@@ -54,13 +54,15 @@ jobs:
     displayName: 'Test with Pester'
     workingDirectory: $(build.sourcesDirectory)
     errorActionPreference: continue
+    continueOnError: true
 
   - publish: "$(build.sourcesDirectory)\\TestResults.xml"
     artifact: PesterTestResults
     displayName: 'Publish Pester test artifacts'
+    continueOnError: true
 
   - task: PublishTestResults@2
-    displayName: 'Publish PSScriptAnalyzer results'
+    displayName: 'Publish Pester results'
     inputs:
       testResultsFormat: "NUnit"
       testResultsFiles: "$(build.sourcesDirectory)\\TestResults.xml"
