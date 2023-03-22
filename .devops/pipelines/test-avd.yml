@@ -20,11 +20,17 @@ steps:
 
 - powershell: |
     Import-Module -Name "PSScriptAnalyzer" -Force -ErrorAction "Stop"
-    Invoke-ScriptAnalyzer -Path "$(build.sourcesDirectory)\scripts" -Recurse | Format-Table -AutoSize
+    $Results = Invoke-ScriptAnalyzer -Path "$(build.sourcesDirectory)\scripts" -Recurse -ReportSummary
+    $Results | Select-Object -Property RuleName, Severity, ScriptName, Line | Format-Table -AutoSize
+    $Results | ConvertTo-Csv | Out-File -Path "$(build.sourcesDirectory)\PSScriptAnalyzer.csv" -Encoding utf8
   name: PSScriptAnalyzer
   displayName: 'Test with PSScriptAnalyzer'
   workingDirectory: $(build.sourcesDirectory)
   errorActionPreference: continue
+
+- publish: "$(build.sourcesDirectory)\\PSScriptAnalyzer.csv"
+  artifact: PSScriptAnalyzerResults
+  name: 'Publish PSScriptAnalyzer test artifacts'
 
 - powershell: |
     Import-Module -Name "Pester" -Force -ErrorAction "Stop"
@@ -42,9 +48,11 @@ steps:
   errorActionPreference: continue
 
 - publish: "$(build.sourcesDirectory)\\TestResults.xml"
-  artifact: TestResults
+  artifact: PesterTestResults
+  name: 'Publish Pester test artifacts'
 
 - task: PublishTestResults@2
+  name: 'Publish PSScriptAnalyzer results'
   inputs:
     testResultsFormat: "NUnit"
     testResultsFiles: "$(build.sourcesDirectory)\\TestResults.xml"
