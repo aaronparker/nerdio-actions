@@ -10,66 +10,71 @@ trigger:
 pool:
   vmImage: windows-latest
 
-steps:
-- powershell: |
-    .\tests\Install-Pester.ps1
-  name: Modules
-  displayName: 'Install modules'
-  workingDirectory: $(build.sourcesDirectory)
-  errorActionPreference: continue
+jobs:
+- job: Test
+  displayName: Test
 
-- powershell: |
-    Import-Module -Name "PSScriptAnalyzer" -Force -ErrorAction "Stop"
-    $Results = Invoke-ScriptAnalyzer -Path "$(build.sourcesDirectory)\scripts" -Recurse -ReportSummary
-    $Results | Select-Object -Property RuleName, Severity, ScriptName, Line | Format-Table -AutoSize
-    $Results | ConvertTo-Csv | Out-File -FilePath "$(build.sourcesDirectory)\PSScriptAnalyzer.csv" -Encoding utf8
-  name: PSScriptAnalyzer
-  displayName: 'Test with PSScriptAnalyzer'
-  workingDirectory: $(build.sourcesDirectory)
-  errorActionPreference: continue
+  steps:
+  - powershell: |
+      .\tests\Install-Pester.ps1
+    name: Modules
+    displayName: 'Install modules'
+    workingDirectory: $(build.sourcesDirectory)
+    errorActionPreference: continue
 
-- publish: "$(build.sourcesDirectory)\\PSScriptAnalyzer.csv"
-  artifact: PSScriptAnalyzerResults
-  displayName: 'Publish PSScriptAnalyzer test artifacts'
+  - powershell: |
+      Import-Module -Name "PSScriptAnalyzer" -Force -ErrorAction "Stop"
+      $Results = Invoke-ScriptAnalyzer -Path "$(build.sourcesDirectory)\scripts" -Recurse -ReportSummary
+      $Results | Select-Object -Property RuleName, Severity, ScriptName, Line | Format-Table -AutoSize
+      $Results | ConvertTo-Csv | Out-File -FilePath "$(build.sourcesDirectory)\PSScriptAnalyzer.csv" -Encoding utf8
+    name: PSScriptAnalyzer
+    displayName: 'Test with PSScriptAnalyzer'
+    workingDirectory: $(build.sourcesDirectory)
+    errorActionPreference: continue
 
-- powershell: |
-    Import-Module -Name "Pester" -Force -ErrorAction "Stop"
-    $Config = New-PesterConfiguration
-    $Config.Run.Path = "$(build.sourcesDirectory)\tests"
-    $Config.Run.PassThru = $True
-    $Config.CodeCoverage.Enabled = $True
-    $Config.CodeCoverage.Path = "$(build.sourcesDirectory)\scripts"
-    $Config.CodeCoverage.OutputFormat = "JaCoCo"
-    $Config.CodeCoverage.OutputPath = "$(build.sourcesDirectory)\CodeCoverage.xml"
-    $Config.TestResult.Enabled = $True
-    $Config.TestResult.OutputFormat = "NUnitXml"
-    $Config.TestResult.OutputPath = "$(build.sourcesDirectory)\TestResults.xml"
-    $Config.Output.Verbosity = "Detailed"
-    Invoke-Pester -Configuration $Config
-  name: Pester
-  displayName: 'Test with Pester'
-  workingDirectory: $(build.sourcesDirectory)
-  errorActionPreference: continue
+  - publish: "$(build.sourcesDirectory)\\PSScriptAnalyzer.csv"
+    artifact: PSScriptAnalyzerResults
+    displayName: 'Publish PSScriptAnalyzer test artifacts'
 
-- publish: "$(build.sourcesDirectory)\\TestResults.xml"
-  artifact: PesterTestResults
-  displayName: 'Publish Pester test artifacts'
+  - powershell: |
+      Import-Module -Name "Pester" -Force -ErrorAction "Stop"
+      $Config = New-PesterConfiguration
+      $Config.Run.Path = "$(build.sourcesDirectory)\tests"
+      $Config.Run.PassThru = $True
+      $Config.CodeCoverage.Enabled = $True
+      $Config.CodeCoverage.Path = "$(build.sourcesDirectory)\scripts"
+      $Config.CodeCoverage.OutputFormat = "JaCoCo"
+      $Config.CodeCoverage.OutputPath = "$(build.sourcesDirectory)\CodeCoverage.xml"
+      $Config.TestResult.Enabled = $True
+      $Config.TestResult.OutputFormat = "NUnitXml"
+      $Config.TestResult.OutputPath = "$(build.sourcesDirectory)\TestResults.xml"
+      $Config.Output.Verbosity = "Detailed"
+      Invoke-Pester -Configuration $Config
+    name: Pester
+    displayName: 'Test with Pester'
+    workingDirectory: $(build.sourcesDirectory)
+    errorActionPreference: continue
 
-- task: PublishTestResults@2
-  displayName: 'Publish PSScriptAnalyzer results'
-  inputs:
-    testResultsFormat: "NUnit"
-    testResultsFiles: "$(build.sourcesDirectory)\\TestResults.xml"
-    failTaskOnFailedTests: true
-    testRunTitle: "Publish Pester results"
+  - publish: "$(build.sourcesDirectory)\\TestResults.xml"
+    artifact: PesterTestResults
+    displayName: 'Publish Pester test artifacts'
 
-# Publish code coverage results v1
-# Publish Cobertura or JaCoCo code coverage results from a build.
-- task: PublishCodeCoverageResults@1
-  inputs:
-    codeCoverageTool: 'JaCoCo' # 'Cobertura' | 'JaCoCo'. Required. Code coverage tool. Default: JaCoCo.
-    summaryFileLocation: "$(build.sourcesDirectory)\\CodeCoverage.xml"
-    pathToSources: "$(build.sourcesDirectory)\\scripts"
-    #reportDirectory: # string. Report directory. 
-    #additionalCodeCoverageFiles: # string. Additional files. 
-    #failIfCoverageEmpty: false # boolean. Fail when code coverage results are missing. Default: false.
+  - task: PublishTestResults@2
+    displayName: 'Publish PSScriptAnalyzer results'
+    inputs:
+      testResultsFormat: "NUnit"
+      testResultsFiles: "$(build.sourcesDirectory)\\TestResults.xml"
+      failTaskOnFailedTests: true
+      testRunTitle: "Publish Pester results"
+
+  # Publish code coverage results v1
+  # Publish Cobertura or JaCoCo code coverage results from a build.
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish code coverage results'
+    inputs:
+      codeCoverageTool: 'JaCoCo' # 'Cobertura' | 'JaCoCo'. Required. Code coverage tool. Default: JaCoCo.
+      summaryFileLocation: "$(build.sourcesDirectory)\\CodeCoverage.xml"
+      pathToSources: "$(build.sourcesDirectory)\\scripts"
+      #reportDirectory: # string. Report directory. 
+      #additionalCodeCoverageFiles: # string. Additional files. 
+      #failIfCoverageEmpty: false # boolean. Fail when code coverage results are missing. Default: false.
