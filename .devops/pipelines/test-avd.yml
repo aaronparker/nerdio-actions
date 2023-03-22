@@ -30,7 +30,7 @@ steps:
 
 - publish: "$(build.sourcesDirectory)\\PSScriptAnalyzer.csv"
   artifact: PSScriptAnalyzerResults
-  name: 'Publish PSScriptAnalyzer test artifacts'
+  displayName: 'Publish PSScriptAnalyzer test artifacts'
 
 - powershell: |
     Import-Module -Name "Pester" -Force -ErrorAction "Stop"
@@ -49,10 +49,10 @@ steps:
 
 - publish: "$(build.sourcesDirectory)\\TestResults.xml"
   artifact: PesterTestResults
-  name: 'Publish Pester test artifacts'
+  displayName: 'Publish Pester test artifacts'
 
 - task: PublishTestResults@2
-  name: 'Publish PSScriptAnalyzer results'
+  displayName: 'Publish PSScriptAnalyzer results'
   inputs:
     testResultsFormat: "NUnit"
     testResultsFiles: "$(build.sourcesDirectory)\\TestResults.xml"
