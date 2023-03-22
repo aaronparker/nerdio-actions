@@ -10,7 +10,7 @@ if (Get-PSRepository | Where-Object { $_.Name -eq $Repository -and $_.Installati
     Set-PSRepository -Name $Repository -InstallationPolicy "Trusted"
 }
 
-foreach ($module in "Pester") {
+foreach ($module in "Pester", "PSScriptAnalyzer") {
     $installedModule = Get-Module -Name $module -ListAvailable -ErrorAction "SilentlyContinue" | `
         Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } -ErrorAction "SilentlyContinue" | `
         Select-Object -First 1

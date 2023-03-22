@@ -45,14 +45,18 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
 
+      - name: Install modules
+        shell: powershell
+        working-directory: "${{ github.workspace }}"
+        run: |
+            .\tests\Install-Pester.ps1
+
       - name: Test with Pester
         shell: powershell
         if: always()
         working-directory: "${{ github.workspace }}"
         run: |
-          .\tests\Install-Pester.ps1
           Import-Module -Name "Pester" -Force -ErrorAction "Stop"
-
           $Config = New-PesterConfiguration
           $Config.Run.Path = "$Env:GITHUB_WORKSPACE\tests"
           $Config.Run.PassThru = $True

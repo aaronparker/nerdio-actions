@@ -13,8 +13,21 @@ pool:
 steps:
 - powershell: |
     .\tests\Install-Pester.ps1
-    Import-Module -Name "Pester" -Force -ErrorAction "Stop"
+  name: Modules
+  displayName: 'Install modules'
+  workingDirectory: $(build.sourcesDirectory)
+  errorActionPreference: continue
 
+- powershell: |
+    Import-Module -Name "PSScriptAnalyzer" -Force -ErrorAction "Stop"
+    Invoke-ScriptAnalyzer -Path "$(build.sourcesDirectory)\scripts" -Recurse | Format-Table -AutoSize
+  name: PSScriptAnalyzer
+  displayName: 'Test with PSScriptAnalyzer'
+  workingDirectory: $(build.sourcesDirectory)
+  errorActionPreference: continue
+
+- powershell: |
+    Import-Module -Name "Pester" -Force -ErrorAction "Stop"
     $Config = New-PesterConfiguration
     $Config.Run.Path = "$(build.sourcesDirectory)\tests"
     $Config.Run.PassThru = $True
@@ -23,7 +36,7 @@ steps:
     $Config.TestResult.OutputPath = "$(build.sourcesDirectory)\TestResults.xml"
     $Config.Output.Verbosity = "Detailed"
     Invoke-Pester -Configuration $Config
-  name: Test
+  name: Pester
   displayName: 'Test with Pester'
   workingDirectory: $(build.sourcesDirectory)
   errorActionPreference: continue

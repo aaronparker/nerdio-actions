@@ -11,9 +11,14 @@ pool: 'Azure Virtual Desktop'
 
 steps:
 - powershell: |
-    #.\tests\Install-Pester.ps1
-    Import-Module -Name "Pester" -Force -ErrorAction "Stop"
+    .\tests\Install-Pester.ps1
+  name: Modules
+  displayName: 'Test with PSScriptAnalyzer'
+  workingDirectory: $(build.sourcesDirectory)
+  errorActionPreference: continue
 
+- powershell: |
+    Import-Module -Name "Pester" -Force -ErrorAction "Stop"
     $Config = New-PesterConfiguration
     $Config.Run.Path = "$(build.sourcesDirectory)\tests\4_ValidateApps.Tests.ps1"
     $Config.Run.PassThru = $True
