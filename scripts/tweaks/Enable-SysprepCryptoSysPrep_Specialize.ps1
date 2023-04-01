@@ -1,4 +1,5 @@
 #description: Modifies the Specialize.xml file to prevent sysprep errors in AD-joined Windows 11 images
+#execution mode: Combined
 #tags: Sysprep, Image, Preview
 
 <#
