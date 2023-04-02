@@ -8,7 +8,7 @@ on:
       - 'scripts/tweaks/*.ps1'
       - 'scripts/uninstall/*.ps1'
       - 'tests/*.ps1'
-      #- '.github/workflows/test-avd.yml'
+      - '.github/workflows/test-avd.yml'
   schedule:
     - cron: '0 1 15 * *' #Run on the 15th of each month
 
@@ -58,7 +58,7 @@ jobs:
         run: |
           Import-Module -Name "Pester" -Force -ErrorAction "Stop"
           $Config = New-PesterConfiguration
-          $Config.Run.Path = "$Env:GITHUB_WORKSPACE\tests"
+          $Config.Run.Path = "$Env:GITHUB_WORKSPACE\tests\scripts"
           $Config.Run.PassThru = $True
           $Config.CodeCoverage.Enabled = $True
           $Config.CodeCoverage.Path = "$Env:GITHUB_WORKSPACE\scripts"
