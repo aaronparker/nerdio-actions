@@ -11,16 +11,9 @@ pool: 'Azure Virtual Desktop'
 
 steps:
 - powershell: |
-    .\tests\Install-Modules.ps1
-  name: Modules
-  displayName: 'Test with PSScriptAnalyzer'
-  workingDirectory: $(build.sourcesDirectory)
-  errorActionPreference: continue
-
-- powershell: |
     Import-Module -Name "Pester" -Force -ErrorAction "Stop"
     $Config = New-PesterConfiguration
-    $Config.Run.Path = "$(build.sourcesDirectory)\tests\4_ValidateApps.Tests.ps1"
+    $Config.Run.Path = "$(build.sourcesDirectory)\tests\image"
     $Config.Run.PassThru = $True
     $Config.TestResult.Enabled = $True
     $Config.TestResult.OutputFormat = "NUnitXml"

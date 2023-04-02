@@ -39,7 +39,7 @@ jobs:
   - powershell: |
       Import-Module -Name "Pester" -Force -ErrorAction "Stop"
       $Config = New-PesterConfiguration
-      $Config.Run.Path = "$(build.sourcesDirectory)\tests"
+      $Config.Run.Path = "$(build.sourcesDirectory)\tests\scripts"
       $Config.Run.PassThru = $True
       $Config.CodeCoverage.Enabled = $True
       $Config.CodeCoverage.Path = "$(build.sourcesDirectory)\scripts"

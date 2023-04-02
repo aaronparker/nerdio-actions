@@ -10,13 +10,8 @@ param()
 BeforeDiscovery {
 
     # Get the list of software to test
-    if ([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE)) {
-        $Path = $PWD.Path
-    }
-    else {
-        $Path = $Env:GITHUB_WORKSPACE
-    }
-    $Applications = Get-Content -Path $([System.IO.Path]::Combine($Path, "tests", "Apps.json")) | ConvertFrom-Json
+    $Path = $PWD.Path
+    $Applications = Get-Content -Path $([System.IO.Path]::Combine($Path, "tests", "scripts", "Apps.json")) | ConvertFrom-Json
 }
 
 BeforeAll {
@@ -99,11 +94,13 @@ Describe "Validate <App.Name>" -ForEach $Applications {
             Select-Object -First 1
     }
 
-    Context "Installed application and configuration tests" {
+    Context "Validate installed application" {
         It "Should be installed" {
             $Installed | Should -Not -BeNullOrEmpty
         }
+    }
 
+    Context "Application configuration tests" {
         It "Should be the current version or better" {
             [System.Version]$Installed.Version | Should -BeGreaterOrEqual ([System.Version]$Latest.Version)
         }
@@ -177,12 +174,7 @@ AfterAll {
     }
     #endregion
 
-    if ([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE)) {
-        $Path = $PWD.Path
-    }
-    else {
-        $Path = $Env:GITHUB_WORKSPACE
-    }
+    $Path = $PWD.Path
     $params = @{
         Path              = "$Path\support\InstalledApplications.csv"
         Encoding          = "Utf8"

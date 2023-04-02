@@ -1,0 +1,222 @@
+[
+    {
+        "Name": "MicrosoftFSLogixApps",
+        "Filter": "Invoke-EvergreenApp -Name \"MicrosoftFSLogixApps\" | Where-Object { $_.Channel -eq \"Production\" } | Select-Object -First 1",
+        "Installed": "Microsoft FSLogix Apps",
+        "FilesExist": [
+            "C:\\Program Files\\FSLogix\\Apps\\frx.exe",
+            "C:\\Program Files\\FSLogix\\Apps\\ConfigurationTool.exe",
+            "C:\\Program Files\\FSLogix\\Apps\\frxcontext.exe",
+            "C:\\Program Files\\FSLogix\\Apps\\frxshell.exe"
+        ],
+        "ShortcutsNotExist": [
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\FSLogix\\FSLogix Apps Online Help.lnk"
+        ],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "MicrosoftFSLogixAppsRuleEditor",
+        "Filter": "Invoke-EvergreenApp -Name \"MicrosoftFSLogixApps\" | Where-Object { $_.Channel -eq \"Production\" } | Select-Object -First 1",
+        "Installed": "Microsoft FSLogix Apps RuleEditor",
+        "FilesExist": [
+            "C:\\Program Files\\FSLogix\\Apps\\RuleEditor.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "Microsoft.NET",
+        "Filter": "Invoke-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"LTS\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Installed": "Microsoft Windows Desktop Runtime - 6",
+        "FilesExist": [
+            "C:\\Program Files\\dotnet\\dotnet.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "Microsoft.NET",
+        "Filter": "Invoke-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"Current\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Installed": "Microsoft Windows Desktop Runtime - 7",
+        "FilesExist": [
+            "C:\\Program Files\\dotnet\\dotnet.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "MicrosoftVcRedist2022x64",
+        "Filter": "Get-VcList -Release \"2022\" -Architecture \"x64\"",
+        "Installed": "Microsoft Visual C.*2015-2022 Redistributable.*x64",
+        "FilesExist": [],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "MicrosoftVcRedist2022x86",
+        "Filter": "Get-VcList -Release \"2022\" -Architecture \"x86\"",
+        "Installed": "Microsoft Visual C.*2015-2022 Redistributable.*x86",
+        "FilesExist": [],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "MicrosoftEdge",
+        "Filter": "Invoke-EvergreenApp -Name \"MicrosoftEdge\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"Stable\" -and $_.Release -eq \"Enterprise\" } | Sort-Object -Property \"Version\" -Descending | Select-Object -First 1",
+        "Installed": "(^Microsoft Edge$)",
+        "FilesExist": [
+            "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\master_preferences"
+        ],
+        "ShortcutsNotExist": [
+            "C:\\Users\\Public\\Desktop\\Microsoft Edge*.lnk"
+        ],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "MicrosoftEdgeWebView2Runtime",
+        "Filter": "$InstalledSoftware | Where-Object { $_.Name -match \"MicrosoftEdgeWebView2Runtime\" } | Select-Object -First 1",
+        "Installed": "Microsoft Edge WebView2 Runtime",
+        "FilesExist": [],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "MicrosoftOneDrive",
+        "Filter": "Invoke-EvergreenApp -Name \"MicrosoftOneDrive\" | Where-Object { $_.Ring -eq \"Production\" -and $_.Type -eq \"Exe\" -and $_.Architecture -eq \"AMD64\" } | Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1",
+        "Installed": "Microsoft OneDrive",
+        "FilesExist": [
+            "C:\\Program Files\\Microsoft OneDrive\\OneDrive.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "MicrosoftTeams",
+        "Filter": "Invoke-EvergreenApp -Name \"MicrosoftTeams\" | Where-Object { $_.Ring -eq \"General\" -and $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "Teams Machine-Wide Installer",
+        "FilesExist": [
+            "C:\\Program Files (x86)\\Teams Installer\\setup.json",
+            "C:\\Program Files (x86)\\Microsoft\\Teams\\setup.json",
+            "C:\\Program Files (x86)\\Teams Installer\\Teams.exe",
+            "C:\\Program Files (x86)\\Microsoft\\Teams\\Update.exe",
+            "C:\\Program Files (x86)\\Microsoft\\Teams\\current\\Teams.exe",
+            "C:\\Program Files (x86)\\Microsoft\\Teams\\current\\Squirrel.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "Microsoft365Apps",
+        "Filter": "Invoke-EvergreenApp -Name \"Microsoft365Apps\" | Where-Object { $_.Channel -eq \"MonthlyEnterprise\" } | Select-Object -First 1",
+        "Installed": "Microsoft 365 Apps for enterprise",
+        "FilesExist": [
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\officeappguardwin32.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\protocolhandler.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "AdobeAcrobatReaderDC",
+        "Filter": "Invoke-EvergreenApp -Name \"AdobeAcrobatReaderDC\" | Where-Object { $_.Language -eq \"MUI\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Installed": "Adobe Acrobat.*64-bit",
+        "FilesExist": [
+            "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe",
+            "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\AdobeCollabSync.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": [
+            "AdobeARMservice"
+        ]
+    },
+    {
+        "Name": "GoogleChrome",
+        "Filter": "Invoke-EvergreenApp -Name \"GoogleChrome\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"stable\" } | Select-Object -First 1",
+        "Installed": "Google Chrome",
+        "FilesExist": [
+            "C:\\Program Files\\Google\\Chrome\\Application\\master_preferences",
+            "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+        ],
+        "ShortcutsNotExist": [
+            "C:\\Users\\Public\\Desktop\\Google Chrome.lnk"
+        ],
+        "ServicesDisabled": [
+            "gupdate",
+            "gupdatem"
+        ]
+    },
+    {
+        "Name": "VideoLanVlcPlayer",
+        "Filter": "Invoke-EvergreenApp -Name \"VideoLanVlcPlayer\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"MSI\" } | Select-Object -First 1",
+        "Installed": "VLC media player",
+        "FilesExist": [
+            "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe"
+        ],
+        "ShortcutsNotExist": [
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\VideoLAN\\VLC\\VideoLAN website.lnk",
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\VideoLAN\\VLC\\Release Notes.lnk",
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\VideoLAN\\VLC\\Documentation.lnk",
+            "C:\\Users\\Public\\Desktop\\VLC media player.lnk"
+        ],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "ZoomMeetings",
+        "Filter": "$InstalledSoftware | Where-Object { $_.Name -match \"Zoom Client for VDI\" } | Select-Object -First 1",
+        "Installed": "Zoom Client for VDI",
+        "FilesExist": [],
+        "ShortcutsNotExist": [
+            "C:\\Users\\Public\\Desktop\\Zoom VDI.lnk"
+        ],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "ImageGlass",
+        "Filter": "Invoke-EvergreenApp -Name \"ImageGlass\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "ImageGlass",
+        "FilesExist": [],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "draw.io",
+        "Filter": "Invoke-EvergreenApp -Name \"diagrams.net\" | Where-Object { $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "draw.io*",
+        "FilesExist": [
+            "C:\\Program Files\\draw.io\\draw.io.exe"
+        ],
+        "ShortcutsNotExist": [
+            "C:\\Users\\Public\\Desktop\\draw.io.lnk"
+        ],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "MozillaFirefox",
+        "Filter": "Invoke-EvergreenApp -Name \"MozillaFirefox\" | Where-Object { $_.Channel -eq \"LATEST_FIREFOX_VERSION\" -and $_.Architecture -eq \"x64\" -and $_.Language -eq \"en-US\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "Mozilla Firefox*",
+        "FilesExist": [
+            "C:\\Program Files\\Mozilla Firefox\\private_browsing.exe",
+            "C:\\Program Files\\Mozilla Firefox\\crashreporter.exe",
+            "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
+        ],
+        "ShortcutsNotExist": [
+            "C:\\Users\\Public\\Desktop\\Mozilla Firefox.lnk"
+        ],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "Paint.NET",
+        "Filter": "Invoke-EvergreenApp -Name \"PaintDotNetOfflineInstaller\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.URI -match \"winmsi\" } | Select-Object -First 1",
+        "Installed": "paint.net*",
+        "FilesExist": [
+            "C:\\Program Files\\Mozilla Firefox\\private_browsing.exe",
+            "C:\\Program Files\\Mozilla Firefox\\crashreporter.exe",
+            "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
+        ],
+        "ShortcutsNotExist": [
+            "C:\\Users\\Public\\Desktop\\Paint.NET.lnk"
+        ],
+        "ServicesDisabled": []
+    }
+]
