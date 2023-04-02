@@ -99,11 +99,13 @@ Describe "Validate <App.Name>" -ForEach $Applications {
             Select-Object -First 1
     }
 
-    Context "Installed application and configuration tests" {
+    Context "Validate installed application" {
         It "Should be installed" {
             $Installed | Should -Not -BeNullOrEmpty
         }
+    }
 
+    Context "Application configuration tests" {
         It "Should be the current version or better" {
             [System.Version]$Installed.Version | Should -BeGreaterOrEqual ([System.Version]$Latest.Version)
         }
