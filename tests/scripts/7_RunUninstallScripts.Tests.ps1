@@ -19,7 +19,7 @@ BeforeDiscovery {
 
     # Get the scripts to test
     $Scripts = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse
-    $Scripts2 = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse -Exclude @("Uninstall-7ZipZS.ps1", "Uninstall-MicrosoftNET.ps1")
+    $Scripts2 = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse -Exclude @("Uninstall-7ZipZS.ps1", "Uninstall-MicrosoftNET.ps1", "Uninstall-NotepadPlusPlus.ps1")
 }
 
 Describe "Uninstall scripts with software installed" {
