@@ -19,6 +19,7 @@ catch {
 }
 
 try {
+    Write-Information -MessageData ":: Install Microsoft Visual Studio Code" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Evergreen\Logs\MicrosoftVisualStudioCode$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = $OutFile.FullName

@@ -19,6 +19,7 @@ catch {
 }
 
 try {
+    Write-Information -MessageData ":: Install Zoom Meetings" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Evergreen\Logs\ZoomMeetings$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"

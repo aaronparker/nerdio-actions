@@ -18,6 +18,7 @@ catch {
 }
 
 try {
+    Write-Information -MessageData ":: Install Notepad++" -InformationAction "Continue"
     $params = @{
         FilePath     = $OutFile.FullName
         ArgumentList = "/S"

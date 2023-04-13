@@ -18,6 +18,7 @@ catch {
 }
 
 try {
+    Write-Information -MessageData ":: Install ShareX" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Evergreen\Logs\ShareX$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = $OutFile.FullName

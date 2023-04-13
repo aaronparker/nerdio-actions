@@ -30,6 +30,7 @@ catch {
 }
 
 try {
+    Write-Information -MessageData ":: Install Paint.NET" -InformationAction "Continue"
     $Installer = Get-ChildItem -Path $Path -Include "paint*.msi" -Recurse
     $LogFile = "$Env:ProgramData\Evergreen\Logs\Paint.NET$($App.Version).log" -replace " ", ""
     $params = @{

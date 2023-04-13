@@ -23,6 +23,7 @@ catch {
 }
 
 try {
+    Write-Information -MessageData ":: Install Cisco WebEx" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Evergreen\Logs\CiscoWebEx$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"

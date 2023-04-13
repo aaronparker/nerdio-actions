@@ -18,6 +18,7 @@ catch {
 }
 
 try {
+    Write-Information -MessageData ":: Install Microsoft PowerToys" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Evergreen\Logs\MicrosoftPowerToys$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = $OutFile.FullName

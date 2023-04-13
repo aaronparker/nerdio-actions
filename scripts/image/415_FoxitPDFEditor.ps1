@@ -28,6 +28,7 @@ catch {
 }
 
 try {
+    Write-Information -MessageData ":: Install Foxit PDF Editor" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Evergreen\Logs\FoxitPDFEditor$($App.Version).log" -replace " ", ""
     $Options = "AUTO_UPDATE=0
         NOTINSTALLUPDATE=1

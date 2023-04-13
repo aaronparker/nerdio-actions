@@ -29,6 +29,7 @@ catch {
 }
 
 try {
+    Write-Information -MessageData ":: Install Mozilla Firefox" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Evergreen\Logs\MozillaFirefox$($App.Version).log" -replace " ", ""
     $Options = "DESKTOP_SHORTCUT=false
         TASKBAR_SHORTCUT=false

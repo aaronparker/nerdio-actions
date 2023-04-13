@@ -18,6 +18,7 @@ catch {
 }
 
 try {
+    Write-Information -MessageData ":: Install 7zip" -InformationAction "Continue"
     $params = @{
         FilePath     = $OutFile.FullName
         ArgumentList = "/S"

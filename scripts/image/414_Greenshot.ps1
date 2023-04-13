@@ -18,6 +18,7 @@ catch {
 }
 
 try {
+    Write-Information -MessageData ":: Install Greenshot" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Evergreen\Logs\Greenshot$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = $OutFile.FullName

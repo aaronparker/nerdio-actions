@@ -18,6 +18,7 @@ catch {
 }
 
 try {
+    Write-Information -MessageData ":: Install draw.io" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Evergreen\Logs\diagrams.net$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"

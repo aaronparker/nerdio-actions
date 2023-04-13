@@ -28,6 +28,7 @@ catch {
 
 try {
     # Install Adobe Acrobat Reader
+    Write-Information -MessageData ":: Install Adobe Acrobat Reader DC" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Evergreen\Logs\AdobeAcrobatReaderDC$($App.Version).log" -replace " ", ""
     $Options = "EULA_ACCEPT=YES
         ENABLE_CHROMEEXT=0
@@ -65,6 +66,10 @@ try {
     # Disable update tasks - assuming we're installing on a gold image or updates will be managed
     Get-Service -Name "AdobeARMservice" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
     Get-ScheduledTask -TaskName "Adobe Acrobat Update Task*" | Unregister-ScheduledTask -Confirm:$false -ErrorAction "SilentlyContinue"
+
+    # Delete public desktop shortcut
+    $Shortcuts = @("$Env:Public\Desktop\Adobe Acrobat.lnk")
+    Remove-Item -Path $Shortcuts -Force -ErrorAction "SilentlyContinue"
 }
 catch {
     throw $_.Exception.Message

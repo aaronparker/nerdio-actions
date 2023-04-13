@@ -52,6 +52,7 @@ try {
     if (Test-Path -Path $TeamsExe) {
         $File = Get-ChildItem -Path $TeamsExe
         if ([System.Version]$File.VersionInfo.ProductVersion -le [System.Version]$App.Version) {
+            Write-Information -MessageData ":: Uninstall Microsoft Teams" -InformationAction "Continue"
             $LogFile = "$Env:ProgramData\Evergreen\Logs\UninstallMicrosoftTeams$($File.VersionInfo.ProductVersion).log" -replace " ", ""
             $params = @{
                 FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -78,7 +79,8 @@ catch {
 $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Teams Machine-Wide Installer" }
 foreach ($App in $Apps) {
     try {
-        $LogFile = "$Env:ProgramData\Evergreen\Logs\UninstallGoogleChrome$($App.Version).log" -replace " ", ""
+        Write-Information -MessageData ":: Uninstall Microsoft Teams Machine Wide Installer" -InformationAction "Continue"
+        $LogFile = "$Env:ProgramData\Evergreen\Logs\UninstallMicrosoftTeamsMachineWideInstaller$($App.Version).log" -replace " ", ""
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
             ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log $LogFile"
