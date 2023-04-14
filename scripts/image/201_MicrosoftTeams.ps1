@@ -11,6 +11,7 @@ function Get-InstalledSoftware {
     [CmdletBinding()]
     param ()
     $UninstallKeys = @(
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*",
         "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*",
         "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
     )
