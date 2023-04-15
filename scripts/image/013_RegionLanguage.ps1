@@ -52,18 +52,11 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
 
 #region Set the locale
 try {
-    $GeoId = @{
-        "en-US" = 244
-        "en-GB" = 242
-        "en-AU" = 12
-        "en-NZ" = 183
-        "en-CA" = 39
-        "ph-PH" = 201
-    }
+    $RegionInfo = New-Object -TypeName "System.Globalization.RegionInfo" -ArgumentList $Language
     Import-Module -Name "International"
     Write-Information -MessageData ":: Set locale to: $Language" -InformationAction "Continue"
     Set-WinSystemLocale -SystemLocale $Language
-    Set-WinHomeLocation -GeoId $GeoId.$Language
+    Set-WinHomeLocation -GeoId $RegionInfo.GeoId
 }
 catch {
     throw $_.Exception.Message
