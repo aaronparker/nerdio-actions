@@ -18,7 +18,7 @@ BeforeDiscovery {
     }
 
     # Get the scripts to test
-    $Scripts = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse
+    $Scripts = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse -Exclude "Install-MicrosoftVdot.ps1"
 }
 
 Describe "Run optimise scripts" {

@@ -18,7 +18,7 @@ BeforeDiscovery {
     }
 
     # Get the scripts to test
-    $Scripts = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse -Exclude "Enable-SysprepCryptoSysPrep_Specialize.ps1", "Install-MicrosoftVdot.ps1"
+    $Scripts = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse
 }
 
 Describe "Run tweaks scripts" {
