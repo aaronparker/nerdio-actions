@@ -30,19 +30,7 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
             ExcludeFeatures = $false
         }
         Write-Information -MessageData ":: Install language pack for: $Language" -InformationAction "Continue"
-        Install-Language @params | Out-Null
-    }
-    catch {
-        throw $_.Exception.Message
-    }
-
-    try {
-        $params = @{
-            Language = $Language
-            PassThru = $false
-        }
-        Write-Information -MessageData ":: Set system UI language to: $Language" -InformationAction "Continue"
-        Set-SystemPreferredUILanguage @params
+        Install-Language @params
     }
     catch {
         throw $_.Exception.Message
