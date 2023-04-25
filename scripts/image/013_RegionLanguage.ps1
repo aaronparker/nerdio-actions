@@ -4,10 +4,10 @@
 
 #region Use Secure variables in Nerdio Manager to pass a system language
 if ($null -eq $SecureVars.OSLanguage) {
-    [System.String] $Language = "en-AU"
+    [System.Globalization.CultureInfo] $Language = "en-AU"
 }
 else {
-    [System.String] $Language = $SecureVars.OSLanguage
+    [System.Globalization.CultureInfo] $Language = $SecureVars.OSLanguage
 }
 #endregion
 
@@ -52,11 +52,16 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
 
 #region Set the locale
 try {
+    Write-Information -MessageData ":: Set locale to: $Language" -InformationAction "Continue"
     $RegionInfo = New-Object -TypeName "System.Globalization.RegionInfo" -ArgumentList $Language
     Import-Module -Name "International"
-    Write-Information -MessageData ":: Set locale to: $Language" -InformationAction "Continue"
+    Set-Culture -CultureInfo $Language
     Set-WinSystemLocale -SystemLocale $Language
+    Set-WinUILanguageOverride -Language $Language
+    Set-WinUserLanguageList -LanguageList $Language.Name -Force
+    $RegionInfo = New-Object -TypeName "System.Globalization.RegionInfo" -ArgumentList $Language
     Set-WinHomeLocation -GeoId $RegionInfo.GeoId
+    Set-SystemPreferredUILanguage -Language $Language
 }
 catch {
     throw $_.Exception.Message
