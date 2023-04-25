@@ -49,7 +49,9 @@ try {
     Set-WinUserLanguageList -LanguageList $Language.Name -Force
     $RegionInfo = New-Object -TypeName "System.Globalization.RegionInfo" -ArgumentList $Language
     Set-WinHomeLocation -GeoId $RegionInfo.GeoId
-    Set-SystemPreferredUILanguage -Language $Language
+    if (Get-Command -Name "Set-SystemPreferredUILanguage" -ErrorAction "SilentlyContinue") {
+        Set-SystemPreferredUILanguage -Language $Language
+    }
 }
 catch {
     throw $_.Exception.Message
