@@ -18,8 +18,6 @@ try {
     Write-Information -MessageData ":: Download Connection Experience Indicator" -InformationAction "Continue"
     $App = Invoke-EvergreenApp -Name "ConnectionExperienceIndicator" | Select-Object -First 1
     Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -WarningAction "SilentlyContinue" | Out-Null
-
-    ConnectionExperienceIndicator
 }
 catch {
     throw $_.Exception.Message
