@@ -1,4 +1,4 @@
-#description: Downloads the Remote Display Analyzer to 'C:\Program Files\RemoteDisplayAnalyzer'
+#description: Downloads the Remote Display Analyzer and Connection Experience Indicator to 'C:\Program Files\RemoteDisplayAnalyzer'
 #execution mode: Combined
 #tags: Evergreen, Remote Display Analyzer, Tools
 #Requires -Modules Evergreen
@@ -9,10 +9,17 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
-    Write-Information -MessageData ":: Download Remote Desktop Analyzer" -InformationAction "Continue"
     Import-Module -Name "Evergreen" -Force
+
+    Write-Information -MessageData ":: Download Remote Desktop Analyzer" -InformationAction "Continue"
     $App = Invoke-EvergreenApp -Name "RDAnalyzer" | Select-Object -First 1
     Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -WarningAction "SilentlyContinue" | Out-Null
+
+    Write-Information -MessageData ":: Download Connection Experience Indicator" -InformationAction "Continue"
+    $App = Invoke-EvergreenApp -Name "ConnectionExperienceIndicator" | Select-Object -First 1
+    Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -WarningAction "SilentlyContinue" | Out-Null
+
+    ConnectionExperienceIndicator
 }
 catch {
     throw $_.Exception.Message

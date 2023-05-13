@@ -88,10 +88,15 @@ Describe "Validate <App.Name>" -ForEach $Applications {
         # Get details for the current application
         $App = $_
         $Latest = Invoke-Expression -Command $App.Filter
-        $Installed = $InstalledSoftware | `
-            Where-Object { $_.Name -match $App.Installed } | `
-            Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | `
-            Select-Object -First 1
+        if ($null -ne $App.Installed) {
+            $Installed = $InstalledSoftware | `
+                Where-Object { $_.Name -match $App.Installed } | `
+                Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | `
+                Select-Object -First 1
+        }
+        else {
+            $Installed = "App does not have Installed property"
+        }
     }
 
     Context "Validate installed application" {

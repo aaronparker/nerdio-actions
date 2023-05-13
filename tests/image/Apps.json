@@ -218,5 +218,21 @@
             "C:\\Users\\Public\\Desktop\\Paint.NET.lnk"
         ],
         "ServicesDisabled": []
+    },
+    {
+        "Name": "RemoteDisplayAnalyzer",
+        "Filter": "Invoke-EvergreenApp -Name RDAnalyzer",
+        "Installed": "",
+        "FilesExist": [
+            "C:\\Program Files\\RemoteDisplayAnalyzer\\RemoteDisplayAnalyzer.exe"
+        ]
+    },
+    {
+        "Name": "ConnectionExperienceIndicator",
+        "Filter": "Invoke-EvergreenApp -Name ConnectionExperienceIndicator",
+        "Installed": "",
+        "FilesExist": [
+            "C:\\Program Files\\RemoteDisplayAnalyzer\\ConnectionExperienceIndicator.exe"
+        ]
     }
 ]
