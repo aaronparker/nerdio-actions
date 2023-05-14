@@ -58,6 +58,7 @@ try {
         "distribution"           = @{
             "ping_delay"                                = 60
             "suppress_first_run_bubble"                 = $true
+            "create_all_shortcuts"                      = $false
             "do_not_create_desktop_shortcut"            = $true
             "do_not_create_quick_launch_shortcut"       = $true
             "do_not_launch_chrome"                      = $true
