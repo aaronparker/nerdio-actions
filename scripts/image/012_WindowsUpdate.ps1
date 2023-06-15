@@ -10,7 +10,7 @@ try {
     # Install updates
     Write-Information -MessageData ":: Installing Windows updates" -InformationAction "Continue"
     Import-Module -Name "PSWindowsUpdate"
-    Install-WindowsUpdate -AcceptAll -MicrosoftUpdate -IgnoreReboot
+    Install-WindowsUpdate -AcceptAll -MicrosoftUpdate -IgnoreReboot -IgnoreRebootRequired | Select-Object -Property "Title", "Size"
 }
 catch {
     throw $_.Exception.Message
