@@ -37,7 +37,9 @@ try {
         VIEW_IN_BROWSER=0
         DESKTOP_SHORTCUT=0
         STARTMENU_SHORTCUT_UNINSTALL=0
-        DISABLE_UNINSTALL_SURVEY=1"
+        DISABLE_UNINSTALL_SURVEY=1
+        CLEAN=1
+        INTERNET_DISABLE=1"
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" $($Options -replace "\s+", " ") ALLUSERS=1 /quiet /log $LogFile"
