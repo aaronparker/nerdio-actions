@@ -38,9 +38,9 @@ foreach ($App in $Apps) {
     $params = @{
         FilePath     = [Regex]::Match($App.UninstallString, '\"(.*)\"').Captures.Groups[1].Value
         ArgumentList = "/uninstall /quiet /norestart /log $LogFile"
-        NoNewWindow  = $True
-        PassThru     = $True
-        Wait         = $True
+        NoNewWindow  = $true
+        PassThru     = $true
+        Wait         = $true
         ErrorAction  = "Continue"
     }
     $result = Start-Process @params

@@ -85,9 +85,9 @@ foreach ($App in $Apps) {
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
             ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log $LogFile"
-            NoNewWindow  = $True
-            PassThru     = $True
-            Wait         = $True
+            NoNewWindow  = $true
+            PassThru     = $true
+            Wait         = $true
             ErrorAction  = "Continue"
         }
         $result = Start-Process @params

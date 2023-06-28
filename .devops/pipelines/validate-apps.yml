@@ -14,8 +14,8 @@ steps:
     Import-Module -Name "Pester" -Force -ErrorAction "Stop"
     $Config = New-PesterConfiguration
     $Config.Run.Path = "$(build.sourcesDirectory)\tests\image"
-    $Config.Run.PassThru = $True
-    $Config.TestResult.Enabled = $True
+    $Config.Run.PassThru = $true
+    $Config.TestResult.Enabled = $true
     $Config.TestResult.OutputFormat = "NUnitXml"
     $Config.TestResult.OutputPath = "$(build.sourcesDirectory)\TestResults.xml"
     $Config.Output.Verbosity = "Detailed"

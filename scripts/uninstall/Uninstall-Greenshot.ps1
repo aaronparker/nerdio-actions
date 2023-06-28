@@ -16,9 +16,9 @@ if (Test-Path -Path "$Env:ProgramFiles\Greenshot\unins000.exe") {
     $params = @{
         FilePath     = "$Env:ProgramFiles\Greenshot\unins000.exe"
         ArgumentList = "/VERYSILENT"
-        NoNewWindow  = $True
-        PassThru     = $True
-        Wait         = $True
+        NoNewWindow  = $true
+        PassThru     = $true
+        Wait         = $true
         ErrorAction  = "Continue"
     }
     $result = Start-Process @params
