@@ -13,7 +13,7 @@ else {
 }
 
 if ($null -eq $SecureVars.AppxMode) {
-    $AppxMode = "Block"
+    $AppxMode = "Allow"
 }
 else {
     $AppxMode = $SecureVars.AppxMode
