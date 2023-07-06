@@ -24,7 +24,7 @@ try {
     # Install the agent
     $params = @{
         FilePath     = $OutFile.FullName
-        ArgumentList = "CID=$($SecureVars.CrowdStrikeCID) /install VDI=1"
+        ArgumentList = "/install /quiet /norestart /log `"$Env:ProgramData\Evergreen\Logs`" CID=$($SecureVars.CrowdStrikeCID) VDI=1 NO_START=1"
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $true
