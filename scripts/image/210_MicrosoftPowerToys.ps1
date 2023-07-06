@@ -6,7 +6,7 @@
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -19,7 +19,7 @@ catch {
 
 try {
     Write-Information -MessageData ":: Install Microsoft PowerToys" -InformationAction "Continue"
-    $LogFile = "$Env:ProgramData\Evergreen\Logs\MicrosoftPowerToys$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftPowerToys$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = $OutFile.FullName
         ArgumentList = "-silent -log $LogFile"

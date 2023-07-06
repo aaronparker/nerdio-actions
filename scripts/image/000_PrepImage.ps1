@@ -16,11 +16,11 @@ try {
     }
 
     # Create logs directory and compress
-    Write-Information -MessageData ":: Create and compress: '$Env:ProgramData\Evergreen\Logs'" -InformationAction "Continue"
-    New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+    Write-Information -MessageData ":: Create and compress: '$Env:ProgramData\Nerdio\Logs'" -InformationAction "Continue"
+    New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\compact.exe"
-        ArgumentList = "/C /S `"$Env:ProgramData\Evergreen\Logs`""
+        ArgumentList = "/C /S `"$Env:ProgramData\Nerdio\Logs`""
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $true

@@ -6,7 +6,7 @@
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -32,7 +32,7 @@ catch {
 try {
     Write-Information -MessageData ":: Install Paint.NET" -InformationAction "Continue"
     $Installer = Get-ChildItem -Path $Path -Include "paint*.msi" -Recurse
-    $LogFile = "$Env:ProgramData\Evergreen\Logs\Paint.NET$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Nerdio\Logs\Paint.NET$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($Installer.FullName)`" DESKTOPSHORTCUT=0 CHECKFORUPDATES=0 CHECKFORBETAS=0 /quiet /log $LogFile"

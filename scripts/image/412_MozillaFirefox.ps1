@@ -15,7 +15,7 @@ else {
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -30,7 +30,7 @@ catch {
 
 try {
     Write-Information -MessageData ":: Install Mozilla Firefox" -InformationAction "Continue"
-    $LogFile = "$Env:ProgramData\Evergreen\Logs\MozillaFirefox$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Nerdio\Logs\MozillaFirefox$($App.Version).log" -replace " ", ""
     $Options = "DESKTOP_SHORTCUT=false
         TASKBAR_SHORTCUT=false
         INSTALL_MAINTENANCE_SERVICE=false

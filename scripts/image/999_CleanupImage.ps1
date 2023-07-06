@@ -24,6 +24,6 @@ catch {
 }
 
 # Remove logs older than 30 days
-Get-ChildItem -Path "$Env:ProgramData\Evergreen\Logs" -Include "*.*" -Recurse | `
+Get-ChildItem -Path "$Env:ProgramData\Nerdio\Logs" -Include "*.*" -Recurse | `
     Where-Object { ($_.LastWriteTime -lt (Get-Date).AddDays(-30)) -and ($_.psIsContainer -eq $false) } | `
     Remove-Item -Force -ErrorAction "Ignore"

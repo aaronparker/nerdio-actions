@@ -9,7 +9,7 @@
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     $App = [PSCustomObject]@{
@@ -24,7 +24,7 @@ catch {
 
 try {
     Write-Information -MessageData ":: Install Cisco WebEx" -InformationAction "Continue"
-    $LogFile = "$Env:ProgramData\Evergreen\Logs\CiscoWebEx$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Nerdio\Logs\CiscoWebEx$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" ENABLEVDI=2 AUTOUPGRADEENABLED=0 ROAMINGENABLED=1 ALLUSERS=1 /quiet /log $LogFile"

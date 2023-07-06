@@ -16,7 +16,7 @@ else {
 #region Script logic
 # Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     Import-Module -Name "Evergreen" -Force
@@ -29,7 +29,7 @@ catch {
 
 try {
     Write-Information -MessageData ":: Install Foxit PDF Editor" -InformationAction "Continue"
-    $LogFile = "$Env:ProgramData\Evergreen\Logs\FoxitPDFEditor$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Nerdio\Logs\FoxitPDFEditor$($App.Version).log" -replace " ", ""
     $Options = "AUTO_UPDATE=0
         NOTINSTALLUPDATE=1
         MAKEDEFAULT=0

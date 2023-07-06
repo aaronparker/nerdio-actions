@@ -30,11 +30,11 @@ function Get-InstalledSoftware {
 #endregion
 
 #region Script logic
-New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "PowerToys*" }
 foreach ($App in $Apps) {
-    $LogFile = "$Env:ProgramData\Evergreen\Logs\UninstallMicrosoftPowerToys$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:ProgramData\Nerdio\Logs\UninstallMicrosoftPowerToys$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = [Regex]::Match($App.UninstallString, '\"(.*)\"').Captures.Groups[1].Value
         ArgumentList = "/uninstall /quiet /norestart /log $LogFile"

@@ -7,7 +7,7 @@
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 #region Edge
 try {
@@ -28,7 +28,7 @@ try {
 
         # Install
         Write-Information -MessageData ":: Install Microsoft Edge" -InformationAction "Continue"
-        $LogFile = "$Env:ProgramData\Evergreen\Logs\MicrosoftEdge$($App.Version).log" -replace " ", ""
+        $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftEdge$($App.Version).log" -replace " ", ""
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
             ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true /log $LogFile"

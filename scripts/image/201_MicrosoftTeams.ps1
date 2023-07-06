@@ -35,7 +35,7 @@ function Get-InstalledSoftware {
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Evergreen\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
     # Download Teams
@@ -54,7 +54,7 @@ try {
         $File = Get-ChildItem -Path $TeamsExe
         if ([System.Version]$File.VersionInfo.ProductVersion -le [System.Version]$App.Version) {
             Write-Information -MessageData ":: Uninstall Microsoft Teams" -InformationAction "Continue"
-            $LogFile = "$Env:ProgramData\Evergreen\Logs\UninstallMicrosoftTeams$($File.VersionInfo.ProductVersion).log" -replace " ", ""
+            $LogFile = "$Env:ProgramData\Nerdio\Logs\UninstallMicrosoftTeams$($File.VersionInfo.ProductVersion).log" -replace " ", ""
             $params = @{
                 FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
                 ArgumentList = "/x `"$($OutFile.FullName)`" /quiet /log $LogFile"
@@ -81,7 +81,7 @@ $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Teams Machine-Wid
 foreach ($App in $Apps) {
     try {
         Write-Information -MessageData ":: Uninstall Microsoft Teams Machine Wide Installer" -InformationAction "Continue"
-        $LogFile = "$Env:ProgramData\Evergreen\Logs\UninstallMicrosoftTeamsMachineWideInstaller$($App.Version).log" -replace " ", ""
+        $LogFile = "$Env:ProgramData\Nerdio\Logs\UninstallMicrosoftTeamsMachineWideInstaller$($App.Version).log" -replace " ", ""
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
             ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log $LogFile"
@@ -103,7 +103,7 @@ try {
     Write-Information -MessageData ":: Install Microsoft Teams" -InformationAction "Continue"
     New-Item -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Force -ErrorAction "SilentlyContinue" | Out-Null
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Name "IsWVDEnvironment" -PropertyType "DWORD" -Value 1 -Force -ErrorAction "SilentlyContinue" | Out-Null
-    $LogFile = $LogFile = "$Env:ProgramData\Evergreen\Logs\MicrosoftTeams$($App.Version).log" -replace " ", ""
+    $LogFile = $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftTeams$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package $($OutFile.FullName) OPTIONS=`"noAutoStart=true`" ALLUSER=1 ALLUSERS=1 /quiet /log $LogFile"
