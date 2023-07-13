@@ -32,20 +32,25 @@ try {
     Write-Information -MessageData ":: Install Citrix Workspace app" -InformationAction "Continue"
     $params = @{
         FilePath     = $OutFile.FullName
-        ArgumentList = "/silent /noreboot /includeSSON /AutoUpdateCheck=Disabled EnableCEIP=False ADDLOCAL=ReceiverInside,ICA_Client,BCR_Client,DesktopViewer,AM,SSON,SELFSERVICE,WebHelper"
+        ArgumentList = "/silent /noreboot /includeSSON /AutoUpdateCheck=Disabled EnableTracing=false EnableCEIP=False ADDLOCAL=ReceiverInside,ICA_Client,BCR_Client,DesktopViewer,AM,SSON,SELFSERVICE,WebHelper"
         NoNewWindow  = $true
-        Wait         = $true
+        Wait         = $false
         PassThru     = $true
         ErrorAction  = "Continue"
     }
     $result = Start-Process @params
+    Start-Sleep -Seconds 120
     Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 }
 catch {
     throw $_.Exception.Message
 }
 
-Start-Sleep -Seconds 5
-$Shortcuts = @("$Env:Public\Desktop\Mozilla Firefox.lnk")
-Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
+try {
+    # Disable update tasks - assuming we're installing on a gold image or updates will be managed
+    Get-Service -Name "CWAUpdaterService" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
+}
+catch {
+    throw $_.Exception.Message
+}
 #endregion
