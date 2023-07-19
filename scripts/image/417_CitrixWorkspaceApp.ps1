@@ -1,4 +1,4 @@
-#description: Installs the latest version the Citrix Workspace app
+#description: Installs the latest version of the Citrix Workspace app
 #execution mode: Combined
 #tags: Evergreen, Citrix
 #Requires -Modules Evergreen

@@ -1,14 +1,14 @@
 #description: Pause session host availability until Hybrid Azure AD join is complete. Run as a scripted action when VM is CREATED but after the VM is joined to the AVD host pool.
 #execution mode: Combined
-#tags: Tools, VMCreation, AAD
+#tags: AAD
 
 # Source: https://github.com/steve-prentice/autopilot/blob/master/WaitForUserDeviceRegistration.ps1
 
-if ($null -eq $SecureVars.UserDeviceRegistration_ScriptTimeout) {
+if ($null -eq $SecureVars.DeviceRegWait) {
     [System.String] $ScriptTimeout = 60 #minutes
 }
 else {
-    [System.String] $ScriptTimeout = $SecureVars.UserDeviceRegistration_ScriptTimeout
+    [System.String] $ScriptTimeout = $SecureVars.DeviceRegWait
 }
 
 function Write-Msg ($Msg) {
