@@ -18,6 +18,7 @@ try {
 
     # Remove C:\Apps folder
     if (Test-Path -Path $Path) { Remove-Item -Path $Path -Recurse -Force -ErrorAction "SilentlyContinue" }
+    if (Test-Path -Path "$env:Temp") { Remove-Item -Path "$env:Temp" -Recurse -Force -ErrorAction "SilentlyContinue" }
 }
 catch {
     throw $_.Exception.Message
