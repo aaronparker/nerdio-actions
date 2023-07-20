@@ -1,6 +1,6 @@
 #description: Pause session host availability until Hybrid Azure AD join is complete. Run as a scripted action when VM is CREATED but after the VM is joined to the AVD host pool.
 #execution mode: Combined
-#tags: AAD
+#tags: HAADJ
 
 # Source: https://github.com/steve-prentice/autopilot/blob/master/WaitForUserDeviceRegistration.ps1
 
