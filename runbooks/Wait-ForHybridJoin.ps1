@@ -5,7 +5,7 @@
 # Source: https://github.com/steve-prentice/autopilot/blob/master/WaitForUserDeviceRegistration.ps1
 
 if ($null -eq $SecureVars.DeviceRegWait) {
-    [System.String] $ScriptTimeout = 60 #minutes
+    [System.String] $ScriptTimeout = 30 #minutes
 }
 else {
     [System.String] $ScriptTimeout = $SecureVars.DeviceRegWait
