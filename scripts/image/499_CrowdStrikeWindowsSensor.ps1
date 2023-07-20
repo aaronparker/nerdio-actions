@@ -24,7 +24,7 @@ try {
     # Install the agent
     $params = @{
         FilePath     = $OutFile.FullName
-        ArgumentList = "/install /quiet /norestart /log `"$Env:ProgramData\Nerdio\Logs`" CID=$($SecureVars.CrowdStrikeCID) VDI=1" # NO_START=1
+        ArgumentList = "/install /quiet /norestart /log `"$Env:ProgramData\Nerdio\Logs\CrowdStrikeWindowsSensor.log`" CID=$($SecureVars.CrowdStrikeCID) VDI=1" # NO_START=1
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $true
