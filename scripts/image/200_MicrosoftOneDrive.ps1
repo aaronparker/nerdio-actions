@@ -23,6 +23,7 @@ catch {
 try {
     # Install
     Write-Information -MessageData ":: Install Microsoft OneDrive" -InformationAction "Continue"
+    reg add "HKLM\Software\Microsoft\OneDrive" /v "AllUsersInstall" /t REG_DWORD /d 1 /reg:64
     $params = @{
         FilePath     = $OutFile.FullName
         ArgumentList = "/silent /allusers"

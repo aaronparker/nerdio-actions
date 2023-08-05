@@ -1,4 +1,4 @@
-#description: Enable RDP Shortpath for managed networks - reboot required. This configuration should preferably be implemented via GPO.
+#description: Enable RDP Shortpath for managed and public networks - reboot required. This configuration should preferably be implemented via GPO.
 #execution mode: Combined
 #tags: RDP Shortpath, Image
 <#
@@ -9,6 +9,7 @@ https://learn.microsoft.com/en-us/azure/virtual-desktop/configure-rdp-shortpath
 # Add registry keys
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations" /v "fUseUdpPortRedirector" /t "REG_DWORD" /d 1 /f | Out-Null
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations" /v "UdpPortNumber" /t "REG_DWORD" /d 3390 /f | Out-Null
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations" /v "ICEControl" /t "REG_DWORD" /d 2 /f | Out-Null
 
 # Add windows firewall rule
 $params = @{

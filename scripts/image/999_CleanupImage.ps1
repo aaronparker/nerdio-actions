@@ -12,9 +12,12 @@ try {
     if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft Windows 1*") {
         # Remove policies
         Write-Information -MessageData ":: Remove policies that prevent updates during deployment" -InformationAction "Continue"
-        reg delete "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableWindowsConsumerFeatures" /f
+        # reg delete "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableWindowsConsumerFeatures" /f
         reg delete "HKLM\Software\Policies\Microsoft\WindowsStore" /v "AutoDownload" /f
     }
+
+    # Disable Windows Update
+    reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 1 /f
 
     # Remove C:\Apps folder
     if (Test-Path -Path $Path) { Remove-Item -Path $Path -Recurse -Force -ErrorAction "SilentlyContinue" }

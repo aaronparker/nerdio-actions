@@ -38,6 +38,12 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
 }
 #endregion
 
+# $LanguageList = Get-WinUserLanguageList
+# $LanguageList.Add("es-es")
+# $LanguageList.Add("fr-fr")
+# $LanguageList.Add("zh-cn")
+# Set-WinUserLanguageList $LanguageList -force
+
 #region Set the locale
 try {
     Write-Information -MessageData ":: Set locale to: $Language" -InformationAction "Continue"
