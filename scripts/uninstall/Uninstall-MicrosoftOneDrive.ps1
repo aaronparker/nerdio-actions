@@ -43,9 +43,8 @@ catch {
 
 $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft OneDrive*" }
 foreach ($App in $Apps) {
-    $App
     $params = @{
-        FilePath     = [Regex]::Match($App.UninstallString, '^(.*.exe)\s').Captures.Groups[1].Value
+        FilePath     = [Regex]::Match($App.UninstallString, '^"(.*.exe)".*$').Captures.Groups[1].Value
         ArgumentList = "/uninstall /allusers /quiet /norestart"
         NoNewWindow  = $true
         PassThru     = $true
