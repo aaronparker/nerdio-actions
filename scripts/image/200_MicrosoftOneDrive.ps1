@@ -11,7 +11,7 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 try {
     # Run tasks/install apps
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "MicrosoftOneDrive" | `
+    $App = Get-EvergreenApp -Name "MicrosoftOneDrive" | `
         Where-Object { $_.Ring -eq "Production" -and $_.Type -eq "exe" -and $_.Architecture -eq "AMD64" } | `
         Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
@@ -23,7 +23,7 @@ catch {
 try {
     # Install
     Write-Information -MessageData ":: Install Microsoft OneDrive" -InformationAction "Continue"
-    reg add "HKLM\Software\Microsoft\OneDrive" /v "AllUsersInstall" /t REG_DWORD /d 1 /reg:64
+    reg add "HKLM\Software\Microsoft\OneDrive" /v "AllUsersInstall" /t REG_DWORD /d 1 /reg:64 /f
     $params = @{
         FilePath     = $OutFile.FullName
         ArgumentList = "/silent /allusers"

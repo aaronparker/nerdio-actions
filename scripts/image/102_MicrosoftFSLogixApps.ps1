@@ -53,7 +53,7 @@ try {
     # Use Secure variables in Nerdio Manager to pass variables
     if ($null -eq $SecureVars.FSLogixAgentVersion) {
         # Use Evergreen to find the latest version
-        $App = Invoke-EvergreenApp -Name "MicrosoftFSLogixApps" | Where-Object { $_.Channel -eq "Production" } | Select-Object -First 1
+        $App = Get-EvergreenApp -Name "MicrosoftFSLogixApps" | Where-Object { $_.Channel -eq "Production" } | Select-Object -First 1
     }
     else {
         # Use the JSON in this script to select a specific version

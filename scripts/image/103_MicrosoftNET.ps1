@@ -11,7 +11,7 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 try {
     # Download
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "Microsoft.NET" | `
+    $App = Get-EvergreenApp -Name "Microsoft.NET" | `
         Where-Object { $_.Installer -eq "windowsdesktop" -and $_.Architecture -eq "x64" -and $_.Channel -match "LTS|Current" }
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }

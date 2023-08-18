@@ -12,11 +12,11 @@ try {
     Import-Module -Name "Evergreen" -Force
 
     Write-Information -MessageData ":: Download Remote Desktop Analyzer" -InformationAction "Continue"
-    $App = Invoke-EvergreenApp -Name "RDAnalyzer" | Select-Object -First 1
+    $App = Get-EvergreenApp -Name "RDAnalyzer" | Select-Object -First 1
     Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -WarningAction "SilentlyContinue" | Out-Null
 
     Write-Information -MessageData ":: Download Connection Experience Indicator" -InformationAction "Continue"
-    $App = Invoke-EvergreenApp -Name "ConnectionExperienceIndicator" | Select-Object -First 1
+    $App = Get-EvergreenApp -Name "ConnectionExperienceIndicator" | Select-Object -First 1
     Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -WarningAction "SilentlyContinue" | Out-Null
 }
 catch {

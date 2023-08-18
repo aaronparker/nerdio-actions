@@ -17,7 +17,7 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 try {
     # Download Reader installer
     Import-Module -Name "Evergreen" -Force
-    $App = Invoke-EvergreenApp -Name "AdobeAcrobatReaderDC" | `
+    $App = Get-EvergreenApp -Name "AdobeAcrobatReaderDC" | `
         Where-Object { $_.Language -eq $Language -and $_.Architecture -eq $Architecture } | `
         Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
