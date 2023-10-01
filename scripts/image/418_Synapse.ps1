@@ -22,8 +22,8 @@ catch {
 try {
     # Install the agent
     $params = @{
-        FilePath     = $OutFile.FullName
-        ArgumentList = "/install /quiet /norestart /log `"$Env:ProgramData\Nerdio\Logs\Synapse.log`""
+        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
+        ArgumentList = "/package `"$OutFile.FullName`" /quiet /norestart /log `"$Env:ProgramData\Nerdio\Logs\Synapse.log`" ENABLE_UPDATE_NOTIFICATION=0 ISCHECKFORPRODUCTUPDATES=0"
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $true
