@@ -14,7 +14,7 @@ try {
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 try {
@@ -32,5 +32,5 @@ try {
     Pop-Location
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }

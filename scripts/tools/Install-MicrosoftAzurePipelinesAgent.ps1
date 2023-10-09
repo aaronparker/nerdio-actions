@@ -21,7 +21,7 @@ try {
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Env:Temp -WarningAction "SilentlyContinue"
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 try {

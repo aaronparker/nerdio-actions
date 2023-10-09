@@ -143,7 +143,7 @@ try {
     Out-File -FilePath $XmlFile -InputObject $OfficeXml -Encoding "utf8"
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 try {
@@ -153,7 +153,7 @@ try {
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 try {
@@ -173,7 +173,7 @@ try {
     Pop-Location
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 finally {
     Pop-Location

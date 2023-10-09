@@ -16,7 +16,7 @@ try {
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 Write-Information -MessageData ":: Install Microsoft .NET" -InformationAction "Continue"
@@ -35,7 +35,7 @@ foreach ($file in $OutFile) {
         Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
     }
     catch {
-        throw $_.Exception.Message
+        throw $_
     }
 }
 #endregion

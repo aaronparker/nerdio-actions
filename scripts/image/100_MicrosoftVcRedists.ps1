@@ -14,6 +14,6 @@ try {
     Get-VcList | Save-VcRedist -Path $Path | Install-VcRedist -Silent | Out-Null
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 #endregion

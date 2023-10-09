@@ -35,7 +35,7 @@ try {
     Pop-Location
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 finally {
     Pop-Location

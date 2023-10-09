@@ -33,7 +33,7 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
         Install-Language @params
     }
     catch {
-        throw $_.Exception.Message
+        throw $_
     }
 }
 #endregion
@@ -60,6 +60,6 @@ try {
     }
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 #endregion

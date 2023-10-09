@@ -45,7 +45,7 @@ Describe "Validate <App.Name>" -ForEach $Applications {
                     New-PSDrive @params | Out-Null
                 }
                 catch {
-                    throw $_.Exception.Message
+                    throw $_
                 }
 
                 $UninstallKeys = @(
@@ -67,14 +67,14 @@ Describe "Validate <App.Name>" -ForEach $Applications {
                             Sort-Object -Property "DisplayName", "Publisher"
                     }
                     catch {
-                        throw $_.Exception.Message
+                        throw $_
                     }
                 }
 
                 return $Apps
             }
             catch {
-                throw $_.Exception.Message
+                throw $_
             }
             finally {
                 Remove-PSDrive "HKU" -ErrorAction "SilentlyContinue" | Out-Null
@@ -142,7 +142,7 @@ AfterAll {
                 New-PSDrive @params | Out-Null
             }
             catch {
-                throw $_.Exception.Message
+                throw $_
             }
 
             $UninstallKeys = @(
@@ -164,14 +164,14 @@ AfterAll {
                         Sort-Object -Property "DisplayName", "Publisher"
                 }
                 catch {
-                    throw $_.Exception.Message
+                    throw $_
                 }
             }
 
             return $Apps
         }
         catch {
-            throw $_.Exception.Message
+            throw $_
         }
         finally {
             Remove-PSDrive "HKU" -ErrorAction "SilentlyContinue" | Out-Null

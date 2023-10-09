@@ -24,7 +24,7 @@ try {
     if (Test-Path -Path "$env:Temp") { Remove-Item -Path "$env:Temp" -Recurse -Force -ErrorAction "SilentlyContinue" }
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 # Remove logs older than 30 days

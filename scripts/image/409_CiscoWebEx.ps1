@@ -19,7 +19,7 @@ try {
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 try {
@@ -37,7 +37,7 @@ try {
     Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 Start-Sleep -Seconds 5
@@ -49,6 +49,6 @@ try {
     reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "CiscoSpark" /f | Out-Null
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 #endregion

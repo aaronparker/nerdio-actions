@@ -26,7 +26,7 @@ function Get-InstalledSoftware {
                 Sort-Object -Property "DisplayName", "Publisher"
         }
         catch {
-            throw $_.Exception.Message
+            throw $_
         }
     }
     return $Apps
@@ -45,7 +45,7 @@ try {
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 try {
@@ -74,7 +74,7 @@ try {
     }
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Teams Machine-Wide Installer" }
@@ -94,7 +94,7 @@ foreach ($App in $Apps) {
         $result.ExitCode
     }
     catch {
-        throw $_.Exception.Message
+        throw $_
     }
 }
 
@@ -116,7 +116,7 @@ try {
     Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 try {
@@ -131,7 +131,7 @@ try {
     }
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 # Delete the registry auto-start
