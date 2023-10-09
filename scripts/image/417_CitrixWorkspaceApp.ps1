@@ -22,7 +22,7 @@ try {
     $App = Get-EvergreenApp -Name "CitrixWorkspaceApp" | `
         Where-Object { $_.Stream -eq $Stream } | `
         Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path
 }
 catch {
     throw $_
@@ -46,11 +46,6 @@ catch {
     throw $_
 }
 
-try {
-    # Disable update tasks - assuming we're installing on a gold image or updates will be managed
-    Get-Service -Name "CWAUpdaterService" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
-}
-catch {
-    throw $_
-}
+# Disable update tasks - assuming we're installing on a gold image or updates will be managed
+Get-Service -Name "CWAUpdaterService" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
 #endregion
