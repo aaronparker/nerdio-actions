@@ -22,10 +22,10 @@ try {
     $App = Get-EvergreenApp -Name "CitrixWorkspaceApp" | `
         Where-Object { $_.Stream -eq $Stream } | `
         Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
 try {
@@ -43,14 +43,9 @@ try {
     Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
 
-try {
-    # Disable update tasks - assuming we're installing on a gold image or updates will be managed
-    Get-Service -Name "CWAUpdaterService" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
-}
-catch {
-    throw $_.Exception.Message
-}
+# Disable update tasks - assuming we're installing on a gold image or updates will be managed
+Get-Service -Name "CWAUpdaterService" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
 #endregion

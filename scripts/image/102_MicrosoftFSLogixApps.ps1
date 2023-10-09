@@ -86,7 +86,7 @@ foreach ($file in "FSLogixAppsSetup.exe", "FSLogixAppsRuleEditorSetup.exe") {
             Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
         }
         catch {
-            throw $_.Exception.Message
+            throw $_
         }
     }
 }

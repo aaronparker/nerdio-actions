@@ -13,5 +13,5 @@ try {
     Install-WindowsUpdate -AcceptAll -MicrosoftUpdate -IgnoreReboot -IgnoreRebootRequired | Select-Object -Property "Title", "Size"
 }
 catch {
-    throw $_.Exception.Message
+    throw $_
 }
