@@ -10,7 +10,7 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 
 try {
     Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "MicrosoftPowerToys" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
+    $App = Get-EvergreenApp -Name "MicrosoftPowerToys" | Where-Object { $_.Architecture -eq "x64" -and $_.InstallerType -eq "Default" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {

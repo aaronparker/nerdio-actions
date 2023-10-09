@@ -21,7 +21,7 @@ BeforeDiscovery {
     $SupportScripts = Get-ChildItem -Path $Path -Include "0*.ps1" -Recurse -Exclude "012_WindowsUpdate.ps1"
     $DependencyScripts = Get-ChildItem -Path $Path -Include "1*.ps1" -Recurse -Exclude "101_Avd-Agents.ps1"
     $MicrosoftAppsScripts = Get-ChildItem -Path $Path -Include "2*.ps1" -Recurse
-    $3rdPartyScripts = Get-ChildItem -Path $Path -Include "4*.ps1" -Recurse -Exclude "499_CrowdStrikeWindowsSensor.ps1"
+    $3rdPartyScripts = Get-ChildItem -Path $Path -Include "4*.ps1" -Recurse -Exclude "499_CrowdStrikeWindowsSensor.ps1", "418_Synapse.ps1"
     $CleanupScripts = Get-ChildItem -Path $Path -Include "9*.ps1" -Recurse
 
     $2ndRunScripts = Get-ChildItem -Path $Path -Include "201_MicrosoftTeams.ps1" -Recurse
