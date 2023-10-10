@@ -13,8 +13,8 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 
 try {
     $App = [PSCustomObject]@{
-        Version = "42.12.0.24485"
-        URI = "https://binaries.webex.com/vdi-hvd-aws-gold/20221208010500/Webex.msi"
+        Version = "43.4.0.25959"
+        URI = "https://binaries.webex.com/vdi-hvd-aws-gold/20230421075619/Webex.msi"
     }
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
