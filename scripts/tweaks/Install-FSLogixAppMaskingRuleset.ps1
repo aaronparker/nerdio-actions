@@ -10,20 +10,20 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 try {
     $params = @{
         Uri             = $SecureVars.AppMaskingRuleset
-        OutFile         = Join-Path -Path $Path -ChildPath $(Split-Path -Path $SecureVars.AppMaskingRuleset -Leaf)
+        OutFile         = "$Path\ruleset.zip"
         UseBasicParsing = $true
         ErrorAction     = "Stop"
     }
     Invoke-WebRequest @params
 
     $params = @{
-        Path            = $(Join-Path -Path $Path -ChildPath $(Split-Path -Path $SecureVars.AppMaskingRuleset -Leaf))
+        Path            = "$Path\ruleset.zip"
         DestinationPath = $Path
         Force           = $true
     }
     Expand-Archive @params
 
-    Remove-Item -Path $(Join-Path -Path $Path -ChildPath $(Split-Path -Path $SecureVars.AppMaskingRuleset -Leaf)) -Force -ErrorAction "SilentlyContinue"
+    Remove-Item -Path "$Path\ruleset.zip" -Force -ErrorAction "SilentlyContinue"
 }
 catch {
     throw $_
