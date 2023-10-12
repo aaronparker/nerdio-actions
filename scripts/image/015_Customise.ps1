@@ -9,10 +9,12 @@
 # Locale
 if ([System.String]::IsNullOrEmpty($SecureVars.OSLanguage)) {
     [System.String] $Language = "en-AU"
+    [System.String] $TimeZone = "AUS Eastern Standard Time"
 }
 else {
     $Json = $SecureVars.OSLanguage | ConvertFrom-Json -ErrorAction "Stop"
-    [System.String] $Language = $Json.$AzureRegionName
+    [System.String] $Language = $Json.$AzureRegionName.Language
+    [System.String] $TimeZone = $Json.$AzureRegionName.TimeZone
 }
 
 # AppX remove mode
@@ -35,7 +37,7 @@ try {
     Expand-Archive -Path $Installer.FullName -DestinationPath $Path -Force
     $InstallFile = Get-ChildItem -Path $Path -Recurse -Include "Install-Defaults.ps1"
     Push-Location -Path $InstallFile.Directory
-    & .\Install-Defaults.ps1 -Language $Language -AppxMode $AppxMode
+    & .\Install-Defaults.ps1 -Language $Language -TimeZone $TimeZone -AppxMode $AppxMode
     Pop-Location
 }
 catch {

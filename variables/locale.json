@@ -1,9 +1,30 @@
 {
-    "australiaeast": "en-AU",
-    "australiasoutheast": "en-AU",
-    "westus": "en-US",
-    "westus2": "en-US",
-    "eastus": "en-US",
-    "uksouth": "en-GB",
-    "ukwest": "en-GB"
+    "australiaeast": {
+        "Language": "en-AU",
+        "TimeZone": "AUS Eastern Standard Time"
+    },
+    "australiasoutheast": {
+        "Language": "en-AU",
+        "TimeZone": "AUS Eastern Standard Time"
+    },
+    "westus": {
+        "Language": "en-US",
+        "TimeZone": "Pacific Standard Time"
+    },
+    "westus2": {
+        "Language": "en-US",
+        "TimeZone": "Pacific Standard Time"
+    },
+    "eastus": {
+        "Language": "en-US",
+        "TimeZone": "Eastern Standard Time"
+    },
+    "uksouth": {
+        "Language": "en-GB",
+        "TimeZone": "GMT Standard Time"
+    },
+    "ukwest": {
+        "Language": "en-GB",
+        "TimeZone": "GMT Standard Time"
+    }
 }
