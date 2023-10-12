@@ -5,18 +5,22 @@
 [System.String] $Path = "$Env:SystemDrive\Apps\image-customise"
 
 #region Use Secure variables in Nerdio Manager to pass variables
-if ($null -eq $SecureVars.OSLanguage) {
+
+# Locale
+if ([System.String]::IsNullOrEmpty($SecureVars.OSLanguage)) {
     [System.String] $Language = "en-AU"
 }
 else {
-    [System.String] $Language = $SecureVars.OSLanguage
+    $Json = $SecureVars.OSLanguage | ConvertFrom-Json -ErrorAction "Stop"
+    [System.String] $Language = $Json.$AzureRegionName
 }
 
-if ($null -eq $SecureVars.AppxMode) {
-    $AppxMode = "Allow"
+# AppX remove mode
+if ([System.String]::IsNullOrEmpty($SecureVars.AppxMode)) {
+    [System.String] $AppxMode = "Block"
 }
 else {
-    $AppxMode = $SecureVars.AppxMode
+    [System.String] $AppxMode = $SecureVars.AppxMode
 }
 #endregion
 
