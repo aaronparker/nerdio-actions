@@ -5,6 +5,7 @@
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Teams"
 [System.String] $TeamsExe = "${env:ProgramFiles(x86)}\Microsoft\Teams\current\Teams.exe"
 
+
 #region Functions
 function Get-InstalledSoftware {
     [OutputType([System.Object[]])]
@@ -37,103 +38,146 @@ function Get-InstalledSoftware {
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
-    # Download Teams
-    Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "MicrosoftTeams" | `
-        Where-Object { $_.Architecture -eq "x64" -and $_.Ring -eq "General" -and $_.Type -eq "msi" } | Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-}
-catch {
-    throw $_
-}
 
-try {
-    # Uninstall the existing Teams
-    if (Test-Path -Path $TeamsExe) {
-        $File = Get-ChildItem -Path $TeamsExe
-        if ([System.Version]$File.VersionInfo.ProductVersion -le [System.Version]$App.Version) {
-            Write-Information -MessageData ":: Uninstall Microsoft Teams" -InformationAction "Continue"
-            $LogFile = "$Env:ProgramData\Nerdio\Logs\UninstallMicrosoftTeams$($File.VersionInfo.ProductVersion).log" -replace " ", ""
+if ([System.String]::IsNullOrEmpty($SecureVars.UseNewTeams)) {
+    try {
+        # Use the old Electron based Microsoft Teams
+        # Download Teams
+        Import-Module -Name "Evergreen" -Force
+        $App = Get-EvergreenApp -Name "MicrosoftTeams" | `
+            Where-Object { $_.Architecture -eq "x64" -and $_.Ring -eq "General" -and $_.Type -eq "msi" } | Select-Object -First 1
+        $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+    }
+    catch {
+        throw $_
+    }
+
+    try {
+        # Uninstall the existing Teams
+        if (Test-Path -Path $TeamsExe) {
+            $File = Get-ChildItem -Path $TeamsExe
+            if ([System.Version]$File.VersionInfo.ProductVersion -le [System.Version]$App.Version) {
+                Write-Information -MessageData ":: Uninstall Microsoft Teams" -InformationAction "Continue"
+                $LogFile = "$Env:ProgramData\Nerdio\Logs\UninstallMicrosoftTeams$($File.VersionInfo.ProductVersion).log" -replace " ", ""
+                $params = @{
+                    FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
+                    ArgumentList = "/x `"$($OutFile.FullName)`" /quiet /log $LogFile"
+                    NoNewWindow  = $true
+                    Wait         = $true
+                    PassThru     = $true
+                    ErrorAction  = "Continue"
+                }
+                $result = Start-Process @params
+                $result.ExitCode
+
+                $Folders = "${env:ProgramFiles(x86)}\Microsoft\Teams", `
+                    "${env:ProgramFiles(x86)}\Microsoft\TeamsMeetingAddin", `
+                    "${env:ProgramFiles(x86)}\Microsoft\TeamsPresenceAddin"
+                Remove-Item -Path $Folders -Recurse -Force -ErrorAction "Ignore"
+            }
+        }
+    }
+    catch {
+        throw $_
+    }
+
+    $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Teams Machine-Wide Installer" }
+    foreach ($App in $Apps) {
+        try {
+            Write-Information -MessageData ":: Uninstall Microsoft Teams Machine Wide Installer" -InformationAction "Continue"
+            $LogFile = "$Env:ProgramData\Nerdio\Logs\UninstallMicrosoftTeamsMachineWideInstaller$($App.Version).log" -replace " ", ""
             $params = @{
                 FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-                ArgumentList = "/x `"$($OutFile.FullName)`" /quiet /log $LogFile"
+                ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log $LogFile"
                 NoNewWindow  = $true
-                Wait         = $true
                 PassThru     = $true
+                Wait         = $true
                 ErrorAction  = "Continue"
             }
             $result = Start-Process @params
             $result.ExitCode
-
-            $Folders = "${env:ProgramFiles(x86)}\Microsoft\Teams", `
-                "${env:ProgramFiles(x86)}\Microsoft\TeamsMeetingAddin", `
-                "${env:ProgramFiles(x86)}\Microsoft\TeamsPresenceAddin"
-            Remove-Item -Path $Folders -Recurse -Force -ErrorAction "Ignore"
+        }
+        catch {
+            throw $_
         }
     }
-}
-catch {
-    throw $_
-}
 
-$Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Teams Machine-Wide Installer" }
-foreach ($App in $Apps) {
     try {
-        Write-Information -MessageData ":: Uninstall Microsoft Teams Machine Wide Installer" -InformationAction "Continue"
-        $LogFile = "$Env:ProgramData\Nerdio\Logs\UninstallMicrosoftTeamsMachineWideInstaller$($App.Version).log" -replace " ", ""
+        # Install Teams
+        Write-Information -MessageData ":: Install Microsoft Teams" -InformationAction "Continue"
+        New-Item -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Force -ErrorAction "SilentlyContinue" | Out-Null
+        New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Name "IsWVDEnvironment" -PropertyType "DWORD" -Value 1 -Force -ErrorAction "SilentlyContinue" | Out-Null
+        $LogFile = $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftTeams$($App.Version).log" -replace " ", ""
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-            ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log $LogFile"
+            ArgumentList = "/package $($OutFile.FullName) OPTIONS=`"noAutoStart=true`" ALLUSER=1 ALLUSERS=1 /quiet /log $LogFile"
             NoNewWindow  = $true
-            PassThru     = $true
             Wait         = $true
+            PassThru     = $true
             ErrorAction  = "Continue"
         }
         $result = Start-Process @params
-        $result.ExitCode
+        Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+    }
+    catch {
+        throw $_
+    }
+
+    try {
+        # Teams JSON files; Read the file and convert from JSON
+        $ConfigFiles = @((Join-Path -Path "${env:ProgramFiles(x86)}\Teams Installer" -ChildPath "setup.json"), (Join-Path -Path "${env:ProgramFiles(x86)}\Microsoft\Teams" -ChildPath "setup.json"))
+        foreach ($Path in $ConfigFiles) {
+            if (Test-Path -Path $Path) {
+                $Json = Get-Content -Path $Path | ConvertFrom-Json
+                $Json.noAutoStart = $true
+                $Json | ConvertTo-Json | Set-Content -Path $Path -Force
+            }
+        }
+    }
+    catch {
+        throw $_
+    }
+
+    # Delete the registry auto-start
+    reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" /v "Teams" /f | Out-Null
+}
+else {
+
+    # New Microsoft Teams client
+    "https://learn.microsoft.com/en-us/microsoftteams/new-teams-bulk-install-client"
+    "https://go.microsoft.com/fwlink/?linkid=2243204&clcid=0x409"
+    "https://statics.teams.cdn.office.net/production-teamsprovision/lkg/teamsbootstrapper.exe"
+
+    try {
+        $App = [PSCustomObject] @{
+            Version = "2.0"
+            URI     = "https://statics.teams.cdn.office.net/production-teamsprovision/lkg/teamsbootstrapper.exe"
+        }
+        $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+    }
+    catch {
+        throw $_
+    }
+
+    try {
+        # Install Teams
+        Write-Information -MessageData ":: Install Microsoft Teams" -InformationAction "Continue"
+        New-Item -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Force -ErrorAction "SilentlyContinue" | Out-Null
+        New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Name "IsWVDEnvironment" -PropertyType "DWORD" -Value 1 -Force -ErrorAction "SilentlyContinue" | Out-Null
+        $params = @{
+            FilePath     = $OutFile.FullName
+            ArgumentList = "--provision-admin"
+            NoNewWindow  = $true
+            Wait         = $true
+            PassThru     = $true
+            ErrorAction  = "Continue"
+        }
+        $result = Start-Process @params
+        Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
     }
     catch {
         throw $_
     }
 }
 
-try {
-    # Install Teams
-    Write-Information -MessageData ":: Install Microsoft Teams" -InformationAction "Continue"
-    New-Item -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Force -ErrorAction "SilentlyContinue" | Out-Null
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Name "IsWVDEnvironment" -PropertyType "DWORD" -Value 1 -Force -ErrorAction "SilentlyContinue" | Out-Null
-    $LogFile = $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftTeams$($App.Version).log" -replace " ", ""
-    $params = @{
-        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package $($OutFile.FullName) OPTIONS=`"noAutoStart=true`" ALLUSER=1 ALLUSERS=1 /quiet /log $LogFile"
-        NoNewWindow  = $true
-        Wait         = $true
-        PassThru     = $true
-        ErrorAction  = "Continue"
-    }
-    $result = Start-Process @params
-    Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
-}
-catch {
-    throw $_
-}
-
-try {
-    # Teams JSON files; Read the file and convert from JSON
-    $ConfigFiles = @((Join-Path -Path "${env:ProgramFiles(x86)}\Teams Installer" -ChildPath "setup.json"), (Join-Path -Path "${env:ProgramFiles(x86)}\Microsoft\Teams" -ChildPath "setup.json"))
-    foreach ($Path in $ConfigFiles) {
-        if (Test-Path -Path $Path) {
-            $Json = Get-Content -Path $Path | ConvertFrom-Json
-            $Json.noAutoStart = $true
-            $Json | ConvertTo-Json | Set-Content -Path $Path -Force
-        }
-    }
-}
-catch {
-    throw $_
-}
-
-# Delete the registry auto-start
-reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" /v "Teams" /f | Out-Null
 #endregion
