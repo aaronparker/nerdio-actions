@@ -55,7 +55,7 @@ try {
     Set-Culture -CultureInfo $Language
     Set-WinSystemLocale -SystemLocale $Language
     Set-WinUILanguageOverride -Language $Language
-    Set-WinUserLanguageList -LanguageList $Language.Name -Force
+    Set-WinUserLanguageList -LanguageList $Language -Force
     $RegionInfo = New-Object -TypeName "System.Globalization.RegionInfo" -ArgumentList $Language
     Set-WinHomeLocation -GeoId $RegionInfo.GeoId
     if (Get-Command -Name "Set-SystemPreferredUILanguage" -ErrorAction "SilentlyContinue") {
