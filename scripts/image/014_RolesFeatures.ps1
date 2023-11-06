@@ -30,6 +30,9 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             }
             Write-Information -MessageData ":: Install Windows features" -InformationAction "Continue"
             Install-WindowsFeature @params
+
+            # Remove Azure Arc Setup from running at sign-in
+            reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "AzureArcSetup" /f | Out-Null
         }
         catch {
             $_.Exception.Message

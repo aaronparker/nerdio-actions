@@ -45,6 +45,12 @@ reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileExplor
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileExplorerPDFPreview" /d 0 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityFileLocksmith" /d 0 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityVideoConferenceMute" /d 0 /t "REG_DWORD" /f | Out-Null
+reg add "HKLM\Software\Policies\PowerToys" /v "AllowExperimentation" /d 0 /t "REG_DWORD" /f | Out-Null
+reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityEnvironmentVariables" /d 0 /t "REG_DWORD" /f | Out-Null
+reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityMouseWithoutBorders" /d 0 /t "REG_DWORD" /f | Out-Null
+reg add "HKLM\Software\Policies\PowerToys" /v "PerUserInstallationDisabled" /d 1 /t "REG_DWORD" /f | Out-Null
+reg add "HKLM\Software\Policies\PowerToys" /v "SuspendNewUpdateAvailableToast" /d 1 /t "REG_DWORD" /f | Out-Null
+reg add "HKLM\Software\Policies\PowerToys" /v "AutomaticUpdateDownloadDisabled" /d 1 /t "REG_DWORD" /f | Out-Null
 
 Start-Sleep -Seconds 5
 Get-Process -ErrorAction "SilentlyContinue" | `
