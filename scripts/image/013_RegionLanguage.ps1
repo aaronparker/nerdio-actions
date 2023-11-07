@@ -51,7 +51,9 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
 try {
     Write-Information -MessageData ":: Set locale to: $Language" -InformationAction "Continue"
     $RegionInfo = New-Object -TypeName "System.Globalization.RegionInfo" -ArgumentList $Language
+
     Import-Module -Name "International"
+    Set-TimeZone -Name $TimeZone
     Set-Culture -CultureInfo $Language
     Set-WinSystemLocale -SystemLocale $Language
     Set-WinUILanguageOverride -Language $Language
