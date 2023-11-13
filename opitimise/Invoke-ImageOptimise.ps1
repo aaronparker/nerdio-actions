@@ -41,8 +41,8 @@ foreach ($module in "Evergreen", "PSWindowsUpdate") {
 }
 
 # Install updates
-Import-Module -Name "PSWindowsUpdate"
-Install-WindowsUpdate -AcceptAll -MicrosoftUpdate -IgnoreReboot -IgnoreRebootRequired | Select-Object -Property "Title", "Size"
+# Import-Module -Name "PSWindowsUpdate"
+# Install-WindowsUpdate -AcceptAll -MicrosoftUpdate -IgnoreReboot -IgnoreRebootRequired | Select-Object -Property "Title", "Size"
 
 # Regional settings
 [System.String] $Language = "en-AU"
