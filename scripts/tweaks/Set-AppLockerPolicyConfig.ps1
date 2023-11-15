@@ -6,29 +6,31 @@
 [System.String] $Path = "$Env:SystemDrive\Apps\AppLocker"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
-    #Download the AppLocker configuration
-    $OutFile = "$Path\AppLocker$(Get-Date -Format "yyyyMMdd").xml"
-    $params = @{
-        URI             = $SecureVars.AppLockerPolicyFile
-        OutFile         = $OutFile
-        UseBasicParsing = $true
-        ErrorAction     = "Stop"
-    }
-    Invoke-WebRequest @params
+if ([System.String]::IsNullOrEmpty($SecureVars.AppLockerPolicyFile)) {
+    try {
+        #Download the AppLocker configuration
+        $OutFile = "$Path\AppLocker$(Get-Date -Format "yyyyMMdd").xml"
+        $params = @{
+            URI             = $SecureVars.AppLockerPolicyFile
+            OutFile         = $OutFile
+            UseBasicParsing = $true
+            ErrorAction     = "Stop"
+        }
+        Invoke-WebRequest @params
 
-    # Start the Application Identity service
-    Start-Service -Name "AppIDSvc" -ErrorAction "SilentlyContinue"
-    sc.exe config appidsvc start= auto
+        # Start the Application Identity service
+        Start-Service -Name "AppIDSvc" -ErrorAction "SilentlyContinue"
+        sc.exe config appidsvc start= auto
 
-    # Import the AppLocker configuration
-    $params = @{
-        XmlPolicy   = $OutFile
-        ErrorAction = "Stop"
+        # Import the AppLocker configuration
+        $params = @{
+            XmlPolicy   = $OutFile
+            ErrorAction = "Stop"
+        }
+        Set-AppLockerPolicy @params
     }
-    Set-AppLockerPolicy @params
-}
-catch {
-    throw $_
+    catch {
+        throw $_
+    }
 }
 #endregion
