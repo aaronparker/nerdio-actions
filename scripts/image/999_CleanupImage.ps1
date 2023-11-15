@@ -13,7 +13,7 @@ if (Test-Path -Path "$Env:SystemDrive\Apps") { Remove-Item -Path "$Env:SystemDri
 if (Test-Path -Path "$Env:SystemDrive\DeployAgent") { Remove-Item -Path "$Env:SystemDrive\DeployAgent" -Recurse -Force -ErrorAction "SilentlyContinue" }
 
 # Remove items from the Temp directory (note that scripts run as SYSTEM)
-Get-ChildItem -Path "$Env:Temp" -Include "*.*" -Recurse | `
+Get-ChildItem -Path "$Env:Temp" -Include "*.*" -Recurse -ErrorAction "SilentlyContinue" | `
     Remove-Item -Force -ErrorAction "SilentlyContinue"
 
 # Remove logs older than 30 days
