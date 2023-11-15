@@ -7,6 +7,9 @@
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 if ([System.String]::IsNullOrEmpty($SecureVars.AppLockerPolicyFile)) {
+    Write-Host "AppLocker configuration file URL not set."
+}
+else {
     try {
         #Download the AppLocker configuration
         $OutFile = "$Path\AppLocker$(Get-Date -Format "yyyyMMdd").xml"
