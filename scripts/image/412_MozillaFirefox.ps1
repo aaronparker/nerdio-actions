@@ -4,12 +4,26 @@
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Mozilla\Firefox"
 
-#region Use Secure variables in Nerdio Manager to pass a language
-if ($null -eq $SecureVars.FirefoxLanguage) {
+#region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
+if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
     [System.String] $Language = "en-US"
+    [System.String] $Channel = "LATEST_FIREFOX_VERSION"
 }
 else {
-    [System.String] $Language = $SecureVars.FirefoxLanguage
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $params = @{
+            Uri             = $SecureVars.VariablesList
+            UseBasicParsing = $true
+            ErrorAction     = "Stop"
+        }
+        $Variables = Invoke-RestMethod @params
+        [System.String] $Language = $Variables.$AzureRegionName.FirefoxLanguage
+        [System.String] $Channel = $Variables.$AzureRegionName.FirefoxChannel
+    }
+    catch {
+        throw $_
+    }
 }
 #endregion
 
@@ -20,7 +34,7 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 try {
     Import-Module -Name "Evergreen" -Force
     $App = Get-EvergreenApp -Name "MozillaFirefox" | `
-        Where-Object { $_.Channel -eq "LATEST_FIREFOX_VERSION" -and $_.Architecture -eq "x64" -and $_.Language -eq $Language -and $_.Type -eq "msi" } | `
+        Where-Object { $_.Channel -eq $Channel -and $_.Architecture -eq "x64" -and $_.Language -eq $Language -and $_.Type -eq "msi" } | `
         Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }

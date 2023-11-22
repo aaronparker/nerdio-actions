@@ -8,6 +8,26 @@
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
+#region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
+if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
+}
+else {
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $params = @{
+            Uri             = $SecureVars.VariablesList
+            UseBasicParsing = $true
+            ErrorAction     = "Stop"
+        }
+        $Variables = Invoke-RestMethod @params
+        [System.String] $GreenshotDefaultsIni = $Variables.$AzureRegionName.GreenshotDefaultsIni
+    }
+    catch {
+        throw $_
+    }
+}
+#endregion
+
 try {
     Import-Module -Name "Evergreen" -Force
     $App = Get-EvergreenApp -Name "Greenshot" | Where-Object { $_.Architecture -eq "x86" -and $_.Uri -match "Greenshot-INSTALLER-*" } | Select-Object -First 1
@@ -35,13 +55,34 @@ catch {
     throw $_
 }
 
-Start-Sleep -Seconds 5
-Get-Process -ErrorAction "SilentlyContinue" | `
-    Where-Object { $_.Path -like "$Env:ProgramFiles\Greenshot\*" } | `
-    Stop-Process -Force -ErrorAction "SilentlyContinue"
-$Shortcuts = @("$Env:Public\Desktop\Greenshot.lnk",
-    "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\License.txt.lnk",
-    "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\Readme.txt.lnk",
-    "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\Uninstall Greenshot.lnk")
-Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
+try {
+    # Close Greenshot
+    Start-Sleep -Seconds 10
+    Get-Process -ErrorAction "SilentlyContinue" | `
+        Where-Object { $_.Path -like "$Env:ProgramFiles\Greenshot\*" } | `
+        Stop-Process -Force -ErrorAction "SilentlyContinue"
+
+    # Download the default settings
+    if ([System.String]::IsNullOrEmpty($GreenshotDefaultsIni)) {
+    }
+    else {
+        $params = @{
+            Uri             = $GreenshotDefaultsIni
+            OutFile         = "$Env:ProgramFiles\Greenshot\greenshot-defaults.ini"
+            UseBasicParsing = $true
+            ErrorAction     = "SilentlyContinue"
+        }
+        Invoke-WebRequest @params
+    }
+
+    # Remove unneeded shortcuts
+    $Shortcuts = @("$Env:Public\Desktop\Greenshot.lnk",
+        "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\License.txt.lnk",
+        "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\Readme.txt.lnk",
+        "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\Uninstall Greenshot.lnk")
+    Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
+}
+catch {
+    throw $_
+}
 #endregion

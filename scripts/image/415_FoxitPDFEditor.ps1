@@ -4,12 +4,24 @@
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Foxit\PDFEditor"
 
-#region Use Secure variables in Nerdio Manager to pass a language
-if ($null -eq $SecureVars.FoxitLanguage) {
+#region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
+if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
     [System.String] $Language = "English"
 }
 else {
-    [System.String] $Language = $SecureVars.FoxitLanguage
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $params = @{
+            Uri             = $SecureVars.VariablesList
+            UseBasicParsing = $true
+            ErrorAction     = "Stop"
+        }
+        $Variables = Invoke-RestMethod @params
+        [System.String] $Language = $Variables.$AzureRegionName.FoxitLanguage
+    }
+    catch {
+        throw $_
+    }
 }
 #endregion
 

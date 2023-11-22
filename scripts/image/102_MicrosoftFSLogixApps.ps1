@@ -50,14 +50,34 @@ try {
     # Download and unpack
     Import-Module -Name "Evergreen" -Force
 
+    #region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
+    if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
+    }
+    else {
+        try {
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            $params = @{
+                Uri             = $SecureVars.VariablesList
+                UseBasicParsing = $true
+                ErrorAction     = "Stop"
+            }
+            $Variables = Invoke-RestMethod @params
+            [System.String] $FSLogixAgentVersion = $Variables.$AzureRegionName.FSLogixAgentVersion
+        }
+        catch {
+            throw $_
+        }
+    }
+    #endregion
+
     # Use Secure variables in Nerdio Manager to pass variables
-    if ($null -eq $SecureVars.FSLogixAgentVersion) {
+    if ($null -eq $FSLogixAgentVersion) {
         # Use Evergreen to find the latest version
         $App = Get-EvergreenApp -Name "MicrosoftFSLogixApps" | Where-Object { $_.Channel -eq "Production" } | Select-Object -First 1
     }
     else {
         # Use the JSON in this script to select a specific version
-        $App = $Versions | ConvertFrom-Json | Where-Object { $_.Version -eq $SecureVars.FSLogixAgentVersion }
+        $App = $Versions | ConvertFrom-Json | Where-Object { $_.Version -eq $FSLogixAgentVersion }
     }
 
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"

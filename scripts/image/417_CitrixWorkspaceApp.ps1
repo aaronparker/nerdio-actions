@@ -4,12 +4,24 @@
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Citrix\Workspace"
 
-#region Use Secure variables in Nerdio Manager to pass a language
-if ($null -eq $SecureVars.CtxWorkspaceStream) {
+#region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
+if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
     [System.String] $Stream = "Current"
 }
 else {
-    [System.String] $Stream = $SecureVars.CtxWorkspaceStream
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $params = @{
+            Uri             = $SecureVars.VariablesList
+            UseBasicParsing = $true
+            ErrorAction     = "Stop"
+        }
+        $Variables = Invoke-RestMethod @params
+        [System.String] $Stream = $Variables.$AzureRegionName.CtxWorkspaceStream
+    }
+    catch {
+        throw $_
+    }
 }
 #endregion
 
