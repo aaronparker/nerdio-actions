@@ -1,0 +1,50 @@
+<Configuration ID="68523f69-0702-4110-9751-6aee45124635">
+  <Info Description="Microsoft 365 Apps for enterprise 64-bit including Microsoft Word, Excel, PowerPoint, Outlook, OneNote, OneDrive, Teams, Visio and Project. Configured with shared computer licensing and hardware acceleration configured for virtual desktop environments." />
+  <Add OfficeClientEdition="64" Channel="Current" MigrateArch="TRUE">
+    <Product ID="O365ProPlusRetail">
+      <Language ID="MatchOS" />
+      <Language ID="MatchPreviousMSI" />
+      <ExcludeApp ID="Access" />
+      <ExcludeApp ID="Groove" />
+      <ExcludeApp ID="OneDrive" />
+      <ExcludeApp ID="Publisher" />
+      <ExcludeApp ID="Lync" />
+      <ExcludeApp ID="Teams" />
+      <ExcludeApp ID="Bing" />
+      <ExcludeApp ID="Outlook" />
+      <ExcludeApp ID="OneNote" />
+      <ExcludeApp ID="PowerPoint" />
+      <ExcludeApp ID="Excel" />
+    </Product>
+  </Add>
+  <Property Name="SharedComputerLicensing" Value="1" />
+  <Property Name="FORCEAPPSHUTDOWN" Value="FALSE" />
+  <Property Name="DeviceBasedLicensing" Value="0" />
+  <Property Name="SCLCacheOverride" Value="0" />
+  <Property Name="TenantId" Value="671563ba-62bf-48be-9120-17075aaaa1cc" />
+  <Updates Enabled="FALSE" />
+  <RemoveMSI />
+  <AppSettings>
+    <Setup Name="Company" Value="Insentra" />
+    <User Key="software\microsoft\office\16.0\common\toolbars" Name="customuiroaming" Value="1" Type="REG_DWORD" App="office16" Id="L_AllowRoamingQuickAccessToolBarRibbonCustomizations" />
+    <User Key="software\microsoft\office\16.0\common\general" Name="shownfirstrunoptin" Value="1" Type="REG_DWORD" App="office16" Id="L_DisableOptinWizard" />
+    <User Key="software\microsoft\office\16.0\common\languageresources" Name="installlanguage" Value="3081" Type="REG_SZ" App="office16" Id="L_PrimaryEditingLanguage" />
+    <User Key="software\microsoft\office\16.0\common\languageresources" Name="preferrededitinglanguage" Value="en-AU" Type="REG_SZ" App="office16" Id="L_PrimaryEditingLanguage" />
+    <User Key="software\microsoft\office\16.0\common\fileio" Name="disablelongtermcaching" Value="0" Type="REG_DWORD" App="office16" Id="L_DeleteFilesFromOfficeDocumentCache" />
+    <User Key="software\microsoft\office\16.0\common\general" Name="disablebackgrounds" Value="0" Type="REG_DWORD" App="office16" Id="L_DisableBackgrounds" />
+    <User Key="software\microsoft\office\16.0\firstrun" Name="disablemovie" Value="1" Type="REG_DWORD" App="office16" Id="L_DisableMovie" />
+    <User Key="software\microsoft\office\16.0\firstrun" Name="bootedrtm" Value="1" Type="REG_DWORD" App="office16" Id="L_DisableOfficeFirstrun" />
+    <User Key="software\microsoft\office\16.0\common" Name="default ui theme" Value="0" Type="REG_DWORD" App="office16" Id="L_DefaultUIThemeUser" />
+    <User Key="software\microsoft\office\16.0\excel\options" Name="defaultformat" Value="51" Type="REG_DWORD" App="excel16" Id="L_SaveExcelfilesas" />
+    <User Key="software\microsoft\office\16.0\onenote\options\other" Name="runsystemtrayapp" Value="0" Type="REG_DWORD" App="onent16" Id="L_AddOneNoteicontonotificationarea" />
+    <User Key="software\microsoft\office\16.0\outlook\preferences" Name="disablemanualarchive" Value="1" Type="REG_DWORD" App="outlk16" Id="L_DisableFileArchive" />
+    <User Key="software\microsoft\office\16.0\outlook\cached mode" Name="syncwindowsetting" Value="1" Type="REG_DWORD" App="outlk16" Id="L_CachedExchangeModeSyncSlider" />
+    <User Key="software\microsoft\office\16.0\outlook\cached mode" Name="syncwindowsettingdays" Value="0" Type="REG_DWORD" App="outlk16" Id="L_CachedExchangeModeSyncSlider" />
+    <User Key="software\microsoft\office\16.0\outlook\autodiscover" Name="zeroconfigexchange" Value="1" Type="REG_DWORD" App="outlk16" Id="L_AutomaticallyConfigureProfileBasedOnActive" />
+    <User Key="software\microsoft\office\16.0\outlook\options\rss" Name="disable" Value="1" Type="REG_DWORD" App="outlk16" Id="L_TurnoffRSSfeature" />
+    <User Key="software\microsoft\office\16.0\outlook\setup" Name="disableroamingsettings" Value="0" Type="REG_DWORD" App="outlk16" Id="L_DisableRoamingSettings" />
+    <User Key="software\microsoft\office\16.0\powerpoint\options" Name="defaultformat" Value="27" Type="REG_DWORD" App="ppt16" Id="L_SavePowerPointfilesas" />
+    <User Key="software\microsoft\office\16.0\word\options" Name="defaultformat" Value="" Type="REG_SZ" App="word16" Id="L_SaveWordfilesas" />
+  </AppSettings>
+  <Display Level="None" AcceptEULA="TRUE" />
+</Configuration>
