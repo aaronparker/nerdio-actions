@@ -228,6 +228,21 @@
         ]
     },
     {
+        "Name": "CitrixWorkspaceApp",
+        "Filter": "Get-EvergreenApp -Name \"CitrixWorkspaceApp\" | Where-Object { $_.Stream -eq \"Current\" } | Select-Object -First 1",
+        "Installed": "Citrix Workspace*",
+        "FilesExist": [
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\SelfServicePlugin\\SelfService.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\SelfServicePlugin\\SelfServicePlugin.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\wfica32.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\wfcrun32.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": [
+            "CWAUpdaterService"
+        ]
+    },
+    {
         "Name": "ConnectionExperienceIndicator",
         "Filter": "Get-EvergreenApp -Name ConnectionExperienceIndicator",
         "Installed": "",
