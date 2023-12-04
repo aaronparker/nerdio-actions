@@ -41,7 +41,7 @@ catch {
 try {
     # Post install configuration
     $prefs = @{
-        "homepage"               = "https://www.office.com"
+        "homepage"               = "https://www.microsoft365.com"
         "homepage_is_newtabpage" = $false
         "browser"                = @{
             "show_home_button" = $true

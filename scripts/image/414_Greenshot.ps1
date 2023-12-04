@@ -8,29 +8,9 @@
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-#region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
-if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
-}
-else {
-    try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $params = @{
-            Uri             = $SecureVars.VariablesList
-            UseBasicParsing = $true
-            ErrorAction     = "Stop"
-        }
-        $Variables = Invoke-RestMethod @params
-        [System.String] $GreenshotDefaultsIni = $Variables.$AzureRegionName.GreenshotDefaultsIni
-    }
-    catch {
-        throw $_
-    }
-}
-#endregion
-
 try {
     Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "Greenshot" | Where-Object { $_.Architecture -eq "x86" -and $_.Uri -match "Greenshot-INSTALLER-*" } | Select-Object -First 1
+    $App = Get-EvergreenApp -Name "Greenshot" | Where-Object { $_.Type -eq "exe" -and $_.InstallerType -eq "Default" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
 catch {
@@ -63,17 +43,13 @@ try {
         Stop-Process -Force -ErrorAction "SilentlyContinue"
 
     # Download the default settings
-    if ([System.String]::IsNullOrEmpty($GreenshotDefaultsIni)) {
+    $params = @{
+        URI             = $SecureVars.GreenshotDefaultsIni
+        OutFile         = "$Env:ProgramFiles\Greenshot\greenshot-defaults.ini"
+        UseBasicParsing = $true
+        ErrorAction     = "SilentlyContinue"
     }
-    else {
-        $params = @{
-            Uri             = $GreenshotDefaultsIni
-            OutFile         = "$Env:ProgramFiles\Greenshot\greenshot-defaults.ini"
-            UseBasicParsing = $true
-            ErrorAction     = "SilentlyContinue"
-        }
-        Invoke-WebRequest @params
-    }
+    Invoke-WebRequest @params
 
     # Remove unneeded shortcuts
     $Shortcuts = @("$Env:Public\Desktop\Greenshot.lnk",
