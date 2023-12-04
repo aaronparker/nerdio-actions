@@ -19,11 +19,12 @@ BeforeDiscovery {
 
     # Get the scripts to test
     $SupportScripts = Get-ChildItem -Path $Path -Include "0*.ps1" -Recurse -Exclude "012_WindowsUpdate.ps1"
-    $DependencyScripts = Get-ChildItem -Path $Path -Include "1*.ps1" -Recurse -Exclude "101_Avd-Agents.ps1"
+    $DependencyScripts = Get-ChildItem -Path $Path -Include "1*.ps1" -Recurse
     $MicrosoftAppsScripts = Get-ChildItem -Path $Path -Include "2*.ps1" -Recurse
     $3rdPartyScripts = Get-ChildItem -Path $Path -Include "4*.ps1" -Recurse
     $CleanupScripts = Get-ChildItem -Path $Path -Include "9*.ps1" -Recurse
 
+    # Get scripts to run a 2nd time
     $2ndRunScripts = Get-ChildItem -Path $Path -Include "201_MicrosoftTeams.ps1" -Recurse
 }
 
