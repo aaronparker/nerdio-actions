@@ -33,8 +33,8 @@ jobs:
         if: always()
         working-directory: "${{ github.workspace }}"
         run: |
-          $AzureRegionName = ${{ secrets.AZUREREGIONNAME }}
-          $SecureVars = ${{ secrets.SECUREVARS }} | ConvertFrom-Json
+          $AzureRegionName = "${{ secrets.AZUREREGIONNAME }}"
+          $SecureVars = @{ VariablesList = "${{ secrets.VARIABLESLIST }}" }
           Import-Module -Name "Pester" -Force -ErrorAction "Stop"
           $Config = New-PesterConfiguration
           $Config.Run.Path = "$Env:GITHUB_WORKSPACE\tests\scripts"
