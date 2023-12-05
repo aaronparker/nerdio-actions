@@ -5,9 +5,7 @@
         "Installed": "Microsoft FSLogix Apps",
         "FilesExist": [
             "C:\\Program Files\\FSLogix\\Apps\\frx.exe",
-            "C:\\Program Files\\FSLogix\\Apps\\ConfigurationTool.exe",
-            "C:\\Program Files\\FSLogix\\Apps\\frxcontext.exe",
-            "C:\\Program Files\\FSLogix\\Apps\\frxshell.exe"
+            "C:\\Program Files\\FSLogix\\Apps\\frxcontext.exe"
         ],
         "ShortcutsNotExist": [
             "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\FSLogix\\FSLogix Apps Online Help.lnk"
@@ -100,7 +98,7 @@
         "Filter": "Get-EvergreenApp -Name \"Microsoft365Apps\" | Where-Object { $_.Channel -eq \"MonthlyEnterprise\" } | Select-Object -First 1",
         "Installed": "Microsoft 365 Apps for enterprise",
         "FilesExist": [
-            "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
         ],
         "ShortcutsNotExist": [],
         "ServicesDisabled": []

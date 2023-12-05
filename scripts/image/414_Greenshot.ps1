@@ -43,8 +43,15 @@ try {
         Stop-Process -Force -ErrorAction "SilentlyContinue"
 
     # Download the default settings
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $params = @{
-        URI             = $SecureVars.GreenshotDefaultsIni
+        Uri             = $SecureVars.VariablesList
+        UseBasicParsing = $true
+        ErrorAction     = "Stop"
+    }
+    $Variables = Invoke-RestMethod @params
+    $params = @{
+        URI             = $Variables.GreenshotDefaultsIni
         OutFile         = "$Env:ProgramFiles\Greenshot\greenshot-defaults.ini"
         UseBasicParsing = $true
         ErrorAction     = "SilentlyContinue"

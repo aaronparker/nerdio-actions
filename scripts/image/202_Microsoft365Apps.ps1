@@ -93,9 +93,9 @@ else {
             ErrorAction     = "Stop"
         }
         $Variables = Invoke-RestMethod @params
-        [System.String] $Channel = $Variables.$AzureRegionName.M365Channel
+        [System.String] $Channel = $Variables.$AzureRegionName.Microsoft365AppsChannel
         $params = @{
-            Uri             = $Variables.$AzureRegionName.M365AppsConfig
+            Uri             = $Variables.$AzureRegionName.Microsoft365AppsConfig
             ContentType     = "text/xml"
             UseBasicParsing = $true
             ErrorAction     = "Stop"

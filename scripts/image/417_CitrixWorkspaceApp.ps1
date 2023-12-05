@@ -17,7 +17,7 @@ else {
             ErrorAction     = "Stop"
         }
         $Variables = Invoke-RestMethod @params
-        [System.String] $Stream = $Variables.$AzureRegionName.CtxWorkspaceStream
+        [System.String] $Stream = $Variables.$AzureRegionName.CitrixWorkspaceStream
     }
     catch {
         throw $_
