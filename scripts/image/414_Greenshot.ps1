@@ -51,7 +51,7 @@ try {
     }
     $Variables = Invoke-RestMethod @params
     $params = @{
-        URI             = $Variables.GreenshotDefaultsIni
+        Uri             = $Variables.$AzureRegionName.GreenshotDefaultsIni
         OutFile         = "$Env:ProgramFiles\Greenshot\greenshot-defaults.ini"
         UseBasicParsing = $true
         ErrorAction     = "SilentlyContinue"

@@ -15,6 +15,7 @@ try {
         URI     = "https://downloads.1password.com/win/1PasswordSetup-latest.msi"
     }
     Import-Module -Name "Evergreen" -Force
+    #$App = Get-EvergreenApp -Name "1Password" | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "Stop"
 }
 catch {

@@ -35,6 +35,15 @@ jobs:
         run: |
           $AzureRegionName = "${{ secrets.AZUREREGIONNAME }}"
           $SecureVars = @{ VariablesList = "${{ secrets.VARIABLESLIST }}" }
+
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          $params = @{
+              Uri             = $SecureVars.VariablesList
+              UseBasicParsing = $true
+              ErrorAction     = "Stop"
+          }
+          Invoke-RestMethod @params
+
           Import-Module -Name "Pester" -Force -ErrorAction "Stop"
           $Config = New-PesterConfiguration
           $Config.Run.Path = "$Env:GITHUB_WORKSPACE\tests\scripts"
