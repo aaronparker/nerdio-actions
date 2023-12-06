@@ -40,27 +40,10 @@ Describe "Validate <App.Name>" -ForEach $Applications {
             param ()
 
             try {
-                try {
-                    $params = @{
-                        PSProvider  = "Registry"
-                        Name        = "HKU"
-                        Root        = "HKEY_USERS"
-                        ErrorAction = "SilentlyContinue"
-                    }
-                    New-PSDrive @params | Out-Null
-                }
-                catch {
-                    throw $_.Exception.Message
-                }
-
                 $UninstallKeys = @(
                     "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*",
                     "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
                 )
-                $UninstallKeys += Get-ChildItem -Path "HKU:" | Where-Object { $_.Name -match "S-\d-\d+-(\d+-){1,14}\d+$" } | ForEach-Object {
-                    "HKU:\$($_.PSChildName)\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
-                }
-
                 $Apps = @()
                 foreach ($Key in $UninstallKeys) {
                     try {
@@ -75,14 +58,10 @@ Describe "Validate <App.Name>" -ForEach $Applications {
                         throw $_.Exception.Message
                     }
                 }
-
                 return $Apps
             }
             catch {
                 throw $_.Exception.Message
-            }
-            finally {
-                Remove-PSDrive "HKU" -ErrorAction "SilentlyContinue" | Out-Null
             }
         }
         #endregion
@@ -141,27 +120,10 @@ AfterAll {
         param ()
 
         try {
-            try {
-                $params = @{
-                    PSProvider  = "Registry"
-                    Name        = "HKU"
-                    Root        = "HKEY_USERS"
-                    ErrorAction = "SilentlyContinue"
-                }
-                New-PSDrive @params | Out-Null
-            }
-            catch {
-                throw $_.Exception.Message
-            }
-
             $UninstallKeys = @(
                 "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*",
                 "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
             )
-            $UninstallKeys += Get-ChildItem -Path "HKU:" | Where-Object { $_.Name -match "S-\d-\d+-(\d+-){1,14}\d+$" } | ForEach-Object {
-                "HKU:\$($_.PSChildName)\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
-            }
-
             $Apps = @()
             foreach ($Key in $UninstallKeys) {
                 try {
@@ -176,14 +138,10 @@ AfterAll {
                     throw $_.Exception.Message
                 }
             }
-
             return $Apps
         }
         catch {
             throw $_.Exception.Message
-        }
-        finally {
-            Remove-PSDrive "HKU" -ErrorAction "SilentlyContinue" | Out-Null
         }
     }
     #endregion

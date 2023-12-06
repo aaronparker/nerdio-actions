@@ -11,25 +11,10 @@ function Get-InstalledSoftware {
     [CmdletBinding()]
     param ()
     try {
-        try {
-            $params = @{
-                PSProvider  = "Registry"
-                Name        = "HKU"
-                Root        = "HKEY_USERS"
-                ErrorAction = "SilentlyContinue"
-            }
-            New-PSDrive @params | Out-Null
-        }
-        catch {
-            throw $_
-        }
         $UninstallKeys = @(
             "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*",
             "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
         )
-        $UninstallKeys += Get-ChildItem -Path "HKU:" | Where-Object { $_.Name -match "S-\d-\d+-(\d+-){1,14}\d+$" } | ForEach-Object {
-            "HKU:\$($_.PSChildName)\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
-        }
         $Apps = @()
         foreach ($Key in $UninstallKeys) {
             try {
@@ -48,9 +33,6 @@ function Get-InstalledSoftware {
     }
     catch {
         throw $_
-    }
-    finally {
-        Remove-PSDrive -Name "HKU" -ErrorAction "Ignore" | Out-Null
     }
 }
 #endregion
