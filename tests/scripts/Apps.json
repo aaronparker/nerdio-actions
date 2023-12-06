@@ -2,26 +2,14 @@
     {
         "Name": "MicrosoftFSLogixApps",
         "Filter": "Get-EvergreenApp -Name \"MicrosoftFSLogixApps\" | Where-Object { $_.Channel -eq \"Production\" } | Select-Object -First 1",
-        "Installed": "Microsoft FSLogix Apps",
+        "Installed": "Microsoft FSLogix Apps*",
         "FilesExist": [
             "C:\\Program Files\\FSLogix\\Apps\\frx.exe",
-            "C:\\Program Files\\FSLogix\\Apps\\ConfigurationTool.exe",
-            "C:\\Program Files\\FSLogix\\Apps\\frxcontext.exe",
-            "C:\\Program Files\\FSLogix\\Apps\\frxshell.exe"
+            "C:\\Program Files\\FSLogix\\Apps\\frxcontext.exe"
         ],
         "ShortcutsNotExist": [
             "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\FSLogix\\FSLogix Apps Online Help.lnk"
         ],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "MicrosoftFSLogixAppsRuleEditor",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftFSLogixApps\" | Where-Object { $_.Channel -eq \"Production\" } | Select-Object -First 1",
-        "Installed": "Microsoft FSLogix Apps RuleEditor",
-        "FilesExist": [
-            "C:\\Program Files\\FSLogix\\Apps\\RuleEditor.exe"
-        ],
-        "ShortcutsNotExist": [],
         "ServicesDisabled": []
     },
     {
@@ -36,7 +24,7 @@
     },
     {
         "Name": "Microsoft.NET",
-        "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"Current\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"STS\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
         "Installed": "Microsoft Windows Desktop Runtime - 7",
         "FilesExist": [
             "C:\\Program Files\\dotnet\\dotnet.exe"
@@ -110,9 +98,7 @@
         "Filter": "Get-EvergreenApp -Name \"Microsoft365Apps\" | Where-Object { $_.Channel -eq \"MonthlyEnterprise\" } | Select-Object -First 1",
         "Installed": "Microsoft 365 Apps for enterprise",
         "FilesExist": [
-            "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
-            "C:\\Program Files\\Microsoft Office\\root\\Office16\\officeappguardwin32.exe",
-            "C:\\Program Files\\Microsoft Office\\root\\Office16\\protocolhandler.exe"
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
         ],
         "ShortcutsNotExist": [],
         "ServicesDisabled": []
@@ -306,21 +292,6 @@
         "ServicesDisabled": []
     },
     {
-        "Name": "CitrixWorkspaceApp",
-        "Filter": "Get-EvergreenApp -Name \"CitrixWorkspaceApp\" | Where-Object { $_.Stream -eq \"Current\" } | Select-Object -First 1",
-        "Installed": "Citrix Workspace*",
-        "FilesExist": [
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\SelfServicePlugin\\SelfService.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\SelfServicePlugin\\SelfServicePlugin.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\wfica32.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\wfcrun32.exe"
-        ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": [
-            "CWAUpdaterService"
-        ]
-    },
-    {
         "Name": "MicrosoftSsms",
         "Filter": "Get-EvergreenApp -Name \"MicrosoftSsms\" | Where-Object { $_.Language -eq \"English\" } | Select-Object -First 1",
         "Installed": "Microsoft SQL Server Management Studio*",
@@ -330,5 +301,82 @@
         "ShortcutsNotExist": [],
         "ServicesDisabled": [
         ]
+    },
+    {
+        "Name": "1Password",
+        "Filter": "Get-EvergreenApp -Name \"1Password\" | Select-Object -First 1",
+        "Installed": "1Password*",
+        "FilesExist": [
+            "C:\\Program Files\\1Password\\app\\8\\1Password.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "Microsoft Azure CLI",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftAzureCLI\" | Where-Object { $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "Microsoft Azure CLI*",
+        "FilesExist": [
+            "C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\CLI2\\python.exe",
+            "C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\CLI2\\pythonw.exe",
+            "C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\CLI2\\wbin\\az.cmd",
+            "C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\CLI2\\wbin\\azps.ps1"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "Microsoft Visual Studio Code",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftVisualStudioCode\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Platform -eq \"win32-x64\" -and $_.Channel -eq \"Stable\" } | Select-Object -First 1",
+        "Installed": "Microsoft Visual Studio Code*",
+        "FilesExist": [
+            "C:\\Program Files\\Microsoft VS Code\\Code.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "Microsoft PowerToys",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftPowerToys\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.InstallerType -eq \"Default\" }",
+        "Installed": "PowerToys*",
+        "FilesExist": [
+            "C:\\Program Files\\PowerToys\\PowerToys.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.FancyZones.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.FancyZonesEditor.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "Zoom Client for VDI",
+        "Filter": "",
+        "Installed": "Zoom Client for VDI*",
+        "FilesExist": [
+            "C:\\Program Files\\ZoomVDI\\bin\\Zoom.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\ZoomVDITool.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "Microsoft PowerShell",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftPowerShell\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Release -eq \"Stable\" } | Select-Object -First 1",
+        "Installed": "PowerShell*",
+        "FilesExist": [
+            "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
+    },
+    {
+        "Name": "1Password CLI",
+        "Filter": "",
+        "Installed": "1Password*",
+        "FilesExist": [
+            "C:\\Program Files\\1Password CLI\\op.exe",
+            "C:\\Program Files\\1Password CLI\\op.exe.sig"
+        ],
+        "ShortcutsNotExist": [],
+        "ServicesDisabled": []
     }
 ]

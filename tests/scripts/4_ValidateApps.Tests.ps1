@@ -50,7 +50,7 @@ Describe "Validate <App.Name>" -ForEach $Applications {
                     New-PSDrive @params | Out-Null
                 }
                 catch {
-                    throw $_
+                    throw $_.Exception.Message
                 }
 
                 $UninstallKeys = @(
@@ -72,14 +72,14 @@ Describe "Validate <App.Name>" -ForEach $Applications {
                             Sort-Object -Property "DisplayName", "Publisher"
                     }
                     catch {
-                        throw $_
+                        throw $_.Exception.Message
                     }
                 }
 
                 return $Apps
             }
             catch {
-                throw $_
+                throw $_.Exception.Message
             }
             finally {
                 Remove-PSDrive "HKU" -ErrorAction "SilentlyContinue" | Out-Null
@@ -92,7 +92,16 @@ Describe "Validate <App.Name>" -ForEach $Applications {
 
         # Get details for the current application
         $App = $_
-        $Latest = Invoke-Expression -Command $App.Filter
+        
+        if ([SYstem.String]::IsNullOrEmpty($App.Filter)) {
+            $Latest = [PSCustomObject]@{
+                Version = "1.1.0"
+            }
+        }
+        else {
+            $Latest = Invoke-Expression -Command $App.Filter
+        }
+
         $Installed = $InstalledSoftware | `
             Where-Object { $_.Name -match $App.Installed } | `
             Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | `
@@ -142,7 +151,7 @@ AfterAll {
                 New-PSDrive @params | Out-Null
             }
             catch {
-                throw $_
+                throw $_.Exception.Message
             }
 
             $UninstallKeys = @(
@@ -164,14 +173,14 @@ AfterAll {
                         Sort-Object -Property "DisplayName", "Publisher"
                 }
                 catch {
-                    throw $_
+                    throw $_.Exception.Message
                 }
             }
 
             return $Apps
         }
         catch {
-            throw $_
+            throw $_.Exception.Message
         }
         finally {
             Remove-PSDrive "HKU" -ErrorAction "SilentlyContinue" | Out-Null

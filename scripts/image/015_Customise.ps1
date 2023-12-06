@@ -4,25 +4,28 @@
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\image-customise"
 
-#region Use Secure variables in Nerdio Manager to pass variables
-
-# Locale
-if ([System.String]::IsNullOrEmpty($SecureVars.OSLanguage)) {
+#region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
+if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
     [System.String] $Language = "en-AU"
     [System.String] $TimeZone = "AUS Eastern Standard Time"
-}
-else {
-    $Json = $SecureVars.OSLanguage | ConvertFrom-Json -ErrorAction "Stop"
-    [System.String] $Language = $Json.$AzureRegionName.Language
-    [System.String] $TimeZone = $Json.$AzureRegionName.TimeZone
-}
-
-# AppX remove mode
-if ([System.String]::IsNullOrEmpty($SecureVars.AppxMode)) {
     [System.String] $AppxMode = "Block"
 }
 else {
-    [System.String] $AppxMode = $SecureVars.AppxMode
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $params = @{
+            Uri             = $SecureVars.VariablesList
+            UseBasicParsing = $true
+            ErrorAction     = "Stop"
+        }
+        $Variables = Invoke-RestMethod @params
+        [System.String] $Language = $Variables.$AzureRegionName.Language
+        [System.String] $TimeZone = $Variables.$AzureRegionName.TimeZone
+        [System.String] $AppxMode = $Variables.$AzureRegionName.AppxMode
+    }
+    catch {
+        throw $_
+    }
 }
 #endregion
 

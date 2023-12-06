@@ -50,14 +50,29 @@ try {
     # Download and unpack
     Import-Module -Name "Evergreen" -Force
 
+    #region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $params = @{
+            Uri             = $SecureVars.VariablesList
+            UseBasicParsing = $true
+            ErrorAction     = "Stop"
+        }
+        $Variables = Invoke-RestMethod @params
+    }
+    catch {
+        throw $_
+    }
+    #endregion
+
     # Use Secure variables in Nerdio Manager to pass variables
-    if ($null -eq $SecureVars.FSLogixAgentVersion) {
+    if ($null -eq $Variables.$AzureRegionName.FSLogixAgentVersion) {
         # Use Evergreen to find the latest version
         $App = Get-EvergreenApp -Name "MicrosoftFSLogixApps" | Where-Object { $_.Channel -eq "Production" } | Select-Object -First 1
     }
     else {
         # Use the JSON in this script to select a specific version
-        $App = $Versions | ConvertFrom-Json | Where-Object { $_.Version -eq $SecureVars.FSLogixAgentVersion }
+        $App = $Versions | ConvertFrom-Json | Where-Object { $_.Version -eq $Variables.$AzureRegionName.FSLogixAgentVersion }
     }
 
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
@@ -69,7 +84,7 @@ catch {
 
 # Install
 Write-Information -MessageData ":: Install Microsoft FSLogix agent" -InformationAction "Continue"
-foreach ($file in "FSLogixAppsSetup.exe", "FSLogixAppsRuleEditorSetup.exe") {
+foreach ($file in "FSLogixAppsSetup.exe") {
     $Installers = Get-ChildItem -Path $Path -Recurse -Include $file | Where-Object { $_.Directory -match "x64" }
     foreach ($Installer in $Installers) {
         try {

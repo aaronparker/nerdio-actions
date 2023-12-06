@@ -9,7 +9,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     "Microsoft Windows Server*" {
         try {
             $params = @{
-                FeatureName   = "Printing-XPSServices-Features"
+                FeatureName   = "Printing-XPSServices-Features", "AzureArcSetup"
                 Online        = $true
                 NoRestart     = $true
                 WarningAction = "SilentlyContinue"

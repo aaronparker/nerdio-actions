@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Generated 2023-10-23 from ./Redirections.csv-->
+<FrxProfileFolderRedirection ExcludeCommonFolders="0">
+  <Excludes>
+    <!--Omit if you need to keep crash dumps for troubleshooting-->
+    <Exclude Copy="0">AppData\Local\CrashDumps</Exclude>
+    <!--Omit if not using Remote Desktop Connection client inside a remote desktop-->
+    <Exclude Copy="0">AppData\Local\Microsoft\Terminal Server Client</Exclude>
+    <!--Microsoft Edge (Chromium) cache - size can also be managed via policy-->
+    <Exclude Copy="0">AppData\Local\Microsoft\Edge SxS\User Data\Default\Cache</Exclude>
+    <!--Details here https://docs.microsoft.com/en-us/microsoftteams/teams-for-vdi#teams-cached-content-exclusion-list-for-non-persistent-setup-->
+    <Exclude Copy="0">AppData\Roaming\Microsoft\Teams\media-stack</Exclude>
+    <!--Details here https://techcommunity.microsoft.com/t5/fslogix-blog/teams-setup-rapidly-grows-my-profile-disk/ba-p/1539064-->
+    <Exclude Copy="0">AppData\Roaming\Microsoft\Teams\Service Worker</Exclude>
+    <!--Details here https://docs.microsoft.com/en-us/microsoftteams/teams-for-vdi#non-persistent-setup-->
+    <Exclude Copy="0">AppData\Roaming\Microsoft\Teams\meeting-addin\Cache</Exclude>
+  </Excludes>
+  <Includes />
+</FrxProfileFolderRedirection>

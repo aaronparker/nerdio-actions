@@ -13,13 +13,13 @@ if (Test-Path -Path "$Env:SystemDrive\Apps") { Remove-Item -Path "$Env:SystemDri
 if (Test-Path -Path "$Env:SystemDrive\DeployAgent") { Remove-Item -Path "$Env:SystemDrive\DeployAgent" -Recurse -Force -ErrorAction "SilentlyContinue" }
 
 # Remove items from the Temp directory (note that scripts run as SYSTEM)
-Get-ChildItem -Path "$Env:Temp" -Include "*.*" -Recurse -ErrorAction "SilentlyContinue" | `
-    Remove-Item -Force -ErrorAction "SilentlyContinue"
+Remove-Item -Path $Env:Temp -Recurse -Force -Confirm:$false -ErrorAction "SilentlyContinue"
+New-Item -Path $Env:Temp -ItemType "Directory" -ErrorAction "SilentlyContinue" | Out-Null
 
 # Remove logs older than 30 days
-Get-ChildItem -Path "$Env:ProgramData\Nerdio\Logs" -Include "*.*" -Recurse | `
+Get-ChildItem -Path "$Env:ProgramData\Nerdio\Logs" -Include "*.*" -Recurse -ErrorAction "SilentlyContinue" | `
     Where-Object { ($_.LastWriteTime -lt (Get-Date).AddDays(-30)) -and ($_.psIsContainer -eq $false) } | `
-    Remove-Item -Force -ErrorAction "SilentlyContinue"
+    ForEach-Object { Remove-Item -Path $_.FullName -Force -Confirm:$false -ErrorAction "SilentlyContinue" }
 
 # Disable Windows Update
 # reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 1 /f

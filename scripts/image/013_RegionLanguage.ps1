@@ -2,15 +2,26 @@
 #execution mode: Combined
 #tags: Language, Image
 
-#region Use Secure variables in Nerdio Manager to pass a system language
-if ([System.String]::IsNullOrEmpty($SecureVars.OSLanguage)) {
+#region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
+if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
     [System.String] $Language = "en-AU"
     [System.String] $TimeZone = "AUS Eastern Standard Time"
 }
 else {
-    $Json = $SecureVars.OSLanguage | ConvertFrom-Json -ErrorAction "Stop"
-    [System.String] $Language = $Json.$AzureRegionName.Language
-    [System.String] $TimeZone = $Json.$AzureRegionName.TimeZone
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $params = @{
+            Uri             = $SecureVars.VariablesList
+            UseBasicParsing = $true
+            ErrorAction     = "Stop"
+        }
+        $Variables = Invoke-RestMethod @params
+        [System.String] $Language = $Variables.$AzureRegionName.Language
+        [System.String] $TimeZone = $Variables.$AzureRegionName.TimeZone
+    }
+    catch {
+        throw $_
+    }
 }
 #endregion
 

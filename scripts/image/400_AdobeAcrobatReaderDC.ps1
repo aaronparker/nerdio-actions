@@ -3,12 +3,33 @@
 #tags: Evergreen, Adobe, Acrobat, PDF
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Adobe\AcrobatReaderDC"
-[System.String] $Architecture = "x64"
-[System.String] $Language = "MUI"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+#region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
+if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
+    [System.String] $Architecture = "x64"
+    [System.String] $Language = "MUI"
+}
+else {
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $params = @{
+            Uri             = $SecureVars.VariablesList
+            UseBasicParsing = $true
+            ErrorAction     = "Stop"
+        }
+        $Variables = Invoke-RestMethod @params
+        [System.String] $Architecture = $Variables.$AzureRegionName.AdobeAcrobatArchitecture
+        [System.String] $Language = $Variables.$AzureRegionName.AdobeAcrobatLanguage
+    }
+    catch {
+        throw $_
+    }
+}
+#endregion
 
 # Run tasks/install apps
 # Enforce settings with GPO: https://www.adobe.com/devnet-docs/acrobatetk/tools/AdminGuide/gpo.html

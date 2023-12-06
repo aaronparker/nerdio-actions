@@ -9,33 +9,10 @@ on:
       - 'scripts/uninstall/*.ps1'
       - 'tests/*.ps1'
       - '.github/workflows/test-avd.yml'
-  schedule:
-    - cron: '0 1 15 * *' #Run on the 15th of each month
+  # schedule:
+  #   - cron: '0 1 15 * *' #Run on the 15th of each month
 
 jobs:
-  # pssa:
-  #   permissions:
-  #     contents: read # for actions/checkout to fetch code
-  #     security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-  #     actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
-  #   name: PSScriptAnalyzer
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-
-  #     - name: Run PSScriptAnalyzer
-  #       uses: microsoft/psscriptanalyzer-action@6b2948b1944407914a58661c49941824d149734f
-  #       with:
-  #         path: "./scripts"
-  #         recurse: true
-  #         output: results.sarif
-
-  #     # Upload the SARIF file generated in the previous step
-  #     - name: Upload SARIF results file
-  #       uses: github/codeql-action/upload-sarif@v2
-  #       with:
-  #         sarif_file: results.sarif
-
   test:
     name: Run tests
     #needs: pssa
@@ -56,6 +33,17 @@ jobs:
         if: always()
         working-directory: "${{ github.workspace }}"
         run: |
+          $AzureRegionName = "${{ secrets.AZUREREGIONNAME }}"
+          $SecureVars = @{ VariablesList = "${{ secrets.VARIABLESLIST }}" }
+
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          $params = @{
+              Uri             = $SecureVars.VariablesList
+              UseBasicParsing = $true
+              ErrorAction     = "Stop"
+          }
+          Invoke-RestMethod @params
+
           Import-Module -Name "Pester" -Force -ErrorAction "Stop"
           $Config = New-PesterConfiguration
           $Config.Run.Path = "$Env:GITHUB_WORKSPACE\tests\scripts"
