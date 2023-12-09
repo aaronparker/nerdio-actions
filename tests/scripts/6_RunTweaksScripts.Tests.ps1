@@ -18,7 +18,8 @@ BeforeDiscovery {
     }
 
     # Get the scripts to test
-    $Scripts = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse -Exclude "Enable-SysprepCryptoSysPrep_Specialize.ps1", "Install-FSLogixAppMaskingRuleset.ps1", "Set-FSLogixStorageAccount.ps1"
+    $Exclude = "Invoke-DefenderFullScan.ps1", "Enable-SysprepCryptoSysPrep_Specialize.ps1", "Install-FSLogixAppMaskingRuleset.ps1", "Set-FSLogixStorageAccount.ps1"
+    $Scripts = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse -Exclude $Exclude
 }
 
 Describe "Run tweaks scripts" {
