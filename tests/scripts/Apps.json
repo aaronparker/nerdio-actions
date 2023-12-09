@@ -278,20 +278,6 @@
         "ServicesDisabled": []
     },
     {
-        "Name": "ShareX",
-        "Filter": "Get-EvergreenApp -Name \"ShareX\" | Where-Object { $_.Type -eq \"exe\" } | Select-Object -First 1",
-        "Installed": "ShareX*",
-        "FilesExist": [
-            "C:\\Program Files\\ShareX\\ShareX.exe",
-            "C:\\Program Files\\ShareX\\unins000.exe"
-        ],
-        "ShortcutsNotExist": [
-            "C:\\Users\\Public\\Desktop\\ShareX.lnk",
-            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\ShareX\\Uninstall ShareX.lnk"
-        ],
-        "ServicesDisabled": []
-    },
-    {
         "Name": "MicrosoftSsms",
         "Filter": "Get-EvergreenApp -Name \"MicrosoftSsms\" | Where-Object { $_.Language -eq \"English\" } | Select-Object -First 1",
         "Installed": "Microsoft SQL Server Management Studio*",
