@@ -8,10 +8,16 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 try {
-    # Download Synapse MSI, specify a secure variable named SynapseUrl to pass a custom URL
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $params = @{
+        Uri             = $SecureVars.VariablesList
+        UseBasicParsing = $true
+        ErrorAction     = "Stop"
+    }
+    $Variables = Invoke-RestMethod @params
     $App = [PSCustomObject]@{
         Version = "4.4.400"
-        URI     = $SecureVars.SynapseUrl
+        URI     = $Variables.$AzureRegionName.Synapse
     }
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }

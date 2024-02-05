@@ -8,11 +8,27 @@
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
+#region Read variables list
+try {
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $params = @{
+        Uri             = $SecureVars.VariablesList
+        UseBasicParsing = $true
+        ErrorAction     = "Stop"
+    }
+    $Variables = Invoke-RestMethod @params
+    [System.String] $CrowdStrikeAgentUrl = $Variables.$AzureRegionName.CrowdStrikeAgent
+}
+catch {
+    throw $_
+}
+#endregion
+
 try {
     # Download CrowdStrike Windows Sensor, specify a secure variable named CrowdStrikeAgentUrl to pass a custom URL
     $App = [PSCustomObject]@{
         Version = "6.54.16808"
-        URI     = $SecureVars.CrowdStrikeAgentUrl
+        URI     = $CrowdStrikeAgentUrl
     }
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }

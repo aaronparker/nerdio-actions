@@ -8,44 +8,71 @@
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
+#region Read variables list
 # Get the Citrix Optimizer template
-switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
-    #region Windows Server
-    "Microsoft Windows Server 2022*" {
-        $OptimizerTemplate = "Citrix_Windows_Server_2022_2009.xml"
-        break
-    }
-
-    "Microsoft Windows Server 2019*" {
-        $OptimizerTemplate = "Citrix_Windows_Server_2019_1809.xml"
-        break
-    }
-    #endregion
-
-    #region Windows 11
-    "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*" {
-        $OptimizerTemplate = "Citrix_Windows_11_2009.xml"
-        break
-    }
-    #endregion
-
-    #region Windows 10
-    "Microsoft Windows 10 Enterprise*|Microsoft Windows 10 Pro*" {
-        $OptimizerTemplate = "Citrix_Windows_10_2009.xml"
-        break
-    }
-    #endregion
-
-    default {
-        $OptimizerTemplate = "Citrix_Windows_11_2009.xml"
+if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
+    switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
+        #region Windows Server
+        "Microsoft Windows Server 2022*" {
+            $OptimizerTemplate = "Citrix_Windows_Server_2022_2009.xml"
+            break
+        }
+    
+        "Microsoft Windows Server 2019*" {
+            $OptimizerTemplate = "Citrix_Windows_Server_2019_1809.xml"
+            break
+        }
+        #endregion
+    
+        #region Windows 11
+        "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*" {
+            $OptimizerTemplate = "Citrix_Windows_11_2009.xml"
+            break
+        }
+        #endregion
+    
+        #region Windows 10
+        "Microsoft Windows 10 Enterprise*|Microsoft Windows 10 Pro*" {
+            $OptimizerTemplate = "Citrix_Windows_10_2009.xml"
+            break
+        }
+        #endregion
+    
+        default {
+            $OptimizerTemplate = "Citrix_Windows_11_2009.xml"
+        }
     }
 }
+else {
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $params = @{
+            Uri             = $SecureVars.VariablesList
+            UseBasicParsing = $true
+            ErrorAction     = "Stop"
+        }
+        $Variables = Invoke-RestMethod @params
+        [System.String] $CitrixOptimizerUrl = $Variables.$AzureRegionName.CitrixOptimizer
+        $params = @{
+            URI             = $Variables.$AzureRegionName.CitrixOptimizerTemplate
+            OutFile         = "$Path\$(Split-Path -Path $Variables.$AzureRegionName.CitrixOptimizerTemplate -Leaf).xml"
+            UseBasicParsing = $true
+            ErrorAction     = "Stop"
+        }
+        Invoke-WebRequest @params
+        $OptimizerTemplate = "$Path\$(Split-Path -Path $Variables.$AzureRegionName.CitrixOptimizerTemplate -Leaf).xml"
+    }
+    catch {
+        throw $_
+    }
+}
+#endregion
 
 try {
     # Download Citrix Optimizer, specify a secure variable named CitrixOptimizerUrl to pass a custom URL
     $App = [PSCustomObject]@{
         Version = "3.1.0.3"
-        URI     = if ($null -eq $SecureVars.CitrixOptimizerUrl) { "https://github.com/aaronparker/packer/raw/main/build/tools/CitrixOptimizerTool.zip" } else { $SecureVars.CitrixOptimizerUrl }
+        URI     = $CitrixOptimizerUrl
     }
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 }
