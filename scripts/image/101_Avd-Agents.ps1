@@ -10,71 +10,53 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 
 # Run tasks/install apps
 #region Microsoft Remote Desktop WebRTC Redirector Service
-try {
-    # Import-Module -Name "Evergreen" -Force
-    # $App = Get-EvergreenApp -Name "MicrosoftWvdRtcService" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
-    # $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+# Import-Module -Name "Evergreen" -Force
+# $App = Get-EvergreenApp -Name "MicrosoftWvdRtcService" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
+# $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-    # Workaround for HTTP 502 on Azure
-    $ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
-    $params = @{
-        Uri             = "https://aka.ms/msrdcwebrtcsvc/msi"
-        OutFile         = "$Path\MsRdcWebRTCSvc_HostSetup_x64.msi"
-        UseBasicParsing = $true
-    }
-    Invoke-WebRequest @params
-    $OutFile = Get-ChildItem -Path "$Path\MsRdcWebRTCSvc_HostSetup_x64.msi"
+# Workaround for HTTP 502 on Azure
+$ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$params = @{
+    Uri             = "https://aka.ms/msrdcwebrtcsvc/msi"
+    OutFile         = "$Path\MsRdcWebRTCSvc_HostSetup_x64.msi"
+    UseBasicParsing = $true
+    ErrorAction     = "Stop"
 }
-catch {
-    throw $_
-}
+Invoke-WebRequest @params
+$OutFile = Get-ChildItem -Path "$Path\MsRdcWebRTCSvc_HostSetup_x64.msi"
 
-try {
-    # Install RTC
-    Write-Information -MessageData ":: Install Microsoft Remote Desktop WebRTC Redirector Service" -InformationAction "Continue"
-    $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftWvdRtcService$($App.Version).log" -replace " ", ""
-    $params = @{
-        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"
-        NoNewWindow  = $true
-        Wait         = $true
-        PassThru     = $true
-        ErrorAction  = "Continue"
-    }
-    $result = Start-Process @params
-    Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+# Install RTC
+Write-Information -MessageData ":: Install Microsoft Remote Desktop WebRTC Redirector Service" -InformationAction "Continue"
+$LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftWvdRtcService$($App.Version).log" -replace " ", ""
+$params = @{
+    FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
+    ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"
+    NoNewWindow  = $true
+    Wait         = $true
+    PassThru     = $true
+    ErrorAction  = "Continue"
 }
-catch {
-    throw $_
-}
+$result = Start-Process @params
+Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 #endregion
 
 #region Microsoft Azure Virtual Desktop Multimedia Redirection Extensions
-try {
-    Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "MicrosoftWvdMultimediaRedirection" | Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-}
-catch {
-    throw $_
-}
+Import-Module -Name "Evergreen" -Force
+$App = Get-EvergreenApp -Name "MicrosoftWvdMultimediaRedirection" | Select-Object -First 1
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-try {
-    # Install MMR
-    Write-Information -MessageData ":: Install Microsoft Azure Virtual Desktop Multimedia Redirection Extensions" -InformationAction "Continue"
-    $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftWvdMultimediaRedirection$($App.Version).log" -replace " ", ""
-    $params = @{
-        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"
-        NoNewWindow  = $true
-        Wait         = $true
-        PassThru     = $true
-        ErrorAction  = "Continue"
-    }
-    $result = Start-Process @params
-    Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+# Install MMR
+Write-Information -MessageData ":: Install Microsoft Azure Virtual Desktop Multimedia Redirection Extensions" -InformationAction "Continue"
+$LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftWvdMultimediaRedirection$($App.Version).log" -replace " ", ""
+$params = @{
+    FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
+    ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"
+    NoNewWindow  = $true
+    Wait         = $true
+    PassThru     = $true
+    ErrorAction  = "Continue"
 }
-catch {
-    throw $_
-}
+$result = Start-Process @params
+Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 #endregion

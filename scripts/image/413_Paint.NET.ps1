@@ -8,45 +8,31 @@
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
-    Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "PaintDotNetOfflineInstaller" | `
-        Where-Object { $_.Architecture -eq "x64" -and $_.URI -match "winmsi" } | Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-}
-catch {
-    throw $_
-}
+Import-Module -Name "Evergreen" -Force
+$App = Get-EvergreenApp -Name "PaintDotNetOfflineInstaller" | `
+    Where-Object { $_.Architecture -eq "x64" -and $_.URI -match "winmsi" } | Select-Object -First 1
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-try {
-    $params = @{
-        Path            = $OutFile.FullName
-        DestinationPath = $Path
-    }
-    Expand-Archive @params
+$params = @{
+    Path            = $OutFile.FullName
+    DestinationPath = $Path
+    ErrorAction     = "Stop"
 }
-catch {
-    throw $_
-}
+Expand-Archive @params
 
-try {
-    Write-Information -MessageData ":: Install Paint.NET" -InformationAction "Continue"
-    $Installer = Get-ChildItem -Path $Path -Include "paint*.msi" -Recurse
-    $LogFile = "$Env:ProgramData\Nerdio\Logs\Paint.NET$($App.Version).log" -replace " ", ""
-    $params = @{
-        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package `"$($Installer.FullName)`" DESKTOPSHORTCUT=0 CHECKFORUPDATES=0 CHECKFORBETAS=0 /quiet /log $LogFile"
-        NoNewWindow  = $true
-        Wait         = $true
-        PassThru     = $true
-        ErrorAction  = "Continue"
-    }
-    $result = Start-Process @params
-    Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Write-Information -MessageData ":: Install Paint.NET" -InformationAction "Continue"
+$Installer = Get-ChildItem -Path $Path -Include "paint*.msi" -Recurse
+$LogFile = "$Env:ProgramData\Nerdio\Logs\Paint.NET$($App.Version).log" -replace " ", ""
+$params = @{
+    FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
+    ArgumentList = "/package `"$($Installer.FullName)`" DESKTOPSHORTCUT=0 CHECKFORUPDATES=0 CHECKFORBETAS=0 /quiet /log $LogFile"
+    NoNewWindow  = $true
+    Wait         = $true
+    PassThru     = $true
+    ErrorAction  = "Stop"
 }
-catch {
-    throw $_
-}
+$result = Start-Process @params
+Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 
 Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\Paint.NET.lnk")

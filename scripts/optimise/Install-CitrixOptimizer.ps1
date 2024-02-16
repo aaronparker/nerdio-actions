@@ -41,36 +41,26 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     }
 }
 
-try {
-    # Download Citrix Optimizer, specify a secure variable named CitrixOptimizerUrl to pass a custom URL
-    $App = [PSCustomObject]@{
-        Version = "3.1.0.3"
-        URI     = if ($null -eq $SecureVars.CitrixOptimizerUrl) { "https://github.com/aaronparker/packer/raw/main/build/tools/CitrixOptimizerTool.zip" } else { $SecureVars.CitrixOptimizerUrl }
-    }
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+# Download Citrix Optimizer, specify a secure variable named CitrixOptimizerUrl to pass a custom URL
+$App = [PSCustomObject]@{
+    Version = "3.1.0.3"
+    URI     = if ($null -eq $SecureVars.CitrixOptimizerUrl) { "https://github.com/aaronparker/packer/raw/main/build/tools/CitrixOptimizerTool.zip" } else { $SecureVars.CitrixOptimizerUrl }
 }
-catch {
-    throw $_
-}
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-try {
-    # Run Citrix Optimizer
-    Write-Information -MessageData ":: Download and run Citrix Optimizer" -InformationAction "Continue"
-    Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
-    $Template = Get-ChildItem -Path $Path -Recurse -Include $OptimizerTemplate
-    $OptimizerBin = Get-ChildItem -Path $Path -Recurse -Include "CtxOptimizerEngine.ps1"
-    Push-Location -Path $OptimizerBin.Directory
-    Write-Information -MessageData ":: Using template: $($Template.FullName)" -InformationAction "Continue"
-    $params = @{
-        Source          = $Template.FullName
-        Mode            = "Execute"
-        OutputLogFolder = "$Env:ProgramData\Nerdio\Logs"
-        OutputHtml      = "$Env:SystemRoot\Temp\CitrixOptimizer.html"
-        Verbose         = $false
-    }
-    & $OptimizerBin.FullName @params *> $null
-    Pop-Location
+# Run Citrix Optimizer
+Write-Information -MessageData ":: Download and run Citrix Optimizer" -InformationAction "Continue"
+Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
+$Template = Get-ChildItem -Path $Path -Recurse -Include $OptimizerTemplate
+$OptimizerBin = Get-ChildItem -Path $Path -Recurse -Include "CtxOptimizerEngine.ps1"
+Push-Location -Path $OptimizerBin.Directory
+Write-Information -MessageData ":: Using template: $($Template.FullName)" -InformationAction "Continue"
+$params = @{
+    Source          = $Template.FullName
+    Mode            = "Execute"
+    OutputLogFolder = "$Env:ProgramData\Nerdio\Logs"
+    OutputHtml      = "$Env:SystemRoot\Temp\CitrixOptimizer.html"
+    Verbose         = $false
 }
-catch {
-    throw $_
-}
+& $OptimizerBin.FullName @params *> $null
+Pop-Location

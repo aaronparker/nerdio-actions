@@ -8,32 +8,22 @@
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
-    Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "MicrosoftPowerToys" | Where-Object { $_.Architecture -eq "x64" -and $_.InstallerType -eq "Default" } | Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-}
-catch {
-    throw $_
-}
+Import-Module -Name "Evergreen" -Force
+$App = Get-EvergreenApp -Name "MicrosoftPowerToys" | Where-Object { $_.Architecture -eq "x64" -and $_.InstallerType -eq "Default" } | Select-Object -First 1
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-try {
-    Write-Information -MessageData ":: Install Microsoft PowerToys" -InformationAction "Continue"
-    $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftPowerToys$($App.Version).log" -replace " ", ""
-    $params = @{
-        FilePath     = $OutFile.FullName
-        ArgumentList = "-silent -log $LogFile"
-        NoNewWindow  = $true
-        Wait         = $true
-        PassThru     = $true
-        ErrorAction  = "Continue"
-    }
-    $result = Start-Process @params
-    Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Write-Information -MessageData ":: Install Microsoft PowerToys" -InformationAction "Continue"
+$LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftPowerToys$($App.Version).log" -replace " ", ""
+$params = @{
+    FilePath     = $OutFile.FullName
+    ArgumentList = "-silent -log $LogFile"
+    NoNewWindow  = $true
+    Wait         = $true
+    PassThru     = $true
+    ErrorAction  = "Continue"
 }
-catch {
-    throw $_
-}
+$result = Start-Process @params
+Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 
 # Disable features that aren't suitable for VDI
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityAwake" /d 0 /t "REG_DWORD" /f | Out-Null

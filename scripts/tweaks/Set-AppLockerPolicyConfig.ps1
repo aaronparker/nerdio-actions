@@ -10,30 +10,25 @@ if ([System.String]::IsNullOrEmpty($SecureVars.AppLockerPolicyFile)) {
     Write-Host "AppLocker configuration file URL not set."
 }
 else {
-    try {
-        #Download the AppLocker configuration
-        $OutFile = "$Path\AppLocker$(Get-Date -Format "yyyyMMdd").xml"
-        $params = @{
-            URI             = $SecureVars.AppLockerPolicyFile
-            OutFile         = $OutFile
-            UseBasicParsing = $true
-            ErrorAction     = "Stop"
-        }
-        Invoke-WebRequest @params
-
-        # Start the Application Identity service
-        Start-Service -Name "AppIDSvc" -ErrorAction "SilentlyContinue"
-        sc.exe config appidsvc start= auto
-
-        # Import the AppLocker configuration
-        $params = @{
-            XmlPolicy   = $OutFile
-            ErrorAction = "Stop"
-        }
-        Set-AppLockerPolicy @params
+    #Download the AppLocker configuration
+    $OutFile = "$Path\AppLocker$(Get-Date -Format "yyyyMMdd").xml"
+    $params = @{
+        URI             = $SecureVars.AppLockerPolicyFile
+        OutFile         = $OutFile
+        UseBasicParsing = $true
+        ErrorAction     = "Stop"
     }
-    catch {
-        throw $_
+    Invoke-WebRequest @params
+
+    # Start the Application Identity service
+    Start-Service -Name "AppIDSvc" -ErrorAction "SilentlyContinue"
+    sc.exe config appidsvc start= auto
+
+    # Import the AppLocker configuration
+    $params = @{
+        XmlPolicy   = $OutFile
+        ErrorAction = "Stop"
     }
+    Set-AppLockerPolicy @params
 }
 #endregion

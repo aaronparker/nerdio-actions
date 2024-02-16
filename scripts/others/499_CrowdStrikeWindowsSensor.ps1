@@ -8,19 +8,13 @@
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
     # Download CrowdStrike Windows Sensor, specify a secure variable named CrowdStrikeAgentUrl to pass a custom URL
     $App = [PSCustomObject]@{
         Version = "6.54.16808"
         URI     = $SecureVars.CrowdStrikeAgentUrl
     }
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-}
-catch {
-    throw $_
-}
 
-try {
     # Install the agent
     $params = @{
         FilePath     = $OutFile.FullName
@@ -31,7 +25,3 @@ try {
         ErrorAction  = "Stop"
     }
     Start-Process @params
-}
-catch {
-    throw $_
-}

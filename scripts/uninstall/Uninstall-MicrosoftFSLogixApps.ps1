@@ -32,22 +32,12 @@ function Get-InstalledSoftware {
 #region Script logic
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
-    # Stop services
-    Stop-Service -Name "frxsvc", "frxccds" -Force -ErrorAction "Ignore"
-}
-catch {
-    Write-Warning -Message "Failed to stop services with error: $($_.Exception.Message)"
-}
+# Stop services
+Stop-Service -Name "frxsvc", "frxccds" -Force -ErrorAction "Ignore"
 
-try {
-    Get-Process -ErrorAction "SilentlyContinue" | `
-        Where-Object { $_.Path -like "$Env:ProgramFiles\FSLogix\Apps\*" } | `
-        Stop-Process -Force -ErrorAction "SilentlyContinue"
-}
-catch {
-    Write-Warning -Message "Failed to stop processes."
-}
+Get-Process -ErrorAction "SilentlyContinue" | `
+    Where-Object { $_.Path -like "$Env:ProgramFiles\FSLogix\Apps\*" } | `
+    Stop-Process -Force -ErrorAction "SilentlyContinue"
 
 $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft FSLogix Apps*" }
 foreach ($App in $Apps) {

@@ -32,14 +32,9 @@ function Get-InstalledSoftware {
 #region Script logic
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
-    Get-Process -ErrorAction "SilentlyContinue" | `
-        Where-Object { $_.Path -like "$Env:ProgramFiles\7-Zip-Zstandard\*" } | `
-        Stop-Process -Force -ErrorAction "SilentlyContinue"
-}
-catch {
-    Write-Warning -Message "Failed to stop processes."
-}
+Get-Process -ErrorAction "SilentlyContinue" | `
+    Where-Object { $_.Path -like "$Env:ProgramFiles\7-Zip-Zstandard\*" } | `
+    Stop-Process -Force -ErrorAction "SilentlyContinue"
 
 $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "7-Zip ZS*" }
 foreach ($App in $Apps) {

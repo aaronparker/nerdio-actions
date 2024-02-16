@@ -46,63 +46,46 @@ $Versions = @"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
-    # Download and unpack
-    Import-Module -Name "Evergreen" -Force
+# Download and unpack
+Import-Module -Name "Evergreen" -Force
 
-    #region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
-    try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $params = @{
-            Uri             = $SecureVars.VariablesList
-            UseBasicParsing = $true
-            ErrorAction     = "Stop"
-        }
-        $Variables = Invoke-RestMethod @params
-    }
-    catch {
-        throw $_
-    }
-    #endregion
-
-    # Use Secure variables in Nerdio Manager to pass variables
-    if ($null -eq $Variables.$AzureRegionName.FSLogixAgentVersion) {
-        # Use Evergreen to find the latest version
-        $App = Get-EvergreenApp -Name "MicrosoftFSLogixApps" | Where-Object { $_.Channel -eq "Production" } | Select-Object -First 1
-    }
-    else {
-        # Use the JSON in this script to select a specific version
-        $App = $Versions | ConvertFrom-Json | Where-Object { $_.Version -eq $Variables.$AzureRegionName.FSLogixAgentVersion }
-    }
-
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-    Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
+#region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
+$ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$params = @{
+    Uri             = $SecureVars.VariablesList
+    UseBasicParsing = $true
+    ErrorAction     = "Stop"
 }
-catch {
-    Write-Information -MessageData $_.Exception.Message -InformationAction "Continue"
+$Variables = Invoke-RestMethod @params
+if ($null -eq $Variables.$AzureRegionName.FSLogixAgentVersion) {
+    # Use Evergreen to find the latest version
+    $App = Get-EvergreenApp -Name "MicrosoftFSLogixApps" | Where-Object { $_.Channel -eq "Production" } | Select-Object -First 1
 }
+else {
+    # Use the JSON in this script to select a specific version
+    $App = $Versions | ConvertFrom-Json | Where-Object { $_.Version -eq $Variables.$AzureRegionName.FSLogixAgentVersion }
+}
+
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 
 # Install
 Write-Information -MessageData ":: Install Microsoft FSLogix agent" -InformationAction "Continue"
 foreach ($file in "FSLogixAppsSetup.exe") {
     $Installers = Get-ChildItem -Path $Path -Recurse -Include $file | Where-Object { $_.Directory -match "x64" }
     foreach ($Installer in $Installers) {
-        try {
-            $LogFile = "$Env:ProgramData\Nerdio\Logs\$($Installer.Name)$($App.Version).log" -replace " ", ""
-            $params = @{
-                FilePath     = $Installer.FullName
-                ArgumentList = "/install /quiet /norestart /log $LogFile"
-                NoNewWindow  = $true
-                Wait         = $true
-                PassThru     = $true
-                ErrorAction  = "Continue"
-            }
-            $result = Start-Process @params
-            Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+        $LogFile = "$Env:ProgramData\Nerdio\Logs\$($Installer.Name)$($App.Version).log" -replace " ", ""
+        $params = @{
+            FilePath     = $Installer.FullName
+            ArgumentList = "/install /quiet /norestart /log $LogFile"
+            NoNewWindow  = $true
+            Wait         = $true
+            PassThru     = $true
+            ErrorAction  = "Continue"
         }
-        catch {
-            throw $_
-        }
+        $result = Start-Process @params
+        Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
     }
 }
 

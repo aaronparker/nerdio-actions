@@ -29,7 +29,6 @@ else {
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
     # https://go.microsoft.com/fwlink/?linkid=2243204&clcid=0x409
     # https://statics.teams.cdn.office.net/production-teamsprovision/lkg/teamsbootstrapper.exe
 
@@ -49,15 +48,9 @@ try {
         URI     = "https://statics.teams.cdn.office.net/production-windows-x64/enterprise/webview2/lkg/MSTeams-x64.msix"
     }
     $TeamsMsi = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-}
-catch {
-    throw $_
-}
 
-try {
     # Set required IsWVDEnvironment registry value
-    New-Item -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Force -ErrorAction "SilentlyContinue" | Out-Null
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Name "IsWVDEnvironment" -PropertyType "DWORD" -Value 1 -Force -ErrorAction "SilentlyContinue" | Out-Null
+    reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /d 1 /t "REG_DWORD" /f | Out-Null
 
     # Install Teams
     Write-Information -MessageData ":: Install Microsoft Teams" -InformationAction "Continue"
@@ -88,10 +81,6 @@ try {
             Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
         }
     }
-}
-catch {
-    throw $_
-}
 #endregion
 
 #region Optimise Teams
@@ -105,8 +94,7 @@ catch {
 # "language": "en-AU"
 
 # Disable auto-update
-New-Item -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Name "DisableAutoUpdate" -PropertyType "DWORD" -Value 1 -Force -ErrorAction "SilentlyContinue" | Out-Null
+reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "DisableAutoUpdate" /d 1 /t "REG_DWORD" /f | Out-Null
 
 # Install Teams / Outlook meeting add-in
 Write-Information -MessageData ":: Install Microsoft Teams meeting add-in" -InformationAction "Continue"

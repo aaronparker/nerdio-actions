@@ -8,30 +8,20 @@
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
-    Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "PDFForgePDFCreator" | Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-}
-catch {
-    throw $_
-}
+Import-Module -Name "Evergreen" -Force
+$App = Get-EvergreenApp -Name "PDFForgePDFCreator" | Select-Object -First 1
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-try {
-    $params = @{
-        FilePath     = $OutFile.FullName
-        ArgumentList = "/VerySilent /Lang=en /NoIcons /COMPONENTS=None"
-        NoNewWindow  = $true
-        Wait         = $true
-        PassThru     = $true
-        ErrorAction  = "Continue"
-    }
-    $result = Start-Process @params
-    $result.ExitCode
+$params = @{
+    FilePath     = $OutFile.FullName
+    ArgumentList = "/VerySilent /Lang=en /NoIcons /COMPONENTS=None"
+    NoNewWindow  = $true
+    Wait         = $true
+    PassThru     = $true
+    ErrorAction  = "Continue"
 }
-catch {
-    throw $_
-}
+$result = Start-Process @params
+$result.ExitCode
 
 Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\PDF Architect 9.lnk",

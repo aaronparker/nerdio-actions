@@ -11,42 +11,30 @@ if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
     [System.String] $AppxMode = "Block"
 }
 else {
-    try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $params = @{
-            Uri             = $SecureVars.VariablesList
-            UseBasicParsing = $true
-            ErrorAction     = "Stop"
-        }
-        $Variables = Invoke-RestMethod @params
-        [System.String] $Language = $Variables.$AzureRegionName.Language
-        [System.String] $TimeZone = $Variables.$AzureRegionName.TimeZone
-        [System.String] $AppxMode = $Variables.$AzureRegionName.AppxMode
+    $ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $params = @{
+        Uri             = $SecureVars.VariablesList
+        UseBasicParsing = $true
+        ErrorAction     = "Stop"
     }
-    catch {
-        throw $_
-    }
+    $Variables = Invoke-RestMethod @params
+    [System.String] $Language = $Variables.$AzureRegionName.Language
+    [System.String] $TimeZone = $Variables.$AzureRegionName.TimeZone
+    [System.String] $AppxMode = $Variables.$AzureRegionName.AppxMode
 }
 #endregion
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
-    Write-Information -MessageData ":: Install Windows Customised Defaults" -InformationAction "Continue"
-    $Installer = Get-EvergreenApp -Name "stealthpuppyWindowsCustomisedDefaults" | Where-Object { $_.Type -eq "zip" } | `
-        Select-Object -First 1 | `
-        Save-EvergreenApp -CustomPath $Path
-    Expand-Archive -Path $Installer.FullName -DestinationPath $Path -Force
-    $InstallFile = Get-ChildItem -Path $Path -Recurse -Include "Install-Defaults.ps1"
-    Push-Location -Path $InstallFile.Directory
-    & .\Install-Defaults.ps1 -Language $Language -TimeZone $TimeZone -AppxMode $AppxMode
-    Pop-Location
-}
-catch {
-    throw $_
-}
-finally {
-    Pop-Location
-}
+Write-Information -MessageData ":: Install Windows Customised Defaults" -InformationAction "Continue"
+$Installer = Get-EvergreenApp -Name "stealthpuppyWindowsCustomisedDefaults" | Where-Object { $_.Type -eq "zip" } | `
+    Select-Object -First 1 | `
+    Save-EvergreenApp -CustomPath $Path
+Expand-Archive -Path $Installer.FullName -DestinationPath $Path -Force
+$InstallFile = Get-ChildItem -Path $Path -Recurse -Include "Install-Defaults.ps1"
+Push-Location -Path $InstallFile.Directory
+& .\Install-Defaults.ps1 -Language $Language -TimeZone $TimeZone -AppxMode $AppxMode
+Pop-Location
 #endregion

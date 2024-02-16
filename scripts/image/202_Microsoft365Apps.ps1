@@ -85,61 +85,43 @@ if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
 "@
 }
 else {
-    try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $params = @{
-            Uri             = $SecureVars.VariablesList
-            UseBasicParsing = $true
-            ErrorAction     = "Stop"
-        }
-        $Variables = Invoke-RestMethod @params
-        [System.String] $Channel = $Variables.$AzureRegionName.Microsoft365AppsChannel
-        $params = @{
-            Uri             = $Variables.$AzureRegionName.Microsoft365AppsConfig
-            ContentType     = "text/xml"
-            UseBasicParsing = $true
-            ErrorAction     = "Stop"
-        }
-        $OfficeXml = (Invoke-WebRequest @params).Content 
-        $XmlFile = Join-Path -Path $Path -ChildPath "Office.xml"
-        Out-File -FilePath $XmlFile -InputObject $OfficeXml -Encoding "utf8"
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $params = @{
+        Uri             = $SecureVars.VariablesList
+        UseBasicParsing = $true
+        ErrorAction     = "Stop"
     }
-    catch {
-        throw $_
+    $Variables = Invoke-RestMethod @params
+    [System.String] $Channel = $Variables.$AzureRegionName.Microsoft365AppsChannel
+    $params = @{
+        Uri             = $Variables.$AzureRegionName.Microsoft365AppsConfig
+        ContentType     = "text/xml"
+        UseBasicParsing = $true
+        ErrorAction     = "Stop"
     }
+    $OfficeXml = (Invoke-WebRequest @params).Content 
+    $XmlFile = Join-Path -Path $Path -ChildPath "Office.xml"
+    Out-File -FilePath $XmlFile -InputObject $OfficeXml -Encoding "utf8"
 }
 #endregion
 
-try {
-    # Get Office version and download
-    Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "Microsoft365Apps" | Where-Object { $_.Channel -eq $Channel } | Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-}
-catch {
-    throw $_
-}
+# Get Office version and download
+Import-Module -Name "Evergreen" -Force
+$App = Get-EvergreenApp -Name "Microsoft365Apps" | Where-Object { $_.Channel -eq $Channel } | Select-Object -First 1
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-try {
-    # Install package
-    Write-Information -MessageData ":: Install Microsoft 365 Apps" -InformationAction "Continue"
-    $params = @{
-        FilePath     = $OutFile.FullName
-        ArgumentList = "/configure $XmlFile"
-        NoNewWindow  = $true
-        Wait         = $true
-        PassThru     = $true
-        ErrorAction  = "Continue"
-    }
-    Push-Location -Path $Path
-    $result = Start-Process @params
-    Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
-    Pop-Location
+# Install package
+Write-Information -MessageData ":: Install Microsoft 365 Apps" -InformationAction "Continue"
+$params = @{
+    FilePath     = $OutFile.FullName
+    ArgumentList = "/configure $XmlFile"
+    NoNewWindow  = $true
+    Wait         = $true
+    PassThru     = $true
+    ErrorAction  = "Continue"
 }
-catch {
-    throw $_
-}
-finally {
-    Pop-Location
-}
+Push-Location -Path $Path
+$result = Start-Process @params
+Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Pop-Location
 #endregion

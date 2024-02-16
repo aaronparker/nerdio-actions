@@ -5,20 +5,16 @@
 [System.String] $Path = "$Env:SystemDrive\agents"
 
 #region Script logic
-try {
-    Push-Location -Path $Path
-    $params = @{
-        FilePath     = "$Path\config.cmd"
-        ArgumentList = "remove --unattended --auth pat --token `"$($SecureVars.DevOpsPat)`""
-        Wait         = $true
-        NoNewWindow  = $true
-        PassThru     = $true
-    }
-    Start-Process @params
+Push-Location -Path $Path
+$params = @{
+    FilePath     = "$Path\config.cmd"
+    ArgumentList = "remove --unattended --auth pat --token `"$($SecureVars.DevOpsPat)`""
+    Wait         = $true
+    NoNewWindow  = $true
+    PassThru     = $true
+    ErrorAction  = "Stop"
 }
-catch {
-    throw $_
-}
+Start-Process @params
 
 # Remove the C:\agents directory and the local user account used by the agent service
 Remove-Item -Path $Path -Recurse -Force -ErrorAction "SilentlyContinue"

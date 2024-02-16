@@ -8,20 +8,16 @@ if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
     [System.String] $TimeZone = "AUS Eastern Standard Time"
 }
 else {
-    try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $params = @{
-            Uri             = $SecureVars.VariablesList
-            UseBasicParsing = $true
-            ErrorAction     = "Stop"
-        }
-        $Variables = Invoke-RestMethod @params
-        [System.String] $Language = $Variables.$AzureRegionName.Language
-        [System.String] $TimeZone = $Variables.$AzureRegionName.TimeZone
+    $ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $params = @{
+        Uri             = $SecureVars.VariablesList
+        UseBasicParsing = $true
+        ErrorAction     = "Stop"
     }
-    catch {
-        throw $_
-    }
+    $Variables = Invoke-RestMethod @params
+    [System.String] $Language = $Variables.$AzureRegionName.Language
+    [System.String] $TimeZone = $Variables.$AzureRegionName.TimeZone
 }
 #endregion
 
@@ -37,18 +33,13 @@ Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Public"
 
 #region Only run if the LanguagePackManagement module is installed
 if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
-    try {
-        $params = @{
-            Language        = $Language
-            CopyToSettings  = $true
-            ExcludeFeatures = $false
-        }
-        Write-Information -MessageData ":: Install language pack for: $Language" -InformationAction "Continue"
-        Install-Language @params
+    $params = @{
+        Language        = $Language
+        CopyToSettings  = $true
+        ExcludeFeatures = $false
     }
-    catch {
-        throw $_
-    }
+    Write-Information -MessageData ":: Install language pack for: $Language" -InformationAction "Continue"
+    Install-Language @params
 }
 #endregion
 
@@ -59,23 +50,18 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
 # Set-WinUserLanguageList $LanguageList -force
 
 #region Set the locale
-try {
-    Write-Information -MessageData ":: Set locale to: $Language" -InformationAction "Continue"
-    $RegionInfo = New-Object -TypeName "System.Globalization.RegionInfo" -ArgumentList $Language
+Write-Information -MessageData ":: Set locale to: $Language" -InformationAction "Continue"
+$RegionInfo = New-Object -TypeName "System.Globalization.RegionInfo" -ArgumentList $Language
 
-    Import-Module -Name "International"
-    Set-TimeZone -Name $TimeZone
-    Set-Culture -CultureInfo $Language
-    Set-WinSystemLocale -SystemLocale $Language
-    Set-WinUILanguageOverride -Language $Language
-    Set-WinUserLanguageList -LanguageList $Language -Force
-    $RegionInfo = New-Object -TypeName "System.Globalization.RegionInfo" -ArgumentList $Language
-    Set-WinHomeLocation -GeoId $RegionInfo.GeoId
-    if (Get-Command -Name "Set-SystemPreferredUILanguage" -ErrorAction "SilentlyContinue") {
-        Set-SystemPreferredUILanguage -Language $Language
-    }
-}
-catch {
-    throw $_
+Import-Module -Name "International"
+Set-TimeZone -Name $TimeZone
+Set-Culture -CultureInfo $Language
+Set-WinSystemLocale -SystemLocale $Language
+Set-WinUILanguageOverride -Language $Language
+Set-WinUserLanguageList -LanguageList $Language -Force
+$RegionInfo = New-Object -TypeName "System.Globalization.RegionInfo" -ArgumentList $Language
+Set-WinHomeLocation -GeoId $RegionInfo.GeoId
+if (Get-Command -Name "Set-SystemPreferredUILanguage" -ErrorAction "SilentlyContinue") {
+    Set-SystemPreferredUILanguage -Language $Language
 }
 #endregion

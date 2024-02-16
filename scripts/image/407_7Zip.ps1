@@ -8,31 +8,21 @@
 New-Item -Path $Path -ItemType "Directory" -Force | Out-Null -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force | Out-Null -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
-    Import-Module -Name "Evergreen" -Force | Out-Null
-    $App = Get-EvergreenApp -Name "7ZipZS" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-}
-catch {
-    throw $_
-}
+Import-Module -Name "Evergreen" -Force | Out-Null
+$App = Get-EvergreenApp -Name "7ZipZS" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-try {
-    Write-Information -MessageData ":: Install 7zip" -InformationAction "Continue"
-    $params = @{
-        FilePath     = $OutFile.FullName
-        ArgumentList = "/S"
-        NoNewWindow  = $true
-        Wait         = $true
-        PassThru     = $true
-        ErrorAction  = "Continue"
-    }
-    $result = Start-Process @params
-    Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Write-Information -MessageData ":: Install 7zip" -InformationAction "Continue"
+$params = @{
+    FilePath     = $OutFile.FullName
+    ArgumentList = "/S"
+    NoNewWindow  = $true
+    Wait         = $true
+    PassThru     = $true
+    ErrorAction  = "Stop"
 }
-catch {
-    throw $_
-}
+$result = Start-Process @params
+Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 
 # Add registry entries for additional file types
 Write-Information -MessageData ":: Importing file type associations" -InformationAction "Continue"

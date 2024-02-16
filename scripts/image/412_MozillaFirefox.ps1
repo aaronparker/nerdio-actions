@@ -10,20 +10,15 @@ if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
     [System.String] $Channel = "LATEST_FIREFOX_VERSION"
 }
 else {
-    try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $params = @{
-            Uri             = $SecureVars.VariablesList
-            UseBasicParsing = $true
-            ErrorAction     = "Stop"
-        }
-        $Variables = Invoke-RestMethod @params
-        [System.String] $Language = $Variables.$AzureRegionName.FirefoxLanguage
-        [System.String] $Channel = $Variables.$AzureRegionName.FirefoxChannel
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $params = @{
+        Uri             = $SecureVars.VariablesList
+        UseBasicParsing = $true
+        ErrorAction     = "Stop"
     }
-    catch {
-        throw $_
-    }
+    $Variables = Invoke-RestMethod @params
+    [System.String] $Language = $Variables.$AzureRegionName.FirefoxLanguage
+    [System.String] $Channel = $Variables.$AzureRegionName.FirefoxChannel
 }
 #endregion
 
@@ -31,40 +26,30 @@ else {
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-try {
-    Import-Module -Name "Evergreen" -Force
-    $App = Get-EvergreenApp -Name "MozillaFirefox" | `
-        Where-Object { $_.Channel -eq $Channel -and $_.Architecture -eq "x64" -and $_.Language -eq $Language -and $_.Type -eq "msi" } | `
-        Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-}
-catch {
-    throw $_
-}
+Import-Module -Name "Evergreen" -Force
+$App = Get-EvergreenApp -Name "MozillaFirefox" | `
+    Where-Object { $_.Channel -eq $Channel -and $_.Architecture -eq "x64" -and $_.Language -eq $Language -and $_.Type -eq "msi" } | `
+    Select-Object -First 1
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-try {
-    Write-Information -MessageData ":: Install Mozilla Firefox" -InformationAction "Continue"
-    $LogFile = "$Env:ProgramData\Nerdio\Logs\MozillaFirefox$($App.Version).log" -replace " ", ""
-    $Options = "DESKTOP_SHORTCUT=false
+Write-Information -MessageData ":: Install Mozilla Firefox" -InformationAction "Continue"
+$LogFile = "$Env:ProgramData\Nerdio\Logs\MozillaFirefox$($App.Version).log" -replace " ", ""
+$Options = "DESKTOP_SHORTCUT=false
         TASKBAR_SHORTCUT=false
         INSTALL_MAINTENANCE_SERVICE=false
         REMOVE_DISTRIBUTION_DIR=true
         PREVENT_REBOOT_REQUIRED=true
         REGISTER_DEFAULT_AGENT=true"
-    $params = @{
-        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/package `"$($OutFile.FullName)`" $($Options -replace "\s+", " ") /quiet /log $LogFile"
-        NoNewWindow  = $true
-        Wait         = $true
-        PassThru     = $true
-        ErrorAction  = "Continue"
-    }
-    $result = Start-Process @params
-    Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+$params = @{
+    FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
+    ArgumentList = "/package `"$($OutFile.FullName)`" $($Options -replace "\s+", " ") /quiet /log $LogFile"
+    NoNewWindow  = $true
+    Wait         = $true
+    PassThru     = $true
+    ErrorAction  = "Stop"
 }
-catch {
-    throw $_
-}
+$result = Start-Process @params
+Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 
 Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\Mozilla Firefox.lnk")
