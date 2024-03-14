@@ -73,7 +73,6 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
 
 #region Set the locale
 Write-Information -MessageData ":: Set locale to: $Language" -InformationAction "Continue"
-$RegionInfo = New-Object -TypeName "System.Globalization.RegionInfo" -ArgumentList $Language
 
 Import-Module -Name "International"
 Set-TimeZone -Name $TimeZone
