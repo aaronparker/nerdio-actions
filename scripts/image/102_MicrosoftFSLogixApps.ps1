@@ -1,4 +1,24 @@
-#description: Installs the latest Microsoft FSLogix Apps agent and the FSLogix Apps Rules Editor
+<#
+.SYNOPSIS
+Installs the latest Microsoft FSLogix Apps agent and the FSLogix Apps Rules Editor.
+
+.DESCRIPTION
+This script installs the latest version of the Microsoft FSLogix Apps agent and the FSLogix Apps Rules Editor.
+It supports installing a specific version in case of any issues. The script downloads the agent from the specified URI,
+unpacks it, and then installs it silently. It also removes any existing shortcuts to FSLogix Apps Online Help.
+
+.PARAMETER Path
+The path where the Microsoft FSLogix Apps agent will be downloaded. The default path is "$Env:SystemDrive\Apps\Microsoft\FSLogix".
+
+.EXAMPLE
+.\102_MicrosoftFSLogixApps.ps1 -Path "C:\Program Files\FSLogix"
+
+.NOTES
+- This script requires the Evergreen module to be installed.
+- The script uses secure variables in Nerdio Manager to pass a JSON file with the variables list.
+- The script requires an internet connection to download the Microsoft FSLogix Apps agent.
+#>
+
 #execution mode: Combined
 #tags: Evergreen, Microsoft, FSLogix
 #Requires -Modules Evergreen
@@ -40,7 +60,6 @@ $Versions = @"
 ]
 "@
 #endregion
-
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null

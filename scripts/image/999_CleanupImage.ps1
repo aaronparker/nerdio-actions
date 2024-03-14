@@ -1,3 +1,22 @@
+<#
+.SYNOPSIS
+This script is used to clean up an image by reenabling settings, removing application installers,
+and removing logs older than 30 days post image completion.
+
+.DESCRIPTION
+The script performs the following actions:
+- Removes policies that prevent updates during deployment on Windows 10.
+- Removes unnecessary paths in the image, such as "$Env:SystemDrive\Apps" and "$Env:SystemDrive\DeployAgent".
+- Clears the Temp directory by removing all items and recreating the directory.
+- Deletes logs older than 30 days from the "$Env:ProgramData\Nerdio\Logs" directory.
+- Disables Windows Update by modifying the registry.
+
+.NOTES
+- This script should be run with administrative privileges.
+- The script is specifically designed for use in the Nerdio environment.
+- Use caution when modifying the registry as it can have unintended consequences.
+#>
+
 #description: Reenables settings, removes application installers, and remove logs older than 30 days post image completion
 #execution mode: Combined
 #tags: Image

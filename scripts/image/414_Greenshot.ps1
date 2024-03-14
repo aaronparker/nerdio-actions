@@ -1,3 +1,26 @@
+<#
+.SYNOPSIS
+Installs the latest version of Greenshot.
+
+.DESCRIPTION
+This script installs the latest version of Greenshot, a screenshot tool, on the local machine. It performs the following tasks:
+- Creates the installation directory for Greenshot.
+- Imports the "Evergreen" module for managing application installations.
+- Retrieves the latest version of Greenshot from the Evergreen repository.
+- Installs Greenshot silently with the specified command-line arguments.
+- Closes any running instances of Greenshot.
+- Downloads the default settings for Greenshot.
+- Removes unnecessary shortcuts.
+
+.PARAMETER Path
+The download path for Greenshot. The default value is "$Env:SystemDrive\Apps\Greenshot".
+
+.NOTES
+- This script requires the "Evergreen" module to be installed.
+- The script may need to be run with administrative privileges.
+- The script assumes that the necessary network connectivity is available to download the Greenshot installer and default settings.
+#>
+
 #description: Installs the latest version of Greenshot
 #execution mode: Combined
 #tags: Evergreen, Greenshot

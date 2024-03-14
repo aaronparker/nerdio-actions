@@ -1,3 +1,20 @@
+<#
+.SYNOPSIS
+Installs the latest Google Chrome 64-bit with automatic updates disabled.
+
+.DESCRIPTION
+This script installs the latest version of Google Chrome 64-bit with automatic updates disabled.
+It also configures various policies for roaming and cache.
+
+.PARAMETER Path
+Specifies the download path for Google Chrome. The default path is "$Env:SystemDrive\Apps\Google\Chrome".
+
+.NOTES
+- This script requires the "Evergreen" module.
+- The script assumes that it is being run on a gold image or that updates will be managed separately.
+- For more information on configuring Chrome browser in a VDI environment, refer to the following link: https://cloud.google.com/blog/products/chrome-enterprise/configuring-chrome-browser-in-your-vdi-environment
+#>
+
 #description: Installs the latest Google Chrome 64-bit with automatic updates disabled
 #execution mode: Combined
 #tags: Evergreen, Google, Chrome

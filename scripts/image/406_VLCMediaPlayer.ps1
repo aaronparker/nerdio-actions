@@ -1,3 +1,22 @@
+<#
+.SYNOPSIS
+Installs the latest VLC media player 64-bit.
+
+.DESCRIPTION
+This script installs the latest version of VLC media player (64-bit) on the system.
+It utilizes the Evergreen module to download and install the MSI package of VLC media player.
+The script also creates necessary directories and removes unnecessary shortcuts.
+
+.PARAMETER Path
+The download path for VLC media player. The default path is "$Env:SystemDrive\Apps\VLC\MediaPlayer".
+
+.NOTES
+- This script requires the Evergreen module to be installed.
+- The script must be run with administrative privileges.
+- The script is designed for 64-bit systems.
+- The script may take a few seconds to complete the installation process.
+#>
+
 #description: Installs the latest VLC media player 64-bit
 #execution mode: Combined
 #tags: Evergreen, VLC

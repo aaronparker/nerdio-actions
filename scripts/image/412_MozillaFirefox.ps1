@@ -1,3 +1,20 @@
+<#
+.SYNOPSIS
+Installs the latest version of Mozilla Firefox 64-bit with automatic update disabled.
+
+.DESCRIPTION
+This script installs the latest version of Mozilla Firefox 64-bit with automatic update disabled.
+It uses the Evergreen module to retrieve the appropriate version of Firefox based on the specified language and channel.
+
+.PARAMETER Path
+The download path for Mozilla Firefox.
+
+.NOTES
+- Requires the Evergreen module.
+- Uses secure variables in Nerdio Manager to pass a JSON file with the variables list.
+- Logs installation details to the Nerdio Logs directory.
+#>
+
 #description: Installs the latest version of Mozilla Firefox 64-bit with automatic update disabled
 #execution mode: Combined
 #tags: Evergreen, Mozilla, Firefox

@@ -1,3 +1,19 @@
+<#
+.SYNOPSIS
+Installs the latest Zoom Meetings VDI client.
+
+.DESCRIPTION
+This script installs the latest Zoom Meetings VDI client by downloading it using the Evergreen module and installing it silently using msiexec.exe.
+
+.PARAMETER Path
+The path where the Zoom Meetings VDI client will be downloaded. The default path is "$Env:SystemDrive\Apps\Zoom\Meetings".
+
+.NOTES
+- This script requires the Evergreen module to be installed.
+- The script creates a log file at "$Env:ProgramData\Nerdio\Logs\ZoomMeetings<version>.log" to track the installation progress.
+- The script uses the Start-Process cmdlet to execute msiexec.exe with the necessary arguments for silent installation.
+#>
+
 #description: Installs the latest Zoom Meetings VDI client
 #execution mode: Combined
 #tags: Evergreen, Zoom

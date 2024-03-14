@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Installs the latest Microsoft Teams per-machine for use on Windows 10/11 multi-session or Windows Server.
+
+.DESCRIPTION
+This script installs the latest version of Microsoft Teams per-machine.
+It first checks if the Teams application is already installed and, if so, uninstalls it.
+Then it downloads the latest version of Teams using the Evergreen module and installs it.
+Finally, it optimizes Teams for multi-session without GPU support by deleting the registry auto-start and updating the default profile.
+
+.PARAMETER Path
+The download path for Microsoft Teams.
+#>
+
 #description: Installs the latest Microsoft Teams per-machine for use on Windows 10/11 multi-session or Windows Server
 #execution mode: Combined
 #tags: Evergreen, Microsoft, Teams, per-machine

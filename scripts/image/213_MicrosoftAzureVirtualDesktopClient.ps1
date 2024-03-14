@@ -1,4 +1,22 @@
-#description: Installs the latest Microsoft Azure Virtual Desktop Remote Desktop client
+<#
+.SYNOPSIS
+Installs the latest Microsoft Azure Virtual Desktop Remote Desktop client.
+
+.DESCRIPTION
+This script installs the latest version of the Microsoft Azure Virtual Desktop Remote Desktop client.
+It uses the Evergreen module to retrieve the appropriate version of the client and installs it silently.
+
+.PARAMETER Path
+The path where the Microsoft Azure Virtual Desktop Remote Desktop client will be downloaded.
+The default path is "$Env:SystemDrive\Apps\Microsoft\Avd".
+
+.NOTES
+- This script requires the Evergreen module to be installed.
+- The script creates a log file in "$Env:ProgramData\Nerdio\Logs" to track the installation progress.
+- The script only installs the x64 version of the client from the "Public" channel.
+- The installation is performed silently without creating a desktop shortcut.
+#>
+
 #execution mode: Combined
 #tags: Evergreen, Microsoft, Remote Desktop
 #Requires -Modules Evergreen

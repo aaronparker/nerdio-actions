@@ -1,4 +1,20 @@
-#description: Installs the latest Foxit PDF Reader with automatic updates disabled
+<#
+.SYNOPSIS
+Installs the latest Foxit PDF Reader with automatic updates disabled.
+
+.DESCRIPTION
+This script installs the latest version of Foxit PDF Reader with automatic updates disabled.
+It uses the Evergreen module to retrieve the appropriate version of Foxit PDF Reader based on the specified language.
+The installation is performed silently and the installation log is saved in the Nerdio Logs folder.
+
+.PARAMETER Path
+Specifies the download path for Foxit PDF Reader. The default path is "$Env:SystemDrive\Apps\Foxit\PDFEditor".
+
+.NOTES
+- This script requires the Evergreen module to be installed.
+- The script assumes that it is being run on a gold image or that updates will be managed separately.
+#>
+
 #execution mode: Combined
 #tags: Evergreen, Foxit, PDF
 #Requires -Modules Evergreen

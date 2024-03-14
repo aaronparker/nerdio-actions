@@ -1,3 +1,19 @@
+<#
+.SYNOPSIS
+Installs Cisco WebEx VDI client with automatic updates disabled.
+
+.DESCRIPTION
+This script installs the Cisco WebEx VDI client with automatic updates disabled. The URL to the installer is hard-coded in this script.
+
+.PARAMETER Path
+Specifies the download path for the Cisco WebEx VDI client.
+
+.NOTES
+- This script requires the Evergreen module.
+- The installer URL and version number are hard-coded in this script and may need to be updated in the future.
+- This script creates a log file in the ProgramData\Nerdio\Logs directory.
+#>
+
 #description: Installs Cisco WebEx VDI client with automatic updates disabled. URL to the installer is hard coded in this script.
 #execution mode: Combined
 #tags: Evergreen, Cisco, WebEx

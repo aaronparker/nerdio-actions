@@ -1,3 +1,19 @@
+<#
+.SYNOPSIS
+Installs Windows Customised Defaults to customize the image and the default profile.
+
+.DESCRIPTION
+This script installs Windows Customised Defaults to customize the image and the default profile.
+It retrieves the necessary variables from Nerdio Manager or uses default values if no variables are provided. The script then downloads and extracts the installer,
+and runs the Install-Defaults.ps1 script with the specified language, time zone, and Appx mode.
+
+.PARAMETER Path
+The path where the Windows Customised Defaults will be installed.
+
+.EXAMPLE
+.\015_Customise.ps1 -Path "C:\Apps\image-customise"
+#>
+
 #description: Installs Windows Customised Defaults to customise the image and the default profile https://stealthpuppy.com/image-customise/
 #execution mode: Combined
 #tags: Evergreen, Customisation, Language, Image

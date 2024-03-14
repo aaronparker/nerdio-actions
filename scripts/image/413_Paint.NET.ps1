@@ -1,4 +1,21 @@
-#description: Installs the latest version of Paint.NET 64-bit with automatic update disabled
+<#
+.SYNOPSIS
+Installs the latest version of Paint.NET 64-bit with automatic update disabled.
+
+.DESCRIPTION
+This script installs the latest version of Paint.NET 64-bit with automatic update disabled.
+It uses the Evergreen module to download the Paint.NET installer and extracts it to the specified path.
+The script then installs Paint.NET silently using the extracted MSI file.
+Finally, it removes the desktop shortcut for Paint.NET.
+
+.PARAMETER Path
+The path where Paint.NET will be downloaded. The default value is "$Env:SystemDrive\Apps\Paint.NET".
+
+.NOTES
+- This script requires the Evergreen module to be installed.
+- The script must be run with administrative privileges.
+#>
+
 #execution mode: Combined
 #tags: Evergreen, Paint.NET
 #Requires -Modules Evergreen

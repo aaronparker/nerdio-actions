@@ -1,4 +1,22 @@
-#description: Installs the latest Microsoft Edge and Microsoft Edge WebView2
+<#
+.SYNOPSIS
+Installs the latest Microsoft Edge and Microsoft Edge WebView2.
+
+.DESCRIPTION
+This script installs the latest version of Microsoft Edge and Microsoft Edge WebView2.
+It uses the Evergreen module to download and install the appropriate versions based on the specified criteria.
+
+.PARAMETER Path
+The path where Microsoft Edge will be downloaded.
+
+.EXAMPLE
+.\104_MicrosoftEdge.ps1 -Path "C:\Apps\Microsoft\Edge"
+
+.NOTES
+- Requires the Evergreen module.
+- This script requires administrative privileges to install Microsoft Edge.
+#>
+
 #execution mode: Combined
 #tags: Evergreen, Microsoft, Edge, WebView2
 #Requires -Modules Evergreen

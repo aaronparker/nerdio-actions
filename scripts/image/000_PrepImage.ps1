@@ -1,4 +1,21 @@
-#description: Preps a RDS / AVD image for customisation.
+<#
+.SYNOPSIS
+Preps a RDS / AVD image for customization.
+
+.DESCRIPTION
+This script is used to prepare a RDS (Remote Desktop Services) or AVD (Azure Virtual Desktop) image
+for customization. It performs the following tasks:
+- Sets a policy to prevent Windows updates during deployment.
+- Customizes the Start menu.
+- Enables time zone redirection.
+- Creates and compresses a logs directory.
+
+.PARAMETER None
+
+.EXAMPLE
+.\000_PrepImage.ps1
+#>
+
 #execution mode: Combined
 #tags: Image
 

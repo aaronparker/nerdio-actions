@@ -1,4 +1,23 @@
-#description: Installs the Microsoft .NET Desktop LTS and Current Runtimes
+<#
+.SYNOPSIS
+Installs the Microsoft .NET Desktop LTS and Current Runtimes.
+
+.DESCRIPTION
+This script installs the Microsoft .NET Desktop LTS (Long-Term Support) and Current Runtimes.
+It uses the Evergreen module to download the appropriate installer and installs it silently with the specified command-line arguments.
+
+.PARAMETER Path
+The path where the Microsoft .NET runtime will be downloaded. The default path is "$Env:SystemDrive\Apps\Microsoft\NET".
+
+.EXAMPLE
+.\103_MicrosoftNET.ps1
+Installs the Microsoft .NET Desktop LTS and Current Runtimes using the default installation path.
+
+.NOTES
+- This script requires the Evergreen module to be installed.
+- The script creates a log file at "$Env:ProgramData\Nerdio\Logs\Microsoft.NET.log" to capture installation logs.
+#>
+
 #execution mode: Combined
 #tags: Evergreen, Microsoft, .NET
 #Requires -Modules Evergreen

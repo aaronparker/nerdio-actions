@@ -1,4 +1,24 @@
-#description: Installs the latest Microsoft Teams v2 per-machine for use on Windows 10/11 multi-session or Windows Server
+<#
+.SYNOPSIS
+Installs the latest Microsoft Teams v2 per-machine for use on Windows 10/11 multi-session or Windows Server.
+
+.DESCRIPTION
+This script installs the latest version of Microsoft Teams v2 per-machine.
+It downloads the Teams v2 Bootstrap installer and the Teams v2 MSIX installer from the specified URIs and installs them based on the operating system.
+It also sets the required registry value for IsWVDEnvironment and optimizes Teams by disabling auto-update and installing the Teams meeting add-in.
+
+.PARAMETER Path
+The path where Microsoft Teams will be downloaded. The default path is "$Env:SystemDrive\Apps\Microsoft\Teams".
+
+.EXAMPLE
+Install-MicrosoftTeams -Path "C:\Program Files\Microsoft\Teams"
+
+.NOTES
+- This script requires the Evergreen module.
+- Secure variables can be used to pass a JSON file with the variables list.
+- The script supports Windows 10/11 multi-session and Windows Server.
+#>
+
 #execution mode: Combined
 #tags: Evergreen, Microsoft, Teams, per-machine
 #Requires -Modules Evergreen
@@ -29,58 +49,52 @@ else {
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-    # https://go.microsoft.com/fwlink/?linkid=2243204&clcid=0x409
-    # https://statics.teams.cdn.office.net/production-teamsprovision/lkg/teamsbootstrapper.exe
+# Download Teams v2 Bootstrap installer
+$App = [PSCustomObject]@{
+    Version = "2.0.0"
+    URI     = "https://statics.teams.cdn.office.net/production-teamsprovision/lkg/teamsbootstrapper.exe"
+}
+$TeamsExe = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-    # https://go.microsoft.com/fwlink/?linkid=2196106
-    # https://statics.teams.cdn.office.net/production-windows-x64/enterprise/webview2/lkg/MSTeams-x64.msix
+# Download Teams v2 MSIX installer
+$App = [PSCustomObject]@{
+    Version = "2.0.0"
+    URI     = "https://statics.teams.cdn.office.net/production-windows-x64/enterprise/webview2/lkg/MSTeams-x64.msix"
+}
+$TeamsMsi = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-    # Download Teams v2 Bootstrap installer
-    $App = [PSCustomObject]@{
-        Version = "2.0.0"
-        URI     = "https://statics.teams.cdn.office.net/production-teamsprovision/lkg/teamsbootstrapper.exe"
-    }
-    $TeamsExe = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+# Set required IsWVDEnvironment registry value
+reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /d 1 /t "REG_DWORD" /f | Out-Null
 
-    # Download Teams v2 MSIX installer
-    $App = [PSCustomObject]@{
-        Version = "2.0.0"
-        URI     = "https://statics.teams.cdn.office.net/production-windows-x64/enterprise/webview2/lkg/MSTeams-x64.msix"
-    }
-    $TeamsMsi = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
-
-    # Set required IsWVDEnvironment registry value
-    reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /d 1 /t "REG_DWORD" /f | Out-Null
-
-    # Install Teams
-    Write-Information -MessageData ":: Install Microsoft Teams" -InformationAction "Continue"
-    switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
-        "Microsoft Windows Server*" {
-            $params = @{
-                FilePath     = "$Env:SystemRoot\System32\dism.exe"
-                ArgumentList = "/Online /Add-ProvisionedAppxPackage /PackagePath:`"$($TeamsMsi.FullName)`" /SkipLicense"
-                NoNewWindow  = $true
-                Wait         = $true
-                PassThru     = $true
-                ErrorAction  = "Continue"
-            }
-            $result = Start-Process @params
-            Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+# Install Teams
+Write-Information -MessageData ":: Install Microsoft Teams" -InformationAction "Continue"
+switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
+    "Microsoft Windows Server*" {
+        $params = @{
+            FilePath     = "$Env:SystemRoot\System32\dism.exe"
+            ArgumentList = "/Online /Add-ProvisionedAppxPackage /PackagePath:`"$($TeamsMsi.FullName)`" /SkipLicense"
+            NoNewWindow  = $true
+            Wait         = $true
+            PassThru     = $true
+            ErrorAction  = "Continue"
         }
-
-        "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*|Microsoft Windows 10 Enterprise*|Microsoft Windows 10 Pro*" {
-            $params = @{
-                FilePath     = $TeamsExe.FullName
-                ArgumentList = "-p -o `"$($TeamsMsi.FullName)`""
-                NoNewWindow  = $true
-                Wait         = $true
-                PassThru     = $true
-                ErrorAction  = "Continue"
-            }
-            $result = Start-Process @params
-            Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
-        }
+        $result = Start-Process @params
+        Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
     }
+
+    "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*|Microsoft Windows 10 Enterprise*|Microsoft Windows 10 Pro*" {
+        $params = @{
+            FilePath     = $TeamsExe.FullName
+            ArgumentList = "-p -o `"$($TeamsMsi.FullName)`""
+            NoNewWindow  = $true
+            Wait         = $true
+            PassThru     = $true
+            ErrorAction  = "Continue"
+        }
+        $result = Start-Process @params
+        Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+    }
+}
 #endregion
 
 #region Optimise Teams

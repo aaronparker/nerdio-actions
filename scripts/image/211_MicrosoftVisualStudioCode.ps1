@@ -1,4 +1,19 @@
-#description: Installs the latest Microsoft Visual Studio Code 64-bit
+<#
+.SYNOPSIS
+Installs the latest Microsoft Visual Studio Code 64-bit.
+
+.DESCRIPTION
+This script installs the latest version of Microsoft Visual Studio Code (64-bit) on a Windows machine. It uses the Evergreen module to retrieve the latest version of Visual Studio Code and installs it silently.
+
+.PARAMETER Path
+The download path for Microsoft Visual Studio Code. The default path is "$Env:SystemDrive\Apps\Microsoft\VisualStudioCode".
+
+.NOTES
+- This script requires the Evergreen module to be installed.
+- The script creates a log file in "$Env:ProgramData\Nerdio\Logs" to track the installation progress.
+- The script stops any running instances of Microsoft Visual Studio Code before installing the new version.
+#>
+
 #execution mode: Combined
 #tags: Evergreen, Microsoft, Visual Studio Code
 #Requires -Modules Evergreen

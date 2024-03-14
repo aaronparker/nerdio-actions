@@ -1,3 +1,21 @@
+<#
+.SYNOPSIS
+Installs the latest version of the Citrix Workspace app.
+
+.DESCRIPTION
+This script installs the latest version of the Citrix Workspace app.
+It uses the Evergreen module to retrieve the appropriate version based on the specified stream.
+The installation is performed silently with specific command-line arguments.
+
+.PARAMETER Path
+The path where the Citrix Workspace app will be download. The default path is "$Env:SystemDrive\Apps\Citrix\Workspace".
+
+.NOTES
+- This script requires the Evergreen module to be installed.
+- The script assumes that the Citrix Workspace app installation file is available in the specified stream.
+- The script disables the Citrix Workspace app update tasks and removes certain startup items.
+#>
+
 #description: Installs the latest version of the Citrix Workspace app
 #execution mode: Combined
 #tags: Evergreen, Citrix

@@ -1,3 +1,26 @@
+<#
+.SYNOPSIS
+Installs the latest Microsoft OneDrive per-machine for use on Windows 10/11 multi-session or Windows Server.
+
+.DESCRIPTION
+This script installs the latest version of Microsoft OneDrive per-machine.
+It uses the Evergreen module to retrieve the latest version of the OneDrive executable and installs it silently with the specified arguments.
+The script also creates the necessary directories and logs for the installation.
+
+.PARAMETER Path
+The installation path for Microsoft OneDrive. The default path is "$Env:SystemDrive\Apps\Microsoft\OneDrive".
+
+.EXAMPLE
+.\200_MicrosoftOneDrive.ps1
+
+This example runs the script and installs the latest version of Microsoft OneDrive per-machine.
+
+.NOTES
+- This script requires the Evergreen module to be installed.
+- The script is designed to be run on Windows 10/11 multi-session or Windows Server.
+- The script must be run with administrative privileges.
+#>
+
 #description: Installs the latest Microsoft OneDrive per-machine for use on Windows 10/11 multi-session or Windows Server
 #execution mode: Combined
 #tags: Evergreen, Microsoft, OneDrive, per-machine

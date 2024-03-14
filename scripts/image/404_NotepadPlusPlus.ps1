@@ -1,4 +1,21 @@
-#description: Installs the latest Notepad++ 64-bit with automatic updates disabled.
+<#
+.SYNOPSIS
+Installs the latest Notepad++ 64-bit with automatic updates disabled.
+
+.DESCRIPTION
+This script installs the latest version of Notepad++ 64-bit on the local machine. It also disables the automatic update feature of Notepad++.
+
+.PARAMETER Path
+Specifies the download path for Notepad++. The default path is "$Env:SystemDrive\Apps\NotepadPlusPlus".
+
+.NOTES
+- This script requires the "Evergreen" module.
+- The script will create a directory at the specified installation path if it does not already exist.
+- The script will create a directory at "$Env:ProgramData\Nerdio\Logs" if it does not already exist.
+- The script will download the latest version of Notepad++ from the Evergreen repository and install it silently.
+- The script will disable the automatic update feature of Notepad++ by renaming the updater folder.
+#>
+
 #execution mode: Combined
 #tags: Evergreen, Notepad++
 #Requires -Modules Evergreen
