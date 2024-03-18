@@ -52,7 +52,7 @@ try {
 
     #region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
     try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
         $params = @{
             Uri             = $SecureVars.VariablesList
             UseBasicParsing = $true

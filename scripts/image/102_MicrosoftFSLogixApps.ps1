@@ -70,7 +70,7 @@ Import-Module -Name "Evergreen" -Force
 
 #region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
 $ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 $params = @{
     Uri             = $SecureVars.VariablesList
     UseBasicParsing = $true
