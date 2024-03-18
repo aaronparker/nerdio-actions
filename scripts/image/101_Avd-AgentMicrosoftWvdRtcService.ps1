@@ -30,18 +30,6 @@ Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftWvdRtcService" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-# Workaround for HTTP 502 on Azure
-# $ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
-# [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-# $params = @{
-#     Uri             = "https://aka.ms/msrdcwebrtcsvc/msi"
-#     OutFile         = "$Path\MsRdcWebRTCSvc_HostSetup_x64.msi"
-#     UseBasicParsing = $true
-#     ErrorAction     = "Stop"
-# }
-# Invoke-WebRequest @params
-# $OutFile = Get-ChildItem -Path "$Path\MsRdcWebRTCSvc_HostSetup_x64.msi"
-
 # Install RTC
 Write-Information -MessageData ":: Install Microsoft Remote Desktop WebRTC Redirector Service" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftWvdRtcService$($App.Version).log" -replace " ", ""
