@@ -15,6 +15,7 @@ The path where the agents will be downloaded. The default path is "$Env:SystemDr
 - This script is intended for use in an Azure Virtual Desktop environment.
 #>
 
+#description: Installs the latest Microsoft Azure Virtual Desktop Multimedia Redirection Extensions
 #execution mode: Combined
 #tags: Evergreen, Microsoft, AVD
 #Requires -Modules Evergreen
