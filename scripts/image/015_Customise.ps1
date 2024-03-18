@@ -28,7 +28,7 @@ if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
 }
 else {
     $ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
     $params = @{
         Uri             = $SecureVars.VariablesList
         UseBasicParsing = $true

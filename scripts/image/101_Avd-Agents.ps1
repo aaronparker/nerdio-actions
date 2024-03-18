@@ -37,7 +37,7 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 
 # Workaround for HTTP 502 on Azure
 $ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 $params = @{
     Uri             = "https://aka.ms/msrdcwebrtcsvc/msi"
     OutFile         = "$Path\MsRdcWebRTCSvc_HostSetup_x64.msi"
