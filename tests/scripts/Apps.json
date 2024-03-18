@@ -143,22 +143,6 @@
         ]
     },
     {
-        "Name": "GoogleChrome",
-        "Filter": "Get-EvergreenApp -Name \"GoogleChrome\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"stable\" } | Select-Object -First 1",
-        "Installed": "Google Chrome",
-        "FilesExist": [
-            "C:\\Program Files\\Google\\Chrome\\Application\\master_preferences",
-            "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
-        ],
-        "ShortcutsNotExist": [
-            "C:\\Users\\Public\\Desktop\\Google Chrome.lnk"
-        ],
-        "ServicesDisabled": [
-            "gupdate",
-            "gupdatem"
-        ]
-    },
-    {
         "Name": "NotepadPlusPlus",
         "Filter": "Get-EvergreenApp -Name \"NotepadPlusPlus\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"exe\" } | Select-Object -First 1",
         "Installed": "Notepad.*(64-bit x64)",
