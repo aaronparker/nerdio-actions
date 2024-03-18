@@ -10,13 +10,20 @@ It also sets the required registry value for IsWVDEnvironment and optimizes Team
 .PARAMETER Path
 The path where Microsoft Teams will be downloaded. The default path is "$Env:SystemDrive\Apps\Microsoft\Teams".
 
-.EXAMPLE
-Install-MicrosoftTeams -Path "C:\Program Files\Microsoft\Teams"
-
 .NOTES
 - This script requires the Evergreen module.
 - Secure variables can be used to pass a JSON file with the variables list.
 - The script supports Windows 10/11 multi-session and Windows Server.
+
+#region Optimise Teams
+# Autostart
+# HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\MSTeams_8wekyb3d8bbwe\TeamsTfwStartupTask
+# State
+# 2,1
+
+# %LocalAppData%\Packages\MSTeams_8wekyb3d8bbwe\LocalCache\Microsoft\MSTeams\app_settings.json
+# "open_app_in_background":true
+# "language": "en-AU"
 #>
 
 #execution mode: Combined
@@ -45,6 +52,33 @@ else {
 }
 #endregion
 
+#region Functions
+function Get-InstalledSoftware {
+    [CmdletBinding()]
+    param ()
+    $UninstallKeys = @(
+        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*",
+        "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
+    )
+
+    $Apps = @()
+    foreach ($Key in $UninstallKeys) {
+        try {
+            $propertyNames = "DisplayName", "DisplayVersion", "Publisher", "UninstallString", "PSPath", "WindowsInstaller", "InstallDate", "InstallSource", "HelpLink", "Language", "EstimatedSize", "SystemComponent"
+            $Apps += Get-ItemProperty -Path $Key -Name $propertyNames -ErrorAction "SilentlyContinue" | `
+                . { process { if ($Null -ne $_.DisplayName) { $_ } } } | `
+                Where-Object { $_.SystemComponent -ne 1 } | `
+                Select-Object -Property @{n = "Name"; e = { $_.DisplayName } }, @{n = "Version"; e = { $_.DisplayVersion } }, "Publisher", "UninstallString", @{n = "RegistryPath"; e = { $_.PSPath -replace "Microsoft.PowerShell.Core\\Registry::", "" } }, "PSChildName", "WindowsInstaller", "InstallDate", "InstallSource", "HelpLink", "Language", "EstimatedSize" | `
+                Sort-Object -Property "DisplayName", "Publisher"
+        }
+        catch {
+            throw $_
+        }
+    }
+    return $Apps
+}
+#endregion
+
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
@@ -61,18 +95,23 @@ $App = [PSCustomObject]@{
     Version = "2.0.0"
     URI     = "https://statics.teams.cdn.office.net/production-windows-x64/enterprise/webview2/lkg/MSTeams-x64.msix"
 }
-$TeamsMsi = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$TeamsMsix = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+
+# Remove any existing Teams AppX package
+Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq "MSTeams_8wekyb3d8bbwe" } | Remove-AppxPackage -ErrorAction "SilentlyContinue"
+
+# Install Teams
+Write-Information -MessageData ":: Install Microsoft Teams" -InformationAction "Continue"
 
 # Set required IsWVDEnvironment registry value
 reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /d 1 /t "REG_DWORD" /f | Out-Null
 
-# Install Teams
-Write-Information -MessageData ":: Install Microsoft Teams" -InformationAction "Continue"
+# Install steps based on the OS we're running on
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     "Microsoft Windows Server*" {
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\dism.exe"
-            ArgumentList = "/Online /Add-ProvisionedAppxPackage /PackagePath:`"$($TeamsMsi.FullName)`" /SkipLicense"
+            ArgumentList = "/Online /Add-ProvisionedAppxPackage /PackagePath:`"$($TeamsMsix.FullName)`" /SkipLicense"
             NoNewWindow  = $true
             Wait         = $true
             PassThru     = $true
@@ -85,7 +124,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*|Microsoft Windows 10 Enterprise*|Microsoft Windows 10 Pro*" {
         $params = @{
             FilePath     = $TeamsExe.FullName
-            ArgumentList = "-p -o `"$($TeamsMsi.FullName)`""
+            ArgumentList = "-p -o `"$($TeamsMsix.FullName)`""
             NoNewWindow  = $true
             Wait         = $true
             PassThru     = $true
@@ -95,32 +134,35 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
         Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
     }
 }
-#endregion
-
-#region Optimise Teams
-# Autostart
-# HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\MSTeams_8wekyb3d8bbwe\TeamsTfwStartupTask
-# State
-# 2,1
-
-# %LocalAppData%\Packages\MSTeams_8wekyb3d8bbwe\LocalCache\Microsoft\MSTeams\app_settings.json
-# "open_app_in_background":true
-# "language": "en-AU"
 
 # Disable auto-update
 reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "DisableAutoUpdate" /d 1 /t "REG_DWORD" /f | Out-Null
 
-# Install Teams / Outlook meeting add-in
-Write-Information -MessageData ":: Install Microsoft Teams meeting add-in" -InformationAction "Continue"
-
-$TeamsPath = Get-ChildItem -Path "$Env:ProgramFiles\WindowsApps\MSTeams*" | Select-Object -ExpandProperty FullName | Sort-Object | Select-Object -First 1
-$AddInInstaller = Get-ChildItem -Path $TeamsPath -Recurse -Include "MicrosoftTeamsMeetingAddinInstaller.msi"
-$Version = Get-AppLockerFileInformation -Path $AddInInstaller.FullName | Select-Object -ExpandProperty "Publisher"
+# Get the add-in path and version. Let's assume the Teams install has been successful
+$TeamsPath = Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq "MSTeams_8wekyb3d8bbwe" } | Select-Object -ExpandProperty "InstallLocation"
+$AddInInstallerPath = Get-ChildItem -Path $TeamsPath -Recurse -Include "MicrosoftTeamsMeetingAddinInstaller.msi" | Select-Object -ExpandProperty "FullName"
+$Version = Get-AppLockerFileInformation -Path $AddInInstallerPath | Select-Object -ExpandProperty "Publisher"
 $AddInPath = "${Env:ProgramFiles(x86)}\Microsoft\TeamsMeetingAddin\$($Version.BinaryVersion.ToString())"
 
+# Uninstall the old add-in if it's installed
+$PreviousInstall = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Teams Meeting Add-in*" }
+if ([System.String]::IsNullOrEmpty($PreviousInstall.PSChildName)) {}
+else {
+    $params = @{
+        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
+        ArgumentList = "/uninstall `"$($PreviousInstall.PSChildName)`" /quiet /norestart"
+        NoNewWindow  = $true
+        Wait         = $true
+        PassThru     = $true
+        ErrorAction  = "Continue"
+    }
+    $result = Start-Process @params
+}
+
+# Install the new version of the add-in
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-    ArgumentList = "/package `"$($AddInInstaller.FullName)`" ALLUSERS=1 TARGETDIR=`"$AddInPath`" /quiet /norestart"
+    ArgumentList = "/package `"$AddInInstallerPath`" ALLUSERS=1 TARGETDIR=`"$AddInPath`" /quiet /norestart"
     NoNewWindow  = $true
     Wait         = $true
     PassThru     = $true
