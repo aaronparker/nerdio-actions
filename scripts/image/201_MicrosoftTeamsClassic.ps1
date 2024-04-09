@@ -69,7 +69,7 @@ else {
 
 # Download Teams
 Import-Module -Name "Evergreen" -Force
-$App = Get-EvergreenApp -Name "MicrosoftTeams" | `
+$App = Get-EvergreenApp -Name "MicrosoftTeamsClassic" | `
     Where-Object { $_.Architecture -eq "x64" -and $_.Ring -eq "General" -and $_.Type -eq "msi" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 

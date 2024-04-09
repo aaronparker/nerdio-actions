@@ -91,10 +91,8 @@ $App = [PSCustomObject]@{
 $TeamsExe = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Download Teams v2 MSIX installer
-$App = [PSCustomObject]@{
-    Version = "2.0.0"
-    URI     = "https://statics.teams.cdn.office.net/production-windows-x64/enterprise/webview2/lkg/MSTeams-x64.msix"
-}
+$App = Get-EvergreenApp -Name "MicrosoftTeams" | `
+    Where-Object { $_.Release -eq "Enterprise" -and $_.Architecture -eq "x64" }
 $TeamsMsix = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Remove any existing Teams AppX package

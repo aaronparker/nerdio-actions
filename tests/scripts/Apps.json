@@ -79,8 +79,8 @@
         "ServicesDisabled": []
     },
     {
-        "Name": "MicrosoftTeams",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftTeams\" | Where-Object { $_.Ring -eq \"General\" -and $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Name": "MicrosoftTeamsClassic",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftTeamsClassic\" | Where-Object { $_.Ring -eq \"General\" -and $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
         "Installed": "Teams Machine-Wide Installer",
         "FilesExist": [
             "C:\\Program Files (x86)\\Teams Installer\\setup.json",
