@@ -15,19 +15,9 @@
         "ServicesDisabled": []
     },
     {
-        "Name": "MicrosoftFSLogixAppsRuleEditor",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftFSLogixApps\" | Where-Object { $_.Channel -eq \"Production\" } | Select-Object -First 1",
-        "Installed": "Microsoft FSLogix Apps RuleEditor",
-        "FilesExist": [
-            "C:\\Program Files\\FSLogix\\Apps\\RuleEditor.exe"
-        ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
         "Name": "Microsoft.NET",
         "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"LTS\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
-        "Installed": "Microsoft Windows Desktop Runtime - 6",
+        "Installed": "Microsoft Windows Desktop Runtime - 8",
         "FilesExist": [
             "C:\\Program Files\\dotnet\\dotnet.exe"
         ],
@@ -36,7 +26,7 @@
     },
     {
         "Name": "Microsoft.NET",
-        "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"Current\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"STS\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
         "Installed": "Microsoft Windows Desktop Runtime - 7",
         "FilesExist": [
             "C:\\Program Files\\dotnet\\dotnet.exe"

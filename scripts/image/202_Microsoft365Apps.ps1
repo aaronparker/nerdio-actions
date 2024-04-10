@@ -119,9 +119,10 @@ else {
         ErrorAction     = "Stop"
     }
     $OfficeXml = (Invoke-WebRequest @params).Content 
-    $XmlFile = Join-Path -Path $Path -ChildPath "Office.xml"
-    Out-File -FilePath $XmlFile -InputObject $OfficeXml -Encoding "utf8"
 }
+
+$XmlFile = Join-Path -Path $Path -ChildPath "Office.xml"
+Out-File -FilePath $XmlFile -InputObject $OfficeXml -Encoding "utf8"
 #endregion
 
 # Get Office version and download

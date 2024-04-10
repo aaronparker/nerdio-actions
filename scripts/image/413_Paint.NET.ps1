@@ -33,6 +33,7 @@ $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction 
 $params = @{
     Path            = $OutFile.FullName
     DestinationPath = $Path
+    Force           = $true
     ErrorAction     = "Stop"
 }
 Expand-Archive @params
