@@ -274,7 +274,7 @@
     },
     {
         "Name": "1Password",
-        "Filter": "Get-EvergreenApp -Name \"1Password\" | Select-Object -First 1",
+        "Filter": "Get-EvergreenApp -Name \"1Password\" | Where-Object { $_.Type -eq \"msi\" } | Select-Object -First 1",
         "Installed": "1Password*",
         "FilesExist": [
             "C:\\Program Files\\1Password\\app\\8\\1Password.exe"

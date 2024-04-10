@@ -23,12 +23,7 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Download
-$App = [PSCustomObject]@{
-    Version = "8.10.18"
-    URI     = "https://downloads.1password.com/win/1PasswordSetup-latest.msi"
-}
-Import-Module -Name "Evergreen" -Force
-#$App = Get-EvergreenApp -Name "1Password" | Select-Object -First 1
+$App = Get-EvergreenApp -Name "1Password" | Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "Stop"
 
 Write-Information -MessageData ":: Install AgileBits 1Password" -InformationAction "Continue"
