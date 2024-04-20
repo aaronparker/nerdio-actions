@@ -273,16 +273,6 @@
         ]
     },
     {
-        "Name": "1Password",
-        "Filter": "Get-EvergreenApp -Name \"1Password\" | Where-Object { $_.Type -eq \"msi\" } | Select-Object -First 1",
-        "Installed": "1Password*",
-        "FilesExist": [
-            "C:\\Program Files\\1Password\\app\\8\\1Password.exe"
-        ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
         "Name": "Microsoft Azure CLI",
         "Filter": "Get-EvergreenApp -Name \"MicrosoftAzureCLI\" | Where-Object { $_.Type -eq \"msi\" } | Select-Object -First 1",
         "Installed": "Microsoft Azure CLI*",
@@ -334,17 +324,6 @@
         "Installed": "PowerShell*",
         "FilesExist": [
             "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
-        ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "1Password CLI",
-        "Filter": "",
-        "Installed": "1Password*",
-        "FilesExist": [
-            "C:\\Program Files\\1Password CLI\\op.exe",
-            "C:\\Program Files\\1Password CLI\\op.exe.sig"
         ],
         "ShortcutsNotExist": [],
         "ServicesDisabled": []
