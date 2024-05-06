@@ -100,8 +100,6 @@ $TeamsMsix = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningActio
 Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq "MSTeams_8wekyb3d8bbwe" } | Remove-AppxPackage -ErrorAction "SilentlyContinue"
 
 # Install Teams
-
-
 # Set required IsWVDEnvironment registry value
 reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /d 1 /t "REG_DWORD" /f | Out-Null
 

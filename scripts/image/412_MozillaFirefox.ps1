@@ -24,7 +24,7 @@ The download path for Mozilla Firefox.
 #region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
 if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
     [System.String] $Language = "en-US"
-    [System.String] $Channel = "LATEST_FIREFOX_VERSION"
+    [System.String] $Channel = "Current"
 }
 else {
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072

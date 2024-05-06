@@ -38,7 +38,6 @@ $params = @{
 }
 Start-Process @params
 
-
 # Disable features that aren't suitable for VDI
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityAwake" /d 0 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityHostsFileEditor" /d 0 /t "REG_DWORD" /f | Out-Null
