@@ -60,7 +60,6 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
         CopyToSettings  = $true
         ExcludeFeatures = $false
     }
-    Write-Information -MessageData ":: Install language pack for: $Language" -InformationAction "Continue"
     Install-Language @params
 }
 #endregion

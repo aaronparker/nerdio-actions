@@ -23,7 +23,6 @@ The script performs the following actions:
 
 if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft Windows 1*") {
     # Remove policies
-    Write-Information -MessageData ":: Remove policies that prevent updates during deployment" -InformationAction "Continue"
     reg delete "HKLM\Software\Policies\Microsoft\WindowsStore" /v "AutoDownload" /f
 }
 

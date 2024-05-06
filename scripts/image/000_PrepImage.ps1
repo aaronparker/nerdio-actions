@@ -22,7 +22,6 @@ for customization. It performs the following tasks:
 
 if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft Windows 1*") {
     # Prevent Windows from installing stuff during deployment
-    Write-Information -MessageData ":: Set policy to prevent updates during deployment" -InformationAction "Continue"
     reg add "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableWindowsConsumerFeatures" /d 1 /t "REG_DWORD" /f | Out-Null
     reg add "HKLM\Software\Policies\Microsoft\WindowsStore" /v "AutoDownload" /d 2 /t "REG_DWORD" /f | Out-Null
 }

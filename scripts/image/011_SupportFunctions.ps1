@@ -39,7 +39,6 @@ foreach ($module in "Evergreen", "VcRedist", "PSWindowsUpdate") {
         Select-Object -First 1
     $publishedModule = Find-Module -Name $module -ErrorAction "SilentlyContinue"
     if (($null -eq $installedModule) -or ([System.Version]$publishedModule.Version -gt [System.Version]$installedModule.Version)) {
-        Write-Information -MessageData ":: Install module: $module" -InformationAction "Continue"
         $params = @{
             Name               = $module
             SkipPublisherCheck = $true

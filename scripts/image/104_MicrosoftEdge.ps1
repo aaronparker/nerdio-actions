@@ -40,7 +40,6 @@ $File = Get-ChildItem -Path $EdgeExe
 if (!(Test-Path -Path $EdgeExe) -or ([System.Version]$File.VersionInfo.ProductVersion -lt [System.Version]$App.Version)) {
 
     # Install
-    Write-Information -MessageData ":: Install Microsoft Edge" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftEdge$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"

@@ -77,7 +77,6 @@ $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction 
 if (Test-Path -Path $TeamsExe) {
     $File = Get-ChildItem -Path $TeamsExe
     if ([System.Version]$File.VersionInfo.ProductVersion -le [System.Version]$App.Version) {
-        Write-Information -MessageData ":: Uninstall Microsoft Teams" -InformationAction "Continue"
         $LogFile = "$Env:ProgramData\Nerdio\Logs\UninstallMicrosoftTeams$($File.VersionInfo.ProductVersion).log" -replace " ", ""
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -98,7 +97,6 @@ if (Test-Path -Path $TeamsExe) {
 
 $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "Teams Machine-Wide Installer" }
 foreach ($App in $Apps) {
-    Write-Information -MessageData ":: Uninstall Microsoft Teams Machine Wide Installer" -InformationAction "Continue"
     $LogFile = "$Env:ProgramData\Nerdio\Logs\UninstallMicrosoftTeamsMachineWideInstaller$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
