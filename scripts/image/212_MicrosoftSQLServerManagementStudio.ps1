@@ -33,7 +33,6 @@ $App = Get-EvergreenApp -Name "MicrosoftSsms" | `
     Where-Object { $_.Language -eq "English" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install Microsoft SQL Server Management Studio" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftSQLServerManagementStudio$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = $OutFile.FullName
@@ -43,6 +42,5 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 #endregion

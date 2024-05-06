@@ -47,7 +47,6 @@ foreach ($App in $Apps) {
         ErrorAction  = "Continue"
     }
     $result = Start-Process @params
-    $result.ExitCode
 }
 
 if ($result.ExitCode -eq 0) {

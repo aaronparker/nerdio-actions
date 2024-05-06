@@ -17,6 +17,7 @@ The default path is "$Env:SystemDrive\Apps\Microsoft\Avd".
 - The installation is performed silently without creating a desktop shortcut.
 #>
 
+#description: Installs the latest Microsoft Azure Virtual Desktop Remote Desktop client
 #execution mode: Combined
 #tags: Evergreen, Microsoft, Remote Desktop
 #Requires -Modules Evergreen
@@ -31,7 +32,6 @@ $App = Get-EvergreenApp -Name "MicrosoftWvdRemoteDesktop" | `
     Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Public" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install Microsoft Azure Virtual Desktop Remote Desktop client" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftAvdClient$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -41,6 +41,5 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 #endregion

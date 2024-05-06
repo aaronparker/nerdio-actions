@@ -87,8 +87,7 @@ if (Test-Path -Path $TeamsExe) {
             PassThru     = $true
             ErrorAction  = "Continue"
         }
-        $result = Start-Process @params
-        $result.ExitCode
+        Start-Process @params
 
         $Folders = "${env:ProgramFiles(x86)}\Microsoft\Teams", `
             "${env:ProgramFiles(x86)}\Microsoft\TeamsMeetingAddin", `
@@ -109,12 +108,10 @@ foreach ($App in $Apps) {
         Wait         = $true
         ErrorAction  = "Continue"
     }
-    $result = Start-Process @params
-    $result.ExitCode
+    Start-Process @params
 }
 
 # Install Teams
-Write-Information -MessageData ":: Install Microsoft Teams" -InformationAction "Continue"
 New-Item -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Teams" -Name "IsWVDEnvironment" -PropertyType "DWORD" -Value 1 -Force -ErrorAction "SilentlyContinue" | Out-Null
 $LogFile = $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftTeams$($App.Version).log" -replace " ", ""
@@ -126,8 +123,7 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 #endregion
 
 #region Optimise Teams for multi-session without GPU support

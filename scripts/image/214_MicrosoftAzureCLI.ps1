@@ -16,6 +16,7 @@ Specifies the download path for Microsoft Azure CLI. The default path is "$Env:S
 - The script uses the Start-Process cmdlet to execute the MSI package installation silently.
 #>
 
+#description: Installs the latest Microsoft Azure CLI
 #execution mode: Combined
 #tags: Evergreen, Microsoft, Azure
 #Requires -Modules Evergreen
@@ -30,7 +31,6 @@ $App = Get-EvergreenApp -Name "MicrosoftAzureCLI" | `
     Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install Microsoft Azure CLI" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftAvdCli$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -40,6 +40,5 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 #endregion

@@ -16,6 +16,7 @@ for customization. It performs the following tasks:
 .\000_PrepImage.ps1
 #>
 
+#description: Preps a RDS / AVD image for customization.
 #execution mode: Combined
 #tags: Image
 
@@ -33,7 +34,6 @@ if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft 
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v fEnableTimeZoneRedirection /t REG_DWORD /d 1 /f
 
 # Create logs directory and compress
-Write-Information -MessageData ":: Create and compress: '$Env:ProgramData\Nerdio\Logs'" -InformationAction "Continue"
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\compact.exe"

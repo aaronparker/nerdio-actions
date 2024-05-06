@@ -43,6 +43,5 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-$result.ExitCode
+Start-Process @params
 #endregion

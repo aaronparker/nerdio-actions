@@ -35,7 +35,6 @@ Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "Greenshot" | Where-Object { $_.Type -eq "exe" -and $_.InstallerType -eq "Default" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install Greenshot" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\Greenshot$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = $OutFile.FullName
@@ -45,8 +44,7 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Stop"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 
 # Close Greenshot
 Start-Sleep -Seconds 10

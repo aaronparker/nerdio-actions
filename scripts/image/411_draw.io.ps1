@@ -16,6 +16,7 @@ The path where draw.io will be downloaded. The default path is "$Env:SystemDrive
 - The script will remove the draw.io shortcut from the desktop after installation.
 #>
 
+#description: Installs the latest draw.io
 #execution mode: Combined
 #tags: Evergreen, draw.io
 #Requires -Modules Evergreen
@@ -29,7 +30,6 @@ Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "diagrams.net" | Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install draw.io" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\diagrams.net$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -39,8 +39,7 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Stop"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 
 Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\draw.io.lnk")

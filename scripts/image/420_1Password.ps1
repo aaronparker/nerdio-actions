@@ -26,7 +26,6 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 $App = Get-EvergreenApp -Name "1Password" | Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "Stop"
 
-Write-Information -MessageData ":: Install AgileBits 1Password" -InformationAction "Continue"
 # Install package
 $LogFile = "$Env:ProgramData\Nerdio\Logs\1Password.log" -replace " ", ""
 $params = @{
@@ -37,6 +36,5 @@ $params = @{
     Wait         = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 #endregion

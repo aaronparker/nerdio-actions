@@ -42,7 +42,6 @@ foreach ($App in $Apps) {
         Wait         = $true
         ErrorAction  = "Continue"
     }
-    $result = Start-Process @params
-    $result.ExitCode
+    Start-Process @params
 }
 #endregion

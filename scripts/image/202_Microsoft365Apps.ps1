@@ -131,7 +131,6 @@ $App = Get-EvergreenApp -Name "Microsoft365Apps" | Where-Object { $_.Channel -eq
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Install package
-Write-Information -MessageData ":: Install Microsoft 365 Apps" -InformationAction "Continue"
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/configure $XmlFile"
@@ -141,7 +140,6 @@ $params = @{
     ErrorAction  = "Continue"
 }
 Push-Location -Path $Path
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 Pop-Location
 #endregion

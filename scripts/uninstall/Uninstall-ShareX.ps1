@@ -22,7 +22,6 @@ if (Test-Path -Path "$Env:ProgramFiles\ShareX\unins000.exe") {
         ErrorAction  = "Continue"
     }
     $result = Start-Process @params
-    $result.ExitCode
     if ($result.ExitCode -eq 0) {
         if (Test-Path -Path "$Env:ProgramFiles\ShareX") {
             Remove-Item -Path "$Env:ProgramFiles\ShareX" -Recurse -Force -ErrorAction "SilentlyContinue"

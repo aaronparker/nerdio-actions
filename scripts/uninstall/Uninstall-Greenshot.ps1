@@ -22,7 +22,7 @@ if (Test-Path -Path "$Env:ProgramFiles\Greenshot\unins000.exe") {
         ErrorAction  = "Continue"
     }
     $result = Start-Process @params
-    $result.ExitCode
+
     if ($result.ExitCode -eq 0) {
         if (Test-Path -Path "$Env:ProgramFiles\Greenshot") {
             Remove-Item -Path "$Env:ProgramFiles\Greenshot" -Recurse -Force -ErrorAction "SilentlyContinue"

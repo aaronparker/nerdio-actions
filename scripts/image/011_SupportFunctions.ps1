@@ -15,6 +15,7 @@ This script does not accept any parameters.
 Runs the script to install the required PowerShell modules for building AVD images.
 #>
 
+#description: Installs PowerShell modules required for building AVD images (Evergreen, VcRedist, PSWindowsUpdate, etc.)
 #execution mode: Combined
 #tags: Evergreen, VcRedist, Image
 

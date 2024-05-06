@@ -17,6 +17,7 @@ The path where Microsoft Edge will be downloaded.
 - This script requires administrative privileges to install Microsoft Edge.
 #>
 
+#description: Installs the latest Microsoft Edge and Microsoft Edge WebView2
 #execution mode: Combined
 #tags: Evergreen, Microsoft, Edge, WebView2
 #Requires -Modules Evergreen
@@ -49,8 +50,7 @@ if (!(Test-Path -Path $EdgeExe) -or ([System.Version]$File.VersionInfo.ProductVe
         PassThru     = $true
         ErrorAction  = "Continue"
     }
-    $result = Start-Process @params
-    Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+    Start-Process @params
 }
 
 # Post install configuration
@@ -87,7 +87,6 @@ $App = Get-EvergreenApp -Name "MicrosoftEdgeWebView2Runtime" | Where-Object { $_
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "Ignore"
 
 # Install
-Write-Information -MessageData ":: Install Microsoft Edge WebView2" -InformationAction "Continue"
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/silent /install"
@@ -96,6 +95,5 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 #endregion

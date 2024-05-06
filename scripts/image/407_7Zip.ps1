@@ -25,7 +25,6 @@ Import-Module -Name "Evergreen" -Force | Out-Null
 $App = Get-EvergreenApp -Name "7ZipZS" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install 7zip" -InformationAction "Continue"
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/S"
@@ -34,11 +33,9 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Stop"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 
 # Add registry entries for additional file types
-Write-Information -MessageData ":: Importing file type associations" -InformationAction "Continue"
 
 # .7z
 New-Item -Path "HKLM:\SOFTWARE\Classes\.7z" -Force | Out-Null

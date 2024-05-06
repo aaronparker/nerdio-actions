@@ -60,7 +60,6 @@ $App = Get-EvergreenApp -Name "AdobeAcrobatReaderDC" | `
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Install Adobe Acrobat Reader
-Write-Information -MessageData ":: Install Adobe Acrobat Reader DC" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\AdobeAcrobatReaderDC$($App.Version).log" -replace " ", ""
 $Options = "EULA_ACCEPT=YES
         ENABLE_CHROMEEXT=0
@@ -77,8 +76,7 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Stop"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 
 # Force Reader into read-only mode
 reg add "HKLM\SOFTWARE\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown" /v "bIsSCReducedModeEnforcedEx" /d 1 /t "REG_DWORD" /f | Out-Null

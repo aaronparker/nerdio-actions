@@ -33,7 +33,6 @@ $App = [PSCustomObject]@{
 }
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install Cisco WebEx" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\CiscoWebEx$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -43,8 +42,7 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Stop"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 
 Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\WebEx.lnk")

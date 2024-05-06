@@ -49,12 +49,11 @@ $App = [PSCustomObject]@{
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Run Citrix Optimizer
-Write-Information -MessageData ":: Download and run Citrix Optimizer" -InformationAction "Continue"
 Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 $Template = Get-ChildItem -Path $Path -Recurse -Include $OptimizerTemplate
 $OptimizerBin = Get-ChildItem -Path $Path -Recurse -Include "CtxOptimizerEngine.ps1"
 Push-Location -Path $OptimizerBin.Directory
-Write-Information -MessageData ":: Using template: $($Template.FullName)" -InformationAction "Continue"
+
 $params = @{
     Source          = $Template.FullName
     Mode            = "Execute"

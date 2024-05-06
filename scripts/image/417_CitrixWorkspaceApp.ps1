@@ -48,7 +48,6 @@ $App = Get-EvergreenApp -Name "CitrixWorkspaceApp" | `
     Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path
 
-Write-Information -MessageData ":: Install Citrix Workspace app" -InformationAction "Continue"
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/silent /noreboot /includeSSON /AutoUpdateCheck=Disabled EnableTracing=false EnableCEIP=False ADDLOCAL=ReceiverInside,ICA_Client,BCR_Client,DesktopViewer,AM,SSON,SELFSERVICE,WebHelper"
@@ -57,9 +56,8 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
+Start-Process @params
 Start-Sleep -Seconds 120
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 
 # Disable update tasks - assuming we're installing on a gold image or updates will be managed
 Get-Service -Name "CWAUpdaterService" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"

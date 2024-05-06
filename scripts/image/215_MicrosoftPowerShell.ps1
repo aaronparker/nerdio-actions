@@ -19,6 +19,7 @@ This example runs the script to install the latest Microsoft PowerShell.
 - The installation log is saved in "$Env:ProgramData\Nerdio\Logs".
 #>
 
+#description: Installs the latest Microsoft PowerShell
 #execution mode: Combined
 #tags: Evergreen, Microsoft, PowerShell
 #Requires -Modules Evergreen
@@ -34,7 +35,6 @@ $App = Get-EvergreenApp -Name "MicrosoftPowerShell" | `
     Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install Microsoft PowerShell" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftPowerShell$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -44,6 +44,5 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 #endregion

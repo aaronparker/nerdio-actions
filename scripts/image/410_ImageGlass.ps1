@@ -16,6 +16,7 @@ The download path for ImageGlass. The default value is "$Env:SystemDrive\Apps\Im
 - This script requires administrative privileges to install ImageGlass.
 #>
 
+#description: Installs the latest ImageGlass 64-bit
 #execution mode: Combined
 #tags: Evergreen, ImageGlass
 #Requires -Modules Evergreen
@@ -29,7 +30,6 @@ Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "ImageGlass" | Where-Object { $_.Architecture -eq "x64" -and $_.Type -eq "msi" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install ImageGlass" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\ImageGlass$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -39,8 +39,7 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Stop"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 
 Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\ImageGlass.lnk",

@@ -39,7 +39,6 @@ $App = Get-EvergreenApp -Name "MicrosoftOneDrive" | `
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Install
-Write-Information -MessageData ":: Install Microsoft OneDrive" -InformationAction "Continue"
 reg add "HKLM\Software\Microsoft\OneDrive" /v "AllUsersInstall" /t REG_DWORD /d 1 /reg:64 /f
 $params = @{
     FilePath     = $OutFile.FullName
@@ -49,10 +48,9 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
+Start-Process @params
 do {
     Start-Sleep -Seconds 5
 } while (Get-Process -Name "OneDriveSetup" -ErrorAction "SilentlyContinue")
 Get-Process -Name "OneDrive" -ErrorAction "SilentlyContinue" | Stop-Process -Force -ErrorAction "SilentlyContinue"
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
 #endregion

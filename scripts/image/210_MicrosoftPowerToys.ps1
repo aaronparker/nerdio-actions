@@ -27,7 +27,6 @@ Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftPowerToys" | Where-Object { $_.Architecture -eq "x64" -and $_.InstallerType -eq "Default" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install Microsoft PowerToys" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftPowerToys$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = $OutFile.FullName
@@ -37,8 +36,8 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
+
 
 # Disable features that aren't suitable for VDI
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityAwake" /d 0 /t "REG_DWORD" /f | Out-Null

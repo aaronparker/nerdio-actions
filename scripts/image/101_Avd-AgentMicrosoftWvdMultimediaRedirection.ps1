@@ -32,7 +32,6 @@ $App = Get-EvergreenApp -Name "MicrosoftWvdMultimediaRedirection" | Select-Objec
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
 # Install MMR
-Write-Information -MessageData ":: Install Microsoft Azure Virtual Desktop Multimedia Redirection Extensions" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftWvdMultimediaRedirection$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -42,6 +41,5 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 #endregion

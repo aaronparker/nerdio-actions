@@ -15,6 +15,7 @@ Specifies the path where the tools will be downloaded. The default path is 'C:\P
 - The script may display warnings if the tools are already installed or if there are any issues during the download process.
 #>
 
+#description: Downloads the Remote Display Analyzer and Connection Experience Indicator
 #execution mode: Combined
 #tags: Evergreen, Remote Display Analyzer, Tools
 #Requires -Modules Evergreen
@@ -26,11 +27,9 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 
 Import-Module -Name "Evergreen" -Force
 
-Write-Information -MessageData ":: Download Remote Desktop Analyzer" -InformationAction "Continue"
 $App = Get-EvergreenApp -Name "RDAnalyzer" | Select-Object -First 1
 Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -WarningAction "SilentlyContinue" | Out-Null
 
-Write-Information -MessageData ":: Download Connection Experience Indicator" -InformationAction "Continue"
 $App = Get-EvergreenApp -Name "ConnectionExperienceIndicator" | Select-Object -First 1
 Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -WarningAction "SilentlyContinue" | Out-Null
 #endregion

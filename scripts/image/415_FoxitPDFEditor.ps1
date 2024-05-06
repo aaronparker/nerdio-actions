@@ -15,6 +15,7 @@ Specifies the download path for Foxit PDF Reader. The default path is "$Env:Syst
 - The script assumes that it is being run on a gold image or that updates will be managed separately.
 #>
 
+#description: Installs the latest Foxit PDF Reader with automatic updates disabled
 #execution mode: Combined
 #tags: Evergreen, Foxit, PDF
 #Requires -Modules Evergreen
@@ -45,7 +46,6 @@ Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "FoxitPDFEditor" | Where-Object { $_.Language -eq $Language } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install Foxit PDF Editor" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\FoxitPDFEditor$($App.Version).log" -replace " ", ""
 $Options = "AUTO_UPDATE=0
         NOTINSTALLUPDATE=1
@@ -65,8 +65,7 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Stop"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 
 # Disable update tasks - assuming we're installing on a gold image or updates will be managed
 Get-Service -Name "FoxitPhantomPDFUpdateService*" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"

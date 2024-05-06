@@ -16,6 +16,7 @@ Specifies the download path for Notepad++. The default path is "$Env:SystemDrive
 - The script will disable the automatic update feature of Notepad++ by renaming the updater folder.
 #>
 
+#description: Installs the latest Notepad++ 64-bit
 #execution mode: Combined
 #tags: Evergreen, Notepad++
 #Requires -Modules Evergreen
@@ -29,7 +30,6 @@ Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "NotepadPlusPlus" | Where-Object { $_.Architecture -eq "x64" -and $_.Type -eq "exe" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install Notepad++" -InformationAction "Continue"
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/S"
@@ -38,8 +38,7 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 
 # Disable updater
 $UpdaterPath = "$Env:ProgramFiles\Notepad++\updater"

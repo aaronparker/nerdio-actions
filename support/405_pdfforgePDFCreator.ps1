@@ -20,8 +20,7 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-$result.ExitCode
+Start-Process @params
 
 Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\PDF Architect 9.lnk",

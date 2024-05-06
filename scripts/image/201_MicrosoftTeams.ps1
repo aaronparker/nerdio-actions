@@ -26,6 +26,7 @@ The path where Microsoft Teams will be downloaded. The default path is "$Env:Sys
 # "language": "en-AU"
 #>
 
+#description: Installs and optimises the latest Microsoft Teams 2.0 client
 #execution mode: Combined
 #tags: Evergreen, Microsoft, Teams, per-machine
 #Requires -Modules Evergreen
@@ -99,7 +100,7 @@ $TeamsMsix = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningActio
 Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq "MSTeams_8wekyb3d8bbwe" } | Remove-AppxPackage -ErrorAction "SilentlyContinue"
 
 # Install Teams
-Write-Information -MessageData ":: Install Microsoft Teams" -InformationAction "Continue"
+
 
 # Set required IsWVDEnvironment registry value
 reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /d 1 /t "REG_DWORD" /f | Out-Null
@@ -115,8 +116,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             PassThru     = $true
             ErrorAction  = "Continue"
         }
-        $result = Start-Process @params
-        Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+        Start-Process @params
     }
 
     "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*|Microsoft Windows 10 Enterprise*|Microsoft Windows 10 Pro*" {
@@ -128,8 +128,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             PassThru     = $true
             ErrorAction  = "Continue"
         }
-        $result = Start-Process @params
-        Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+        Start-Process @params
     }
 }
 
@@ -154,7 +153,7 @@ else {
         PassThru     = $true
         ErrorAction  = "Continue"
     }
-    $result = Start-Process @params
+    Start-Process @params
 }
 
 # Install the new version of the add-in
@@ -166,6 +165,5 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 #endregion

@@ -19,6 +19,7 @@ The path where the Microsoft FSLogix Apps agent will be downloaded. The default 
 - The script requires an internet connection to download the Microsoft FSLogix Apps agent.
 #>
 
+#description: Installs the latest Microsoft FSLogix Apps agent
 #execution mode: Combined
 #tags: Evergreen, Microsoft, FSLogix
 #Requires -Modules Evergreen
@@ -90,7 +91,6 @@ $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction 
 Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 
 # Install
-Write-Information -MessageData ":: Install Microsoft FSLogix agent" -InformationAction "Continue"
 foreach ($file in "FSLogixAppsSetup.exe") {
     $Installers = Get-ChildItem -Path $Path -Recurse -Include $file | Where-Object { $_.Directory -match "x64" }
     foreach ($Installer in $Installers) {
@@ -103,8 +103,7 @@ foreach ($file in "FSLogixAppsSetup.exe") {
             PassThru     = $true
             ErrorAction  = "Continue"
         }
-        $result = Start-Process @params
-        Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+        Start-Process @params
     }
 }
 

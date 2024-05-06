@@ -49,7 +49,6 @@ $App = Get-EvergreenApp -Name "MozillaFirefox" | `
     Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install Mozilla Firefox" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\MozillaFirefox$($App.Version).log" -replace " ", ""
 $Options = "DESKTOP_SHORTCUT=false
         TASKBAR_SHORTCUT=false
@@ -65,8 +64,7 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Stop"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 
 Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\Mozilla Firefox.lnk")

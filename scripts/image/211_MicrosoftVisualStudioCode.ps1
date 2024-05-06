@@ -14,6 +14,7 @@ The download path for Microsoft Visual Studio Code. The default path is "$Env:Sy
 - The script stops any running instances of Microsoft Visual Studio Code before installing the new version.
 #>
 
+#description: Installs the latest Microsoft Visual Studio Code 64-bit
 #execution mode: Combined
 #tags: Evergreen, Microsoft, Visual Studio Code
 #Requires -Modules Evergreen
@@ -28,7 +29,6 @@ $App = Get-EvergreenApp -Name "MicrosoftVisualStudioCode" | `
     Where-Object { $_.Architecture -eq "x64" -and $_.Platform -eq "win32-x64" -and $_.Channel -eq "Stable" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install Microsoft Visual Studio Code" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftVisualStudioCode$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = $OutFile.FullName
@@ -38,8 +38,7 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 
 Start-Sleep -Seconds 5
 Get-Process -ErrorAction "SilentlyContinue" | `

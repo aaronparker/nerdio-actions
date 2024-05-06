@@ -30,7 +30,6 @@ This example installs the Microsoft Visual C++ Redistributables in the "C:\Redis
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Run tasks/install apps
-Write-Information -MessageData ":: Install Microsoft Visual C++ Redistributables" -InformationAction "Continue"
 Import-Module -Name "VcRedist" -Force
 Get-VcList | Save-VcRedist -Path $Path | Install-VcRedist -Silent | Out-Null
 #endregion

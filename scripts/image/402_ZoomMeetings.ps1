@@ -29,7 +29,6 @@ Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "ZoomVDI" | Where-Object { $_.Platform -eq "VDIClient" -and $_.Architecture -eq "x64" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
 
-Write-Information -MessageData ":: Install Zoom Meetings" -InformationAction "Continue"
 $LogFile = "$Env:ProgramData\Nerdio\Logs\ZoomMeetings$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -39,6 +38,5 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Continue"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 #endregion

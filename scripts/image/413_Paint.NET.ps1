@@ -16,6 +16,7 @@ The path where Paint.NET will be downloaded. The default value is "$Env:SystemDr
 - The script must be run with administrative privileges.
 #>
 
+#description: Installs the latest Paint.NET 64-bit
 #execution mode: Combined
 #tags: Evergreen, Paint.NET
 #Requires -Modules Evergreen
@@ -38,7 +39,6 @@ $params = @{
 }
 Expand-Archive @params
 
-Write-Information -MessageData ":: Install Paint.NET" -InformationAction "Continue"
 $Installer = Get-ChildItem -Path $Path -Include "paint*.msi" -Recurse
 $LogFile = "$Env:ProgramData\Nerdio\Logs\Paint.NET$($App.Version).log" -replace " ", ""
 $params = @{
@@ -49,8 +49,7 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Stop"
 }
-$result = Start-Process @params
-Write-Information -MessageData ":: Install exit code: $($result.ExitCode)" -InformationAction "Continue"
+Start-Process @params
 
 Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\Paint.NET.lnk")
