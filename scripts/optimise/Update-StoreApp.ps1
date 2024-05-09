@@ -2,7 +2,7 @@
 #execution mode: Combined
 #tags: Image, Optimise, Store
 
-function Update-StoreApp.ps1 {
+function Update-StoreApp {
     <#
         .SYNOPSIS
             Updates Microsoft Store apps by package family name.
@@ -32,6 +32,8 @@ function Update-StoreApp.ps1 {
             - The script uses the UpdateAppByPackageFamilyNameAsync method of the AppInstallManager class to request updates for the specified apps
             - The script periodically checks the update status and displays a progress bar until the update is completed
             - The script can be run as system (i.e. to use when creating a gold image)
+
+            Source: https://github.com/microsoft/winget-cli/discussions/1738
     #>
     [CmdletBinding()]
     param(
@@ -49,26 +51,34 @@ function Update-StoreApp.ps1 {
             "Microsoft.WindowsStore_8wekyb3d8bbwe")
     )
 
+    begin {
+        if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -match "Microsoft Windows Server*") {
+            Write-Warning -Message "This script is not intended to be run on Windows Server."
+            exit
+        }
+
+        if ($PSVersionTable.PSVersion.Major -ne 5) {
+            $Msg = "This script has problems in pwsh on some platforms; please run it with legacy Windows PowerShell."
+            throw [System.Management.Automation.ScriptRequiresException]::New($Msg)
+        }
+
+        # https://fleexlab.blogspot.com/2018/02/using-winrts-iasyncoperation-in.html
+        Add-Type -AssemblyName "System.Runtime.WindowsRuntime"
+        $asTaskGeneric = ([System.WindowsRuntimeSystemExtensions].GetMethods() | `
+                Where-Object { $_.Name -eq 'AsTask' -and $_.GetParameters().Count -eq 1 -and $_.GetParameters()[0].ParameterType.Name -eq 'IAsyncOperation`1' })[0]
+
+        function Await($WinRtTask, $ResultType) {                
+            $asTask = $asTaskGeneric.MakeGenericMethod($ResultType)
+            $netTask = $asTask.Invoke($null, @($WinRtTask))
+            $netTask.Wait(-1) | Out-Null
+            $netTask.Result
+        }
+    }
+
     process {
         try {
-            if ($PSVersionTable.PSVersion.Major -ne 5) {
-                throw "This script has problems in pwsh on some platforms; please run it with legacy Windows PowerShell (5.1) (powershell.exe)."
-            }
-
-            # https://fleexlab.blogspot.com/2018/02/using-winrts-iasyncoperation-in.html
-            Add-Type -AssemblyName "System.Runtime.WindowsRuntime"
-            $asTaskGeneric = ([System.WindowsRuntimeSystemExtensions].GetMethods() | `
-                    Where-Object { $_.Name -eq 'AsTask' -and $_.GetParameters().Count -eq 1 -and $_.GetParameters()[0].ParameterType.Name -eq 'IAsyncOperation`1' })[0]
-
-            function Await($WinRtTask, $ResultType) {
-                $asTask = $asTaskGeneric.MakeGenericMethod($ResultType)
-                $netTask = $asTask.Invoke($null, @($WinRtTask))
-                $netTask.Wait(-1) | Out-Null
-                $netTask.Result
-            }
-
             # https://docs.microsoft.com/uwp/api/windows.applicationmodel.store.preview.installcontrol.appinstallmanager?view=winrt-22000
-            # We need to tell PowerShell about this WinRT API before we can call it...
+            # We need to tell PowerShell about this WinRT API before we can call it
             Write-Verbose -Message "Enabling Windows.ApplicationModel.Store.Preview.InstallControl.AppInstallManager WinRT type"
             [Windows.ApplicationModel.Store.Preview.InstallControl.AppInstallManager, Windows.ApplicationModel.Store.Preview, ContentType = WindowsRuntime] | Out-Null
             $AppManager = New-Object -TypeName "Windows.ApplicationModel.Store.Preview.InstallControl.AppInstallManager"
@@ -91,7 +101,6 @@ function Update-StoreApp.ps1 {
 
                         Write-Progress -Activity $App -Status "Updating" -PercentComplete $updateResult.GetCurrentStatus().PercentComplete
                         if ($updateResult.GetCurrentStatus().PercentComplete -eq 100) {
-                            #Write-Verbose -Message "Install completed ($App)"
                             break
                         }
                         Start-Sleep -Seconds 3
