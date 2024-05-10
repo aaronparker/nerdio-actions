@@ -44,4 +44,8 @@ Start-Sleep -Seconds 5
 Get-Process -ErrorAction "SilentlyContinue" | `
     Where-Object { $_.Path -like "$Env:ProgramFiles\Microsoft VS Code\*" } | `
     Stop-Process -Force -ErrorAction "SilentlyContinue"
+
+
+# Disable updates for pooled desktops
+reg add "HKLM\Software\Policies\Microsoft\Microsoft\VSCode" /v "UpdateMode" /d "none" /t "REG_SZ" /f | Out-Null
 #endregion
