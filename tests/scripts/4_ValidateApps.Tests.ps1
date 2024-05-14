@@ -10,12 +10,13 @@ param()
 BeforeDiscovery {
 
     # Get the list of software to test
-    if ([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE)) {
-        $Path = $PWD.Path
-    }
-    else {
-        $Path = $Env:GITHUB_WORKSPACE
-    }
+        # Get the working directory
+        if ([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE)) {
+            $Path = $Env:BUILD_SOURCESDIRECTORY
+        }
+        else {
+            $Path = $Env:GITHUB_WORKSPACE
+        }
     $Applications = Get-Content -Path $([System.IO.Path]::Combine($Path, "tests", "scripts", "Apps.json")) | ConvertFrom-Json
 }
 
@@ -28,8 +29,13 @@ BeforeAll {
 Describe "Validate <App.Name>" -ForEach $Applications {
     BeforeDiscovery {
         $FilesExist = $_.FilesExist
-        $ShortcutsNotExist = $_.ShortcutsNotExist
+        $FilesNotExist = $_.FilesNotExist
         $ServicesDisabled = $_.ServicesDisabled
+        $ServicesEnabled = $_.ServicesEnabled
+        $TasksNotExist = $_.TasksNotExist
+        $RegDwordValue = $_.RegDwordValue
+        $RegStringValue = $_.RegStringValue
+        $RegValueNotExits = $_.RegValueNotExits
     }
 
     BeforeAll {
@@ -40,10 +46,27 @@ Describe "Validate <App.Name>" -ForEach $Applications {
             param ()
 
             try {
+                try {
+                    $params = @{
+                        PSProvider  = "Registry"
+                        Name        = "HKU"
+                        Root        = "HKEY_USERS"
+                        ErrorAction = "SilentlyContinue"
+                    }
+                    New-PSDrive @params | Out-Null
+                }
+                catch {
+                    throw $_.Exception.Message
+                }
+
                 $UninstallKeys = @(
                     "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*",
                     "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
                 )
+                $UninstallKeys += Get-ChildItem -Path "HKU:" | Where-Object { $_.Name -match "S-\d-\d+-(\d+-){1,14}\d+$" } | ForEach-Object {
+                    "HKU:\$($_.PSChildName)\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
+                }
+
                 $Apps = @()
                 foreach ($Key in $UninstallKeys) {
                     try {
@@ -58,10 +81,14 @@ Describe "Validate <App.Name>" -ForEach $Applications {
                         throw $_.Exception.Message
                     }
                 }
+
                 return $Apps
             }
             catch {
                 throw $_.Exception.Message
+            }
+            finally {
+                Remove-PSDrive "HKU" -ErrorAction "SilentlyContinue" | Out-Null
             }
         }
         #endregion
@@ -71,7 +98,7 @@ Describe "Validate <App.Name>" -ForEach $Applications {
 
         # Get details for the current application
         $App = $_
-        
+
         if ([SYstem.String]::IsNullOrEmpty($App.Filter)) {
             $Latest = [PSCustomObject]@{
                 Version = "1.1.0"
@@ -87,27 +114,50 @@ Describe "Validate <App.Name>" -ForEach $Applications {
             Select-Object -First 1
     }
 
-    Context "Validate installed application" {
-        It "Should be installed" {
+    Context "Validate installed application: <App.Name>" {
+        It "<App.Name> should be installed" {
             $Installed | Should -Not -BeNullOrEmpty
         }
     }
 
-    Context "Application configuration tests" {
-        It "Should be the current version or better" {
+    Context "Application configuration tests: <App.Name>" {
+        It "<App.Name> should be the current version or better" {
             [System.Version]$Installed.Version | Should -BeGreaterOrEqual ([System.Version]$Latest.Version)
         }
 
-        It "Should have application file installed: <_>" -ForEach $FilesExist {
+        It "<App.Name> should have file installed: <_>" -ForEach $FilesExist {
             $_ | Should -Exist
         }
 
-        It "Should have shortcut deleted or removed: <_>" -ForEach $ShortcutsNotExist {
+        It "<App.Name> should have file or shortcut deleted: <_>" -ForEach $FilesNotExist {
             $_ | Should -Not -Exist
         }
 
         It "Should have the service disabled: <_>" -ForEach $ServicesDisabled {
             (Get-Service -Name $_).StartType | Should -Be "Disabled"
+        }
+
+        It "Should have the service enabled: <_>" -ForEach $ServicesEnabled {
+            (Get-Service -Name $_).StartType | Should -Be "Automatic"
+        }
+
+        It "Should have the scheduled task removed: <_>" -ForEach $TasksNotExist {
+            (Get-ScheduledTask -TaskName $_) | Should -BeNullOrEmpty
+        }
+
+        It "Should have the registry DWORD value set for: <_.Value>" -ForEach $RegDwordValue {
+            $RegKey = Get-Item -Path $_.Key
+            $RegKey.GetValue($_.Value) | Should -BeExactly $_.Data
+        }
+
+        It "Should have the registry STRING value set for: <_.Value>" -ForEach $RegStringValue {
+            $RegKey = Get-Item -Path $_.Key
+            $RegKey.GetValue($_.Value) | Should -Be $_.Data
+        }
+
+        It "Should have the registry value deleted: <_.Value>" -ForEach $RegValueNotExits {
+            $RegKey = Get-Item -Path $_.Key
+            $RegKey.GetValue($_.Value) | Should -BeNullOrEmpty
         }
     }
 }
@@ -120,10 +170,27 @@ AfterAll {
         param ()
 
         try {
+            try {
+                $params = @{
+                    PSProvider  = "Registry"
+                    Name        = "HKU"
+                    Root        = "HKEY_USERS"
+                    ErrorAction = "SilentlyContinue"
+                }
+                New-PSDrive @params | Out-Null
+            }
+            catch {
+                throw $_.Exception.Message
+            }
+
             $UninstallKeys = @(
                 "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*",
                 "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
             )
+            $UninstallKeys += Get-ChildItem -Path "HKU:" | Where-Object { $_.Name -match "S-\d-\d+-(\d+-){1,14}\d+$" } | ForEach-Object {
+                "HKU:\$($_.PSChildName)\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
+            }
+
             $Apps = @()
             foreach ($Key in $UninstallKeys) {
                 try {
@@ -138,20 +205,19 @@ AfterAll {
                     throw $_.Exception.Message
                 }
             }
+
             return $Apps
         }
         catch {
             throw $_.Exception.Message
         }
+        finally {
+            Remove-PSDrive "HKU" -ErrorAction "SilentlyContinue" | Out-Null
+        }
     }
     #endregion
 
-    if ([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE)) {
-        $Path = $PWD.Path
-    }
-    else {
-        $Path = $Env:GITHUB_WORKSPACE
-    }
+    $Path = $Env:BUILD_SOURCESDIRECTORY
     $params = @{
         Path              = "$Path\support\InstalledApplications.csv"
         Encoding          = "Utf8"

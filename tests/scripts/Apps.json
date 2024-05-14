@@ -1,276 +1,222 @@
 [
     {
-        "Name": "MicrosoftFSLogixApps",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftFSLogixApps\" | Where-Object { $_.Channel -eq \"Production\" } | Select-Object -First 1",
-        "Installed": "Microsoft FSLogix Apps*",
+        "Name": "1Password",
+        "Filter": "Get-EvergreenApp -Name \"1Password\" | Where-Object { $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "1Password*",
         "FilesExist": [
-            "C:\\Program Files\\FSLogix\\Apps\\frx.exe",
-            "C:\\Program Files\\FSLogix\\Apps\\frxcontext.exe"
+            "C:\\Program Files\\1Password\\app\\8\\1Password.exe",
+            "C:\\Program Files\\1Password\\app\\8\\1Password-BrowserSupport.exe"
         ],
-        "ShortcutsNotExist": [
-            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\FSLogix\\FSLogix Apps Online Help.lnk"
-        ],
-        "ServicesDisabled": []
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
     },
     {
-        "Name": "Microsoft.NET",
-        "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"LTS\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
-        "Installed": "Microsoft Windows Desktop Runtime - 8",
+        "Name": "1Password CLI",
+        "Filter": "",
+        "Installed": "1Password*",
         "FilesExist": [
-            "C:\\Program Files\\dotnet\\dotnet.exe"
+            "C:\\Program Files\\1Password CLI\\op.exe",
+            "C:\\Program Files\\1Password CLI\\op.exe.sig"
         ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
     },
     {
-        "Name": "Microsoft.NET",
-        "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"STS\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
-        "Installed": "Microsoft Windows Desktop Runtime - 7",
-        "FilesExist": [
-            "C:\\Program Files\\dotnet\\dotnet.exe"
-        ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "MicrosoftVcRedist2022x64",
-        "Filter": "Get-VcList -Release \"2022\" -Architecture \"x64\"",
-        "Installed": "Microsoft Visual C.*2015-2022 Redistributable.*x64",
-        "FilesExist": [],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "MicrosoftVcRedist2022x86",
-        "Filter": "Get-VcList -Release \"2022\" -Architecture \"x86\"",
-        "Installed": "Microsoft Visual C.*2015-2022 Redistributable.*x86",
-        "FilesExist": [],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "MicrosoftEdge",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftEdge\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"Stable\" -and $_.Release -eq \"Enterprise\" } | Sort-Object -Property \"Version\" -Descending | Select-Object -First 1",
-        "Installed": "(^Microsoft Edge$)",
-        "FilesExist": [
-            "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\master_preferences"
-        ],
-        "ShortcutsNotExist": [
-            "C:\\Users\\Public\\Desktop\\Microsoft Edge*.lnk"
-        ],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "MicrosoftEdgeWebView2Runtime",
-        "Filter": "$InstalledSoftware | Where-Object { $_.Name -match \"MicrosoftEdgeWebView2Runtime\" } | Select-Object -First 1",
-        "Installed": "Microsoft Edge WebView2 Runtime",
-        "FilesExist": [],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "MicrosoftOneDrive",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftOneDrive\" | Where-Object { $_.Ring -eq \"Production\" -and $_.Type -eq \"exe\" -and $_.Architecture -eq \"x64\" } | Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1",
-        "Installed": "Microsoft OneDrive",
-        "FilesExist": [
-            "C:\\Program Files\\Microsoft OneDrive\\OneDrive.exe"
-        ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "MicrosoftTeamsClassic",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftTeamsClassic\" | Where-Object { $_.Ring -eq \"General\" -and $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
-        "Installed": "Teams Machine-Wide Installer",
-        "FilesExist": [
-            "C:\\Program Files (x86)\\Teams Installer\\setup.json",
-            "C:\\Program Files (x86)\\Microsoft\\Teams\\setup.json",
-            "C:\\Program Files (x86)\\Teams Installer\\Teams.exe",
-            "C:\\Program Files (x86)\\Microsoft\\Teams\\Update.exe",
-            "C:\\Program Files (x86)\\Microsoft\\Teams\\current\\Teams.exe",
-            "C:\\Program Files (x86)\\Microsoft\\Teams\\current\\Squirrel.exe"
-        ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "Microsoft365Apps",
-        "Filter": "Get-EvergreenApp -Name \"Microsoft365Apps\" | Where-Object { $_.Channel -eq \"MonthlyEnterprise\" } | Select-Object -First 1",
-        "Installed": "Microsoft 365 Apps for enterprise",
-        "FilesExist": [
-            "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
-        ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "AdobeAcrobatReaderDC",
+        "Name": "Adobe Acrobat Reader DC",
         "Filter": "Get-EvergreenApp -Name \"AdobeAcrobatReaderDC\" | Where-Object { $_.Language -eq \"MUI\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
         "Installed": "Adobe Acrobat.*64-bit",
         "FilesExist": [
+            "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\acrobat_sl.exe",
             "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe",
-            "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\AdobeCollabSync.exe"
+            "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\AcrobatInfo.exe",
+            "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\AcroBroker.exe",
+            "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\AcroTextExtractor.exe",
+            "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\ADNotificationManager.exe",
+            "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\AdobeCollabSync.exe",
+            "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\ShowAppPickerForPDF.exe"
         ],
-        "ShortcutsNotExist": [],
+        "FilesNotExist": [
+            "C:\\Users\\Public\\Desktop\\Adobe Acrobat.lnk"
+        ],
         "ServicesDisabled": [
             "AdobeARMservice"
+        ],
+        "ServicesEnabled": [],
+        "TaskNotExist": [
+            "Adobe Acrobat Update Task*"
+        ],
+        "RegDwordValue": [
+            {
+                "Key": "HKLM:\\SOFTWARE\\Policies\\Adobe\\Acrobat Reader\\DC\\FeatureLockDown",
+                "Value": "bUpdater",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\SOFTWARE\\Policies\\Adobe\\Acrobat Reader\\DC\\FeatureLockDown",
+                "Value": "bIsSCReducedModeEnforcedEx",
+                "Data": 1
+            },
+            {
+                "Key": "HKLM:\\SOFTWARE\\Policies\\Adobe\\Acrobat Reader\\DC\\FeatureLockDown",
+                "Value": "bDontShowMsgWhenViewingDoc",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\SOFTWARE\\Policies\\Adobe\\Acrobat Reader\\DC\\FeatureLockDown\\cIPM",
+                "Value": "bDontShowMsgWhenViewingDoc",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\SOFTWARE\\WOW6432Node\\Adobe\\Adobe ARM\\Legacy\\Reader\\{AC76BA86-7AD7-1033-7B44-AC0F074E4100}",
+                "Value": "Mode",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\SOFTWARE\\Adobe\\Adobe Acrobat\\DC\\Installer",
+                "Value": "DisableMaintenance",
+                "Data": 1
+            }
+        ],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Citrix Workspace app",
+        "Filter": "Get-EvergreenApp -Name \"CitrixWorkspaceApp\" | Where-Object { $_.Stream -eq \"Current\" } | Select-Object -First 1",
+        "Installed": "Citrix Workspace*",
+        "FilesExist": [
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\bgblursvc.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\CDViewer.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\concentr.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\cpviewer.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\Ctx64Injector64.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\CtxBrowserInt.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\CtxCFRUI.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\CtxTwnPA.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\HdxRtcEngine.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\icaconf.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\NMHost.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\pcl2bmp.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\PdfPrintHelper.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\RawPrintHelper.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\redirector.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\SetIntegrityLevel.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\ssonsvr.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\vdrcghost64.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\WebHelper.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\wfcrun32.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\wfcwow64.exe",
+            "C:\\Program Files (x86)\\Citrix\\ICA Client\\wfica32.exe"
+        ],
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": [
+            {
+                "Key": "HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run",
+                "Value": "AnalyticsSrv"
+            },
+            {
+                "Key": "HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run",
+                "Value": "ConnectionCenter"
+            },
+            {
+                "Key": "HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run",
+                "Value": "Redirector"
+            }
         ]
-    },
-    {
-        "Name": "FoxitPDFReader",
-        "Filter": "Get-EvergreenApp -Name \"FoxitReader\" | Where-Object { $_.Language -eq \"English\" } | Select-Object -First 1",
-        "Installed": "Foxit PDF Reader",
-        "FilesExist": [
-            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Reader\\FoxitPDFReader.exe",
-            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Reader\\Activation.exe"
-        ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": [
-            "FoxitReaderUpdateService"
-        ]
-    },
-    {
-        "Name": "FoxitPDFEditor",
-        "Filter": "Get-EvergreenApp -Name \"FoxitPDFEditor\" | Where-Object { $_.Language -eq \"English\" } | Select-Object -First 1",
-        "Installed": "Foxit PDF Editor",
-        "FilesExist": [
-            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Editor\\FoxitPDFEditor.exe",
-            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Editor\\Activation.exe"
-        ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": [
-            "FoxitPhantomPDFUpdateService"
-        ]
-    },
-    {
-        "Name": "NotepadPlusPlus",
-        "Filter": "Get-EvergreenApp -Name \"NotepadPlusPlus\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"exe\" } | Select-Object -First 1",
-        "Installed": "Notepad.*(64-bit x64)",
-        "FilesExist": [
-            "C:\\Program Files\\Notepad++\\notepad++.exe"
-        ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "VideoLanVlcPlayer",
-        "Filter": "Get-EvergreenApp -Name \"VideoLanVlcPlayer\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"MSI\" } | Select-Object -First 1",
-        "Installed": "VLC media player",
-        "FilesExist": [
-            "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe"
-        ],
-        "ShortcutsNotExist": [
-            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\VideoLAN\\VLC\\VideoLAN website.lnk",
-            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\VideoLAN\\VLC\\Release Notes.lnk",
-            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\VideoLAN\\VLC\\Documentation.lnk",
-            "C:\\Users\\Public\\Desktop\\VLC media player.lnk"
-        ],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "ZoomMeetings",
-        "Filter": "$InstalledSoftware | Where-Object { $_.Name -match \"Zoom Client for VDI\" } | Select-Object -First 1",
-        "Installed": "Zoom Client for VDI",
-        "FilesExist": [],
-        "ShortcutsNotExist": [
-            "C:\\Users\\Public\\Desktop\\Zoom VDI.lnk"
-        ],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "CiscoWebEx",
-        "Filter": "$InstalledSoftware | Where-Object { $_.Name -match \"WebEx\" } | Select-Object -First 1",
-        "Installed": "WebEx",
-        "FilesExist": [],
-        "ShortcutsNotExist": [
-            "C:\\Users\\Public\\Desktop\\WebEx.lnk"
-        ],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "MicrosoftPowerToys",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftPowerToys\" | Where-Object { $_.Architecture -eq \"x64\" } | Select-Object -First 1",
-        "Installed": "PowerToys*",
-        "FilesExist": [
-            "C:\\Program Files\\PowerToys\\PowerToys.exe"
-        ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "ImageGlass",
-        "Filter": "Get-EvergreenApp -Name \"ImageGlass\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
-        "Installed": "ImageGlass",
-        "FilesExist": [],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "draw.io",
-        "Filter": "Get-EvergreenApp -Name \"diagrams.net\" | Where-Object { $_.Type -eq \"msi\" } | Select-Object -First 1",
-        "Installed": "draw.io*",
-        "FilesExist": [
-            "C:\\Program Files\\draw.io\\draw.io.exe"
-        ],
-        "ShortcutsNotExist": [
-            "C:\\Users\\Public\\Desktop\\draw.io.lnk"
-        ],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "MozillaFirefox",
-        "Filter": "Get-EvergreenApp -Name \"MozillaFirefox\" | Where-Object { $_.Channel -eq \"Current\" -and $_.Architecture -eq \"x64\" -and $_.Language -eq \"en-US\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
-        "Installed": "Mozilla Firefox*",
-        "FilesExist": [
-            "C:\\Program Files\\Mozilla Firefox\\private_browsing.exe",
-            "C:\\Program Files\\Mozilla Firefox\\crashreporter.exe",
-            "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
-        ],
-        "ShortcutsNotExist": [
-            "C:\\Users\\Public\\Desktop\\Mozilla Firefox.lnk"
-        ],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "Paint.NET",
-        "Filter": "Get-EvergreenApp -Name \"PaintDotNetOfflineInstaller\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.URI -match \"winmsi\" } | Select-Object -First 1",
-        "Installed": "paint.net*",
-        "FilesExist": [
-            "C:\\Program Files\\Mozilla Firefox\\private_browsing.exe",
-            "C:\\Program Files\\Mozilla Firefox\\crashreporter.exe",
-            "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
-        ],
-        "ShortcutsNotExist": [
-            "C:\\Users\\Public\\Desktop\\Paint.NET.lnk"
-        ],
-        "ServicesDisabled": []
     },
     {
         "Name": "Greenshot",
-        "Filter": "Get-EvergreenApp -Name \"Greenshot\" | Where-Object { $_.Architecture -eq \"x86\" -and $_.Uri -match \"Greenshot-INSTALLER-\" } | Select-Object -First 1",
+        "Filter": "Get-EvergreenApp -Name \"Greenshot\" | Where-Object { $_.Type -eq \"exe\" -and $_.InstallerType -eq \"Default\" }  | Select-Object -First 1",
         "Installed": "Greenshot*",
         "FilesExist": [
             "C:\\Program Files\\Greenshot\\Greenshot.exe",
+            "C:\\Program Files\\Greenshot\\greenshot-defaults.ini",
             "C:\\Program Files\\Greenshot\\unins000.exe"
         ],
-        "ShortcutsNotExist": [
+        "FilesNotExist": [
             "C:\\Users\\Public\\Desktop\\Greenshot.lnk",
             "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Greenshot\\License.txt.lnk",
             "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Greenshot\\Readme.txt.lnk",
             "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Greenshot\\Uninstall Greenshot.lnk"
         ],
-        "ServicesDisabled": []
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
     },
     {
-        "Name": "MicrosoftSsms",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftSsms\" | Where-Object { $_.Language -eq \"English\" } | Select-Object -First 1",
-        "Installed": "Microsoft SQL Server Management Studio*",
+        "Name": "Microsoft 365 Apps",
+        "Filter": "Get-EvergreenApp -Name \"Microsoft365Apps\" | Where-Object { $_.Channel -eq \"MonthlyEnterprise\" } | Select-Object -First 1",
+        "Installed": "Microsoft 365 Apps for enterprise",
         "FilesExist": [
-            "C:\\Program Files (x86)\\Microsoft SQL Server Management Studio 20\\Common7\\IDE\\Ssms.exe"
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\CLVIEW.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\CNFNOT32.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\EDITOR.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\excelcnv.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\GRAPH.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\misc.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\msoadfsb.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\msoasb.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\msoev.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\MSOHTMED.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\MSOSREC.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\MSQRY32.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\NAMECONTROLSERVER.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\officeappguardwin32.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\OfficeScrBroker.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\OfficeScrSanBroker.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\OLCFG.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\ONENOTE.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\ONENOTEM.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\ORGCHART.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\ORGWIZ.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\PDFREFLOW.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\PerfBoost.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\POWERPNT.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\PPTICO.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\PROJIMPT.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\protocolhandler.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\SCANPST.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\SDXHelper.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\SDXHelperBgt.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\SELFCERT.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\SETLANG.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\TLIMPT.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\VISICON.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\VISIO.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\VPREVIEW.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINPROJ.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\Wordconv.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\WORDICON.exe",
+            "C:\\Program Files\\Microsoft Office\\root\\Office16\\XLICONS.exe"
         ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": [
-        ]
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
     },
     {
         "Name": "Microsoft Azure CLI",
@@ -282,8 +228,253 @@
             "C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\CLI2\\wbin\\az.cmd",
             "C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\CLI2\\wbin\\azps.ps1"
         ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Microsoft Edge",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftEdge\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"Stable\" -and $_.Release -eq \"Enterprise\" } | Sort-Object -Property \"Version\" -Descending | Select-Object -First 1",
+        "Installed": "(^Microsoft Edge$)",
+        "FilesExist": [
+            "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+            "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\master_preferences"
+        ],
+        "FilesNotExist": [
+            "C:\\Users\\Public\\Desktop\\Microsoft Edge*.lnk"
+        ],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Microsoft Edge WebView2 Runtime",
+        "Filter": "$InstalledSoftware | Where-Object { $_.Name -match \"MicrosoftEdgeWebView2Runtime\" } | Select-Object -First 1",
+        "Installed": "Microsoft Edge WebView2 Runtime",
+        "FilesExist": [],
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Microsoft FSLogix Apps",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftFSLogixApps\" | Where-Object { $_.Channel -eq \"Production\" } | Select-Object -First 1",
+        "Installed": "Microsoft FSLogix Apps",
+        "FilesExist": [
+            "C:\\Program Files\\FSLogix\\Apps\\frx.exe",
+            "C:\\Program Files\\FSLogix\\Apps\\frxccds.exe",
+            "C:\\Program Files\\FSLogix\\Apps\\frxcontext.exe",
+            "C:\\Program Files\\FSLogix\\Apps\\frxlauncher.exe",
+            "C:\\Program Files\\FSLogix\\Apps\\frxshell.exe",
+            "C:\\Program Files\\FSLogix\\Apps\\frxsvc.exe",
+            "C:\\Program Files\\FSLogix\\Apps\\frxtray.exe"
+        ],
+        "FilesNotExist": [
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\FSLogix\\FSLogix Apps Online Help.lnk"
+        ],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [
+            "frxsvc"
+        ],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Microsoft OneDrive",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftOneDrive\" | Where-Object { $_.Ring -eq \"Production\" -and $_.Type -eq \"Exe\" -and $_.Architecture -eq \"x64\" } | Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1",
+        "Installed": "Microsoft OneDrive",
+        "FilesExist": [
+            "C:\\Program Files\\Microsoft OneDrive\\OneDrive.exe"
+        ],
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Microsoft PowerShell",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftPowerShell\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Release -eq \"Stable\" } | Select-Object -First 1",
+        "Installed": "PowerShell*",
+        "FilesExist": [
+            "C:\\Program Files\\PowerShell\\7\\pwsh.deps.json",
+            "C:\\Program Files\\PowerShell\\7\\pwsh.dll",
+            "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+            "C:\\Program Files\\PowerShell\\7\\pwsh.runtimeconfig.json",
+            "C:\\Program Files\\PowerShell\\7\\pwsh.xml"
+        ],
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Microsoft PowerToys",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftPowerToys\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.InstallerType -eq \"Default\" }",
+        "Installed": "PowerToys*",
+        "FilesExist": [
+            "C:\\Program Files\\PowerToys\\PowerToys.ActionRunner.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.AlwaysOnTop.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.Awake.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.ColorPickerUI.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.CropAndLock.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.FancyZones.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.FancyZonesEditor.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.GcodePreviewHandler.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.GcodeThumbnailProvider.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.ImageResizer.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.MarkdownPreviewHandler.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.MonacoPreviewHandler.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.MouseJumpUI.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.MouseWithoutBorders.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.MouseWithoutBordersHelper.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.MouseWithoutBordersService.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.PdfPreviewHandler.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.PdfThumbnailProvider.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.PowerAccent.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.PowerLauncher.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.PowerOCR.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.QoiPreviewHandler.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.QoiThumbnailProvider.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.ShortcutGuide.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.StlThumbnailProvider.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.SvgPreviewHandler.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.SvgThumbnailProvider.exe",
+            "C:\\Program Files\\PowerToys\\PowerToys.Update.exe"
+        ],
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityAwake",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityHostsFileEditor",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityFileExplorerPDFThumbnails",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityFileExplorerSTLThumbnails",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityFileExplorerSVGThumbnails",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityFileExplorerGcodeThumbnails",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityFileExplorerPDFPreview",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityFileLocksmith",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityVideoConferenceMute",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityPeek",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "AllowExperimentation",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityEnvironmentVariables",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityMouseWithoutBorders",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "PerUserInstallationDisabled",
+                "Data": 1
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "SuspendNewUpdateAvailableToast",
+                "Data": 1
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "AutomaticUpdateDownloadDisabled",
+                "Data": 1
+            }
+        ],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Microsoft VcRedist 2022 x64",
+        "Filter": "Get-VcList -Release \"2022\" -Architecture \"x64\"",
+        "Installed": "Microsoft Visual C.*2015-2022 Redistributable.*x64",
+        "FilesExist": [],
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Microsoft VcRedist 2022 x86",
+        "Filter": "Get-VcList -Release \"2022\" -Architecture \"x86\"",
+        "Installed": "Microsoft Visual C.*2015-2022 Redistributable.*x86",
+        "FilesExist": [],
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
     },
     {
         "Name": "Microsoft Visual Studio Code",
@@ -292,40 +483,48 @@
         "FilesExist": [
             "C:\\Program Files\\Microsoft VS Code\\Code.exe"
         ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [
+            {
+                "Key": "HKLM:\\Software\\Policies\\Microsoft\\Microsoft\\VSCode",
+                "Value": "UpdateMode",
+                "Data": "none"
+            }
+        ],
+        "RegValueNotExits": []
     },
     {
-        "Name": "Microsoft PowerToys",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftPowerToys\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.InstallerType -eq \"Default\" }",
-        "Installed": "PowerToys*",
+        "Name": "Microsoft.NET",
+        "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"STS\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Installed": "Microsoft Windows Desktop Runtime - 7",
         "FilesExist": [
-            "C:\\Program Files\\PowerToys\\PowerToys.exe",
-            "C:\\Program Files\\PowerToys\\PowerToys.FancyZones.exe",
-            "C:\\Program Files\\PowerToys\\PowerToys.FancyZonesEditor.exe"
+            "C:\\Program Files\\dotnet\\dotnet.exe"
         ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
     },
     {
-        "Name": "Zoom Client for VDI",
-        "Filter": "",
-        "Installed": "Zoom Client for VDI*",
+        "Name": "Microsoft.NET",
+        "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"LTS\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Installed": "Microsoft Windows Desktop Runtime - 8",
         "FilesExist": [
-            "C:\\Program Files\\ZoomVDI\\bin\\Zoom.exe",
-            "C:\\Program Files\\ZoomVDI\\bin\\ZoomVDITool.exe"
+            "C:\\Program Files\\dotnet\\dotnet.exe"
         ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
-    },
-    {
-        "Name": "Microsoft PowerShell",
-        "Filter": "Get-EvergreenApp -Name \"MicrosoftPowerShell\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Release -eq \"Stable\" } | Select-Object -First 1",
-        "Installed": "PowerShell*",
-        "FilesExist": [
-            "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
-        ],
-        "ShortcutsNotExist": [],
-        "ServicesDisabled": []
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
     }
 ]
