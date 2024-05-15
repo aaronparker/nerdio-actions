@@ -23,13 +23,16 @@ BeforeDiscovery {
     # Get the scripts to test
     $Path = "$Path\scripts\image"
     $SupportScripts = Get-ChildItem -Path $Path -Include "0*.ps1" -Recurse -Exclude "012_WindowsUpdate.ps1"
-    $DependencyScripts = Get-ChildItem -Path $Path -Include "1*.ps1" -Recurse
+    $DependencyScripts = Get-ChildItem -Path $Path -Include "1*.ps1" -Recurse -Exclude "101_Avd-AgentMicrosoftWvdMultimediaRedirection"
     $MicrosoftAppsScripts = Get-ChildItem -Path $Path -Include "2*.ps1" -Recurse
     $3rdPartyScripts = Get-ChildItem -Path $Path -Include "4*.ps1" -Recurse
     $CleanupScripts = Get-ChildItem -Path $Path -Include "9*.ps1" -Recurse
 
     # Get scripts to run a 2nd time
     $2ndRunScripts = Get-ChildItem -Path $Path -Include "201_MicrosoftTeams.ps1" -Recurse
+
+    # Path to a custom Office configuration file
+    $Env:OfficeConfig = "$Path\configs\Microsoft365Apps-Outlook-Shared.xml"
 }
 
 Describe "Run application image scripts with required modules installed" {

@@ -45,11 +45,10 @@
   <Property Name="FORCEAPPSHUTDOWN" Value="FALSE" />
   <Property Name="DeviceBasedLicensing" Value="0" />
   <Property Name="SCLCacheOverride" Value="0" />
-  <Property Name="TenantId" Value="671563ba-62bf-48be-9120-17075aaaa1cc" />
   <Updates Enabled="FALSE" />
   <RemoveMSI />
   <AppSettings>
-    <Setup Name="Company" Value="Insentra" />
+    <Setup Name="Company" Value="stealthpuppy" />
     <User Key="software\microsoft\office\16.0\common\toolbars" Name="customuiroaming" Value="1" Type="REG_DWORD" App="office16" Id="L_AllowRoamingQuickAccessToolBarRibbonCustomizations" />
     <User Key="software\microsoft\office\16.0\common\general" Name="shownfirstrunoptin" Value="1" Type="REG_DWORD" App="office16" Id="L_DisableOptinWizard" />
     <User Key="software\microsoft\office\16.0\common\languageresources" Name="installlanguage" Value="3081" Type="REG_SZ" App="office16" Id="L_PrimaryEditingLanguage" />
