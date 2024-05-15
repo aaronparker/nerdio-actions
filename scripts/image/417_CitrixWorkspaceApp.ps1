@@ -17,36 +17,30 @@ The path where the Citrix Workspace app will be download. The default path is "$
 #>
 
 #description: Installs the latest version of the Citrix Workspace app
-#execution mode: Combined
+#execution mode: Individual
 #tags: Evergreen, Citrix
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Citrix\Workspace"
-
-#region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
-if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
-    [System.String] $Stream = "Current"
-}
-else {
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-    $params = @{
-        Uri             = $SecureVars.VariablesList
-        UseBasicParsing = $true
-        ErrorAction     = "Stop"
-    }
-    $Variables = Invoke-RestMethod @params
-    [System.String] $Stream = $Variables.$AzureRegionName.CitrixWorkspaceStream
-}
-#endregion
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 Import-Module -Name "Evergreen" -Force
-$App = Get-EvergreenApp -Name "CitrixWorkspaceApp" | `
-    Where-Object { $_.Stream -eq $Stream } | `
-    Select-Object -First 1
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path
+
+# Try current release and fall back to LTSR the download fails
+try {
+    $App = Get-EvergreenApp -Name "CitrixWorkspaceApp" | `
+        Where-Object { $_.Stream -eq "Current" } | `
+        Select-Object -First 1
+    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path
+}
+catch {
+    $App = Get-EvergreenApp -Name "CitrixWorkspaceApp" | `
+        Where-Object { $_.Stream -eq "LTSR"} | `
+        Select-Object -First 1
+    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path
+}
 
 $params = @{
     FilePath     = $OutFile.FullName
