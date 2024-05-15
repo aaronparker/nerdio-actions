@@ -9,12 +9,15 @@ param ()
 
 BeforeDiscovery {
 
-    # Get the list of software to test
-    if ([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE)) {
-        $Path = $PWD.Path
+    # Get the working directory
+    if (!([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE))) {
+        $Path = $Env:GITHUB_WORKSPACE
+    }
+    elseif (!([System.String]::IsNullOrWhiteSpace($Env:BUILD_SOURCESDIRECTORY))) {
+        $Path = $Env:BUILD_SOURCESDIRECTORY
     }
     else {
-        $Path = $Env:GITHUB_WORKSPACE
+        $Path = $PWD.Path
     }
 
     # TestCases are splatted to the script so we need hashtables

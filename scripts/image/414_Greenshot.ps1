@@ -53,20 +53,23 @@ Get-Process -ErrorAction "SilentlyContinue" | `
     Stop-Process -Force -ErrorAction "SilentlyContinue"
 
 # Download the default settings
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-$params = @{
-    Uri             = $SecureVars.VariablesList
-    UseBasicParsing = $true
-    ErrorAction     = "Continue"
+if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {}
+else {
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+    $params = @{
+        Uri             = $SecureVars.VariablesList
+        UseBasicParsing = $true
+        ErrorAction     = "Continue"
+    }
+    $Variables = Invoke-RestMethod @params
+    $params = @{
+        Uri             = $Variables.$AzureRegionName.GreenshotDefaultsIni
+        OutFile         = "$Env:ProgramFiles\Greenshot\greenshot-defaults.ini"
+        UseBasicParsing = $true
+        ErrorAction     = "Continue"
+    }
+    Invoke-WebRequest @params
 }
-$Variables = Invoke-RestMethod @params
-$params = @{
-    Uri             = $Variables.$AzureRegionName.GreenshotDefaultsIni
-    OutFile         = "$Env:ProgramFiles\Greenshot\greenshot-defaults.ini"
-    UseBasicParsing = $true
-    ErrorAction     = "Continue"
-}
-Invoke-WebRequest @params
 
 # Remove unneeded shortcuts
 $Shortcuts = @("$Env:Public\Desktop\Greenshot.lnk",

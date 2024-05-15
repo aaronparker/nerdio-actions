@@ -10,11 +10,14 @@ param()
 BeforeDiscovery {
 
     # Get the working directory
-    if ([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE)) {
-        $Path = [System.IO.Path]::Combine($PWD.Path, "scripts", "tweaks")
+    if (!([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE))) {
+        $Path = $Env:GITHUB_WORKSPACE
+    }
+    elseif (!([System.String]::IsNullOrWhiteSpace($Env:BUILD_SOURCESDIRECTORY))) {
+        $Path = $Env:BUILD_SOURCESDIRECTORY
     }
     else {
-        $Path = [System.IO.Path]::Combine($Env:GITHUB_WORKSPACE, "scripts", "tweaks")
+        $Path = $PWD.Path
     }
 
     # Get the scripts to test

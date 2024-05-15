@@ -9,15 +9,18 @@ param()
 
 BeforeDiscovery {
 
+    # Get the working directory
+    if (!([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE))) {
+        $Path = $Env:GITHUB_WORKSPACE
+    }
+    elseif (!([System.String]::IsNullOrWhiteSpace($Env:BUILD_SOURCESDIRECTORY))) {
+        $Path = $Env:BUILD_SOURCESDIRECTORY
+    }
+    else {
+        $Path = $PWD.Path
+    }
     # Get the list of software to test
-        # Get the working directory
-        if ([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE)) {
-            $Path = $Env:BUILD_SOURCESDIRECTORY
-        }
-        else {
-            $Path = $Env:GITHUB_WORKSPACE
-        }
-    $Applications = Get-Content -Path $([System.IO.Path]::Combine($Path, "tests", "scripts", "Apps.json")) | ConvertFrom-Json
+    $Applications = Get-Content -Path $([System.IO.Path]::Combine($Path, "tests", "image", "Apps.json")) | ConvertFrom-Json
 }
 
 BeforeAll {
@@ -196,7 +199,18 @@ AfterAll {
     }
     #endregion
 
-    $Path = $PWD.Path
+    # Get the working directory
+    if (!([System.String]::IsNullOrWhiteSpace($Env:GITHUB_WORKSPACE))) {
+        $Path = $Env:GITHUB_WORKSPACE
+    }
+    elseif (!([System.String]::IsNullOrWhiteSpace($Env:BUILD_SOURCESDIRECTORY))) {
+        $Path = $Env:BUILD_SOURCESDIRECTORY
+    }
+    else {
+        $Path = $PWD.Path
+    }
+
+    New-Item -Path "$Path\support" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
     $params = @{
         Path              = "$Path\support\InstalledApplications.csv"
         Encoding          = "Utf8"
