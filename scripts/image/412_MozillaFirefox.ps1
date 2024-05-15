@@ -44,7 +44,7 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 Import-Module -Name "Evergreen" -Force
-$App = Get-EvergreenApp -Name "MozillaFirefox" -ErrorAction "SilentlyContinue" -WarningAction "SilentlyContinue" | `
+$App = Get-EvergreenApp -Name "MozillaFirefox" | `
     Where-Object { $_.Channel -eq $Channel -and $_.Architecture -eq "x64" -and $_.Language -eq $Language -and $_.Type -eq "msi" } | `
     Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"

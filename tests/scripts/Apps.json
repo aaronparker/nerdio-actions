@@ -645,21 +645,6 @@
     },
     {
         "Name": "Microsoft.NET",
-        "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"STS\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
-        "Installed": "Microsoft Windows Desktop Runtime - 7",
-        "FilesExist": [
-            "C:\\Program Files\\dotnet\\dotnet.exe"
-        ],
-        "FilesNotExist": [],
-        "ServicesDisabled": [],
-        "ServicesEnabled": [],
-        "TaskNotExist": [],
-        "RegDwordValue": [],
-        "RegStringValue": [],
-        "RegValueNotExits": []
-    },
-    {
-        "Name": "Microsoft.NET",
         "Filter": "Get-EvergreenApp -Name \"Microsoft.NET\" | Where-Object { $_.Installer -eq \"windowsdesktop\" -and $_.Channel -eq \"LTS\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
         "Installed": "Microsoft Windows Desktop Runtime - 8",
         "FilesExist": [

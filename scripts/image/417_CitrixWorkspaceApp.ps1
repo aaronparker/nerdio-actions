@@ -28,7 +28,7 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 
 Import-Module -Name "Evergreen" -Force
 
-# Try current release and fall back to LTSR the download fails
+# Try current release and fall back to LTSR if the download fails
 try {
     $App = Get-EvergreenApp -Name "CitrixWorkspaceApp" | `
         Where-Object { $_.Stream -eq "Current" } | `

@@ -30,12 +30,14 @@ BeforeDiscovery {
 
     # Get scripts to run a 2nd time
     $2ndRunScripts = Get-ChildItem -Path $Path -Include "201_MicrosoftTeams.ps1" -Recurse
-
-    # Path to a custom Office configuration file
-    $Env:OfficeConfig = "$Path\configs\Microsoft365Apps-Outlook-Shared.xml"
 }
 
 Describe "Run application image scripts with required modules installed" {
+    BeforeAll {
+        # Path to a custom Office configuration file
+        $Env:OfficeConfig = "$Path\configs\Microsoft365Apps-Outlook-Shared.xml"
+    }
+
     Context "Support scripts run successfully" {
         It "Should not throw during execution: <_.Name>" -ForEach $SupportScripts {
             { & $_.FullName } | Should -Not -Throw
