@@ -32,6 +32,47 @@
         "RegValueNotExits": []
     },
     {
+        "Name": "7-Zip ZS",
+        "Filter": "Get-EvergreenApp -Name \"7ZipZS\" | Where-Object { $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Installed": "7-Zip ZS*",
+        "FilesExist": [
+            "C:\\Program Files\\7-Zip-Zstandard\\7z.exe",
+            "C:\\Program Files\\7-Zip-Zstandard\\7za.exe",
+            "C:\\Program Files\\7-Zip-Zstandard\\7zFM.exe",
+            "C:\\Program Files\\7-Zip-Zstandard\\7zG.exe"
+        ],
+        "FilesNotExist": [
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\7-Zip-Zstandard\\7-Zip Help.lnk"
+        ],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [
+            {
+                "Key": "HKLM:\\SOFTWARE\\Classes\\.7z",
+                "Value": "",
+                "Data": "7-Zip-Zstandard.7z"
+            },
+            {
+                "Key": "HKLM:\\SOFTWARE\\Classes\\7-Zip-Zstandard.7z",
+                "Value": "",
+                "Data": "7z Archive"
+            },
+            {
+                "Key": "HKLM:\\SOFTWARE\\Classes\\7-Zip-Zstandard.7z\\DefaultIcon",
+                "Value": "",
+                "Data": "C:\\Program Files\\7-Zip-Zstandard\\7z.dll,0"
+            },
+            {
+                "Key": "HKLM:\\SOFTWARE\\Classes\\7-Zip-Zstandard.7z\\shell\\open\\command",
+                "Value": "",
+                "Data": "\"C:\\Program Files\\7-Zip-Zstandard\\7zFM.exe\" \"%1\""
+            }
+        ],
+        "RegValueNotExits": []
+    },
+    {
         "Name": "Adobe Acrobat Reader DC",
         "Filter": "Get-EvergreenApp -Name \"AdobeAcrobatReaderDC\" | Where-Object { $_.Language -eq \"MUI\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
         "Installed": "Adobe Acrobat.*64-bit",
@@ -140,6 +181,91 @@
         ]
     },
     {
+        "Name": "draw.io",
+        "Filter": "Get-EvergreenApp -Name \"diagrams.net\" | Where-Object { $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "draw.io*",
+        "FilesExist": [
+            "C:\\Program Files\\draw.io\\draw.io.exe"
+        ],
+        "FilesNotExist": [
+            "C:\\Users\\Public\\Desktop\\draw.io.lnk"
+        ],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Foxit PDF Editor",
+        "Filter": "Get-EvergreenApp -Name \"FoxitPDFEditor\" | Where-Object { $_.Language -eq \"English\" } | Select-Object -First 1",
+        "Installed": "Foxit PDF Editor",
+        "FilesExist": [
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Editor\\64BitMailAgent.exe",
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Editor\\Activation.exe",
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Editor\\FoxitPDFEditor.exe",
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Editor\\iwKillSessionCache.exe",
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Editor\\iwSessionCache.exe",
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Editor\\ProfileMgr.exe",
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Editor\\SendCrashReport.exe",
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Editor\\TrackReview.exe"
+        ],
+        "FilesNotExist": [],
+        "ServicesDisabled": [
+            "FoxitPhantomPDFUpdateService*"
+        ],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Foxit PDF Reader",
+        "Filter": "Get-EvergreenApp -Name \"FoxitReader\" | Where-Object { $_.Language -eq \"English\" } | Select-Object -First 1",
+        "Installed": "Foxit PDF Reader",
+        "FilesExist": [
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Reader\\64BitMailAgent.exe",
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Reader\\Activation.exe",
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Reader\\FoxitPDFReader.exe",
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Reader\\SendCrashReport.exe",
+            "C:\\Program Files (x86)\\Foxit Software\\Foxit PDF Reader\\TrackReview.exe"
+        ],
+        "FilesNotExist": [],
+        "ServicesDisabled": [
+            "FoxitReaderUpdateService*"
+        ],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Google Chrome",
+        "Filter": "Get-EvergreenApp -Name \"GoogleChrome\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"stable\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "Google Chrome*",
+        "FilesExist": [
+            "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+            "C:\\Program Files\\Google\\Chrome\\Application\\master_preferences"
+        ],
+        "FilesNotExist": [
+            "C:\\Users\\Public\\Desktop\\Google Chrome.lnk"
+        ],
+        "ServicesDisabled": [
+            "gupdate*",
+            "GoogleChromeElevationService"
+        ],
+        "ServicesEnabled": [],
+        "TaskNotExist": [
+            "GoogleUpdateTaskMachine*"
+        ],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
         "Name": "Greenshot",
         "Filter": "Get-EvergreenApp -Name \"Greenshot\" | Where-Object { $_.Type -eq \"exe\" -and $_.InstallerType -eq \"Default\" }  | Select-Object -First 1",
         "Installed": "Greenshot*",
@@ -153,6 +279,26 @@
             "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Greenshot\\License.txt.lnk",
             "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Greenshot\\Readme.txt.lnk",
             "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Greenshot\\Uninstall Greenshot.lnk"
+        ],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "ImageGlass",
+        "Filter": "Get-EvergreenApp -Name \"ImageGlass\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "ImageGlass*",
+        "FilesExist": [
+            "C:\\Program Files\\1Password CLI\\op.exe",
+            "C:\\Program Files\\1Password CLI\\op.exe.sig"
+        ],
+        "FilesNotExist": [
+            "C:\\Users\\Public\\Desktop\\ImageGlass.lnk",
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\ImageGlass\\ImageGlass' LICENSE.lnk",
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\ImageGlass\\Uninstall ImageGlass*.lnk"
         ],
         "ServicesDisabled": [],
         "ServicesEnabled": [],

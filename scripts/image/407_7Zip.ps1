@@ -35,8 +35,10 @@ $params = @{
 }
 Start-Process @params
 
-# Add registry entries for additional file types
+Remove-Item -Path "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\7-Zip-Zstandard\7-Zip Help.lnk" -Force -ErrorAction "SilentlyContinue" | Out-Null
+#endregion
 
+#region Add registry entries for additional file types
 # .7z
 New-Item -Path "HKLM:\SOFTWARE\Classes\.7z" -Force | Out-Null
 New-Item -Path "HKLM:\SOFTWARE\Classes\7-Zip-Zstandard.7z" -Force | Out-Null
