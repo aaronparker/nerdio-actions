@@ -21,6 +21,7 @@ BeforeDiscovery {
     }
 
     # Get the scripts to test
+    $Path = "$Path\scripts\tweaks"
     $Exclude = "Invoke-DefenderFullScan.ps1", "Enable-SysprepCryptoSysPrep_Specialize.ps1", "Install-FSLogixAppMaskingRuleset.ps1", "Set-FSLogixStorageAccount.ps1"
     $Scripts = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse -Exclude $Exclude
 }

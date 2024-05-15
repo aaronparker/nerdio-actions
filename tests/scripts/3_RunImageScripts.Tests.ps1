@@ -21,6 +21,7 @@ BeforeDiscovery {
     }
 
     # Get the scripts to test
+    $Path = "$Path\scripts\image"
     $SupportScripts = Get-ChildItem -Path $Path -Include "0*.ps1" -Recurse -Exclude "012_WindowsUpdate.ps1"
     $DependencyScripts = Get-ChildItem -Path $Path -Include "1*.ps1" -Recurse
     $MicrosoftAppsScripts = Get-ChildItem -Path $Path -Include "2*.ps1" -Recurse

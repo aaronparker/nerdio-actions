@@ -21,6 +21,7 @@ BeforeDiscovery {
     }
 
     # Get the scripts to test
+    $Path = "$Path\scripts\image"
     $DependencyScripts = Get-ChildItem -Path $Path -Include "1*.ps1" -Recurse
     $MicrosoftAppsScripts = Get-ChildItem -Path $Path -Include "2*.ps1" -Recurse
     $3rdPartyScripts = Get-ChildItem -Path $Path -Include "4*.ps1" -Recurse

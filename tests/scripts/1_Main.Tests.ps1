@@ -21,6 +21,7 @@ BeforeDiscovery {
     }
 
     # TestCases are splatted to the script so we need hashtables
+    $Path = "$Path\scripts"
     $Scripts = Get-ChildItem -Path $Path -Recurse -Include "*.ps1", "*.psm1"
     $TestCases = $scripts | ForEach-Object { @{file = $_ } }
 }

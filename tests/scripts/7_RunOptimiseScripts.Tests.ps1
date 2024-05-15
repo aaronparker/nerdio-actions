@@ -21,6 +21,7 @@ BeforeDiscovery {
     }
 
     # Get the scripts to test
+    $Path = "$Path\scripts\optimise"
     $Scripts = Get-ChildItem -Path $Path -Include "*.ps1" -Recurse -Exclude "Install-MicrosoftVdot.ps1", "Install-CitrixOptimizer.ps1"
 }
 
