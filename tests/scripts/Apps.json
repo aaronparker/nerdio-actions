@@ -1,46 +1,5 @@
 [
     {
-        "Name": "7-Zip ZS",
-        "Filter": "",
-        "Installed": "7-Zip ZS*",
-        "FilesExist": [
-            "C:\\Program Files\\7-Zip-Zstandard\\7z.exe",
-            "C:\\Program Files\\7-Zip-Zstandard\\7za.exe",
-            "C:\\Program Files\\7-Zip-Zstandard\\7zFM.exe",
-            "C:\\Program Files\\7-Zip-Zstandard\\7zG.exe"
-        ],
-        "FilesNotExist": [
-            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\7-Zip-Zstandard\\7-Zip Help.lnk"
-        ],
-        "ServicesDisabled": [],
-        "ServicesEnabled": [],
-        "TaskNotExist": [],
-        "RegDwordValue": [],
-        "RegStringValue": [
-            {
-                "Key": "HKLM:\\SOFTWARE\\Classes\\.7z",
-                "Value": "",
-                "Data": "7-Zip-Zstandard.7z"
-            },
-            {
-                "Key": "HKLM:\\SOFTWARE\\Classes\\7-Zip-Zstandard.7z",
-                "Value": "",
-                "Data": "7z Archive"
-            },
-            {
-                "Key": "HKLM:\\SOFTWARE\\Classes\\7-Zip-Zstandard.7z\\DefaultIcon",
-                "Value": "",
-                "Data": "C:\\Program Files\\7-Zip-Zstandard\\7z.dll,0"
-            },
-            {
-                "Key": "HKLM:\\SOFTWARE\\Classes\\7-Zip-Zstandard.7z\\shell\\open\\command",
-                "Value": "",
-                "Data": "\"C:\\Program Files\\7-Zip-Zstandard\\7zFM.exe\" \"%1\""
-            }
-        ],
-        "RegValueNotExits": []
-    },
-    {
         "Name": "Adobe Acrobat Reader DC",
         "Filter": "Get-EvergreenApp -Name \"AdobeAcrobatReaderDC\" | Where-Object { $_.Language -eq \"MUI\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
         "Installed": "Adobe Acrobat.*64-bit",
@@ -173,7 +132,7 @@
             "C:\\Users\\Public\\Desktop\\Google Chrome.lnk"
         ],
         "ServicesDisabled": [
-            "GoogleUpdaterInternalService",
+            "GoogleUpdaterInternalService*",
             "GoogleUpdaterService*"
         ],
         "ServicesEnabled": [],
@@ -554,7 +513,7 @@
     {
         "Name": "Notepad++",
         "Filter": "Get-EvergreenApp -Name \"NotepadPlusPlus\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"exe\" } | Select-Object -First 1",
-        "Installed": "Notepad`+`+*",
+        "Installed": "Notepad++*",
         "FilesExist": [
             "C:\\Program Files\\Notepad++\\notepad++.exe"
         ],

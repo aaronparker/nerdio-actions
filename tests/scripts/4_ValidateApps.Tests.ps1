@@ -112,7 +112,7 @@ Describe "Validate <App.Name>" -ForEach $Applications {
         }
 
         $Installed = $InstalledSoftware | `
-            Where-Object { $_.Name -match $App.Installed } | `
+            Where-Object { $_.Name -match [Regex]::Escape($App.Installed) } | `
             Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | `
             Select-Object -First 1
     }

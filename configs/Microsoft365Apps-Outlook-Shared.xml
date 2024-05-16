@@ -11,8 +11,6 @@
       <ExcludeApp ID="Lync" />
       <ExcludeApp ID="Teams" />
       <ExcludeApp ID="Bing" />
-      <ExcludeApp ID="Bing" />
-      <ExcludeApp ID="Bing" />
     </Product>
     <Product ID="VisioProRetail">
       <Language ID="MatchOS" />
@@ -24,8 +22,6 @@
       <ExcludeApp ID="Lync" />
       <ExcludeApp ID="Teams" />
       <ExcludeApp ID="Bing" />
-      <ExcludeApp ID="Bing" />
-      <ExcludeApp ID="Bing" />
     </Product>
     <Product ID="ProjectProRetail">
       <Language ID="MatchOS" />
@@ -36,8 +32,6 @@
       <ExcludeApp ID="Publisher" />
       <ExcludeApp ID="Lync" />
       <ExcludeApp ID="Teams" />
-      <ExcludeApp ID="Bing" />
-      <ExcludeApp ID="Bing" />
       <ExcludeApp ID="Bing" />
     </Product>
   </Add>
