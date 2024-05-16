@@ -1,7 +1,7 @@
 [
     {
         "Name": "7-Zip ZS",
-        "Filter": "Get-EvergreenApp -Name \"7ZipZS\" | Where-Object { $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Filter": "",
         "Installed": "7-Zip ZS*",
         "FilesExist": [
             "C:\\Program Files\\7-Zip-Zstandard\\7z.exe",
@@ -173,8 +173,8 @@
             "C:\\Users\\Public\\Desktop\\Google Chrome.lnk"
         ],
         "ServicesDisabled": [
-            "gupdate*",
-            "GoogleChromeElevationService"
+            "GoogleUpdaterInternalService",
+            "GoogleUpdaterService*"
         ],
         "ServicesEnabled": [],
         "TaskNotExist": [
@@ -554,7 +554,7 @@
     {
         "Name": "Notepad++",
         "Filter": "Get-EvergreenApp -Name \"NotepadPlusPlus\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"exe\" } | Select-Object -First 1",
-        "Installed": "Notepad++*",
+        "Installed": "Notepad`+`+*",
         "FilesExist": [
             "C:\\Program Files\\Notepad++\\notepad++.exe"
         ],
@@ -690,7 +690,7 @@
     },
     {
         "Name": "Zoom Client for VDI",
-        "Filter": "Get-EvergreenApp -Name \"ZoomVDI\" | Where-Object { $_.Platform -eq \"VDIClient\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Filter": "",
         "Installed": "Zoom Client for VDI*",
         "FilesExist": [
             "C:\\Program Files\\ZoomVDI\\bin\\airhost.exe",

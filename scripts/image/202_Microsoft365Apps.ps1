@@ -59,6 +59,7 @@ if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
     #[ValidateSet("BetaChannel", "CurrentPreview", "Current", "MonthlyEnterprise", "PerpetualVL2021", "SemiAnnualPreview", "SemiAnnual", "PerpetualVL2019")]
     [System.String] $Channel = "MonthlyEnterprise"
     $OfficeXml = Get-Content -Path $Env:OfficeConfig
+    Write-Host "Using configuration file: $Env:OfficeConfig"
 }
 else {
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
@@ -75,7 +76,8 @@ else {
         UseBasicParsing = $true
         ErrorAction     = "Stop"
     }
-    $OfficeXml = (Invoke-WebRequest @params).Content 
+    $OfficeXml = (Invoke-WebRequest @params).Content
+    Write-Host "Using configuration file: $($Variables.$AzureRegionName.Microsoft365AppsChannel)"
 }
 
 $XmlFile = Join-Path -Path $Path -ChildPath "Office.xml"

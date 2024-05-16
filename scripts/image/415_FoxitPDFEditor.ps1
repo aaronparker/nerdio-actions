@@ -66,7 +66,7 @@ $params = @{
     ErrorAction  = "Stop"
 }
 Start-Process @params
-Start-Wait -Seconds 10
+Start-Sleep -Seconds 10
 
 # Disable update tasks - assuming we're installing on a gold image or updates will be managed
 Get-Service -Name "FoxitPhantomPDFUpdateService*" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"

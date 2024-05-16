@@ -35,6 +35,7 @@ BeforeDiscovery {
 Describe "Run application image scripts with required modules installed" {
     BeforeAll {
         # Path to a custom Office configuration file
+        Write-Host "Set Env:OfficeConfig to: $Path\configs\Microsoft365Apps-Outlook-Shared.xml"
         $Env:OfficeConfig = "$Path\configs\Microsoft365Apps-Outlook-Shared.xml"
     }
 
