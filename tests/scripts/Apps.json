@@ -308,6 +308,42 @@
         "RegValueNotExits": []
     },
     {
+        "Name": "Microsoft Azure CLI",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftAzureCLI\" | Where-Object { $_.Type -eq \"msi\" } | Select-Object -First 1",
+        "Installed": "Microsoft Azure CLI*",
+        "FilesExist": [
+            "C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\CLI2\\python.exe",
+            "C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\CLI2\\pythonw.exe"
+        ],
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Microsoft SQL Server Management Studio",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftSsms\" | Where-Object { $_.Language -eq \"English\"  } | Select-Object -First 1",
+        "Installed": "Microsoft SQL Server Management Studio*",
+        "FilesExist": [
+            "C:\\Program Files (x86)\\Microsoft SQL Server Management Studio 20\\Common7\\DTA.EXE",
+            "C:\\Program Files (x86)\\Microsoft SQL Server Management Studio 20\\Common7\\dtaengine.exe",
+            "C:\\Program Files (x86)\\Microsoft SQL Server Management Studio 20\\Common7\\DTASHELL.EXE",
+            "C:\\Program Files (x86)\\Microsoft SQL Server Management Studio 20\\Common7\\PROFILER.EXE",
+            "C:\\Program Files (x86)\\Microsoft SQL Server Management Studio 20\\Common7\\sqlmonitor.exe",
+            "C:\\Program Files (x86)\\Microsoft SQL Server Management Studio 20\\Common7\\ssbdiagnose.exe"
+        ],
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
         "Name": "Microsoft 365 Apps",
         "Filter": "Get-EvergreenApp -Name \"Microsoft365Apps\" | Where-Object { $_.Channel -eq \"MonthlyEnterprise\" } | Select-Object -First 1",
         "Installed": "Microsoft 365 Apps for enterprise",
@@ -597,6 +633,60 @@
         "RegValueNotExits": []
     },
     {
+        "Name": "Notepad++",
+        "Filter": "Get-EvergreenApp -Name \"NotepadPlusPlus\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"exe\" } | Select-Object -First 1",
+        "Installed": "Notepad++*",
+        "FilesExist": [
+            "C:\\Program Files\\Notepad++\\notepad++.exe"
+        ],
+        "FilesNotExist": [
+            "C:\\Program Files\\Notepad++\\updater"
+        ],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Paint.NET",
+        "Filter": "Get-EvergreenApp -Name \"PaintDotNetOfflineInstaller\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.URI -match \"winmsi\" } | Select-Object -First 1",
+        "Installed": "paint.net",
+        "FilesExist": [
+            "C:\\Program Files\\paint.net\\createdump.exe",
+            "C:\\Program Files\\paint.net\\ilasm.exe",
+            "C:\\Program Files\\paint.net\\ildasm.exe",
+            "C:\\Program Files\\paint.net\\paintdotnet.exe",
+            "C:\\Program Files\\paint.net\\PdnRepair.exe"
+        ],
+        "FilesNotExist": [
+            "C:\\Users\\Public\\Desktop\\Paint.NET.lnk"
+        ],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Microsoft Azure Virtual Desktop Remote Desktop",
+        "Filter": "Get-EvergreenApp -Name \"MicrosoftWvdRemoteDesktop\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Channel -eq \"Public\" } | Select-Object -First 1",
+        "Installed": "Remote Desktop*",
+        "FilesExist": [
+            "C:\\Program Files\\Remote Desktop\\msrdc.exe",
+            "C:\\Program Files\\Remote Desktop\\msrdcw.exe"
+        ],
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
         "Name": "Microsoft VcRedist 2022 x64",
         "Filter": "Get-VcList -Release \"2022\" -Architecture \"x64\"",
         "Installed": "Microsoft Visual C.*2015-2022 Redistributable.*x64",
@@ -649,6 +739,60 @@
         "Installed": "Microsoft Windows Desktop Runtime - 8",
         "FilesExist": [
             "C:\\Program Files\\dotnet\\dotnet.exe"
+        ],
+        "FilesNotExist": [],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "VLC media player",
+        "Filter": "Get-EvergreenApp -Name \"VideoLanVlcPlayer\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"MSI\" } | Select-Object -First 1",
+        "Installed": "VLC media player",
+        "FilesExist": [
+            "C:\\Program Files\\VideoLAN\\VLC\\vlc-cache-gen.exe",
+            "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe"
+        ],
+        "FilesNotExist": [
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\VideoLAN\\VLC\\VideoLAN website.lnk",
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\VideoLAN\\VLC\\Release Notes.lnk",
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\VideoLAN\\VLC\\Documentation.lnk",
+            "C:\\Users\\Public\\Desktop\\VLC media player.lnk"
+        ],
+        "ServicesDisabled": [],
+        "ServicesEnabled": [],
+        "TaskNotExist": [],
+        "RegDwordValue": [],
+        "RegStringValue": [],
+        "RegValueNotExits": []
+    },
+    {
+        "Name": "Zoom Client for VDI",
+        "Filter": "Get-EvergreenApp -Name \"ZoomVDI\" | Where-Object { $_.Platform -eq \"VDIClient\" -and $_.Architecture -eq \"x64\" } | Select-Object -First 1",
+        "Installed": "Zoom Client for VDI*",
+        "FilesExist": [
+            "C:\\Program Files\\ZoomVDI\\bin\\airhost.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\aomhost64.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\CptControl.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\CptHost.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\CptInstall.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\CptService.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\Installer.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\zCrashReport.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\zCrashReport64.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\Zoom.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\ZoomDocConverter.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\ZoomOutlookIMPlugin.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\ZoomOutlookMAPI.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\ZoomOutlookMAPI64.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\ZoomVDITool.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\zTscoder.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\zUpdater.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\zWebview2Agent.exe",
+            "C:\\Program Files\\ZoomVDI\\bin\\zWspExtension.exe"
         ],
         "FilesNotExist": [],
         "ServicesDisabled": [],

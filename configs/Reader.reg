@@ -1,0 +1,137 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown]
+"bUpdater"=dword:00000000
+"bAcroSuppressUpsell"=dword:00000001
+"bSuppressSignOut"=dword:00000001
+"bEnableAcrobatHS"=dword:00000000
+"bToggleAdobeSign"=dword:00000001
+"bToggleShareFeedback"=dword:00000000
+"bCrashReporterEnabled"=dword:00000000
+"bMergeMenuBar"=dword:00000001
+"bMixRecentFilesFeatureLockDown"=dword:00000001
+"bCommercialPDF"=dword:00000001
+"bShowAdsAllow"=dword:00000001
+"bFindMoreWorkflowsOnline"=dword:00000000
+"bFindMoreCustomizationsOnline"=dword:00000000
+"bToggleDCAppCenter"=dword:00000001
+"bPurchaseAcro"=dword:00000000
+"bReaderRetentionExperiment"=dword:00000000
+"bEnableTrialistLaunchCard"=dword:00000000
+"bToggleSophiaWebInfra"=dword:00000000
+"bEnableCloudPoweredSearch"=dword:00000000
+"bEnableCloudPoweredSearchTokenCaching"=dword:00000000
+"bEnableReviewPromote"=dword:00000000
+"bHideUnreadHomeBannerMsgAtLaunch"=dword:00000001
+"bShowRhpToolSearch"=dword:00000000
+"bShowScanTabInHomeView"=dword:00000000
+"bLastShowStatus"=dword:00000000
+"btoggleFTE"=dword:00000000
+"bShowWelcomeScreen"=dword:00000000
+"bEnableContextualTips"=dword:00000000
+"bEnableContextualToolbar"=dword:00000000
+"bToggleToDoList"=dword:00000001
+"bToggleToDoTiles"=dword:00000001
+"bToggleBillingIssue"=dword:00000000
+"bShouldUseScalableCursor"=dword:00000000
+"bRegisterProduct"=dword:00000001
+"bOrganizePagesFromThumbnails"=dword:00000000
+"bToggleAdobeReview"=dword:00000000
+"bDisableOnBehalfOfText"=dword:00000000
+"bDisablePDFRedirectionActions"=dword:00000001
+"bToggleShare"=dword:00000001
+"bToggleSendAndTrack"=dword:00000001
+"bAdobeSendPluginToggle"=dword:00000001
+"bCreatePDFOnline"=dword:00000000
+"bEnableHSLibrary"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cAcrobatApp]
+"bAcrobatAppInstalled"=dword:00000001
+"bHideUnreadHomeBannerMsgAtLaunch"=dword:00000001
+"bScanAppInstalled"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cCloud]
+"bDisableADCFileStore"=dword:00000001
+"bAdobeSendPluginToggle"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cDefaultExecMenuItems]
+"tWhiteList"="Close|GeneralInfo|Quit|FirstPage|PrevPage|NextPage|LastPage|ActualSize|FitPage|FitWidth|FitHeight|SinglePage|OneColumn|TwoPages|TwoColumns|ZoomViewIn|ZoomViewOut|ShowHideBookmarks|ShowHideThumbnails|Print|GoToPage|ZoomTo|GeneralPrefs|SaveAs|FullScreenMode|OpenOrganizer|Scan|Web2PDF:OpnURL|AcroSendMail:SendMail|Spelling:Check Spelling|PageSetup|Find|FindSearch|GoBack|GoForward|FitVisible|ShowHideArticles|ShowHideFileAttachment|ShowHideAnnotManager|ShowHideFields|ShowHideOptCont|ShowHideModelTree|ShowHideSignatures|InsertPages|ExtractPages|ReplacePages|DeletePages|CropPages|RotatePages|AddFileAttachment|FindCurrentBookmark|BookmarkShowLocation|GoBackDoc|GoForwardDoc|DocHelpUserGuide|HelpReader|rolReadPage|HandMenuItem|ZoomDragMenuItem|CollectionPreview|CollectionHome|CollectionDetails|CollectionShowRoot|&Pages|Co&ntent|&Forms|Action &Wizard|Recognize &Text|P&rotection|&Sign && Certify|Doc&ument Processing|Print Pro&duction|Ja&vaScript|&Accessibility|Analy&ze|&Annotations|D&rawing Markups|Revie&w"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cDefaultFindAttachmentPerms]
+"tSearchAttachmentsWhiteList"="3g2|3gp|3gpp|3gpp2|aac|ac3|aif|aiff|ani|asf|avi|bmp|cdr|cur|divx|djvu|doc|docx|dv|emf|eps|flv|f4v|gif|ico|iff|jbig2|jp2|jpeg|jpg|m2v|m4a|m4b|m4p|m4v|mid|mkv|mov|mpa|mp2|mp3|mp4|mts|nsv|ogg|ogm|ogv|pbm|pgm|png|ppm|ppt|pptx|ps|psd|qt|rtf|riff|svg|tif|ts|txt|ram|rm|rmvb|vob|wav|wma|wmf|wmv|xmb|xls|xlsx"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cDefaultLaunchAttachmentPerms]
+"tBuiltInPermList"="version:1|.ade:3|.adp:3|.app:3|.arc:3|.arj:3|.asp:3|.bas:3|.bat:3|.bz:3|.bz2:3|.cab:3|.chm:3|.class:3|.cmd:3|.com:3|.command:3|.cpl:3|.crt:3|.csh:3|.desktop:3|.dll:3|.exe:3|.fxp:3|.gz:3|.hex:3|.hlp:3|.hqx:3|.hta:3|.inf:3|.ini:3|.ins:3|.isp:3|.its:3|.job:3|.js:3|.jse:3|.ksh:3|.lnk:3|.lzh:3|.mad:3|.maf:3|.mag:3|.mam:3|.maq:3|.mar:3|.mas:3|.mat:3|.mau:3|.mav:3|.maw:3|.mda:3|.mdb:3|.mde:3|.mdt:3|.mdw:3|.mdz:3|.msc:3|.msi:3|.msp:3|.mst:3|.ocx:3|.ops:3|.pcd:3|.pi:3|.pif:3|.prf:3|.prg:3|.pst:3|.rar:3|.reg:3|.scf:3|.scr:3|.sct:3|.sea:3|.shb:3|.shs:3|.sit:3|.tar:3|.taz:3|.tgz:3|.tmp:3|.url:3|.vb:3|.vbe:3|.vbs:3|.vsmacros:3|.vss:3|.vst:3|.vsw:3|.webloc:3|.ws:3|.wsc:3|.wsf:3|.wsh:3|.z:3|.zip:3|.zlo:3|.zoo:3|.pdf:2|.fdf:2|.jar:3|.pkg:3|.tool:3|.term:3|.acm:3|.asa:3|.aspx:3|.ax:3|.ad:3|.application:3|.asx:3|.cer:3|.cfg:3|.chi:3|.class:3|.clb:3|.cnt:3|.cnv:3|.cpx:3|.crx:3|.der:3|.drv:3|.fon:3|.gadget:3|.grp:3|.htt:3|.ime:3|.jnlp:3|.local:3|.manifest:3|.mmc:3|.mof:3|.msh:3|.msh1:3|.msh2:3|.mshxml:3|.msh1xml:3|.msh2xml:3|.mui:3|.nls:3|.pl:3|.perl:3|.plg:3|.ps1:3|.ps2:3|.ps1xml:3|.ps2xml:3|.psc1:3|.psc2:3|.py:3|.pyc:3|.pyo:3|.pyd:3|.rb:3|.sys:3|.tlb:3|.tsp:3|.xbap:3|.xnk:3|.xpi:3|.air:3|.appref-ms:3|.desklink:3|.glk:3|.library-ms:3|.mapimail:3|.mydocs:3|.sct:3|.search-ms:3|.searchConnector-ms:3|.vxd:3|.website:3|.zfsendtotarget:3"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cDefaultLaunchURLPerms]
+"tSchemePerms"="version:2|shell:3|hcp:3|ms-help:3|ms-its:3|ms-itss:3|its:3|mk:3|mhtml:3|help:3|disk:3|afp:3|disks:3|telnet:3|ssh:3|acrobat:2|mailto:2|file:1|rlogin:3|javascript:4|data:3|jar:3|vbscript:3"
+"tSponsoredContentSchemeWhiteList"="http|https"
+"tFlashContentSchemeWhiteList"="http|https|ftp|rtmp|rtmpe|rtmpt|rtmpte|rtmps|mailto"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cHomeWelcome]
+"bLastShowStatus"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cIPM]
+"bShowMsgAtLaunch"=dword:00000000
+"bHideUnreadHomeBannerMsgAtLaunch"=dword:00000001
+"bShowWelcomeScreen"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cServices]
+"bToggleAdobeSign"=dword:00000001
+"bSuppressSignOut"=dword:00000001
+"bUpdater"=dword:00000000
+"bDisableSharePointFeatures"=dword:00000001
+"bNeedSynchronizer"=dword:00000000
+"bCreatePDFOnline"=dword:00000000
+"bUsageMeasurement"=dword:00000000
+"bAcrobatAppInstalled"=dword:00000001
+"bScanAppInstalled"=dword:00000001
+"bAdobeSendPluginToggle"=dword:00000001
+"bAcroSuppressUpsell"=dword:00000000
+"bToggleAdobeDocumentServices"=dword:00000001
+"bTogglePrefsSync"=dword:00000001
+"bToggleFillSign"=dword:00000001
+"bToggleSendAndTrack"=dword:00000001
+"bToggleWebConnectors"=dword:00000001
+"bToggleNotifications"=dword:00000001
+"bEnableBellButton"=dword:00000001
+"bToggleDocumentCloud"=dword:00000001
+"bBoxConnectorEnabled"=dword:00000000
+"bDropboxConnectorEnabled"=dword:00000000
+"bOneDriveConnectorEnabled"=dword:00000000
+"bGoogleDriveConnectorEnabled"=dword:00000000
+"bToggleAdobeReview"=dword:00000001
+"bToggleDCAppCenter"=dword:00000001
+"bHideUnreadHomeBannerMsgAtLaunch"=dword:00000001
+"bToggleSophiaWebInfra"=dword:00000000
+"bToggleNotificationToasts"=dword:00000001
+"bEnableContextualTips"=dword:00000000
+"bEnableBHCache"=dword:00000000
+"bEnableReviewPromote"=dword:00000000
+"bToggleToDoTiles"=dword:00000001
+"bToggleFTE"=dword:00000001
+"bToggleShareFeedback"=dword:00000000
+"bShowMsgAtLaunch"=dword:00000000
+"bMixRecentFilesFeatureLockDown"=dword:00000001
+"bShowEbookMenu"=dword:00000000
+"bCommercialPDF"=dword:00000001
+"bToggleSendACopy"=dword:00000000
+"bToggleManageSign"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cServices\cAcrobatApp]
+"bAcrobatAppInstalled"=dword:00000001
+"bHideUnreadHomeBannerMsgAtLaunch"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cServices\cScanApp]
+"bScanAppInstalled"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cSharePoint]
+"bDisableSharePointFeatures"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cWelcomeScreen]
+"bShowWelcomeScreen"=dword:00000000
+"bHideUnreadHomeBannerMsgAtLaunch"=dword:00000001
+"bLastShowStatus"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\FormsPrefs]
+"bShowDistAcrobatDotCom"=dword:00000000
