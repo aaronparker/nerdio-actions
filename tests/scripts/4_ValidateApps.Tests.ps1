@@ -102,7 +102,7 @@ Describe "Validate <App.Name>" -ForEach $Applications {
         # Get details for the current application
         $App = $_
 
-        if ([SYstem.String]::IsNullOrEmpty($App.Filter)) {
+        if ([System.String]::IsNullOrEmpty($App.Filter)) {
             $Latest = [PSCustomObject]@{
                 Version = "1.1.0"
             }
@@ -112,7 +112,7 @@ Describe "Validate <App.Name>" -ForEach $Applications {
         }
 
         $Installed = $InstalledSoftware | `
-            Where-Object { $_.Name -match [Regex]::Escape($App.Installed) } | `
+            Where-Object { $_.Name -match $App.Installed } | `
             Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | `
             Select-Object -First 1
     }

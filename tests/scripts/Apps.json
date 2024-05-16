@@ -513,7 +513,7 @@
     {
         "Name": "Notepad++",
         "Filter": "Get-EvergreenApp -Name \"NotepadPlusPlus\" | Where-Object { $_.Architecture -eq \"x64\" -and $_.Type -eq \"exe\" } | Select-Object -First 1",
-        "Installed": "Notepad++*",
+        "Installed": "Notepad*",
         "FilesExist": [
             "C:\\Program Files\\Notepad++\\notepad++.exe"
         ],
