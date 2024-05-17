@@ -47,7 +47,7 @@ $params = @{
 Start-Process @params
 
 # Close Greenshot
-Start-Sleep -Seconds 10
+Start-Sleep -Seconds 20
 Get-Process -ErrorAction "SilentlyContinue" | `
     Where-Object { $_.Path -like "$Env:ProgramFiles\Greenshot\*" } | `
     Stop-Process -Force -ErrorAction "SilentlyContinue"
