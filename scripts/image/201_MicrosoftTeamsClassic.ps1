@@ -84,7 +84,7 @@ if (Test-Path -Path $TeamsExe) {
             NoNewWindow  = $true
             Wait         = $true
             PassThru     = $true
-            ErrorAction  = "Continue"
+            ErrorAction  = "Stop"
         }
         Start-Process @params
 
@@ -104,7 +104,7 @@ foreach ($App in $Apps) {
         NoNewWindow  = $true
         PassThru     = $true
         Wait         = $true
-        ErrorAction  = "Continue"
+        ErrorAction  = "Stop"
     }
     Start-Process @params
 }
@@ -119,7 +119,7 @@ $params = @{
     NoNewWindow  = $true
     Wait         = $true
     PassThru     = $true
-    ErrorAction  = "Continue"
+    ErrorAction  = "Stop"
 }
 Start-Process @params
 #endregion

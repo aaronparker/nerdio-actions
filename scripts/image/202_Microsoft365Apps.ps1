@@ -96,7 +96,7 @@ $params = @{
     NoNewWindow  = $true
     Wait         = $true
     PassThru     = $true
-    ErrorAction  = "Continue"
+    ErrorAction  = "Stop"
 }
 Push-Location -Path $Path
 Start-Process @params

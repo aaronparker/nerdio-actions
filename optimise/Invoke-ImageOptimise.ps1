@@ -63,7 +63,7 @@ foreach ($File in $FsLogix) {
         FilePath     = $File.FullName
         ArgumentList = "/norestart /uninstall /quiet"
         Wait         = $true
-        ErrorAction  = "Continue"
+        ErrorAction  = "Stop"
     }
     Start-Process @params
 }

@@ -112,7 +112,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             NoNewWindow  = $true
             Wait         = $true
             PassThru     = $true
-            ErrorAction  = "Continue"
+            ErrorAction  = "Stop"
         }
         Start-Process @params
     }
@@ -124,7 +124,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             NoNewWindow  = $true
             Wait         = $true
             PassThru     = $true
-            ErrorAction  = "Continue"
+            ErrorAction  = "Stop"
         }
         Start-Process @params
     }
@@ -149,7 +149,7 @@ else {
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $true
-        ErrorAction  = "Continue"
+        ErrorAction  = "Stop"
     }
     Start-Process @params
 }
@@ -161,7 +161,7 @@ $params = @{
     NoNewWindow  = $true
     Wait         = $true
     PassThru     = $true
-    ErrorAction  = "Continue"
+    ErrorAction  = "Stop"
 }
 Start-Process @params
 #endregion

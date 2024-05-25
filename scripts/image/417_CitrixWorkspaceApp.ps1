@@ -102,7 +102,7 @@ $params = @{
     NoNewWindow  = $true
     Wait         = $false
     PassThru     = $true
-    ErrorAction  = "Continue"
+    ErrorAction  = "Stop"
 }
 Start-Process @params
 

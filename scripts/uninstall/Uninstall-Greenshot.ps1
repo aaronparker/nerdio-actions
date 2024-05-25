@@ -19,7 +19,7 @@ if (Test-Path -Path "$Env:ProgramFiles\Greenshot\unins000.exe") {
         NoNewWindow  = $true
         PassThru     = $true
         Wait         = $true
-        ErrorAction  = "Continue"
+        ErrorAction  = "Stop"
     }
     $result = Start-Process @params
 

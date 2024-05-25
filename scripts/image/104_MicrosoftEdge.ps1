@@ -47,7 +47,7 @@ if (!(Test-Path -Path $EdgeExe) -or ([System.Version]$File.VersionInfo.ProductVe
         NoNewWindow  = $true
         Wait         = $true
         PassThru     = $true
-        ErrorAction  = "Continue"
+        ErrorAction  = "Stop"
     }
     Start-Process @params
 }
@@ -92,7 +92,7 @@ $params = @{
     NoNewWindow  = $true
     Wait         = $true
     PassThru     = $true
-    ErrorAction  = "Continue"
+    ErrorAction  = "Stop"
 }
 Start-Process @params
 #endregion

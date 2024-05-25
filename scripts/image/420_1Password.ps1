@@ -34,7 +34,7 @@ $params = @{
     NoNewWindow  = $true
     PassThru     = $true
     Wait         = $true
-    ErrorAction  = "Continue"
+    ErrorAction  = "Stop"
 }
 Start-Process @params
 #endregion
