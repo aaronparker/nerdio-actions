@@ -136,8 +136,9 @@ Describe "Validate <App.Name>" -ForEach $Applications {
             $_ | Should -Not -Exist
         }
 
+        # We need to account for more than one service
         It "Should have the service disabled: <_>" -ForEach $ServicesDisabled {
-            (Get-Service -Name $_).StartType | Should -Be "Disabled"
+            (Get-Service -Name $_).StartType | Should -BeIn @("Disabled", "Disabled")
         }
 
         It "Should have the service enabled: <_>" -ForEach $ServicesEnabled {
