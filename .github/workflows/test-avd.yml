@@ -88,3 +88,10 @@ jobs:
         with:
           name: installed-applications
           path: "${{ github.workspace }}\\support\\InstalledApplications.csv"
+
+      - name: Upload installer logs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: installer-logs
+          path: "${{ github.workspace }}\\support\\logs\\"
