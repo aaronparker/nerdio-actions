@@ -23,9 +23,14 @@ BeforeDiscovery {
     # Get the scripts to test
     $Path = "$Path\scripts\image"
     $SupportScripts = Get-ChildItem -Path $Path -Include "0*.ps1" -Recurse -Exclude "012_WindowsUpdate.ps1"
-    $DependencyScripts = Get-ChildItem -Path $Path -Include "1*.ps1" -Recurse -Exclude "101_Avd-AgentMicrosoftWvdMultimediaRedirection"
+
+    $ExcludeApps = "101_Avd-AgentMicrosoftWvdMultimediaRedirection.ps1", "101_Avd-AgentMicrosoftWvdRtcService.ps1"
+    $DependencyScripts = Get-ChildItem -Path $Path -Include "1*.ps1" -Recurse -Exclude $ExcludeApps
+
     $MicrosoftAppsScripts = Get-ChildItem -Path $Path -Include "2*.ps1" -Recurse
-    $3rdPartyScripts = Get-ChildItem -Path $Path -Include "4*.ps1" -Recurse -Exclude "420_1Password.ps1", "421_1PasswordCli.ps1", "412_MozillaFirefox.ps1", "417_CitrixWorkspaceApp.ps1"
+
+    $ExcludeApps = "420_1Password.ps1", "421_1PasswordCli.ps1", "412_MozillaFirefox.ps1", "417_CitrixWorkspaceApp.ps1"
+    $3rdPartyScripts = Get-ChildItem -Path $Path -Include "4*.ps1" -Recurse #-Exclude $ExcludeApps
     $CleanupScripts = Get-ChildItem -Path $Path -Include "9*.ps1" -Recurse
 
     # Get scripts to run a 2nd time
@@ -79,55 +84,25 @@ Describe "Run application image scripts that need a second run" {
 AfterAll {
     #region Functions
     function Get-InstalledSoftware {
-        [OutputType([System.Object[]])]
-        [CmdletBinding()]
-        param ()
-
-        try {
+        $UninstallKeys = @(
+            "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*",
+            "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
+        )
+        $Apps = @()
+        foreach ($Key in $UninstallKeys) {
             try {
-                $params = @{
-                    PSProvider  = "Registry"
-                    Name        = "HKU"
-                    Root        = "HKEY_USERS"
-                    ErrorAction = "SilentlyContinue"
-                }
-                New-PSDrive @params | Out-Null
+                $propertyNames = "DisplayName", "DisplayVersion", "Publisher", "UninstallString", "PSPath", "WindowsInstaller", "InstallDate", "InstallSource", "HelpLink", "Language", "EstimatedSize", "SystemComponent"
+                $Apps += Get-ItemProperty -Path $Key -Name $propertyNames -ErrorAction "SilentlyContinue" | `
+                    . { process { if ($null -ne $_.DisplayName) { $_ } } } | `
+                    Where-Object { $_.SystemComponent -ne 1 } | `
+                    Select-Object -Property @{n = "Name"; e = { $_.DisplayName } }, @{n = "Version"; e = { $_.DisplayVersion } }, "Publisher", "UninstallString", @{n = "RegistryPath"; e = { $_.PSPath -replace "Microsoft.PowerShell.Core\\Registry::", "" } }, "PSChildName", "WindowsInstaller", "InstallDate", "InstallSource", "HelpLink", "Language", "EstimatedSize" | `
+                    Sort-Object -Property "DisplayName", "Publisher"
             }
             catch {
                 throw $_.Exception.Message
             }
-
-            $UninstallKeys = @(
-                "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*",
-                "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
-            )
-            $UninstallKeys += Get-ChildItem -Path "HKU:" | Where-Object { $_.Name -match "S-\d-\d+-(\d+-){1,14}\d+$" } | ForEach-Object {
-                "HKU:\$($_.PSChildName)\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
-            }
-
-            $Apps = @()
-            foreach ($Key in $UninstallKeys) {
-                try {
-                    $propertyNames = "DisplayName", "DisplayVersion", "Publisher", "UninstallString", "PSPath", "WindowsInstaller", "InstallDate", "InstallSource", "HelpLink", "Language", "EstimatedSize", "SystemComponent"
-                    $Apps += Get-ItemProperty -Path $Key -Name $propertyNames -ErrorAction "SilentlyContinue" | `
-                        . { process { if ($null -ne $_.DisplayName) { $_ } } } | `
-                        Where-Object { $_.SystemComponent -ne 1 } | `
-                        Select-Object -Property @{n = "Name"; e = { $_.DisplayName } }, @{n = "Version"; e = { $_.DisplayVersion } }, "Publisher", "UninstallString", @{n = "RegistryPath"; e = { $_.PSPath -replace "Microsoft.PowerShell.Core\\Registry::", "" } }, "PSChildName", "WindowsInstaller", "InstallDate", "InstallSource", "HelpLink", "Language", "EstimatedSize" | `
-                        Sort-Object -Property "DisplayName", "Publisher"
-                }
-                catch {
-                    throw $_.Exception.Message
-                }
-            }
-
-            return $Apps
         }
-        catch {
-            throw $_.Exception.Message
-        }
-        finally {
-            Remove-PSDrive "HKU" -ErrorAction "SilentlyContinue" | Out-Null
-        }
+        return $Apps
     }
     #endregion
 
