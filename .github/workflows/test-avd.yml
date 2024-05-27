@@ -45,11 +45,16 @@ jobs:
           Invoke-RestMethod @params
 
           Import-Module -Name "Pester" -Force -ErrorAction "Stop"
+
+          $CodeDirs = @("$Env:GITHUB_WORKSPACE\scripts\image",
+          "$Env:GITHUB_WORKSPACE\scripts\tweaks",
+          "$Env:GITHUB_WORKSPACE\scripts\uninstall")
+
           $Config = New-PesterConfiguration
           $Config.Run.Path = "$Env:GITHUB_WORKSPACE\tests\scripts"
           $Config.Run.PassThru = $true
           $Config.CodeCoverage.Enabled = $true
-          $Config.CodeCoverage.Path = "$Env:GITHUB_WORKSPACE\scripts"
+          $Config.CodeCoverage.Path = $CodeDirs
           $Config.CodeCoverage.OutputFormat = "JaCoCo"
           $Config.CodeCoverage.OutputPath = "$Env:GITHUB_WORKSPACE\CodeCoverage.xml"
           $Config.TestResult.Enabled = $true

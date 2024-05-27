@@ -1,11 +1,13 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-    branches:
-        include: [ main ]
-    paths:
-        include: [ "scripts/**.ps1" ]
+# This pipeline validates scripts as they are modified
+
+trigger: none
+    # branches:
+    #     include: [ main ]
+    # paths:
+    #     include: [ "scripts/**.ps1" ]
 
 pool:
   vmImage: windows-latest
@@ -37,12 +39,20 @@ jobs:
     displayName: 'Publish PSScriptAnalyzer test artifacts'
 
   - powershell: |
+      $AzureRegionName = ${env:AZUREREGIONNAME}
+      $SecureVars = ${env:SECUREVARS} | ConvertFrom-Json -ErrorAction "Stop"
+
       Import-Module -Name "Pester" -Force -ErrorAction "Stop"
+
+      $CodeDirs = @("$(build.sourcesDirectory)\scripts\image",
+        "$(build.sourcesDirectory)\scripts\tweaks",
+        "$(build.sourcesDirectory)\scripts\uninstall")
+
       $Config = New-PesterConfiguration
       $Config.Run.Path = "$(build.sourcesDirectory)\tests\scripts"
       $Config.Run.PassThru = $true
       $Config.CodeCoverage.Enabled = $true
-      $Config.CodeCoverage.Path = "$(build.sourcesDirectory)\scripts"
+      $Config.CodeCoverage.Path = $CodeDirs
       $Config.CodeCoverage.OutputFormat = "JaCoCo"
       $Config.CodeCoverage.OutputPath = "$(build.sourcesDirectory)\CodeCoverage.xml"
       $Config.TestResult.Enabled = $true
@@ -56,11 +66,22 @@ jobs:
     errorActionPreference: continue
     continueOnError: true
 
+  - publish: "$(build.sourcesDirectory)\\support\\InstalledApplications.csv"
+    artifact: InstalledApplications
+    displayName: 'Publish installed applications'
+    continueOnError: true
+
+  - publish: "$(build.sourcesDirectory)\\support\\logs\\"
+    artifact: AppInstallLogs
+    displayName: 'Publish application installer logs'
+    continueOnError: true
+
   - publish: "$(build.sourcesDirectory)\\TestResults.xml"
     artifact: PesterTestResults
     displayName: 'Publish Pester test artifacts'
     continueOnError: true
 
+  # Publish Pester results
   - task: PublishTestResults@2
     displayName: 'Publish Pester results'
     inputs:
@@ -69,14 +90,11 @@ jobs:
       failTaskOnFailedTests: true
       testRunTitle: "Publish Pester results"
 
-  # Publish code coverage results v1
-  # Publish Cobertura or JaCoCo code coverage results from a build.
-  - task: PublishCodeCoverageResults@1
+  # Publish code coverage results
+  - task: PublishCodeCoverageResults@2
     displayName: 'Publish code coverage results'
     inputs:
-      codeCoverageTool: 'JaCoCo' # 'Cobertura' | 'JaCoCo'. Required. Code coverage tool. Default: JaCoCo.
+      codeCoverageTool: 'JaCoCo'
       summaryFileLocation: "$(build.sourcesDirectory)\\CodeCoverage.xml"
       pathToSources: "$(build.sourcesDirectory)\\scripts"
-      #reportDirectory: # string. Report directory. 
-      #additionalCodeCoverageFiles: # string. Additional files. 
-      #failIfCoverageEmpty: false # boolean. Fail when code coverage results are missing. Default: false.
+      failIfCoverageEmpty: false
