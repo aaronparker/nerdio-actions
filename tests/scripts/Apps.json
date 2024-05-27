@@ -91,55 +91,6 @@
         "RegValueNotExits": []
     },
     {
-        "Name": "Citrix Workspace app",
-        "Filter": "Get-EvergreenApp -Name \"CitrixWorkspaceApp\" | Where-Object { $_.Stream -eq \"Current\" } | Select-Object -First 1",
-        "Installed": "Citrix Workspace*",
-        "FilesExist": [
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\bgblursvc.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\CDViewer.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\concentr.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\cpviewer.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\Ctx64Injector64.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\CtxBrowserInt.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\CtxCFRUI.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\CtxTwnPA.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\HdxRtcEngine.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\icaconf.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\NMHost.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\pcl2bmp.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\PdfPrintHelper.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\RawPrintHelper.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\redirector.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\SetIntegrityLevel.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\ssonsvr.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\vdrcghost64.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\WebHelper.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\wfcrun32.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\wfcwow64.exe",
-            "C:\\Program Files (x86)\\Citrix\\ICA Client\\wfica32.exe"
-        ],
-        "FilesNotExist": [],
-        "ServicesDisabled": [],
-        "ServicesEnabled": [],
-        "TaskNotExist": [],
-        "RegDwordValue": [],
-        "RegStringValue": [],
-        "RegValueNotExits": [
-            {
-                "Key": "HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run",
-                "Value": "AnalyticsSrv"
-            },
-            {
-                "Key": "HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run",
-                "Value": "ConnectionCenter"
-            },
-            {
-                "Key": "HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run",
-                "Value": "Redirector"
-            }
-        ]
-    },
-    {
         "Name": "draw.io",
         "Filter": "Get-EvergreenApp -Name \"diagrams.net\" | Where-Object { $_.Type -eq \"msi\" } | Select-Object -First 1",
         "Installed": "draw.io*",
@@ -610,7 +561,7 @@
             {
                 "Key": "HKLM:\\Software\\Policies\\PowerToys",
                 "Value": "DisableNewUpdateAvailableToast",
-                "Data": 0
+                "Data": 1
             },
             {
                 "Key": "HKLM:\\Software\\Policies\\PowerToys",

@@ -60,6 +60,7 @@ reg add "HKLM\Software\Policies\PowerToys" /v "DoNotShowWhatsNewAfterUpdates" /d
 reg add "HKLM\Software\Policies\PowerToys" /v "SuspendNewUpdateAvailableToast" /d 1 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityCmdNotFound" /d 0 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityPeek" /d 0 /t "REG_DWORD" /f | Out-Null
+reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityMouseWithoutBorders" /d 0 /t "REG_DWORD" /f | Out-Null
 
 Start-Sleep -Seconds 5
 Get-Process -ErrorAction "SilentlyContinue" | `
