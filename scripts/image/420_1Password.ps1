@@ -24,7 +24,7 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 
 # Download
 $App = Get-EvergreenApp -Name "1Password" | Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "Stop"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 # Install package
 $LogFile = "$Env:ProgramData\Nerdio\Logs\1Password.log" -replace " ", ""

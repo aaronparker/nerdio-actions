@@ -36,7 +36,7 @@ Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftOneDrive" | `
     Where-Object { $_.Ring -eq "Production" -and $_.Type -eq "exe" -and $_.Architecture -eq "x64" } | `
     Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 # Install
 reg add "HKLM\Software\Microsoft\OneDrive" /v "AllUsersInstall" /t REG_DWORD /d 1 /reg:64 /f

@@ -13,7 +13,7 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
         Version = "6.54.16808"
         URI     = $SecureVars.CrowdStrikeAgentUrl
     }
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
     # Install the agent
     $params = @{

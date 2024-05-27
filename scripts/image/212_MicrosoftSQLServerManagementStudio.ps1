@@ -31,7 +31,7 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftSsms" | `
     Where-Object { $_.Language -eq "English" } | Select-Object -First 1
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftSQLServerManagementStudio$($App.Version).log" -replace " ", ""
 $params = @{

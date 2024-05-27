@@ -57,7 +57,7 @@ Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "AdobeAcrobatReaderDC" | `
     Where-Object { $_.Language -eq $Language -and $_.Architecture -eq $Architecture } | `
     Select-Object -First 1
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 # Install Adobe Acrobat Reader
 $LogFile = "$Env:ProgramData\Nerdio\Logs\AdobeAcrobatReaderDC$($App.Version).log" -replace " ", ""

@@ -31,7 +31,7 @@ $App = [PSCustomObject]@{
     Version = "43.4.0.25959"
     URI     = "https://binaries.webex.com/vdi-hvd-aws-gold/20230421075619/Webex.msi"
 }
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 $LogFile = "$Env:ProgramData\Nerdio\Logs\CiscoWebEx$($App.Version).log" -replace " ", ""
 $params = @{

@@ -89,12 +89,12 @@ $App = [PSCustomObject]@{
     Version = "2.0.0"
     URI     = "https://statics.teams.cdn.office.net/production-teamsprovision/lkg/teamsbootstrapper.exe"
 }
-$TeamsExe = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$TeamsExe = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 # Download Teams v2 MSIX installer
 $App = Get-EvergreenApp -Name "MicrosoftTeams" | `
     Where-Object { $_.Release -eq "Enterprise" -and $_.Architecture -eq "x64" }
-$TeamsMsix = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$TeamsMsix = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 # Remove any existing Teams AppX package
 Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq "MSTeams_8wekyb3d8bbwe" } | Remove-AppxPackage -ErrorAction "SilentlyContinue"

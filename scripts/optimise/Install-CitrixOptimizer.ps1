@@ -46,7 +46,7 @@ $App = [PSCustomObject]@{
     Version = "3.1.0.3"
     URI     = if ($null -eq $SecureVars.CitrixOptimizerUrl) { "https://github.com/aaronparker/packer/raw/main/build/tools/CitrixOptimizerTool.zip" } else { $SecureVars.CitrixOptimizerUrl }
 }
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 # Run Citrix Optimizer
 Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force

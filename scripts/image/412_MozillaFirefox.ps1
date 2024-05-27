@@ -47,7 +47,7 @@ Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MozillaFirefox" | `
     Where-Object { $_.Channel -eq $Channel -and $_.Architecture -eq "x64" -and $_.Language -eq $Language -and $_.Type -eq "msi" } | `
     Select-Object -First 1
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 $LogFile = "$Env:ProgramData\Nerdio\Logs\MozillaFirefox$($App.Version).log" -replace " ", ""
 $Options = "DESKTOP_SHORTCUT=false

@@ -18,7 +18,7 @@ Installs the Microsoft .NET Desktop LTS and Current Runtimes using the default i
 - The script creates a log file at "$Env:ProgramData\Nerdio\Logs\Microsoft.NET.log" to capture installation logs.
 #>
 
-#description: Installs the Microsoft .NET Desktop LTS and Current Runtimes
+#description: Installs the Microsoft .NET Desktop LTS
 #execution mode: Combined
 #tags: Evergreen, Microsoft, .NET
 #Requires -Modules Evergreen
@@ -32,7 +32,7 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "Microsoft.NET" | `
     Where-Object { $_.Installer -eq "windowsdesktop" -and $_.Architecture -eq "x64" -and $_.Channel -match "LTS" }
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 foreach ($file in $OutFile) {
     $LogFile = "$Env:ProgramData\Nerdio\Logs\Microsoft.NET.log" -replace " ", ""

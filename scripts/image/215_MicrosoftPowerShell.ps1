@@ -33,7 +33,7 @@ Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftPowerShell" | `
     Where-Object { $_.Architecture -eq "x64" -and $_.Release -eq "Stable" } | `
     Select-Object -First 1
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftPowerShell$($App.Version).log" -replace " ", ""
 $params = @{

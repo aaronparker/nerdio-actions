@@ -28,8 +28,8 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 Import-Module -Name "Evergreen" -Force
 
 $App = Get-EvergreenApp -Name "RDAnalyzer" | Select-Object -First 1
-Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -WarningAction "SilentlyContinue" | Out-Null
+Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -ErrorAction "Stop" | Out-Null
 
 $App = Get-EvergreenApp -Name "ConnectionExperienceIndicator" | Select-Object -First 1
-Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -WarningAction "SilentlyContinue" | Out-Null
+Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -ErrorAction "Stop" | Out-Null
 #endregion

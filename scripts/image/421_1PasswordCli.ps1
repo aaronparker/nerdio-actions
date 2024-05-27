@@ -33,7 +33,7 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 
 # Download - update when Evergreen supports 1Password CLI
 $App = Get-EvergreenApp -Name "1PasswordCLI" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 Remove-Item -Path $OutFile.FullName -Force -ErrorAction "SilentlyContinue"
 

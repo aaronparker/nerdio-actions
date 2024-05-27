@@ -87,7 +87,7 @@ else {
     $App = $Versions | ConvertFrom-Json | Where-Object { $_.Version -eq $Variables.$AzureRegionName.FSLogixAgentVersion }
 }
 
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 
 # Install

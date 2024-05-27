@@ -12,7 +12,7 @@ $App = [PSCustomObject]@{
     Version = "4.4.400"
     URI     = $SecureVars.SynapseUrl
 }
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 # Install the agent
 $params = @{

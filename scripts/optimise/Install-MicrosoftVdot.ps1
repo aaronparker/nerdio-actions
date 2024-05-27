@@ -10,7 +10,7 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 
 # Download Microsoft Virtual Desktop Optimization Tool
 $App = Get-EvergreenApp -Name "MicrosoftVdot" | Select-Object -First 1
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 # Run Microsoft Virtual Desktop Optimization Tool
 Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force

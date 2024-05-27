@@ -87,7 +87,7 @@ Out-File -FilePath $XmlFile -InputObject $OfficeXml -Encoding "utf8"
 # Get Office version and download
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "Microsoft365Apps" | Where-Object { $_.Channel -eq $Channel } | Select-Object -First 1
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "SilentlyContinue"
+$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 # Install package
 $params = @{

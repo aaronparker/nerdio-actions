@@ -33,13 +33,13 @@ try {
     $App = Get-EvergreenApp -Name "CitrixWorkspaceApp" | `
         Where-Object { $_.Stream -eq "Current" } | `
         Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path
+    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 }
 catch {
     $App = Get-EvergreenApp -Name "CitrixWorkspaceApp" | `
         Where-Object { $_.Stream -eq "LTSR" } | `
         Select-Object -First 1
-    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path
+    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 }
 
 # Rename the installer
