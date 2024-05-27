@@ -586,6 +586,41 @@
                 "Key": "HKLM:\\Software\\Policies\\PowerToys",
                 "Value": "AutomaticUpdateDownloadDisabled",
                 "Data": 1
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityFileExplorerGcodePreview",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityFileExplorerGcodeThumbnails",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityFileExplorerQOIPreview",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityFileExplorerQOIThumbnails",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "DisableNewUpdateAvailableToast",
+                "Data": 0
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "DoNotShowWhatsNewAfterUpdates",
+                "Data": 1
+            },
+            {
+                "Key": "HKLM:\\Software\\Policies\\PowerToys",
+                "Value": "ConfigureEnabledUtilityCmdNotFound",
+                "Data": 0
             }
         ],
         "RegStringValue": [],
