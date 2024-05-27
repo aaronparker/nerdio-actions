@@ -31,7 +31,7 @@ BeforeDiscovery {
     $MicrosoftAppsScripts = Get-ChildItem -Path $Path -Include "2*.ps1" -Recurse
 
     # These apps don't test well in pipelines / workers
-    $ExcludeApps = "420_1Password.ps1", "421_1PasswordCli.ps1", "412_MozillaFirefox.ps1", "417_CitrixWorkspaceApp.ps1"
+    $ExcludeApps = "412_MozillaFirefox.ps1", "417_CitrixWorkspaceApp.ps1"
     $3rdPartyScripts = Get-ChildItem -Path $Path -Include "4*.ps1" -Recurse -Exclude $ExcludeApps
     $CleanupScripts = Get-ChildItem -Path $Path -Include "9*.ps1" -Recurse
 
