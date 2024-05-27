@@ -26,7 +26,7 @@ BeforeDiscovery {
 
     # These apps don't test well in pipelines / workers
     $ExcludeApps = "101_Avd-AgentMicrosoftWvdMultimediaRedirection.ps1", "101_Avd-AgentMicrosoftWvdRtcService.ps1"
-    $DependencyScripts = Get-ChildItem -Path $Path -Include "1*.ps1" -Recurse -Exclude $ExcludeApps
+    $DependencyScripts = Get-ChildItem -Path $Path -Include "1*.ps1" -Recurse #-Exclude $ExcludeApps
 
     $MicrosoftAppsScripts = Get-ChildItem -Path $Path -Include "2*.ps1" -Recurse
 

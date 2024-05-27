@@ -28,8 +28,16 @@ New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -Erro
 # Run tasks/install apps
 #region Microsoft Remote Desktop WebRTC Redirector Service
 Import-Module -Name "Evergreen" -Force
-$App = Get-EvergreenApp -Name "MicrosoftWvdRtcService" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
-$OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
+
+try {
+    $App = Get-EvergreenApp -Name "MicrosoftWvdRtcService" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
+    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
+}
+catch {
+    # Workaround if there's a HTTP 502 error
+    $App = Get-EvergreenAppFromApi -Name "MicrosoftWvdRtcService" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
+    $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
+}
 
 # Install RTC
 $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftWvdRtcService$($App.Version).log" -replace " ", ""
