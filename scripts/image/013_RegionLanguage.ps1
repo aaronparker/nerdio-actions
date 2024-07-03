@@ -53,6 +53,11 @@ Enable-PSRemoting -Force
 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Public"
 #endregion
 
+# Disable LanguageComponentsInstaller while installing language packs
+# See Bug 45044965: Installing language pack fails with error: ERROR_SHARING_VIOLATION for more details
+# Disable-ScheduledTask -TaskName "\Microsoft\Windows\LanguageComponentsInstaller\Installation"
+# Disable-ScheduledTask -TaskName "\Microsoft\Windows\LanguageComponentsInstaller\ReconcileLanguageResources"
+
 #region Only run if the LanguagePackManagement module is installed
 if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
     $params = @{
@@ -83,3 +88,7 @@ if (Get-Command -Name "Set-SystemPreferredUILanguage" -ErrorAction "SilentlyCont
     Set-SystemPreferredUILanguage -Language $Language
 }
 #endregion
+
+# Enable LanguageComponentsInstaller after language packs are installed
+# Enable-ScheduledTask -TaskName "\Microsoft\Windows\LanguageComponentsInstaller\Installation"
+# Enable-ScheduledTask -TaskName "\Microsoft\Windows\LanguageComponentsInstaller\ReconcileLanguageResources"
