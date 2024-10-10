@@ -6,7 +6,7 @@
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Get the Citrix Optimizer template
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
@@ -57,7 +57,7 @@ Push-Location -Path $OptimizerBin.Directory
 $params = @{
     Source          = $Template.FullName
     Mode            = "Execute"
-    OutputLogFolder = "$Env:ProgramData\Nerdio\Logs"
+    OutputLogFolder = "$Env:SystemRoot\Logs\ImageBuild"
     OutputHtml      = "$Env:SystemRoot\Temp\CitrixOptimizer.html"
     Verbose         = $false
 }

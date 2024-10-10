@@ -16,7 +16,7 @@ This example runs the script to install the latest Microsoft PowerShell.
 .NOTES
 - Requires the Evergreen module.
 - Only installs the x64 architecture of Microsoft PowerShell.
-- The installation log is saved in "$Env:ProgramData\Nerdio\Logs".
+- The installation log is saved in "$Env:SystemRoot\Logs\ImageBuild".
 #>
 
 #description: Installs the latest Microsoft PowerShell
@@ -27,7 +27,7 @@ This example runs the script to install the latest Microsoft PowerShell.
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftPowerShell" | `
@@ -35,7 +35,7 @@ $App = Get-EvergreenApp -Name "MicrosoftPowerShell" | `
     Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftPowerShell$($App.Version).log" -replace " ", ""
+$LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftPowerShell$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /norestart ALLUSERS=1 /log $LogFile"

@@ -11,7 +11,7 @@ Specifies the download path for Notepad++. The default path is "$Env:SystemDrive
 .NOTES
 - This script requires the "Evergreen" module.
 - The script will create a directory at the specified installation path if it does not already exist.
-- The script will create a directory at "$Env:ProgramData\Nerdio\Logs" if it does not already exist.
+- The script will create a directory at "$Env:SystemRoot\Logs\ImageBuild" if it does not already exist.
 - The script will download the latest version of Notepad++ from the Evergreen repository and install it silently.
 - The script will disable the automatic update feature of Notepad++ by renaming the updater folder.
 #>
@@ -24,7 +24,7 @@ Specifies the download path for Notepad++. The default path is "$Env:SystemDrive
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "NotepadPlusPlus" | Where-Object { $_.Architecture -eq "x64" -and $_.Type -eq "exe" } | Select-Object -First 1

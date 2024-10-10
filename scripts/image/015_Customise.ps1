@@ -46,9 +46,13 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 $Installer = Get-EvergreenApp -Name "stealthpuppyWindowsCustomisedDefaults" | Where-Object { $_.Type -eq "zip" } | `
     Select-Object -First 1 | `
     Save-EvergreenApp -CustomPath $Path
+
+# Extract the installer
 Expand-Archive -Path $Installer.FullName -DestinationPath $Path -Force
 $InstallFile = Get-ChildItem -Path $Path -Recurse -Include "Install-Defaults.ps1"
+
+# Install the Customised Defaults
 Push-Location -Path $InstallFile.Directory
-& .\Install-Defaults.ps1 -Language $Language -TimeZone $TimeZone -AppxMode $AppxMode
+& $InstallFile.FullName -Language $Language -TimeZone $TimeZone -AppxMode $AppxMode
 Pop-Location
 #endregion

@@ -43,23 +43,19 @@ else {
 }
 #endregion
 
-#region Enable the WinRM rule as a workaround for VM provisioning DSC failure with: "Unable to check the status of the firewall"
-# https://github.com/Azure/RDS-Templates/issues/435
-# https://qiita.com/fujinon1109/items/440c614338fe2535b09e
-
-Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Private"
-Get-NetFirewallRule -DisplayGroup "Windows Remote Management" | Enable-NetFirewallRule
-Enable-PSRemoting -Force
-Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Public"
-#endregion
-
-# Disable LanguageComponentsInstaller while installing language packs
-# See Bug 45044965: Installing language pack fails with error: ERROR_SHARING_VIOLATION for more details
-# Disable-ScheduledTask -TaskName "\Microsoft\Windows\LanguageComponentsInstaller\Installation"
-# Disable-ScheduledTask -TaskName "\Microsoft\Windows\LanguageComponentsInstaller\ReconcileLanguageResources"
-
 #region Only run if the LanguagePackManagement module is installed
+# Works for Windows 11, test on Windows Server 2025
 if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
+
+    # Enable the WinRM rule as a workaround for VM provisioning DSC failure with: "Unable to check the status of the firewall"
+    # https://github.com/Azure/RDS-Templates/issues/435
+    # https://qiita.com/fujinon1109/items/440c614338fe2535b09e
+
+    Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Private"
+    Get-NetFirewallRule -DisplayGroup "Windows Remote Management" | Enable-NetFirewallRule
+    Enable-PSRemoting -Force
+    Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Public"
+
     $params = @{
         Language        = $Language
         CopyToSettings  = $true

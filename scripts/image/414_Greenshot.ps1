@@ -29,13 +29,13 @@ The download path for Greenshot. The default value is "$Env:SystemDrive\Apps\Gre
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "Greenshot" | Where-Object { $_.Type -eq "exe" -and $_.InstallerType -eq "Default" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:ProgramData\Nerdio\Logs\Greenshot$($App.Version).log" -replace " ", ""
+$LogFile = "$Env:SystemRoot\Logs\ImageBuild\Greenshot$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /TASKS= /FORCECLOSEAPPLICATIONS /LOGCLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /LOG=$LogFile"

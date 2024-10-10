@@ -29,7 +29,7 @@ The download path for the 1Password CLI. The default value is "$Env:ProgramFiles
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Download - update when Evergreen supports 1Password CLI
 $App = Get-EvergreenApp -Name "1PasswordCLI" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1

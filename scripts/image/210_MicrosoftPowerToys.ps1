@@ -21,13 +21,13 @@ The download path for Microsoft PowerToys. The default path is "$Env:SystemDrive
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftPowerToys" | Where-Object { $_.Architecture -eq "x64" -and $_.InstallerType -eq "Default" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftPowerToys$($App.Version).log" -replace " ", ""
+$LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftPowerToys$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "-silent -log $LogFile"

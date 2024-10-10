@@ -12,7 +12,7 @@ Specifies the download path for Microsoft Azure CLI. The default path is "$Env:S
 
 .NOTES
 - This script requires the Evergreen module to be installed.
-- The script creates a log file in "$Env:ProgramData\Nerdio\Logs" directory to track the installation progress and any errors that occur during the installation.
+- The script creates a log file in "$Env:SystemRoot\Logs\ImageBuild" directory to track the installation progress and any errors that occur during the installation.
 - The script uses the Start-Process cmdlet to execute the MSI package installation silently.
 #>
 
@@ -24,14 +24,14 @@ Specifies the download path for Microsoft Azure CLI. The default path is "$Env:S
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftAzureCLI" | `
     Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftAvdCli$($App.Version).log" -replace " ", ""
+$LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftAvdCli$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /norestart ALLUSERS=1 /log $LogFile"

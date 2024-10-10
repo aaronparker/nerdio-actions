@@ -12,7 +12,7 @@ The path where draw.io will be downloaded. The default path is "$Env:SystemDrive
 
 .NOTES
 - This script requires the Evergreen module to be installed.
-- The script will create a log file in "$Env:ProgramData\Nerdio\Logs" to track the installation progress.
+- The script will create a log file in "$Env:SystemRoot\Logs\ImageBuild" to track the installation progress.
 - The script will remove the draw.io shortcut from the desktop after installation.
 #>
 
@@ -24,13 +24,13 @@ The path where draw.io will be downloaded. The default path is "$Env:SystemDrive
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "diagrams.net" | Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:ProgramData\Nerdio\Logs\diagrams.net$($App.Version).log" -replace " ", ""
+$LogFile = "$Env:SystemRoot\Logs\ImageBuild\diagrams.net$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 /quiet /log $LogFile"

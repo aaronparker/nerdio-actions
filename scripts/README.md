@@ -6,7 +6,7 @@ Image scripts for customising Windows 10/11 Enterprise and Enterprise multi-sess
 
 Scripts use [Evergreen](https://stealthpuppy.com/evergreen/) to determine the latest version of an application. Running each script will install the latest version on a clean image or update an existing application install on a gold image or existing session hosts.
 
-Where supported, application installers will save install logs to `$Env:ProgramData\Nerdio\Logs`.
+Where supported, application installers will save install logs to `$Env:SystemRoot\Logs\ImageBuild`.
 
 | **Script**                    | **Notes**                                                                                                                                                                   |
 |-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -51,4 +51,4 @@ Once run on the target VM, the VM or image should have the specified application
 
 Scripts here will uninstall target applications. Run on gold images or target session hosts when users are not signed in, as applications will be forcibly uninstalled.
 
-Where supported, uninstall commands will save uninstall logs to `$Env:ProgramData\Nerdio\Logs`.
+Where supported, uninstall commands will save uninstall logs to `$Env:SystemRoot\Logs\ImageBuild`.

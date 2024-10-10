@@ -64,7 +64,7 @@ $Versions = @"
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Download and unpack
 Import-Module -Name "Evergreen" -Force
@@ -94,7 +94,7 @@ Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 foreach ($file in "FSLogixAppsSetup.exe") {
     $Installers = Get-ChildItem -Path $Path -Recurse -Include $file | Where-Object { $_.Directory -match "x64" }
     foreach ($Installer in $Installers) {
-        $LogFile = "$Env:ProgramData\Nerdio\Logs\$($Installer.Name)$($App.Version).log" -replace " ", ""
+        $LogFile = "$Env:SystemRoot\Logs\ImageBuild\$($Installer.Name)$($App.Version).log" -replace " ", ""
         $params = @{
             FilePath     = $Installer.FullName
             ArgumentList = "/install /quiet /norestart /log $LogFile"

@@ -30,11 +30,11 @@ function Get-InstalledSoftware {
 #endregion
 
 #region Script logic
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 $Apps = Get-InstalledSoftware | Where-Object { $_.Name -match "MsMmrHostMsi*" }
 foreach ($App in $Apps) {
-    $LogFile = "$Env:ProgramData\Nerdio\Logs\UninstallMsMmrHostMsi$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:SystemRoot\Logs\ImageBuild\UninstallMsMmrHostMsi$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/uninstall `"$($App.PSChildName)`" /quiet /norestart /log $LogFile"

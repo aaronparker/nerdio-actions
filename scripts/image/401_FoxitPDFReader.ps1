@@ -15,7 +15,7 @@ The target folder where Foxit PDF Reader will be downloaded. The default value i
 - This script requires the Evergreen module to be installed.
 - The script uses secure variables in Nerdio Manager to pass a JSON file with the variables list. If the secure variables are not available, the script defaults to the English language.
 - The script requires TLS 1.2 to be enabled on the system.
-- The script creates a log file in the "$Env:ProgramData\Nerdio\Logs" folder with the name "FoxitPDFReader<version>.log".
+- The script creates a log file in the "$Env:SystemRoot\Logs\ImageBuild" folder with the name "FoxitPDFReader<version>.log".
 - The script disables the "FoxitReaderUpdateService" service to prevent automatic updates.
 #>
 
@@ -44,13 +44,13 @@ else {
 #region Script logic
 # Create target folder
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "FoxitReader" | Where-Object { $_.Language -eq $Language } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:ProgramData\Nerdio\Logs\FoxitPDFReader$($App.Version).log" -replace " ", ""
+$LogFile = "$Env:SystemRoot\Logs\ImageBuild\FoxitPDFReader$($App.Version).log" -replace " ", ""
 $Options = "AUTO_UPDATE=0
         NOTINSTALLUPDATE=1
         MAKEDEFAULT=0

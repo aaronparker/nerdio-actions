@@ -20,14 +20,14 @@ The download path for the 1Password client. The default path is "$Env:SystemDriv
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Download
 $App = Get-EvergreenApp -Name "1Password" | Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 # Install package
-$LogFile = "$Env:ProgramData\Nerdio\Logs\1Password.log" -replace " ", ""
+$LogFile = "$Env:SystemRoot\Logs\ImageBuild\1Password.log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"

@@ -26,7 +26,7 @@ The path where Microsoft Edge will be downloaded.
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 #region Edge
 # Download
@@ -40,7 +40,7 @@ $File = Get-ChildItem -Path $EdgeExe
 if (!(Test-Path -Path $EdgeExe) -or ([System.Version]$File.VersionInfo.ProductVersion -lt [System.Version]$App.Version)) {
 
     # Install
-    $LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftEdge$($App.Version).log" -replace " ", ""
+    $LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftEdge$($App.Version).log" -replace " ", ""
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true /log $LogFile"

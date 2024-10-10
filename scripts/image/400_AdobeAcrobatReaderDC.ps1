@@ -27,7 +27,7 @@ The path where Adobe Acrobat Reader will be downloaded. The default path is "$En
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 #region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
 if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
@@ -60,7 +60,7 @@ $App = Get-EvergreenApp -Name "AdobeAcrobatReaderDC" | `
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 # Install Adobe Acrobat Reader
-$LogFile = "$Env:ProgramData\Nerdio\Logs\AdobeAcrobatReaderDC$($App.Version).log" -replace " ", ""
+$LogFile = "$Env:SystemRoot\Logs\ImageBuild\AdobeAcrobatReaderDC$($App.Version).log" -replace " ", ""
 $Options = "EULA_ACCEPT=YES
         ENABLE_CHROMEEXT=0
         DISABLE_BROWSER_INTEGRATION=1

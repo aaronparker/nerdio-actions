@@ -30,7 +30,7 @@ function Get-InstalledSoftware {
 #endregion
 
 #region Script logic
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 Get-Process -ErrorAction "SilentlyContinue" | `
     Where-Object { $_.Path -like "$Env:ProgramFiles\7-Zip-Zstandard\*" } | `

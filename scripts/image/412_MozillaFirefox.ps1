@@ -41,7 +41,7 @@ else {
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MozillaFirefox" | `
@@ -49,7 +49,7 @@ $App = Get-EvergreenApp -Name "MozillaFirefox" | `
     Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:ProgramData\Nerdio\Logs\MozillaFirefox$($App.Version).log" -replace " ", ""
+$LogFile = "$Env:SystemRoot\Logs\ImageBuild\MozillaFirefox$($App.Version).log" -replace " ", ""
 $Options = "DESKTOP_SHORTCUT=false
         TASKBAR_SHORTCUT=false
         INSTALL_MAINTENANCE_SERVICE=false

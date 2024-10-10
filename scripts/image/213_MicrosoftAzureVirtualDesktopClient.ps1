@@ -12,7 +12,7 @@ The default path is "$Env:SystemDrive\Apps\Microsoft\Avd".
 
 .NOTES
 - This script requires the Evergreen module to be installed.
-- The script creates a log file in "$Env:ProgramData\Nerdio\Logs" to track the installation progress.
+- The script creates a log file in "$Env:SystemRoot\Logs\ImageBuild" to track the installation progress.
 - The script only installs the x64 version of the client from the "Public" channel.
 - The installation is performed silently without creating a desktop shortcut.
 #>
@@ -25,14 +25,14 @@ The default path is "$Env:SystemDrive\Apps\Microsoft\Avd".
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftWvdRemoteDesktop" | `
     Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Public" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftAvdClient$($App.Version).log" -replace " ", ""
+$LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftAvdClient$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true /log $LogFile"

@@ -23,7 +23,7 @@ The path where the agents will be downloaded. The default path is "$Env:SystemDr
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Run tasks/install apps
 #region Microsoft Azure Virtual Desktop Multimedia Redirection Extensions
@@ -40,7 +40,7 @@ catch {
 }
 
 # Install MMR
-$LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftWvdMultimediaRedirection$($App.Version).log" -replace " ", ""
+$LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftWvdMultimediaRedirection$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"

@@ -11,7 +11,7 @@ Specifies the download path for SSMS. The default path is "$Env:SystemDrive\Apps
 
 .NOTES
 - This script requires the Evergreen module to be installed.
-- The script creates a log file in "$Env:ProgramData\Nerdio\Logs" to track the installation progress.
+- The script creates a log file in "$Env:SystemRoot\Logs\ImageBuild" to track the installation progress.
 - The script supports multiple languages, but it only installs the English version of SSMS.
 - The installation is performed silently without any user interaction.
 - The script checks if SSMS is already installed and skips the installation if it is.
@@ -26,14 +26,14 @@ Specifies the download path for SSMS. The default path is "$Env:SystemDrive\Apps
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftSsms" | `
     Where-Object { $_.Language -eq "English" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:ProgramData\Nerdio\Logs\MicrosoftSQLServerManagementStudio$($App.Version).log" -replace " ", ""
+$LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftSQLServerManagementStudio$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/install /quiet /norestart DoNotInstallAzureDataStudio=1 /log $LogFile"

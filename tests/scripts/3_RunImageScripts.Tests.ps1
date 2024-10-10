@@ -131,5 +131,5 @@ AfterAll {
 
     # Copy logs for upload to the pipeline
     New-Item -Path "$Path\support\logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-    Copy-Item -Path "$Env:ProgramData\Nerdio\Logs\*" -Destination "$Path\support\logs"
+    Copy-Item -Path "$Env:SystemRoot\Logs\ImageBuild\*" -Destination "$Path\support\logs"
 }

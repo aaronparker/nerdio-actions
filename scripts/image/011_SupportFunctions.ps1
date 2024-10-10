@@ -23,7 +23,6 @@ Runs the script to install the required PowerShell modules for building AVD imag
 # Trust the PSGallery for modules
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 Install-PackageProvider -Name "NuGet" -MinimumVersion "2.8.5.208" -Force -ErrorAction "SilentlyContinue"
-#Install-Module -Name PowerShellGet -Force -AllowClobber
 Install-PackageProvider -Name "PowerShellGet" -MinimumVersion "2.2.5" -Force -ErrorAction "SilentlyContinue"
 foreach ($Repository in "PSGallery") {
     if (Get-PSRepository | Where-Object { $_.Name -eq $Repository -and $_.InstallationPolicy -ne "Trusted" }) {

@@ -15,7 +15,7 @@ Installs the Microsoft .NET Desktop LTS and Current Runtimes using the default i
 
 .NOTES
 - This script requires the Evergreen module to be installed.
-- The script creates a log file at "$Env:ProgramData\Nerdio\Logs\Microsoft.NET.log" to capture installation logs.
+- The script creates a log file at "$Env:SystemRoot\Logs\ImageBuild\Microsoft.NET.log" to capture installation logs.
 #>
 
 #description: Installs the Microsoft .NET Desktop LTS
@@ -26,7 +26,7 @@ Installs the Microsoft .NET Desktop LTS and Current Runtimes using the default i
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:ProgramData\Nerdio\Logs" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Download
 Import-Module -Name "Evergreen" -Force
@@ -35,7 +35,7 @@ $App = Get-EvergreenApp -Name "Microsoft.NET" | `
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 foreach ($file in $OutFile) {
-    $LogFile = "$Env:ProgramData\Nerdio\Logs\Microsoft.NET.log" -replace " ", ""
+    $LogFile = "$Env:SystemRoot\Logs\ImageBuild\Microsoft.NET.log" -replace " ", ""
     $params = @{
         FilePath     = $file.FullName
         ArgumentList = "/install /quiet /norestart /log $LogFile"
