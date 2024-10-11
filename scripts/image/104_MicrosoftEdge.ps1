@@ -53,27 +53,70 @@ if (!(Test-Path -Path $EdgeExe) -or ([System.Version]$File.VersionInfo.ProductVe
 }
 
 # Post install configuration
-$prefs = @{
-    "homepage"               = "https://www.microsoft365.com"
-    "homepage_is_newtabpage" = $false
-    "browser"                = @{
-        "show_home_button" = $true
-    }
-    "distribution"           = @{
-        "skip_first_run_ui"              = $true
-        "show_welcome_page"              = $false
-        "import_search_engine"           = $false
-        "import_history"                 = $false
-        "do_not_create_any_shortcuts"    = $false
-        "do_not_create_taskbar_shortcut" = $false
-        "do_not_create_desktop_shortcut" = $true
-        "do_not_launch_chrome"           = $true
-        "make_chrome_default"            = $true
-        "make_chrome_default_for_user"   = $true
-        "system_level"                   = $true
+$prefs = @"
+{
+    "bookmark_bar": {
+        "show_apps_shortcut": true,
+        "show_managed_bookmarks": true,
+        "show_on_all_tabs": false
+    },
+    "bookmarks": {
+        "editing_enabled": true
+    },
+    "browser": {
+        "clear_data": {
+            "browsing_history": true,
+            "browsing_history_basic": true,
+            "cache": true,
+            "cache_basic": true,
+            "cookies": true,
+            "download_history": true,
+            "form_data": false,
+            "passwords": false
+        },
+        "clear_data_on_exit": {
+            "browsing_history": false,
+            "cache": false,
+            "cookies": false,
+            "download_history": false,
+            "form_data": false,
+            "hosted_apps_data": false,
+            "passwords": false,
+            "site_settings": false
+        },
+        "dark_theme": true,
+        "first_run_tabs": [
+            "https://www.microsoft365.com"
+        ],
+        "show_toolbar_bookmarks_button": true,
+        "show_toolbar_collections_button": true,
+        "show_toolbar_downloads_button": false,
+        "show_home_button": true,
+        "show_prompt_before_closing_tabs": true,
+        "show_toolbar_history_button": true
+    },
+    "default_search_provider": {
+        "enabled": true,
+        "search_url": "www.bing.com"
+    },
+    "fullscreen": {
+        "allowed": false
+    },
+    "homepage": "https://www.microsoft365.com/",
+    "homepage_is_newtabpage": false,
+    "history": {
+        "clear_on_exit": false,
+        "deleting_enabled": true
+    },
+    "feedback_allowed": false,
+    "session": {
+        "restore_on_startup": 1,
+        "startup_urls": []
     }
 }
-$prefs | ConvertTo-Json | Set-Content -Path "${Env:ProgramFiles(x86)}\Microsoft\Edge\Application\master_preferences" -Force -Encoding "utf8"
+"@
+
+$prefs | Set-Content -Path "${Env:ProgramFiles(x86)}\Microsoft\Edge\Application\initial_preferences" -Force -Encoding "utf8"
 $Shortcuts = @("$Env:Public\Desktop\Microsoft Edge*.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "SilentlyContinue"
 #endregion

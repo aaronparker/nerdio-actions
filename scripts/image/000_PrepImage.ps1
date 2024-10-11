@@ -38,7 +38,6 @@ if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft 
 }
 
 # Enable time zone redirection - this can be configure via policy as well
-Write-LogFile -Message "Enable time zone redirection" -LogLevel 1
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v "fEnableTimeZoneRedirection" /t "REG_DWORD" /d 1 /f
 
 # Create logs directory and compress

@@ -42,9 +42,17 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
 }
 
 # Download Citrix Optimizer, specify a secure variable named CitrixOptimizerUrl to pass a custom URL
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+$params = @{
+    Uri             = $SecureVars.VariablesList
+    UseBasicParsing = $true
+    ErrorAction     = "Stop"
+}
+$Variables = Invoke-RestMethod @params
+
 $App = [PSCustomObject]@{
     Version = "3.1.0.3"
-    URI     = if ($null -eq $SecureVars.CitrixOptimizerUrl) { "https://github.com/aaronparker/packer/raw/main/build/tools/CitrixOptimizerTool.zip" } else { $SecureVars.CitrixOptimizerUrl }
+    URI     = $Variables.$AzureRegionName.CitrixOptimizer
 }
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 

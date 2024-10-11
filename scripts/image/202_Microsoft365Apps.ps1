@@ -77,7 +77,6 @@ else {
         ErrorAction     = "Stop"
     }
     $OfficeXml = (Invoke-WebRequest @params).Content
-    Write-Host "Using configuration file: $($Variables.$AzureRegionName.Microsoft365AppsChannel)"
 }
 
 $XmlFile = Join-Path -Path $Path -ChildPath "Office.xml"
