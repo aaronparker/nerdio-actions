@@ -35,6 +35,17 @@ if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft 
 
     # https://learn.microsoft.com/en-us/windows/deployment/update/waas-wu-settings#allow-windows-updates-to-install-before-initial-user-sign-in
     reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Orchestrator" /v "ScanBeforeInitialLogonAllowed" /d 1 /t "REG_DWORD" /f | Out-Null 
+
+    # https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/uninstall-remote-desktop-connection?tabs=command-prompt
+    $params = @{
+        FilePath     = "$Env:SystemRoot\System32\mstsc.exe"
+        ArgumentList = "/uninstall /noPromptBeforeRestart"
+        NoNewWindow  = $true
+        Wait         = $true
+        PassThru     = $true
+        ErrorAction  = "Stop"
+    }
+    Start-Process @params | Out-Null
 }
 
 # Enable time zone redirection - this can be configure via policy as well
