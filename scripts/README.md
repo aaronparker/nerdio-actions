@@ -46,9 +46,3 @@ Where supported, application installers will save install logs to `$Env:SystemRo
 Once run on the target VM, the VM or image should have the specified applications installed:
 
 ![Applications installed into the VM/image](apps.png)
-
-## Uninstall scripts
-
-Scripts here will uninstall target applications. Run on gold images or target session hosts when users are not signed in, as applications will be forcibly uninstalled.
-
-Where supported, uninstall commands will save uninstall logs to `$Env:SystemRoot\Logs\ImageBuild`.
