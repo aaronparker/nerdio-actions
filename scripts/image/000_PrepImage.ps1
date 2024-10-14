@@ -40,6 +40,10 @@ if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft 
 # Enable time zone redirection - this can be configure via policy as well
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v "fEnableTimeZoneRedirection" /t "REG_DWORD" /d 1 /f
 
+# Disable remote keyboard layout to keep the locale settings configured in the image
+# https://dennisspan.com/solving-keyboard-layout-issues-in-an-ica-or-rdp-session/
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout" /v "IgnoreRemoteKeyboardLayout" /d 1 /t "REG_DWORD" /f | Out-Null
+
 # Create logs directory and compress
 New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 $params = @{
