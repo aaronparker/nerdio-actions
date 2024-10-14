@@ -115,7 +115,6 @@ $prefs = @"
     }
 }
 "@
-
 $prefs | Set-Content -Path "${Env:ProgramFiles(x86)}\Microsoft\Edge\Application\initial_preferences" -Force -Encoding "utf8"
 $Shortcuts = @("$Env:Public\Desktop\Microsoft Edge*.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "SilentlyContinue"
