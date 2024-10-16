@@ -1,6 +1,6 @@
-<#
-    Basic optimisations for non-desktop images
-#>
+#description: Optimise the image
+#execution mode: Combined
+#tags: Optimise
 
 # Disable consumer features
 reg add "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableWindowsConsumerFeatures" /d 1 /t "REG_DWORD" /f | Out-Null

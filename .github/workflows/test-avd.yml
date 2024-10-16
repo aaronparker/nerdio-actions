@@ -2,13 +2,13 @@ name: "Validate scripts"
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'scripts/image/*.ps1'
-      - 'scripts/tweaks/*.ps1'
-      - 'scripts/uninstall/*.ps1'
-      - 'tests/*.ps1'
-      - '.github/workflows/test-avd.yml'
+  # push:
+  #   paths:
+  #     - 'scripts/image/*.ps1'
+  #     - 'scripts/tweaks/*.ps1'
+  #     - 'scripts/uninstall/*.ps1'
+  #     - 'tests/*.ps1'
+  #     - '.github/workflows/test-avd.yml'
   # schedule:
   #   - cron: '0 1 15 * *' #Run on the 15th of each month
 

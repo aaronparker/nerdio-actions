@@ -1,3 +1,7 @@
+#description: Cleanup the image at the end of the build process
+#execution mode: Combined
+#tags: Cleanup, Optimise
+
 <#
     .SYNOPSIS
     This script is used to clean up an image by removing unnecessary registry entries,
