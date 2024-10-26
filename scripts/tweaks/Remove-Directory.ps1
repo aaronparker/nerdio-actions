@@ -9,3 +9,6 @@ if (Test-Path -Path "$Env:SystemDrive\Apps") {
 if (Test-Path -Path "$Env:SystemDrive\DeployAgent") {
     Remove-Item -Path "$Env:SystemDrive\DeployAgent" -Recurse -Force -ErrorAction "SilentlyContinue"
 }
+
+Remove-Item -Path "$Env:SystemDrive\Users\AgentInstall.txt" -Force -Confirm:$false -ErrorAction "SilentlyContinue"
+Remove-Item -Path "$Env:SystemDrive\Users\AgentBootLoaderInstall.txt" -Force -Confirm:$false -ErrorAction "SilentlyContinue"
