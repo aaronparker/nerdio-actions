@@ -1,3 +1,4 @@
+$Context.Log("Installing SQL Server Management Studio")
 $params = @{
     FilePath     = $Context.GetAttachedBinary()
     ArgumentList = "/install /quiet /norestart"

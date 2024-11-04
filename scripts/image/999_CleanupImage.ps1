@@ -39,8 +39,6 @@ function Get-InstalledSoftware {
             throw $_.Exception.Message
         }
     }
-
-    Remove-PSDrive -Name "HKU" -ErrorAction "SilentlyContinue" | Out-Null
     return $Apps
 }
 #endregion
