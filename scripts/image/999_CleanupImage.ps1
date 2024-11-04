@@ -48,7 +48,6 @@ function Get-InstalledSoftware {
 # Clean up registry entries
 if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft Windows 1*") {
     # Remove policies
-    Write-LogFile -Message "Run: reg delete HKLM\Software\Policies\Microsoft\WindowsStore /v AutoDownload /f" -LogLevel 1
     reg delete "HKLM\Software\Policies\Microsoft\WindowsStore" /v "AutoDownload" /f
 }
 

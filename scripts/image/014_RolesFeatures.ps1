@@ -7,14 +7,15 @@ This script is used to configure Windows roles, features, and capabilities on di
 including Windows Server, Windows 11, and Windows 10. It enables or disables specific Windows roles and features based on the operating system version.
 #>
 [CmdletBinding(SupportsShouldProcess = $false)]
-param ()
+param()
 
 #region Script logic
 # Add / Remove roles and features (requires reboot at end of deployment)
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     #region Windows Server
     "Microsoft Windows Server*" {
-        $Features = @("Printing-XPSServices-Features", "AzureArcSetup", "WindowsServerBackupSnapin", "WindowsServerBackup")
+        $Features = @("Printing-XPSServices-Features", "AzureArcSetup", "WindowsServerBackupSnapin",
+            "WindowsServerBackup", "WindowsAdminCenterSetup", "SystemDataArchiver", "WirelessNetworking")
         foreach ($Feature in $Features) {
             $params = @{
                 FeatureName   = $Feature
@@ -33,7 +34,6 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
                 WarningAction = "SilentlyContinue"
                 ErrorAction   = "SilentlyContinue"
             }
-            Write-LogFile -Message "Install-WindowsFeature: $Feature" -LogLevel 1
             Install-WindowsFeature @params
         }
 
@@ -48,7 +48,6 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             "Microsoft.Windows.WordPad~~~~0.0.1.0",
             "XPS.Viewer~~~~0.0.1.0")
         foreach ($Capability in $Capabilities) {
-            Write-LogFile -Message "Remove-Capability: $Capability" -LogLevel 1
             & "$Env:SystemRoot\System32\dism.exe" /Online /Remove-Capability /CapabilityName:$Capability /NoRestart /Quiet
         }
 
@@ -56,23 +55,34 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
         reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "AzureArcSetup" /f | Out-Null
 
         # Remove unnecessary shortcuts
-        Remove-Item -Path "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\Microsoft Azure services.lnk"
+        Remove-Item -Path "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\Microsoft Azure services.lnk" -ErrorAction "SilentlyContinue"
+        Remove-Item -Path "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Azure Arc Setup.lnk" -ErrorAction "SilentlyContinue"
 
         # Enable services
         foreach ($service in "Audiosrv", "WSearch") {
-            try {
-                $params = @{
-                    Name          = $service
-                    StartupType   = "Automatic"
-                    WarningAction = "SilentlyContinue"
-                    ErrorAction   = "SilentlyContinue"
-                }
-                Set-Service @params
+            $params = @{
+                Name          = $service
+                StartupType   = "Automatic"
+                WarningAction = "SilentlyContinue"
+                ErrorAction   = "SilentlyContinue"
             }
-            catch {
-                $_.Exception.Message
+            Set-Service @params
+        }
+
+        # Uninstall unnecessary applications
+        foreach ($Path in "$Env:SystemRoot\System32\mspaint.exe", "$Env:SystemRoot\System32\mstsc.exe", "$Env:SystemRoot\System32\SnippingTool.exe") {
+            if (Test-Path -Path $Path) {
+                $params = @{
+                    FilePath     = $Path
+                    ArgumentList = "/uninstall /quiet /norestart"
+                    Wait         = $true
+                    NoNewWindow  = $true
+                    ErrorAction  = "SilentlyContinue"
+                }
+                Start-Process @params
             }
         }
+
         break
     }
     #endregion
@@ -127,6 +137,5 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     #endregion
 
     default {
-        Write-LogFile -Message "Failed to determine OS" -LogLevel 1
     }
 }
