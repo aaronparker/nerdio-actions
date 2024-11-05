@@ -44,18 +44,29 @@ else {
 #endregion
 
 #region Only run if the LanguagePackManagement module is installed
-# Works for Windows 11, test on Windows Server 2025
+# Works for Windows 10 22H2, Windows 11, Windows Server 2025
 if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
+
+    # Disable Language Pack Cleanup
+    # https://learn.microsoft.com/en-us/azure/virtual-desktop/windows-11-language-packs
+    Disable-ScheduledTask -TaskPath "\Microsoft\Windows\AppxDeploymentClient\" -TaskName "Pre-staged app cleanup"
+    Disable-ScheduledTask -TaskPath "\Microsoft\Windows\MUI\" -TaskName "LPRemove"
+    Disable-ScheduledTask -TaskPath "\Microsoft\Windows\LanguageComponentsInstaller" -TaskName "Uninstallation"
+    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Control Panel\International" /v "BlockCleanupOfUnusedPreinstalledLangPacks" /t REG_DWORD /d 1 /f *> $null
+
+    # Ensure no Windows Update settings will block the installation of language packs
+    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DoNotConnectToWindowsUpdateInternetLocations" /d 0 /t REG_DWORD /f
+    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "UseWUServer" /d 0 /t REG_DWORD /f
 
     # Enable the WinRM rule as a workaround for VM provisioning DSC failure with: "Unable to check the status of the firewall"
     # https://github.com/Azure/RDS-Templates/issues/435
     # https://qiita.com/fujinon1109/items/440c614338fe2535b09e
-
     Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Private"
     Get-NetFirewallRule -DisplayGroup "Windows Remote Management" | Enable-NetFirewallRule
     Enable-PSRemoting -Force
     Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Public"
 
+    # Install the language pack
     $params = @{
         Language        = $Language
         CopyToSettings  = $true
