@@ -74,7 +74,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             if (Test-Path -Path $Path) {
                 $params = @{
                     FilePath     = $Path
-                    ArgumentList = "/uninstall /quiet /norestart"
+                    ArgumentList = "/uninstall /noPromptBeforeRestart"
                     Wait         = $true
                     NoNewWindow  = $true
                     ErrorAction  = "SilentlyContinue"
