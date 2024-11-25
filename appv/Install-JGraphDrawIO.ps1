@@ -2,7 +2,7 @@
 [System.String] $Path = "$Env:SystemDrive\Temp"
 
 Import-Module -Name "Evergreen" -Force
-$App = Get-EvergreenApp -Name "diagrams.net" | Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
+$App = Get-EvergreenApp -Name "JGraphDrawIO" | Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 $params = @{
