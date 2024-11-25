@@ -43,12 +43,6 @@ function Get-InstalledSoftware {
 }
 #endregion
 
-# Clean up registry entries
-if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft Windows 1*") {
-    # Remove policies
-    reg delete "HKLM\Software\Policies\Microsoft\WindowsStore" /v "AutoDownload" /f
-}
-
 # Uninstall a list of applications already included in the image or that we don't need
 # Microsoft .NET 6.x installs are in the default Windows Server image from the Azure Marketplace
 $Targets = @("Microsoft .NET.*Windows Server Hosting",
@@ -96,9 +90,9 @@ if (Test-Path -Path "$Env:SystemDrive\Apps") {
 if (Test-Path -Path "$Env:SystemDrive\DeployAgent") {
     Remove-Item -Path "$Env:SystemDrive\DeployAgent" -Recurse -Force -ErrorAction "SilentlyContinue"
 }
-
 Remove-Item -Path "$Env:SystemDrive\Users\AgentInstall.txt" -Force -Confirm:$false -ErrorAction "SilentlyContinue"
 Remove-Item -Path "$Env:SystemDrive\Users\AgentBootLoaderInstall.txt" -Force -Confirm:$false -ErrorAction "SilentlyContinue"
+Remove-Item -Path "$Env:Public\Desktop\*.lnk" -Force -Confirm:$false -ErrorAction "SilentlyContinue"
 
 # Remove items from the Temp directory (note that scripts run as SYSTEM)
 Remove-Item -Path $Env:Temp -Recurse -Force -Confirm:$false -ErrorAction "SilentlyContinue"
