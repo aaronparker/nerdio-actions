@@ -34,10 +34,10 @@ $App = Get-EvergreenApp -Name "Microsoft.NET" | `
     Where-Object { $_.Installer -eq "windowsdesktop" -and $_.Architecture -eq "x64" -and $_.Channel -match "LTS" }
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-foreach ($file in $OutFile) {
+foreach ($File in $OutFile) {
     $LogFile = "$Env:SystemRoot\Logs\ImageBuild\Microsoft.NET.log" -replace " ", ""
     $params = @{
-        FilePath     = $file.FullName
+        FilePath     = $File.FullName
         ArgumentList = "/install /quiet /norestart /log $LogFile"
         NoNewWindow  = $true
         PassThru     = $true

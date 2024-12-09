@@ -32,14 +32,14 @@ foreach ($Repository in "PSGallery") {
 
 # Install the Evergreen module; https://github.com/aaronparker/Evergreen
 # Install the VcRedist module; https://docs.stealthpuppy.com/vcredist/
-foreach ($module in "Evergreen", "VcRedist", "PSWindowsUpdate") {
-    $installedModule = Get-Module -Name $module -ListAvailable -ErrorAction "SilentlyContinue" | `
+foreach ($Module in "Evergreen", "VcRedist", "PSWindowsUpdate") {
+    $InstalledModule = Get-Module -Name $Module -ListAvailable -ErrorAction "SilentlyContinue" | `
         Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } -ErrorAction "SilentlyContinue" | `
         Select-Object -First 1
-    $publishedModule = Find-Module -Name $module -ErrorAction "SilentlyContinue"
-    if (($null -eq $installedModule) -or ([System.Version]$publishedModule.Version -gt [System.Version]$installedModule.Version)) {
+    $PublishedModule = Find-Module -Name $Module -ErrorAction "SilentlyContinue"
+    if (($null -eq $InstalledModule) -or ([System.Version]$PublishedModule.Version -gt [System.Version]$InstalledModule.Version)) {
         $params = @{
-            Name               = $module
+            Name               = $Module
             SkipPublisherCheck = $true
             Force              = $true
             ErrorAction        = "Stop"

@@ -91,8 +91,8 @@ $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "S
 Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 
 # Install
-foreach ($file in "FSLogixAppsSetup.exe") {
-    $Installers = Get-ChildItem -Path $Path -Recurse -Include $file | Where-Object { $_.Directory -match "x64" }
+foreach ($File in "FSLogixAppsSetup.exe") {
+    $Installers = Get-ChildItem -Path $Path -Recurse -Include $File | Where-Object { $_.Directory -match "x64" }
     foreach ($Installer in $Installers) {
         $LogFile = "$Env:SystemRoot\Logs\ImageBuild\$($Installer.Name)$($App.Version).log" -replace " ", ""
         $params = @{
