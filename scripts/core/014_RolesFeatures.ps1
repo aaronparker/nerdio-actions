@@ -6,8 +6,9 @@ Configures Windows roles, features, and capabilities by enabling or disabling Wi
 This script is used to configure Windows roles, features, and capabilities on different versions of Windows,
 including Windows Server, Windows 11, and Windows 10. It enables or disables specific Windows roles and features based on the operating system version.
 #>
-[CmdletBinding(SupportsShouldProcess = $false)]
-param()
+#description: Configure Windows roles and features
+#execution mode: Combined
+#tags: Roles, Features, Image
 
 #region Script logic
 # Add / Remove roles and features (requires reboot at end of deployment)
