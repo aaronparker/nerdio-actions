@@ -1,20 +1,20 @@
 <#
 .SYNOPSIS
-Installs Windows Customised Defaults to customize the image and the default profile.
+Installs Windows Enterprise Defaults to customize the image and the default profile.
 
 .DESCRIPTION
-This script installs Windows Customised Defaults to customize the image and the default profile.
+This script installs Windows Enterprise Defaults to customize the image and the default profile.
 It retrieves the necessary variables from Nerdio Manager or uses default values if no variables are provided. The script then downloads and extracts the installer,
 and runs the Install-Defaults.ps1 script with the specified language, time zone, and Appx mode.
 
 .PARAMETER Path
-The path where the Windows Customised Defaults will be installed.
+The path where the Windows Enterprise Defaults will be installed.
 
 .EXAMPLE
 .\015_Customise.ps1 -Path "C:\Apps\image-customise"
 #>
 
-#description: Installs Windows Customised Defaults to customise the image and the default profile https://stealthpuppy.com/image-customise/
+#description: Installs Windows Enterprise Defaults to customise the image and the default profile https://stealthpuppy.com/image-customise/
 #execution mode: Combined
 #tags: Evergreen, Customisation, Language, Image
 #Requires -Modules Evergreen
@@ -53,6 +53,7 @@ $InstallFile = Get-ChildItem -Path $Path -Recurse -Include "Install-Defaults.ps1
 
 # Install the Customised Defaults
 Push-Location -Path $InstallFile.Directory
-& $InstallFile.FullName -Language $Language -TimeZone $TimeZone -AppxMode $AppxMode
+& ".\Remove-AppXApps.ps1"
+& ".\Install-Defaults.ps1" -Language $Language -TimeZone $TimeZone
 Pop-Location
 #endregion

@@ -86,7 +86,7 @@ $prefs = @"
         },
         "dark_theme": true,
         "first_run_tabs": [
-            "https://www.microsoft365.com"
+            "https://m365.cloud.microsoft/?auth=2"
         ],
         "show_toolbar_bookmarks_button": true,
         "show_toolbar_collections_button": true,
@@ -102,7 +102,7 @@ $prefs = @"
     "fullscreen": {
         "allowed": false
     },
-    "homepage": "https://www.microsoft365.com/",
+    "homepage": "https://m365.cloud.microsoft/?auth=2",
     "homepage_is_newtabpage": false,
     "history": {
         "clear_on_exit": false,
