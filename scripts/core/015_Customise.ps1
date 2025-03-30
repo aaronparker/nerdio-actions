@@ -53,7 +53,7 @@ $InstallFile = Get-ChildItem -Path $Path -Recurse -Include "Install-Defaults.ps1
 
 # Install the Customised Defaults
 Push-Location -Path $InstallFile.Directory
-& ".\Remove-AppXApps.ps1"
-& ".\Install-Defaults.ps1" -Language $Language -TimeZone $TimeZone
+& "$($InstallFile.Directory.FullName)\Remove-AppXApps.ps1"
+& "$($InstallFile.Directory.FullName)\Install-Defaults.ps1" -Language $Language -TimeZone $TimeZone
 Pop-Location
 #endregion
