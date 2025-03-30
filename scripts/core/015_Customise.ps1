@@ -51,9 +51,10 @@ $Installer = Get-EvergreenApp -Name "stealthpuppyWindowsCustomisedDefaults" | Wh
 Expand-Archive -Path $Installer.FullName -DestinationPath $Path -Force
 $InstallFile = Get-ChildItem -Path $Path -Recurse -Include "Install-Defaults.ps1"
 
-# Install the Customised Defaults
+# Install the Windows Enterprise Defaults
 Push-Location -Path $InstallFile.Directory
 & "$($InstallFile.Directory.FullName)\Remove-AppXApps.ps1"
+Import-Module -Name "$($InstallFile.Directory.FullName)\Install-Defaults.psm1" -Force
 & "$($InstallFile.Directory.FullName)\Install-Defaults.ps1" -Language $Language -TimeZone $TimeZone
 Pop-Location
 #endregion
