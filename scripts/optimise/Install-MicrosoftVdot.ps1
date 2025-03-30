@@ -17,10 +17,15 @@ Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 $Installer = Get-ChildItem -Path $Path -Recurse -Include "Windows_VDOT.ps1"
 Push-Location -Path $Installer.Directory
 $params = @{
-    Optimizations = "ScheduledTasks", "Autologgers", "Services", "NetworkOptimizations"
-    AcceptEULA    = $true
-    Restart       = $false
-    Verbose       = $false
+    Optimizations         = "WindowsMediaPlayer", "ScheduledTasks", "LocalPolicy", "Autologgers", "Services", "NetworkOptimizations", "DiskCleanup"
+    AdvancedOptimizations = "Edge"
+    AcceptEULA            = $true
+    Restart               = $false
+    Verbose               = $false
 }
 & $Installer.FullName @params
 Pop-Location
+
+# Other options for Optimizations:
+# Optimizations - "All", "WindowsMediaPlayer", "AppxPackages", "ScheduledTasks", "DefaultUserSettings", "LocalPolicy", "Autologgers", "Services", "NetworkOptimizations", "DiskCleanup"
+# AdvancedOptimizations - "All", "Edge", "RemoveLegacyIE", "RemoveOneDrive"
