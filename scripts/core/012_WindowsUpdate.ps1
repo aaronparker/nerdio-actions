@@ -34,4 +34,13 @@ reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /f | Out-
 
 # Install updates
 Import-Module -Name "PSWindowsUpdate"
-Install-WindowsUpdate -AcceptAll -MicrosoftUpdate -IgnoreReboot -IgnoreRebootRequired | Select-Object -Property "Title", "Size"
+$params = @{
+    Install              = $true
+    Download             = $true
+    AcceptAll            = $true
+    MicrosoftUpdate      = $true
+    IgnoreReboot         = $true
+    IgnoreRebootRequired = $true
+    IgnoreUserInput      = $true
+}
+Install-WindowsUpdate @params | Select-Object -Property "Title", "Size"
