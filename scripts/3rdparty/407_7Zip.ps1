@@ -1,14 +1,14 @@
 <#
-.SYNOPSIS
-Installs the latest 7-Zip ZS 64-bit.
+    .SYNOPSIS
+    Installs the latest 7-Zip ZS 64-bit.
 
-.DESCRIPTION
-This script installs the latest version of 7-Zip ZS 64-bit.
-It creates the necessary directories, imports the Evergreen module, downloads and installs the 7-Zip ZS application,
-and adds registry entries for additional file types.
+    .DESCRIPTION
+    This script installs the latest version of 7-Zip ZS 64-bit.
+    It creates the necessary directories, imports the Evergreen module, downloads and installs the 7-Zip ZS application,
+    and adds registry entries for additional file types.
 
-.PARAMETER Path
-The download path for 7-Zip ZS.
+    .PARAMETER Path
+    The download path for 7-Zip ZS.
 #>
 
 #description: Installs the latest 7-Zip ZS 64-bit

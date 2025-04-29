@@ -1,23 +1,23 @@
 <#
-.SYNOPSIS
-Installs the latest 1Password CLI.
+    .SYNOPSIS
+    Installs the latest 1Password CLI.
 
-.DESCRIPTION
-This script installs the latest version of the 1Password CLI (Command Line Interface) tool.
-It downloads the specified version of the CLI from the official 1Password website and extracts it to the specified installation path.
-It also adds the installation path to the system's Path environment variable if it doesn't already exist.
+    .DESCRIPTION
+    This script installs the latest version of the 1Password CLI (Command Line Interface) tool.
+    It downloads the specified version of the CLI from the official 1Password website and extracts it to the specified installation path.
+    It also adds the installation path to the system's Path environment variable if it doesn't already exist.
 
-.PARAMETER Path
-The download path for the 1Password CLI. The default value is "$Env:ProgramFiles\1Password CLI".
+    .PARAMETER Path
+    The download path for the 1Password CLI. The default value is "$Env:ProgramFiles\1Password CLI".
 
-.NOTES
-- This script requires the Evergreen module to be installed.
-- The script will create the installation path directory if it doesn't already exist.
-- The script will create a "Logs" directory under "$Env:ProgramData\Nerdio" if it doesn't already exist.
-- The script will download the specified version of the 1Password CLI from the official 1Password website.
-- The downloaded ZIP file will be extracted to the installation path.
-- The downloaded ZIP file will be deleted after extraction.
-- The script will add the installation path to the system's Path environment variable if it doesn't already exist.
+    .NOTES
+    - This script requires the Evergreen module to be installed.
+    - The script will create the installation path directory if it doesn't already exist.
+    - The script will create a "Logs" directory under "$Env:ProgramData\Nerdio" if it doesn't already exist.
+    - The script will download the specified version of the 1Password CLI from the official 1Password website.
+    - The downloaded ZIP file will be extracted to the installation path.
+    - The downloaded ZIP file will be deleted after extraction.
+    - The script will add the installation path to the system's Path environment variable if it doesn't already exist.
 #>
 
 #description: Installs the latest 1Password CLI

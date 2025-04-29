@@ -1,22 +1,22 @@
 <#
-.SYNOPSIS
-Installs the latest Foxit PDF Reader with automatic updates disabled.
+    .SYNOPSIS
+    Installs the latest Foxit PDF Reader with automatic updates disabled.
 
-.DESCRIPTION
-This script installs the latest version of Foxit PDF Reader with automatic updates disabled.
-It uses the Evergreen module to retrieve the appropriate version of Foxit PDF Reader based on the specified language.
-The installation is performed silently and logs are generated for troubleshooting purposes.
-Additionally, the script disables the update tasks assuming that the installation is being performed on a gold image or updates will be managed separately.
+    .DESCRIPTION
+    This script installs the latest version of Foxit PDF Reader with automatic updates disabled.
+    It uses the Evergreen module to retrieve the appropriate version of Foxit PDF Reader based on the specified language.
+    The installation is performed silently and logs are generated for troubleshooting purposes.
+    Additionally, the script disables the update tasks assuming that the installation is being performed on a gold image or updates will be managed separately.
 
-.PARAMETER Path
-The target folder where Foxit PDF Reader will be downloaded. The default value is "$Env:SystemDrive\Apps\Foxit\PDFReader".
+    .PARAMETER Path
+    The target folder where Foxit PDF Reader will be downloaded. The default value is "$Env:SystemDrive\Apps\Foxit\PDFReader".
 
-.NOTES
-- This script requires the Evergreen module to be installed.
-- The script uses secure variables in Nerdio Manager to pass a JSON file with the variables list. If the secure variables are not available, the script defaults to the English language.
-- The script requires TLS 1.2 to be enabled on the system.
-- The script creates a log file in the "$Env:SystemRoot\Logs\ImageBuild" folder with the name "FoxitPDFReader<version>.log".
-- The script disables the "FoxitReaderUpdateService" service to prevent automatic updates.
+    .NOTES
+    - This script requires the Evergreen module to be installed.
+    - The script uses secure variables in Nerdio Manager to pass a JSON file with the variables list. If the secure variables are not available, the script defaults to the English language.
+    - The script requires TLS 1.2 to be enabled on the system.
+    - The script creates a log file in the "$Env:SystemRoot\Logs\ImageBuild" folder with the name "FoxitPDFReader<version>.log".
+    - The script disables the "FoxitReaderUpdateService" service to prevent automatic updates.
 #>
 
 #description: Installs the latest Foxit PDF Reader with automatic updates disabled

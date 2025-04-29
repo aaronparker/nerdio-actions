@@ -1,19 +1,19 @@
 <#
-.SYNOPSIS
-Installs the latest version of ImageGlass 64-bit.
+    .SYNOPSIS
+    Installs the latest version of ImageGlass 64-bit.
 
-.DESCRIPTION
-This script installs the latest version of ImageGlass, a lightweight image viewer for Windows.
-It uses the Evergreen module to download and install the ImageGlass MSI package.
-The script creates the necessary directories and logs the installation process. It also removes any existing shortcuts related to ImageGlass.
+    .DESCRIPTION
+    This script installs the latest version of ImageGlass, a lightweight image viewer for Windows.
+    It uses the Evergreen module to download and install the ImageGlass MSI package.
+    The script creates the necessary directories and logs the installation process. It also removes any existing shortcuts related to ImageGlass.
 
-.PARAMETER Path
-The download path for ImageGlass. The default value is "$Env:SystemDrive\Apps\ImageGlass".
+    .PARAMETER Path
+    The download path for ImageGlass. The default value is "$Env:SystemDrive\Apps\ImageGlass".
 
-.NOTES
-- This script requires the Evergreen module to be installed.
-- This script is designed for 64-bit systems.
-- This script requires administrative privileges to install ImageGlass.
+    .NOTES
+    - This script requires the Evergreen module to be installed.
+    - This script is designed for 64-bit systems.
+    - This script requires administrative privileges to install ImageGlass.
 #>
 
 #description: Installs the latest ImageGlass 64-bit

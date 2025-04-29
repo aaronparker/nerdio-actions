@@ -1,22 +1,22 @@
 <#
-.SYNOPSIS
-Installs the latest Adobe Acrobat Reader MUI 64-bit with automatic updates disabled and forces Reader into read-only mode.
+    .SYNOPSIS
+    Installs the latest Adobe Acrobat Reader MUI 64-bit with automatic updates disabled and forces Reader into read-only mode.
 
-.DESCRIPTION
-This script installs the latest version of Adobe Acrobat Reader MUI (64-bit) with automatic updates disabled.
-It also enforces read-only mode for Reader. The script downloads the Reader installer, installs it with the specified options,
-and configures the necessary registry settings to enforce read-only mode and disable the Adobe Updater.
-It also disables the AdobeARMservice and the Adobe Acrobat Update Task scheduled task.
-Finally, it removes the public desktop shortcut for Adobe Acrobat.
+    .DESCRIPTION
+    This script installs the latest version of Adobe Acrobat Reader MUI (64-bit) with automatic updates disabled.
+    It also enforces read-only mode for Reader. The script downloads the Reader installer, installs it with the specified options,
+    and configures the necessary registry settings to enforce read-only mode and disable the Adobe Updater.
+    It also disables the AdobeARMservice and the Adobe Acrobat Update Task scheduled task.
+    Finally, it removes the public desktop shortcut for Adobe Acrobat.
 
-.PARAMETER Path
-The path where Adobe Acrobat Reader will be downloaded. The default path is "$Env:SystemDrive\Apps\Adobe\AcrobatReaderDC".
+    .PARAMETER Path
+    The path where Adobe Acrobat Reader will be downloaded. The default path is "$Env:SystemDrive\Apps\Adobe\AcrobatReaderDC".
 
-.NOTES
-- This script requires the Evergreen module to download the Reader installer.
-- Secure variables can be used in Nerdio Manager to pass a JSON file with the variables list.
-- For more information on enforcing settings with Group Policy Objects (GPO), refer to the Adobe Acrobat Enterprise Administration Guide.
-- For more information on installing Adobe Acrobat Reader 64-bit for enterprises, refer to the Adobe Acrobat Enterprise Administration Guide.
+    .NOTES
+    - This script requires the Evergreen module to download the Reader installer.
+    - Secure variables can be used in Nerdio Manager to pass a JSON file with the variables list.
+    - For more information on enforcing settings with Group Policy Objects (GPO), refer to the Adobe Acrobat Enterprise Administration Guide.
+    - For more information on installing Adobe Acrobat Reader 64-bit for enterprises, refer to the Adobe Acrobat Enterprise Administration Guide.
 #>
 
 #description: Installs the latest Adobe Acrobat Reader MUI 64-bit with automatic updates disabled. Forces Reader into read-only mode

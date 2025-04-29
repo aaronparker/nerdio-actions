@@ -1,17 +1,17 @@
 <#
-.SYNOPSIS
-Installs Cisco WebEx VDI client with automatic updates disabled.
+    .SYNOPSIS
+    Installs Cisco WebEx VDI client with automatic updates disabled.
 
-.DESCRIPTION
-This script installs the Cisco WebEx VDI client with automatic updates disabled. The URL to the installer is hard-coded in this script.
+    .DESCRIPTION
+    This script installs the Cisco WebEx VDI client with automatic updates disabled. The URL to the installer is hard-coded in this script.
 
-.PARAMETER Path
-Specifies the download path for the Cisco WebEx VDI client.
+    .PARAMETER Path
+    Specifies the download path for the Cisco WebEx VDI client.
 
-.NOTES
-- This script requires the Evergreen module.
-- The installer URL and version number are hard-coded in this script and may need to be updated in the future.
-- This script creates a log file in the ProgramData\Nerdio\Logs directory.
+    .NOTES
+    - This script requires the Evergreen module.
+    - The installer URL and version number are hard-coded in this script and may need to be updated in the future.
+    - This script creates a log file in the ProgramData\Nerdio\Logs directory.
 #>
 
 #description: Installs Cisco WebEx VDI client with automatic updates disabled. URL to the installer is hard coded in this script.
@@ -28,8 +28,8 @@ New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue
 New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 $App = [PSCustomObject]@{
-    Version = "43.4.0.25959"
-    URI     = "https://binaries.webex.com/vdi-hvd-aws-gold/20230421075619/Webex.msi"
+    Version = "45.4.0.32217"
+    URI     = "https://binaries.webex.com/Webex-Desktop-Windows-x64-Combined-VDI-Gold/20250416220615/WebexBundle.msi"
 }
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 

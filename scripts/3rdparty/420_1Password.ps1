@@ -1,14 +1,14 @@
 <#
-.SYNOPSIS
-Installs the 1Password Windows client.
+    .SYNOPSIS
+    Installs the 1Password Windows client.
 
-.DESCRIPTION
-This script installs the 1Password Windows client using the Evergreen module.
-It downloads the MSI installer from the specified URI and installs it silently.
-The installation log is saved in the specified log file.
+    .DESCRIPTION
+    This script installs the 1Password Windows client using the Evergreen module.
+    It downloads the MSI installer from the specified URI and installs it silently.
+    The installation log is saved in the specified log file.
 
-.PARAMETER Path
-The download path for the 1Password client. The default path is "$Env:SystemDrive\Apps\AgileBits\1Password".
+    .PARAMETER Path
+    The download path for the 1Password client. The default path is "$Env:SystemDrive\Apps\AgileBits\1Password".
 #>
 
 #description: Installs the 1Password Windows client

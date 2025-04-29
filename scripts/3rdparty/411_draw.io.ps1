@@ -1,19 +1,19 @@
 <#
-.SYNOPSIS
-Installs the latest version of draw.io.
+    .SYNOPSIS
+    Installs the latest version of draw.io.
 
-.DESCRIPTION
-This script installs the latest version of draw.io using the Evergreen module.
-It creates a directory for draw.io, imports the Evergreen module, retrieves the latest version of the diagrams.net MSI package,
-saves it to the draw.io directory, and then installs draw.io silently using msiexec.exe.
+    .DESCRIPTION
+    This script installs the latest version of draw.io using the Evergreen module.
+    It creates a directory for draw.io, imports the Evergreen module, retrieves the latest version of the diagrams.net MSI package,
+    saves it to the draw.io directory, and then installs draw.io silently using msiexec.exe.
 
-.PARAMETER Path
-The path where draw.io will be downloaded. The default path is "$Env:SystemDrive\Apps\draw.io".
+    .PARAMETER Path
+    The path where draw.io will be downloaded. The default path is "$Env:SystemDrive\Apps\draw.io".
 
-.NOTES
-- This script requires the Evergreen module to be installed.
-- The script will create a log file in "$Env:SystemRoot\Logs\ImageBuild" to track the installation progress.
-- The script will remove the draw.io shortcut from the desktop after installation.
+    .NOTES
+    - This script requires the Evergreen module to be installed.
+    - The script will create a log file in "$Env:SystemRoot\Logs\ImageBuild" to track the installation progress.
+    - The script will remove the draw.io shortcut from the desktop after installation.
 #>
 
 #description: Installs the latest draw.io
