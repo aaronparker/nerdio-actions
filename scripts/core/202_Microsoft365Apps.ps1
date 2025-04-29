@@ -1,20 +1,20 @@
 <#
-.SYNOPSIS
-Installs the latest Microsoft 365 Apps for Enterprise with specific configurations.
+    .SYNOPSIS
+    Installs the latest Microsoft 365 Apps for Enterprise with specific configurations.
 
-.DESCRIPTION
-This script installs the latest version of Microsoft 365 Apps for Enterprise with specific configurations.
-It determines whether to install with shared computer licensing based on the operating system.
-It also supports using secure variables in Nerdio Manager to pass a JSON file with the variables list for customization.
+    .DESCRIPTION
+    This script installs the latest version of Microsoft 365 Apps for Enterprise with specific configurations.
+    It determines whether to install with shared computer licensing based on the operating system.
+    It also supports using secure variables in Nerdio Manager to pass a JSON file with the variables list for customization.
 
-.PARAMETER Path
-Specifies the download path for Microsoft 365 Apps. The default path is "$Env:SystemDrive\Apps\Microsoft\Office".
+    .PARAMETER Path
+    Specifies the download path for Microsoft 365 Apps. The default path is "$Env:SystemDrive\Apps\Microsoft\Office".
 
-.NOTES
-- This script requires the Evergreen module.
-- This script requires administrative privileges to install Microsoft 365 Apps.
-- This script supports Windows Server, Windows 10, and Windows 11 Enterprise multi-session.
-- This script supports customization using a JSON file with secure variables in Nerdio Manager.
+    .NOTES
+    - This script requires the Evergreen module.
+    - This script requires administrative privileges to install Microsoft 365 Apps.
+    - This script supports Windows Server, Windows 10, and Windows 11 Enterprise multi-session.
+    - This script supports customization using a JSON file with secure variables in Nerdio Manager.
 #>
 
 #description: Installs the latest Microsoft 365 Apps for Enterprise, Current channel, 64-bit with shared computer licensing and updates disabled

@@ -1,22 +1,22 @@
 <#
-.SYNOPSIS
-Installs the latest Microsoft PowerShell.
+    .SYNOPSIS
+    Installs the latest Microsoft PowerShell.
 
-.DESCRIPTION
-This script installs the latest version of Microsoft PowerShell. It uses the Evergreen module to retrieve the latest stable release of PowerShell and installs it silently. The installation log is saved in the Nerdio Logs directory.
+    .DESCRIPTION
+    This script installs the latest version of Microsoft PowerShell. It uses the Evergreen module to retrieve the latest stable release of PowerShell and installs it silently. The installation log is saved in the Nerdio Logs directory.
 
-.PARAMETER Path
-The installation path for Microsoft PowerShell. The default path is "$Env:SystemDrive\Apps\Microsoft\PowerShell".
+    .PARAMETER Path
+    The installation path for Microsoft PowerShell. The default path is "$Env:SystemDrive\Apps\Microsoft\PowerShell".
 
-.EXAMPLE
-.\215_MicrosoftPowerShell.ps1
+    .EXAMPLE
+    .\215_MicrosoftPowerShell.ps1
 
-This example runs the script to install the latest Microsoft PowerShell.
+    This example runs the script to install the latest Microsoft PowerShell.
 
-.NOTES
-- Requires the Evergreen module.
-- Only installs the x64 architecture of Microsoft PowerShell.
-- The installation log is saved in "$Env:SystemRoot\Logs\ImageBuild".
+    .NOTES
+    - Requires the Evergreen module.
+    - Only installs the x64 architecture of Microsoft PowerShell.
+    - The installation log is saved in "$Env:SystemRoot\Logs\ImageBuild".
 #>
 
 #description: Installs the latest Microsoft PowerShell

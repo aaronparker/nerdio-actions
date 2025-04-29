@@ -1,19 +1,19 @@
 <#
-.SYNOPSIS
-Preps a RDS / AVD image for customization.
+    .SYNOPSIS
+    Preps a RDS / AVD image for customization.
 
-.DESCRIPTION
-This script is used to prepare a RDS (Remote Desktop Services) or AVD (Azure Virtual Desktop) image
-for customization. It performs the following tasks:
-- Sets a policy to prevent Windows updates during deployment.
-- Customizes the Start menu.
-- Enables time zone redirection.
-- Creates and compresses a logs directory.
+    .DESCRIPTION
+    This script is used to prepare a RDS (Remote Desktop Services) or AVD (Azure Virtual Desktop) image
+    for customization. It performs the following tasks:
+    - Sets a policy to prevent Windows updates during deployment.
+    - Customizes the Start menu.
+    - Enables time zone redirection.
+    - Creates and compresses a logs directory.
 
-.PARAMETER None
+    .PARAMETER None
 
-.EXAMPLE
-.\000_PrepImage.ps1
+    .EXAMPLE
+    .\000_PrepImage.ps1
 #>
 
 #description: Preps a RDS / AVD image for customization.
@@ -22,16 +22,10 @@ for customization. It performs the following tasks:
 
 # If we're on Windows 11, configure the registry settings
 if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft Windows 1*") {
-    
+
     # Prevent Windows from installing stuff during deployment
     reg add "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableWindowsConsumerFeatures" /d 1 /t "REG_DWORD" /f *> $null
     reg add "HKLM\Software\Policies\Microsoft\WindowsStore" /v "AutoDownload" /d 2 /t "REG_DWORD" /f *> $null
-    
-    # https://www.reddit.com/r/Windows11/comments/17toy5k/prevent_automatic_installation_of_outlook_and_dev/
-    reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Orchestrator\UScheduler\DevHomeUpdate" /f *> $null
-    reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Orchestrator\UScheduler\OutlookUpdate" /f *> $null
-    reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Orchestrator\UScheduler_Oobe\DevHomeUpdate" /f *> $null
-    reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Orchestrator\UScheduler_Oobe\OutlookUpdate" /f *> $null
 
     # https://learn.microsoft.com/en-us/windows/deployment/update/waas-wu-settings#allow-windows-updates-to-install-before-initial-user-sign-in
     reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Orchestrator" /v "ScanBeforeInitialLogonAllowed" /d 1 /t "REG_DWORD" /f *> $null 

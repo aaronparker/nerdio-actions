@@ -1,23 +1,23 @@
 <#
-.SYNOPSIS
-Installs Windows language support and sets language/regional settings.
+    .SYNOPSIS
+    Installs Windows language support and sets language/regional settings.
 
-.DESCRIPTION
-This script installs Windows language support and sets the language and regional settings on a Windows machine.
-It also enables WinRM and PS Remoting to fix an issue with VM deployment using non en-US language packs.
+    .DESCRIPTION
+    This script installs Windows language support and sets the language and regional settings on a Windows machine.
+    It also enables WinRM and PS Remoting to fix an issue with VM deployment using non en-US language packs.
 
-.PARAMETER SecureVars
-Use Secure variables in Nerdio Manager to pass a JSON file with the variables list.
+    .PARAMETER SecureVars
+    Use Secure variables in Nerdio Manager to pass a JSON file with the variables list.
 
-.EXAMPLE
-.\013_RegionLanguage.ps1
+    .EXAMPLE
+    .\013_RegionLanguage.ps1
 
-This example runs the script and installs the language pack and sets the regional settings based on the specified variables.
+    This example runs the script and installs the language pack and sets the regional settings based on the specified variables.
 
-.NOTES
-- This script requires the LanguagePackManagement module to be installed.
-- The script enables the WinRM rule as a workaround for VM provisioning DSC failure with "Unable to check the status of the firewall".
-- The script sets the locale, time zone, culture, system locale, UI language, user language list, and home location based on the specified language and time zone.
+    .NOTES
+    - This script requires the LanguagePackManagement module to be installed.
+    - The script enables the WinRM rule as a workaround for VM provisioning DSC failure with "Unable to check the status of the firewall".
+    - The script sets the locale, time zone, culture, system locale, UI language, user language list, and home location based on the specified language and time zone.
 #>
 
 #description: Installs Windows language support and sets language/regional settings. Note that this script enables WinRM and PS Remoting to fix an issue with VM deployment using non en-US language packs

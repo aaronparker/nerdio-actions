@@ -1,18 +1,18 @@
 <#
-.SYNOPSIS
-Installs the latest Microsoft Azure Virtual Desktop agents.
+    .SYNOPSIS
+    Installs the latest Microsoft Azure Virtual Desktop agents.
 
-.DESCRIPTION
-This script installs the Microsoft Azure Virtual Desktop agents,
-including the Microsoft Remote Desktop WebRTC Redirector Service
+    .DESCRIPTION
+    This script installs the Microsoft Azure Virtual Desktop agents,
+    including the Microsoft Remote Desktop WebRTC Redirector Service
 
-.PARAMETER Path
-The path where the agents will be downloaded. The default path is "$Env:SystemDrive\Apps\Microsoft\Avd".
+    .PARAMETER Path
+    The path where the agents will be downloaded. The default path is "$Env:SystemDrive\Apps\Microsoft\Avd".
 
-.NOTES
-- Requires the "Evergreen" module.
-- Requires administrative privileges.
-- This script is intended for use in an Azure Virtual Desktop environment.
+    .NOTES
+    - Requires the "Evergreen" module.
+    - Requires administrative privileges.
+    - This script is intended for use in an Azure Virtual Desktop environment.
 #>
 
 #description: Installs the latest Microsoft Azure Virtual Desktop WebRTC Redirector Service

@@ -1,17 +1,17 @@
 <#
-.SYNOPSIS
-Installs Windows Enterprise Defaults to customize the image and the default profile.
+    .SYNOPSIS
+    Installs Windows Enterprise Defaults to customize the image and the default profile.
 
-.DESCRIPTION
-This script installs Windows Enterprise Defaults to customize the image and the default profile.
-It retrieves the necessary variables from Nerdio Manager or uses default values if no variables are provided. The script then downloads and extracts the installer,
-and runs the Install-Defaults.ps1 script with the specified language, time zone, and Appx mode.
+    .DESCRIPTION
+    This script installs Windows Enterprise Defaults to customize the image and the default profile.
+    It retrieves the necessary variables from Nerdio Manager or uses default values if no variables are provided. The script then downloads and extracts the installer,
+    and runs the Install-Defaults.ps1 script with the specified language, time zone, and Appx mode.
 
-.PARAMETER Path
-The path where the Windows Enterprise Defaults will be installed.
+    .PARAMETER Path
+    The path where the Windows Enterprise Defaults will be installed.
 
-.EXAMPLE
-.\015_Customise.ps1 -Path "C:\Apps\image-customise"
+    .EXAMPLE
+    .\015_Customise.ps1 -Path "C:\Apps\image-customise"
 #>
 
 #description: Installs Windows Enterprise Defaults to customise the image and the default profile https://stealthpuppy.com/image-customise/

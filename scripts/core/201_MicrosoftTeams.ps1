@@ -1,29 +1,29 @@
 <#
-.SYNOPSIS
-Installs the latest Microsoft Teams v2 per-machine for use on Windows 10/11 multi-session or Windows Server.
+    .SYNOPSIS
+    Installs the latest Microsoft Teams v2 per-machine for use on Windows 10/11 multi-session or Windows Server.
 
-.DESCRIPTION
-This script installs the latest version of Microsoft Teams v2 per-machine.
-It downloads the Teams v2 Bootstrap installer and the Teams v2 MSIX installer from the specified URIs and installs them based on the operating system.
-It also sets the required registry value for IsWVDEnvironment and optimizes Teams by disabling auto-update and installing the Teams meeting add-in.
+    .DESCRIPTION
+    This script installs the latest version of Microsoft Teams v2 per-machine.
+    It downloads the Teams v2 Bootstrap installer and the Teams v2 MSIX installer from the specified URIs and installs them based on the operating system.
+    It also sets the required registry value for IsWVDEnvironment and optimizes Teams by disabling auto-update and installing the Teams meeting add-in.
 
-.PARAMETER Path
-The path where Microsoft Teams will be downloaded. The default path is "$Env:SystemDrive\Apps\Microsoft\Teams".
+    .PARAMETER Path
+    The path where Microsoft Teams will be downloaded. The default path is "$Env:SystemDrive\Apps\Microsoft\Teams".
 
-.NOTES
-- This script requires the Evergreen module.
-- Secure variables can be used to pass a JSON file with the variables list.
-- The script supports Windows 10/11 multi-session and Windows Server.
+    .NOTES
+    - This script requires the Evergreen module.
+    - Secure variables can be used to pass a JSON file with the variables list.
+    - The script supports Windows 10/11 multi-session and Windows Server.
 
-#region Optimise Teams
-# Autostart
-# HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\MSTeams_8wekyb3d8bbwe\TeamsTfwStartupTask
-# State
-# 2,1
+    #region Optimise Teams
+    # Autostart
+    # HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\MSTeams_8wekyb3d8bbwe\TeamsTfwStartupTask
+    # State
+    # 2,1
 
-# %LocalAppData%\Packages\MSTeams_8wekyb3d8bbwe\LocalCache\Microsoft\MSTeams\app_settings.json
-# "open_app_in_background":true
-# "language": "en-AU"
+    # %LocalAppData%\Packages\MSTeams_8wekyb3d8bbwe\LocalCache\Microsoft\MSTeams\app_settings.json
+    # "open_app_in_background":true
+    # "language": "en-AU"
 #>
 
 #description: Installs and optimises the latest Microsoft Teams 2.0 client

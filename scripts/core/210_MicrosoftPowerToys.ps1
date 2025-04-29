@@ -1,16 +1,16 @@
 <#
-.SYNOPSIS
-Installs the latest Microsoft PowerToys.
+    .SYNOPSIS
+    Installs the latest Microsoft PowerToys.
 
-.DESCRIPTION
-This script installs the latest version of Microsoft PowerToys. It requires the Microsoft .NET Runtime.
+    .DESCRIPTION
+    This script installs the latest version of Microsoft PowerToys. It requires the Microsoft .NET Runtime.
 
-.PARAMETER Path
-The download path for Microsoft PowerToys. The default path is "$Env:SystemDrive\Apps\Microsoft\PowerToys".
+    .PARAMETER Path
+    The download path for Microsoft PowerToys. The default path is "$Env:SystemDrive\Apps\Microsoft\PowerToys".
 
-.NOTES
-- This script requires the "Evergreen" module to be installed.
-- The script disables certain features of PowerToys that are not suitable for VDI environments.
+    .NOTES
+    - This script requires the "Evergreen" module to be installed.
+    - The script disables certain features of PowerToys that are not suitable for VDI environments.
 #>
 
 #description: Installs the latest Microsoft PowerToys. Requires the Microsoft .NET Runtime

@@ -1,19 +1,19 @@
 <#
-.SYNOPSIS
-Installs the latest Microsoft Azure CLI.
+    .SYNOPSIS
+    Installs the latest Microsoft Azure CLI.
 
-.DESCRIPTION
-This script installs the latest version of Microsoft Azure CLI on the local machine.
-It uses the Evergreen module to download and install the MSI package for Microsoft Azure CLI.
-The installation is performed silently without any user interaction.
+    .DESCRIPTION
+    This script installs the latest version of Microsoft Azure CLI on the local machine.
+    It uses the Evergreen module to download and install the MSI package for Microsoft Azure CLI.
+    The installation is performed silently without any user interaction.
 
-.PARAMETER Path
-Specifies the download path for Microsoft Azure CLI. The default path is "$Env:SystemDrive\Apps\Microsoft\AzureCli".
+    .PARAMETER Path
+    Specifies the download path for Microsoft Azure CLI. The default path is "$Env:SystemDrive\Apps\Microsoft\AzureCli".
 
-.NOTES
-- This script requires the Evergreen module to be installed.
-- The script creates a log file in "$Env:SystemRoot\Logs\ImageBuild" directory to track the installation progress and any errors that occur during the installation.
-- The script uses the Start-Process cmdlet to execute the MSI package installation silently.
+    .NOTES
+    - This script requires the Evergreen module to be installed.
+    - The script creates a log file in "$Env:SystemRoot\Logs\ImageBuild" directory to track the installation progress and any errors that occur during the installation.
+    - The script uses the Start-Process cmdlet to execute the MSI package installation silently.
 #>
 
 #description: Installs the latest Microsoft Azure CLI

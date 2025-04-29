@@ -1,10 +1,10 @@
 <#
-.SYNOPSIS
-Configures Windows roles, features, and capabilities by enabling or disabling Windows roles and features.
+    .SYNOPSIS
+    Configures Windows roles, features, and capabilities by enabling or disabling Windows roles and features.
 
-.DESCRIPTION
-This script is used to configure Windows roles, features, and capabilities on different versions of Windows,
-including Windows Server, Windows 11, and Windows 10. It enables or disables specific Windows roles and features based on the operating system version.
+    .DESCRIPTION
+    This script is used to configure Windows roles, features, and capabilities on different versions of Windows,
+    including Windows Server, Windows 11, and Windows 10. It enables or disables specific Windows roles and features based on the operating system version.
 #>
 #description: Configure Windows roles and features
 #execution mode: Combined
