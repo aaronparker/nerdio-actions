@@ -1,15 +1,18 @@
-# Scripted Actions for Nerdio Manager
+# Nerdio Manager scripts
 
-PowerShell scripts for integration with [Scripted Actions in Nerdio Manager](https://nmw.zendesk.com/hc/en-us/articles/4731662951447-Scripted-Actions-Overview).
+## 🖥️ Scripted Actions
+
+PowerShell scripts for integration with [Scripted Actions in Nerdio Manager](https://nmehelp.getnerdio.com/hc/en-us/articles/26124327585421-Scripted-Actions-Overview).
 
     Note: this code is provided as-is, without warranty or support of any kind.
 
-* `/scripts/image` - scripts for building a Windows 10/11 pooled desktop (single session or multi-session). Can be used to build an image or run against already deployed session hosts
+These scripts can be added to your Nerdio Manager install by specifying the paths below to add individual directories:
+
+* `/scripts/core` - scripts for building a Windows 10/11 pooled desktop (single session or multi-session). Can be used to build an image or run against already deployed session hosts
+* `/scripts/3rdparty` - scripts for installing 3rd party applications
 * `/scripts/tweaks` - scripts for implementing specific configurations and tweaks for gold images or session hosts
-* `/scripts/uninstall` - scripts for uninstalling applications
+* `/scripts/optimise` - scripts to optimise the Windows image
 
-## GitHub Actions validation results
+## 🧩 App-V
 
-Note: these scripts are tested via GitHub Actions on Windows Server 2022.
-
-[![Validate scripts](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-avd.yml/badge.svg)](https://github.com/aaronparker/nerdio-actions/actions/workflows/test-avd.yml) [![codecov](https://codecov.io/gh/aaronparker/nerdio-actions/branch/main/graph/badge.svg?token=32KRCWIL9R)](https://codecov.io/gh/aaronparker/nerdio-actions)
+A set of scripts for installing applications to capture via application virtualization tools such as App-V.
