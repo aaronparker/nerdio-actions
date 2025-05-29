@@ -51,33 +51,84 @@ function Get-InstalledSoftware {
     return $Apps
 }
 
-$Publishers = "Citrix Systems, Inc.", "UniDesk Corporation", "vast limits GmbH", "Citrix Systems, Inc."
-Get-InstalledSoftware | Where-Object { $_.Publisher -in $Publishers } | ForEach-Object {
-    if ($_.WindowsInstaller -eq 1) {
-        $params = @{
-            FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-            ArgumentList = "/uninstall `"$($_.PSChildName)`" /quiet"
-            NoNewWindow  = $true
-            PassThru     = $true
-            Wait         = $true
-            ErrorAction  = "Continue"
-            Verbose      = $true
-        }
-        #$params
-        Start-Process @params
+function Uninstall-Software {
+    [CmdletBinding()]
+    param (
+        [System.Object[]]$Application
+    )
+
+    begin {
+        $LogPath = "$Env:SystemRoot\Logs\Uninstall-CitrixAgents"
+        New-Item -Path $LogPath -ItemType Directory -Force -ErrorAction "SilentlyContinue" | Out-Null
     }
-    else {
-        $String = $_.UninstallString -replace "`"", "" -split ".exe"
-        $params = @{
-            FilePath     = "$($String[0].Trim()).exe"
-            ArgumentList = "$($String[1].Trim()) /quiet /norestart /silent"
-            NoNewWindow  = $true
-            PassThru     = $true
-            Wait         = $true
-            ErrorAction  = "Continue"
-            Verbose      = $true
+    process {
+        if ($Application.WindowsInstaller -eq 1) {
+            $ArgumentList = "/uninstall `"$($Application.PSChildName)`" /quiet /norestart /log `"$LogPath\$($Application.PSChildName).log`""
+            $params = @{
+                FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
+                ArgumentList = $ArgumentList
+                NoNewWindow  = $true
+                PassThru     = $false
+                Wait         = $true
+                ErrorAction  = "Continue"
+                Verbose      = $true
+            }
+            Write-Host "Uninstall: $($Application.Name) $($Application.Version)"
+            Write-Host "Path: $Env:SystemRoot\System32\msiexec.exe"
+            Write-Host "Arguments: $ArgumentList"
+            Start-Process @params
         }
-        #$params
-        Start-Process @params
+        else {
+            # Split the uninstall string to extract the executable and arguments
+            $String = $Application.UninstallString -replace "`"", "" -split ".exe"
+
+            switch ($Application.UninstallString) {
+                { $Application -match "rundll32" } {
+                    # Driver packages
+                    $ArgumentList = "$($String[1].Trim())"
+                }
+                { $Application -match "bootstrapperhelper.exe" } {
+                    # Citrix Workspace app
+                    $ArgumentList = "$($String[1].Trim()) /silent /norestart"
+                }
+                { $Application -match "XenDesktopVdaSetup.exe" } {
+                    # Citrix Virtual Desktop Agent
+                    $ArgumentList = "/remove /REMOVE_APPDISK_ACK /REMOVE_PVD_ACK /quiet /noreboot"
+                }
+                default {
+                    # Other non-MSI uninstallers
+                    $ArgumentList = "$($String[1].Trim()) /quiet /norestart /log `"$LogPath\$(Split-Path $String[0].Trim() -Leaf).log`""
+                }
+            }
+
+            $params = @{
+                FilePath     = "$($String[0].Trim()).exe"
+                ArgumentList = $ArgumentList
+                NoNewWindow  = $true
+                PassThru     = $false
+                Wait         = $true
+                ErrorAction  = "Continue"
+                Verbose      = $true
+            }
+            Write-Host "Uninstall: $($Application.Name) $($Application.Version)"
+            Write-Host "Path: $($String[0].Trim()).exe"
+            Write-Host "Arguments: $ArgumentList"
+            Start-Process @params
+        }
     }
 }
+
+# $Publishers = "Citrix Systems, Inc.", "vast limits GmbH", "UniDesk Corporation"
+# Get-InstalledSoftware | Where-Object { $_.Publisher -in $Publishers } | Out-GridView
+
+$Publishers = "Citrix Systems, Inc.", "vast limits GmbH"
+Get-InstalledSoftware | Where-Object { $_.Publisher -in $Publishers } | ForEach-Object {
+    Uninstall-Software -Application $_
+}
+
+Write-Host "Uninstallation of Citrix agents completed. Please restart the system to finalize the process."
+
+# Remove any lingering Citrix directories if necessary
+# Remove-Item -Confirm:$false -Force -Recurse -Path "C:\Program Files\Citrix"
+# Remove-Item -Confirm:$false -Force -Recurse -Path "C:\Program Files (x86)\Citrix"
+# Remove-Item -Confirm:$false -Force -Recurse -Path "C:\Program Files (x86)\Common Files\Citrix"
