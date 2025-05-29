@@ -11,18 +11,23 @@
         Get-InstalledSoftware
             Retrieves a list of installed software from the registry, including details such as name, version, publisher, uninstall string, and other properties.
 
+        Uninstall-Software
+            Uninstalls a specified software application based on its properties, handling both MSI and non-MSI uninstallers.
+
     .PARAMETER Publishers
         An array of publisher names whose software should be targeted for uninstallation.
 
     .NOTES
         - Requires administrative privileges to uninstall software.
-        - Designed for use on Windows systems.
-        - Removes the HKU PSDrive if present to avoid lingering drives.
 
     .EXAMPLE
         .\Uninstall-CitrixAgents.ps1
         Runs the script and silently uninstalls all Citrix-related agents from the system.
 #>
+[CmdletBinding()]
+param (
+    [System.String[]] $Publishers = @("Citrix Systems, Inc.", "vast limits GmbH")
+)
 
 function Get-InstalledSoftware {
     [CmdletBinding()]
@@ -118,10 +123,10 @@ function Uninstall-Software {
     }
 }
 
-# $Publishers = "Citrix Systems, Inc.", "vast limits GmbH", "UniDesk Corporation"
-# Get-InstalledSoftware | Where-Object { $_.Publisher -in $Publishers } | Out-GridView
+# Output the list of installed Citrix software for review
+# Get-InstalledSoftware | Where-Object { $_.Publisher -in "Citrix Systems, Inc.", "vast limits GmbH", "UniDesk Corporation" } | Out-GridView
 
-$Publishers = "Citrix Systems, Inc.", "vast limits GmbH"
+# Uninstall Citrix agents based on the specified publishers
 Get-InstalledSoftware | Where-Object { $_.Publisher -in $Publishers } | ForEach-Object {
     Uninstall-Software -Application $_
 }
