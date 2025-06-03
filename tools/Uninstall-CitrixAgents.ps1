@@ -1,30 +1,38 @@
 #Requires -RunAsAdministrator
 <#
     .SYNOPSIS
-        Uninstalls Citrix-related software agents from the system.
+        Uninstalls Citrix agents and related software from the system based on specified publishers.
 
     .DESCRIPTION
-        This script enumerates all installed software on the system and uninstalls applications published by
-        Citrix Systems, Inc., UniDesk Corporation, or vast limits GmbH.
-        It supports both MSI-based and non-MSI-based uninstallers, running them silently.
-
-    .FUNCTIONS
-        Get-InstalledSoftware
-            Retrieves a list of installed software from the registry, including details such as name,
-            version, publisher, uninstall string, and other properties.
-
-        Uninstall-CitrixAgent
-            Uninstalls a specified software application based on its properties, handling both MSI and non-MSI uninstallers.
+        This script searches for installed software published by Citrix Systems, Inc. and vast limits GmbH (by default),
+        logs the process, and uninstalls the matching applications.
+        It supports both MSI and non-MSI uninstallers, handles logging, and checks for pending file rename operations that may require a reboot.
+        After uninstallation, it suggests directories to remove and prompts for a system restart if necessary.
 
     .PARAMETER Publishers
-        An array of publisher names whose software should be targeted for uninstallation.
+        An array of publisher names to match installed software for uninstallation. Defaults to "Citrix Systems, Inc." and "vast limits GmbH".
 
-    .NOTES
-        - Requires administrative privileges to uninstall software.
+    .FUNCTIONS
+        Write-LogFile
+            Writes log messages to a daily log file and outputs to the console. Supports log levels for information and warnings.
+
+        Get-InstalledSoftware
+            Retrieves a list of installed software from the system registry, filtering out system components.
+
+        Uninstall-CitrixAgent
+            Uninstalls a given application, handling both MSI and non-MSI uninstallers, and logs the process.
+
+        Get-PendingFileRenameOperation
+            Checks the registry for pending file rename operations that may require a system reboot.
 
     .EXAMPLE
         .\Uninstall-CitrixAgents.ps1
-        Runs the script and silently uninstalls all Citrix-related agents from the system.
+        Runs the script with default publishers to uninstall Citrix agents.
+
+    .NOTES
+        - Requires administrative privileges.
+        - Logs are stored in $Env:SystemRoot\Logs\Uninstall-CitrixAgents.
+        - After uninstallation, a reboot may be required to finalize file deletions.
 #>
 [CmdletBinding(SupportsShouldProcess = $true)]
 param (
@@ -33,32 +41,6 @@ param (
 
 begin {
     function Write-LogFile {
-        <#
-        .SYNOPSIS
-            This function creates or appends a line to a log file
-
-        .DESCRIPTION
-            This function writes a log line to a log file in the form synonymous with
-            ConfigMgr logs so that tools such as CMtrace and SMStrace can easily parse
-            the log file.  It uses the ConfigMgr client log format's file section
-            to add the line of the script in which it was called.
-
-        .PARAMETER  Message
-            The message parameter is the log message you'd like to record to the log file
-
-        .PARAMETER  LogLevel
-            The logging level is the severity rating for the message you're recording. Like ConfigMgr
-            clients, you have 3 severity levels available; 1, 2 and 3 from informational messages
-            for FYI to critical messages that stop the install. This defaults to 1.
-
-        .EXAMPLE
-            PS C:\> Write-LogFile -Message 'Value1' -LogLevel 'Value2'
-            This example shows how to call the Write-LogFile function with named parameters.
-
-        .NOTES
-            Constantin Lotz;
-            Adam Bertram, https://github.com/adbertram/PowerShellTipsToWriteBy/blob/f865c4212284dc25fe613ca70d9a4bafb6c7e0fe/chapter_7.ps1#L5
-    #>
         [CmdletBinding(SupportsShouldProcess = $false)]
         param (
             [Parameter(Position = 0, ValueFromPipeline = $true, Mandatory = $true)]
@@ -249,11 +231,14 @@ end {
         Write-LogFile -Message "Uninstallation of Citrix agents completed."
         $FilesPending = Get-PendingFileRenameOperation
         if ($FilesPending.RebootRequired -eq $true) {
+
             # List of directories to remove after uninstallation
-            Write-LogFile -Message "Files remaining after uninstallation. Delete the following directories after rebooting:"
+            Write-LogFile -Message "Delete the following directories after rebooting:"
             "$Env:ProgramFiles\Citrix", "${Env:ProgramFiles(x86)}\Citrix", "${Env:ProgramFiles(x86)}\Common Files\Citrix" | `
-                ForEach-Object { Write-LogFile -Message "$_" }
-            Write-LogFile -Message "Please restart the system to finalize the process. $($FilesPending.Files.Count) files pending for deletion."
+                ForEach-Object { if (Test-Path -Path $_) { Write-LogFile -Message "$_" } }
+
+            Write-LogFile -Message "$($FilesPending.Files.Count) files pending for deletion."
+            Write-LogFile -Message "Please restart the system to finalize the process."
         }
         else {
             Write-LogFile -Message "No pending file rename operations detected."
