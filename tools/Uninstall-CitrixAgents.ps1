@@ -220,10 +220,12 @@ process {
         $AgentsCount = 0
     }
 
-    # Uninstall Citrix agents based on the specified publishers
+    # Output the installed agents
     Write-LogFile -Message "Found $AgentsCount Citrix agents for uninstallation:"
     $CitrixAgents | ForEach-Object { Write-LogFile -Message "  $($_.Name) $($_.Version)" }
-    $CitrixAgents | ForEach-Object { Uninstall-CitrixAgent -Application $_ }
+
+    # Uninstall each Citrix agent. Sorted by name in descending order to ensure proper uninstallation order
+    $CitrixAgents | Sort-Object -Property "Name" -Descending | ForEach-Object { Uninstall-CitrixAgent -Application $_ }
 }
 
 end {
@@ -233,9 +235,9 @@ end {
         if ($FilesPending.RebootRequired -eq $true) {
 
             # List of directories to remove after uninstallation
-            Write-LogFile -Message "Delete the following directories after rebooting:"
+            Write-LogFile -Message "Delete the following directories after restarting:"
             "$Env:ProgramFiles\Citrix", "${Env:ProgramFiles(x86)}\Citrix", "${Env:ProgramFiles(x86)}\Common Files\Citrix" | `
-                ForEach-Object { if (Test-Path -Path $_) { Write-LogFile -Message "$_" } }
+                ForEach-Object { if (Test-Path -Path $_) { Write-LogFile -Message "  $_" } }
 
             Write-LogFile -Message "$($FilesPending.Files.Count) files pending for deletion."
             Write-LogFile -Message "Please restart the system to finalize the process."
