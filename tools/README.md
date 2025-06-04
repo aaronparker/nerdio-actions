@@ -1,0 +1,11 @@
+# Migration scripts
+
+To prepare a virtual machine to be migrated from a third party virtual desktop solution to Azure Virtual Desktop or Nerdio Manager
+
+`Uninstall-CitrixAgents.ps1` - uninstalls Citrix agents on a Windows virtual machine. This script queries the local system for installed Win32 software from Citrix Systems, Inc. and vast limits GmbH, determines the uninstall strings for each installed application and uninstalls the application. Actions are logged to `C:\Windows\Logs\Uninstall-CitrixAgents`.
+
+It is recommended that the target virtual machine is restarted before running the script. Additionally, a reboot is required after running the script to enable the agents to be completely removed after uninstall. Some log files will be left behind in the Program Files directories after uninstall.
+
+Here's what the uninstall process looks like:
+
+![](./uninstall-citrixagents.png)
