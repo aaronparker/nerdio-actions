@@ -13,6 +13,14 @@ These scripts can be added to your Nerdio Manager install by specifying the path
 * `/scripts/tweaks` - scripts for implementing specific configurations and tweaks for gold images or session hosts
 * `/scripts/optimise` - scripts to optimise the Windows image
 
+## 🐚 Shell Apps
+
+A set of example scripts for installing applications via [Shell Apps](https://nmehelp.getnerdio.com/hc/en-us/articles/25499430784909-UAM-Shell-apps-overview-and-usage).
+
+## 🛠️ Tools
+
+A set of scripts for various functions - scripts include uninstall of third party virtual desktop agents to assist in the migration to Azure Virtual Desktop or Windows 365.
+
 ## 🧩 App-V
 
 A set of scripts for installing applications to capture via application virtualization tools such as App-V.
