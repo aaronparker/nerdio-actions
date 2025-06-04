@@ -36,7 +36,16 @@
 #>
 [CmdletBinding(SupportsShouldProcess = $true)]
 param (
-    [System.String[]] $Publishers = @("Citrix Systems, Inc.", "vast limits GmbH")
+    [Parameter(Position = 0, Mandatory = $false)]
+    [System.String[]] $Publishers = @("Citrix Systems, Inc.", "vast limits GmbH"),
+
+    [Parameter(Position = 1, Mandatory = $false)]
+    [System.String[]] $Paths = @("$Env:ProgramFiles\Citrix",
+        "${Env:ProgramFiles(x86)}\Citrix",
+        "${Env:ProgramFiles(x86)}\Common Files\Citrix",
+        "$Env:ProgramData\Citrix",
+        "$Env:ProgramData\deviceTRUST",
+        "$Env:ProgramData\Unidesk")
 )
 
 begin {
@@ -108,6 +117,9 @@ begin {
     }
 
     function Uninstall-CitrixAgent {
+        <#
+            Accepts output from Get-InstalledSoftware and uninstalls the specified application.
+        #>
         [CmdletBinding(SupportsShouldProcess = $true)]
         param (
             [System.Object[]]$Application
@@ -118,6 +130,7 @@ begin {
         }
 
         process {
+            Write-LogFile -Message "Uninstall: $($Application.Name) $($Application.Version)"
             if ($Application.WindowsInstaller -eq 1) {
                 $ArgumentList = "/uninstall `"$($Application.PSChildName)`" /quiet /norestart /log `"$LogPath\$($Application.PSChildName).log`""
                 $params = @{
@@ -129,12 +142,12 @@ begin {
                     ErrorAction  = "Continue"
                     Verbose      = $true
                 }
-                Write-LogFile -Message "Uninstall:  $($Application.Name) $($Application.Version)"
-                Write-LogFile -Message "Executable: $Env:SystemRoot\System32\msiexec.exe"
-                Write-LogFile -Message "Arguments:  $ArgumentList"
+                Write-LogFile -Message " Executable: $Env:SystemRoot\System32\msiexec.exe"
+                Write-LogFile -Message " Arguments:  $ArgumentList"
                 if ($PSCmdlet.ShouldProcess("$Env:SystemRoot\System32\msiexec.exe", "Start process")) {
                     $result = Start-Process @params
-                    Write-LogFile -Message "Uninstall return code: $($result.ExitCode)"
+                    Write-LogFile -Message " Uninstall return code: $($result.ExitCode)"
+                    if ($result.ExitCode -in 3, 3010) { Write-LogFile -Message " Reboot is required to complete uninstall." }
                 }
             }
             else {
@@ -169,12 +182,12 @@ begin {
                     ErrorAction  = "Continue"
                     Verbose      = $true
                 }
-                Write-LogFile -Message "Uninstall:  $($Application.Name) $($Application.Version)"
-                Write-LogFile -Message "Executable: $($String[0].Trim()).exe"
-                Write-LogFile -Message "Arguments:  $ArgumentList"
+                Write-LogFile -Message " Executable: $($String[0].Trim()).exe"
+                Write-LogFile -Message " Arguments:  $ArgumentList"
                 if ($PSCmdlet.ShouldProcess("$($String[0].Trim()).exe", "Start process")) {
                     $result = Start-Process @params
-                    Write-LogFile -Message "Uninstall return code: $($result.ExitCode)"
+                    Write-LogFile -Message " Uninstall return code: $($result.ExitCode)"
+                    if ($result.ExitCode -in 3, 3010) { Write-LogFile -Message " Reboot is required to complete uninstall." }
                 }
             }
         }
@@ -231,14 +244,11 @@ process {
 end {
     if ($AgentsCount -gt 0) {
         Write-LogFile -Message "Uninstallation of Citrix agents completed."
+        Write-LogFile -Message "The following directories still exist on the system:"
+        $Paths | ForEach-Object { if (Test-Path -Path $_) { Write-LogFile -Message " $_" } }
+
         $FilesPending = Get-PendingFileRenameOperation
         if ($FilesPending.RebootRequired -eq $true) {
-
-            # List of directories to remove after uninstallation
-            Write-LogFile -Message "Delete the following directories after restarting:"
-            "$Env:ProgramFiles\Citrix", "${Env:ProgramFiles(x86)}\Citrix", "${Env:ProgramFiles(x86)}\Common Files\Citrix" | `
-                ForEach-Object { if (Test-Path -Path $_) { Write-LogFile -Message "  $_" } }
-
             Write-LogFile -Message "$($FilesPending.Files.Count) files pending for deletion."
             Write-LogFile -Message "Please restart the system to finalize the process."
         }
@@ -247,6 +257,8 @@ end {
         }
     }
     else {
-        Write-LogFile -Message "No Citrix agents found for uninstallation."
+        Write-LogFile -Message "No Citrix agents found to uninstall."
+        Write-LogFile -Message "The following directories still exist on the system:"
+        $Paths | ForEach-Object { if (Test-Path -Path $_) { Write-LogFile -Message " $_" } }
     }
 }
