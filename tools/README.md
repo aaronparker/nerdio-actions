@@ -8,7 +8,7 @@ To prepare a virtual machine to be migrated from a third party virtual desktop s
 
 Uninstalls Citrix agents on a Windows virtual machine. This script queries the local system for installed Win32 software from Citrix Systems, Inc. and vast limits GmbH, determines the uninstall strings for each installed application and uninstalls the application. Actions are logged to `C:\Windows\Logs\Uninstall-CitrixAgents`.
 
-![](./omnissa-installed.png)
+![](./citrix-installed.png)
 
 Run the script to uninstall agents - no parameters are required:
 
@@ -44,6 +44,8 @@ Remove-CitrixPaths.ps1 -Confirm:$false
 
 Uninstalls Omnissa agents on a Windows virtual machine. This script queries the local system for installed Win32 software from Omnissa, LLC and Omnissa, determines the uninstall strings for each installed application and uninstalls the application. Actions are logged to `C:\Windows\Logs\Uninstall-OmnissaAgents`.
 
+![](./omnissa-installed.png)
+
 Run the script to uninstall agents - no parameters are required:
 
 ```powershell
@@ -62,7 +64,7 @@ Here's what the uninstall process looks like:
 
 After uninstalling the Omnissa agents, if you run `Uninstall-OmnissaAgents.ps1` again, the following output will be displayed where some directories may remain on the system:
 
-![](./Omnissa-noagents.png)
+![](./omnissa-noagents.png)
 
 `Uninstall-OmnissaAgents.ps1` does not remove these paths. To remove the remaining file system directories and registry entries, `Remove-OmnissaPaths.ps1` can be used. This script supports the `-WhatIf` parameter to determine what will be removed. Actions are logged to `C:\Windows\Logs\Uninstall-OmnissaAgents`.
 
