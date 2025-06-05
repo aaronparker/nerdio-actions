@@ -8,7 +8,7 @@ To prepare a virtual machine to be migrated from a third party virtual desktop s
 
 Uninstalls Citrix agents on a Windows virtual machine. This script queries the local system for installed Win32 software from Citrix Systems, Inc. and vast limits GmbH, determines the uninstall strings for each installed application and uninstalls the application. Actions are logged to `C:\Windows\Logs\Uninstall-CitrixAgents`.
 
-![](./citrix-installed.png)
+![](./img/citrix-installed.png)
 
 Run the script to uninstall agents - no parameters are required:
 
@@ -22,13 +22,13 @@ It is recommended that the target virtual machine is restarted before running th
 
 Here's what the uninstall process looks like:
 
-![](./uninstall-citrixagents.png)
+![](./img/uninstall-citrixagents.png)
 
 ### Remove-CitrixPaths.ps1
 
 After uninstalling the Citrix agents, if you run `Uninstall-CitrixAgents.ps1` again, the following output will be displayed where some directories may remain on the system:
 
-![](./citrix-noagents.png)
+![](./img/citrix-noagents.png)
 
 `Uninstall-CitrixAgents.ps1` does not remove these paths. To remove the remaining file system directories and registry entries, `Remove-CitrixPaths.ps1` can be used. This script supports the `-WhatIf` parameter to determine what will be removed. Actions are logged to `C:\Windows\Logs\Uninstall-CitrixAgents`.
 
@@ -44,7 +44,7 @@ Remove-CitrixPaths.ps1 -Confirm:$false
 
 Uninstalls Omnissa agents on a Windows virtual machine. This script queries the local system for installed Win32 software from Omnissa, LLC and Omnissa, determines the uninstall strings for each installed application and uninstalls the application. Actions are logged to `C:\Windows\Logs\Uninstall-OmnissaAgents`.
 
-![](./omnissa-installed.png)
+![](./img/omnissa-installed.png)
 
 Run the script to uninstall agents - no parameters are required:
 
@@ -58,13 +58,13 @@ It is recommended that the target virtual machine is restarted before running th
 
 Here's what the uninstall process looks like:
 
-![](./uninstall-omnissaagents.png)
+![](./img/uninstall-omnissaagents.png)
 
 ### Remove-OmnissaPaths.ps1
 
 After uninstalling the Omnissa agents, if you run `Uninstall-OmnissaAgents.ps1` again, the following output will be displayed where some directories may remain on the system:
 
-![](./omnissa-noagents.png)
+![](./img/omnissa-noagents.png)
 
 `Uninstall-OmnissaAgents.ps1` does not remove these paths. To remove the remaining file system directories and registry entries, `Remove-OmnissaPaths.ps1` can be used. This script supports the `-WhatIf` parameter to determine what will be removed. Actions are logged to `C:\Windows\Logs\Uninstall-OmnissaAgents`.
 
