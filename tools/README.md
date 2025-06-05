@@ -12,7 +12,7 @@ To prepare a virtual machine to be migrated from a third party virtual desktop s
 
 ### Uninstall-CitrixAgents.ps1
 
-Uninstalls Citrix agents on a Windows virtual machine. This script queries the local system for installed Win32 software from Citrix Systems, Inc. and vast limits GmbH, determines the uninstall strings for each installed application and uninstalls the application. Actions are logged to `C:\Windows\Logs\Uninstall-CitrixAgents`.
+Uninstalls Citrix agents on a Windows virtual machine. This script queries the local system for installed Win32 software from **Citrix Systems, Inc.** and **vast limits GmbH**, determines the uninstall strings for each installed application and uninstalls the application. Actions are logged to `C:\Windows\Logs\Uninstall-CitrixAgents`.
 
 ![](./img/citrix-installed.png)
 
@@ -48,7 +48,7 @@ Remove-CitrixPaths.ps1 -Confirm:$false
 
 ### Uninstall-OmnissaAgents.ps1
 
-Uninstalls Omnissa agents on a Windows virtual machine. This script queries the local system for installed Win32 software from Omnissa, LLC and Omnissa, determines the uninstall strings for each installed application and uninstalls the application. Actions are logged to `C:\Windows\Logs\Uninstall-OmnissaAgents`.
+Uninstalls Omnissa agents on a Windows virtual machine. This script queries the local system for installed Win32 software from **Omnissa, LLC** and **Omnissa**, determines the uninstall strings for each installed application and uninstalls the application. Actions are logged to `C:\Windows\Logs\Uninstall-OmnissaAgents`.
 
 ![](./img/omnissa-installed.png)
 
