@@ -42,7 +42,7 @@ param (
     [Parameter(Position = 1, Mandatory = $false)]
     [System.String[]] $Paths = @("$Env:ProgramFiles\Citrix",
         "${Env:ProgramFiles(x86)}\Citrix",
-        "${Env:ProgramFiles(x86)}\Common Files\Citrix",
+        "${Env:CommonProgramFiles(x86)}\Citrix",
         "$Env:ProgramData\Citrix",
         "$Env:ProgramData\deviceTRUST",
         "$Env:ProgramData\Unidesk")

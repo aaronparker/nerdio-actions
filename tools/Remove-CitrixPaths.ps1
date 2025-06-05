@@ -94,6 +94,7 @@ process {
     }
 
     # Search the registry for matching keys and remove
+    Write-LogFile -Message "Searching for registry keys matching: $RegMatch"
     Get-ChildItem -Path "HKLM:\" -Recurse -ErrorAction "SilentlyContinue" | `
         Where-Object { $_.PSPath -match $RegMatch } | `
         Select-Object -ExpandProperty "PSPath" | ForEach-Object {
