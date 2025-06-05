@@ -22,7 +22,7 @@ Run the script to uninstall agents - no parameters are required:
 Uninstall-CitrixAgents.ps1
 ```
 
-You may need to run the script twice - in some cases, the Virtual Delivery Agent does not completely uninstall and requires a reboot before running the uninstall script again.
+You may need to run the script twice - in some cases, the Citrix Virtual Delivery Agent does not completely uninstall and requires a reboot before running the uninstall script again.
 
 It is recommended that the target virtual machine is restarted before running the script. Additionally, a reboot is required after running the script to enable the agents to be completely removed after uninstall. Some log files will be left behind in the Program Files directories after uninstall.
 
@@ -57,8 +57,6 @@ Run the script to uninstall agents - no parameters are required:
 ```powershell
 Uninstall-OmnissaAgents.ps1
 ```
-
-You may need to run the script twice - in some cases, the Virtual Delivery Agent does not completely uninstall and requires a reboot before running the uninstall script again.
 
 It is recommended that the target virtual machine is restarted before running the script. Additionally, a reboot is required after running the script to enable the agents to be completely removed after uninstall. Some log files will be left behind in the Program Files directories after uninstall.
 
