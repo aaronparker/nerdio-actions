@@ -2,6 +2,12 @@
 
 To prepare a virtual machine to be migrated from a third party virtual desktop solution to Azure Virtual Desktop or Windows 365, scripts here can be used to uninstall third party agents.
 
+> [!WARNING]  
+> Uninstall scripts will uninstall target agents without confirmation. Use the `-WhatIf` parameter to determine which software will be uninstalled.
+
+> [!CAUTION]
+> The `Remove-` scripts will delete directories and registry keys. Use Use the `-WhatIf` parameter to determine which directories and keys will be removed.
+
 ## Citrix
 
 ### Uninstall-CitrixAgents.ps1
