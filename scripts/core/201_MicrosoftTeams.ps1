@@ -101,7 +101,7 @@ Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq "MSTeams_8wekyb3d8bbwe
 
 # Install Teams
 # Set required IsWVDEnvironment registry value
-reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /d 1 /t "REG_DWORD" /f | Out-Null
+reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /d 1 /t "REG_DWORD" /f *> $null
 
 # Install steps based on the OS we're running on
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {

@@ -39,7 +39,7 @@ $App = Get-EvergreenApp -Name "MicrosoftOneDrive" | `
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 # Install
-reg add "HKLM\Software\Microsoft\OneDrive" /v "AllUsersInstall" /t REG_DWORD /d 1 /reg:64 /f
+reg add "HKLM\Software\Microsoft\OneDrive" /v "AllUsersInstall" /t REG_DWORD /d 1 /reg:64 /f *> $null
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/silent /allusers"

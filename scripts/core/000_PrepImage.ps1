@@ -9,11 +9,6 @@
     - Customizes the Start menu.
     - Enables time zone redirection.
     - Creates and compresses a logs directory.
-
-    .PARAMETER None
-
-    .EXAMPLE
-    .\000_PrepImage.ps1
 #>
 
 #description: Preps a RDS / AVD image for customization.
@@ -32,7 +27,7 @@ if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft 
 }
 
 # Enable time zone redirection - this can be configure via policy as well
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v "fEnableTimeZoneRedirection" /t "REG_DWORD" /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v "fEnableTimeZoneRedirection" /t "REG_DWORD" /d 1 /f *> $null
 
 # Disable remote keyboard layout to keep the locale settings configured in the image
 # https://dennisspan.com/solving-keyboard-layout-issues-in-an-ica-or-rdp-session/

@@ -6,13 +6,6 @@
     This script installs the necessary PowerShell modules for building AVD (Azure Virtual Desktop) images.
     It ensures that the PSGallery is trusted, installs the required package providers,
     and then installs the Evergreen, VcRedist, and PSWindowsUpdate modules if they are not already installed or if a newer version is available.
-
-    .PARAMETER None
-    This script does not accept any parameters.
-
-    .EXAMPLE
-    .\011_SupportFunctions.ps1
-    Runs the script to install the required PowerShell modules for building AVD images.
 #>
 
 #description: Installs PowerShell modules required for building AVD images (Evergreen, VcRedist, PSWindowsUpdate, etc.)
