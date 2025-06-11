@@ -1,3 +1,4 @@
+#Requires -RunAsAdministrator
 <#
     .SYNOPSIS
     Removes specified Omnissa and related directories and registry keys from the system.
@@ -23,8 +24,6 @@
     - Requires administrator privileges.
     - Use with caution, as this will permanently delete files and registry keys.
 #>
-
-#Requires -RunAsAdministrator
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = "High")]
 param (
     [Parameter(Position = 0, Mandatory = $false)]
