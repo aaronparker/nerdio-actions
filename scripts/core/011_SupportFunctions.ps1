@@ -22,13 +22,9 @@
 #region Script logic
 # Trust the PSGallery for modules
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-Install-PackageProvider -Name "NuGet" -MinimumVersion "2.8.5.208" -Force -ErrorAction "SilentlyContinue"
+# Install-PackageProvider -Name "NuGet" -MinimumVersion "2.8.5.208" -Force -ErrorAction "Stop"
 Install-PackageProvider -Name "PowerShellGet" -MinimumVersion "2.2.5" -Force -ErrorAction "SilentlyContinue"
-foreach ($Repository in "PSGallery") {
-    if (Get-PSRepository | Where-Object { $_.Name -eq $Repository -and $_.InstallationPolicy -ne "Trusted" }) {
-        Set-PSRepository -Name $Repository -InstallationPolicy "Trusted"
-    }
-}
+Set-PSRepository -Name "PSGallery" -InstallationPolicy "Trusted"
 
 # Install the Evergreen module; https://github.com/aaronparker/Evergreen
 # Install the VcRedist module; https://docs.stealthpuppy.com/vcredist/
@@ -44,6 +40,7 @@ foreach ($Module in "Evergreen", "VcRedist", "PSWindowsUpdate") {
             Force              = $true
             ErrorAction        = "Stop"
         }
+        Write-Host "Installing module: $Module"
         Install-Module @params
     }
 }
