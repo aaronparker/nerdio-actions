@@ -43,7 +43,7 @@ else {
 
 #region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-$Installer = Get-EvergreenApp -Name "stealthpuppyWindowsCustomisedDefaults" | Where-Object { $_.Type -eq "zip" } | `
+$Installer = Get-EvergreenApp -Name "WindowsEnterpriseDefaults" | Where-Object { $_.Type -eq "zip" } | `
     Select-Object -First 1 | `
     Save-EvergreenApp -CustomPath $Path
 
