@@ -80,6 +80,6 @@ Remove-OmnissaPaths.ps1 -Confirm:$false
 
 ## Microsoft agents
 
-To prepare the virtual machine for use with Azure Virtual Desktop or Windows 365, `Install-AvdAgents.ps1` can be used to install the **Remote Desktop WebRTC Redirector Service** to support the [optimisation of Microsoft Teams](https://learn.microsoft.com/en-us/azure/virtual-desktop/teams-on-avd), the **Remote Desktop Multimedia Redirection Service** to [optimise multimedia redirection](Multimedia redirection for video playback and calls in a remote session), and the [Microsoft Visual C++ Redistributables](https://vcredist.com) to support these agents.
+To prepare the virtual machine for use with Azure Virtual Desktop or Windows 365, `Install-AvdAgents.ps1` can be used to install the **Remote Desktop WebRTC Redirector Service** to support the [optimisation of Microsoft Teams](https://learn.microsoft.com/en-us/azure/virtual-desktop/teams-on-avd), the **Remote Desktop Multimedia Redirection Service** to [optimise multimedia redirection](https://learn.microsoft.com/en-us/azure/virtual-desktop/multimedia-redirection-video-playback-calls), and the [Microsoft Visual C++ Redistributables](https://vcredist.com) to support these agents.
 
 This aligns with the the marketplace images for Azure Virtual Desktop and Windows 365: [Device images overview](https://learn.microsoft.com/en-us/windows-365/enterprise/device-images).
