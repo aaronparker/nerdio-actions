@@ -26,20 +26,27 @@
 #tags: Evergreen, Microsoft, OneDrive, per-machine
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\OneDrive"
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
 
 #region Script logic
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-
 # Run tasks/install apps
 Import-Module -Name "Evergreen" -Force
+Write-LogFile -Message "Downloading Microsoft OneDrive per-machine x64 version"
 $App = Get-EvergreenApp -Name "MicrosoftOneDrive" | `
     Where-Object { $_.Ring -eq "Production" -and $_.Throttle -eq "100" -and $_.Architecture -eq "x64" } | `
     Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
+Write-LogFile -Message "Downloaded Microsoft OneDrive to: $($OutFile.FullName)"
 
 # Install
+Write-LogFile -Message "Add HKLM\Software\Microsoft\OneDrive\AllUsersInstall"
 reg add "HKLM\Software\Microsoft\OneDrive" /v "AllUsersInstall" /t REG_DWORD /d 1 /reg:64 /f *> $null
+Write-LogFile -Message "Installing Microsoft OneDrive from: $($OutFile.FullName)"
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/silent /allusers"
@@ -51,6 +58,11 @@ $params = @{
 Start-Process @params
 do {
     Start-Sleep -Seconds 5
+    Write-LogFile -Message "Waiting for OneDrive Setup to complete."
 } while (Get-Process -Name "OneDriveSetup" -ErrorAction "SilentlyContinue")
-Get-Process -Name "OneDrive" -ErrorAction "SilentlyContinue" | Stop-Process -Force -ErrorAction "SilentlyContinue"
+Write-LogFile -Message "OneDrive Setup completed."
+Get-Process -Name "OneDrive" -ErrorAction "SilentlyContinue" | ForEach-Object {
+    Write-LogFile -Message "Stopped OneDrive process: $($_.Name)"
+    Stop-Process -Name $_.Name -Force -ErrorAction "SilentlyContinue"
+}
 #endregion

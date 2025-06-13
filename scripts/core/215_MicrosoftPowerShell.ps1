@@ -24,18 +24,23 @@
 #tags: Evergreen, Microsoft, PowerShell
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\PowerShell"
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
 
 #region Script logic
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftPowerShell" | `
     Where-Object { $_.Architecture -eq "x64" -and $_.Release -eq "Stable" } | `
     Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
+Write-LogFile -Message "Microsoft PowerShell $($App.Version) downloaded to: $($OutFile.FullName)"
 
 $LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftPowerShell$($App.Version).log" -replace " ", ""
+Write-LogFile -Message "Starting Microsoft PowerShell installation from: $($OutFile.FullName)"
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /norestart ALLUSERS=1 /log $LogFile"

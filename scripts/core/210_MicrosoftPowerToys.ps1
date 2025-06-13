@@ -18,16 +18,21 @@
 #tags: Evergreen, Microsoft, PowerToys
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\PowerToys"
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
 
 #region Script logic
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftPowerToys" | Where-Object { $_.Architecture -eq "x64" -and $_.InstallerType -eq "Default" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
+Write-LogFile -Message "Microsoft PowerToys $($App.Version) downloaded to: $($OutFile.FullName)"
 
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftPowerToys$($App.Version).log" -replace " ", ""
+$LogFile = "$LogPath\MicrosoftPowerToys$($App.Version).log" -replace " ", ""
+Write-LogFile -Message "Starting Microsoft PowerToys installation from: $($OutFile.FullName) with log file: $LogFile"
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "-silent -log $LogFile"
@@ -39,6 +44,7 @@ $params = @{
 Start-Process @params
 
 # Disable features that aren't suitable for VDI
+Write-LogFile -Message "Disabling PowerToys features that are not suitable for VDI environments"
 reg add "HKLM\Software\Policies\PowerToys" /v "AllowExperimentation" /d 0 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityAwake" /d 0 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\Software\Policies\PowerToys" /v "ConfigureEnabledUtilityEnvironmentVariables" /d 0 /t "REG_DWORD" /f | Out-Null

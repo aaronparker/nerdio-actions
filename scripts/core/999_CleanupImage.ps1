@@ -16,6 +16,11 @@
     5. Removes items from the Temp directory
 #>
 
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+
 #region Functions
 function Get-InstalledSoftware {
     [CmdletBinding()]
@@ -54,6 +59,7 @@ $Targets = @("Microsoft .NET.*Windows Server Hosting",
 $Targets | ForEach-Object {
     $Target = $_
     Get-InstalledSoftware | Where-Object { $_.Name -match $Target } | ForEach-Object {
+        Write-LogFile -Message "Uninstalling: $($_.Publisher) $($_.Name) $($_.Version)"
         
         if ($_.UninstallString -match "msiexec") {
             # Match the GUID in the uninstall string
@@ -84,12 +90,15 @@ $Targets | ForEach-Object {
 }
 
 # Remove paths that we should not need to leave around in the image
+Write-LogFile -Message "Removing unnecessary paths from the image"
 Remove-Item -Path "$Env:SystemDrive\Apps" -Recurse -Force -ErrorAction "SilentlyContinue"
 Remove-Item -Path "$Env:SystemDrive\DeployAgent" -Recurse -Force -ErrorAction "SilentlyContinue"
 Remove-Item -Path "$Env:SystemDrive\Users\AgentInstall.txt" -Force -Confirm:$false -ErrorAction "SilentlyContinue"
 Remove-Item -Path "$Env:SystemDrive\Users\AgentBootLoaderInstall.txt" -Force -Confirm:$false -ErrorAction "SilentlyContinue"
+Remove-Item -Path "$Env:SystemDrive\%userprofile%" -Recurse -Force -Confirm:$false -ErrorAction "SilentlyContinue"
 Remove-Item -Path "$Env:Public\Desktop\*.lnk" -Force -Confirm:$false -ErrorAction "SilentlyContinue"
 
 # Remove items from the Temp directory (note that scripts run as SYSTEM)
+Write-LogFile -Message "Cleaning up the Temp directory"
 Remove-Item -Path $Env:Temp -Recurse -Force -Confirm:$false -ErrorAction "SilentlyContinue"
 New-Item -Path $Env:Temp -ItemType "Directory" -ErrorAction "SilentlyContinue" | Out-Null

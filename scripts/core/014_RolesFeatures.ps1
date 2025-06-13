@@ -10,14 +10,20 @@
 #execution mode: Combined
 #tags: Roles, Features, Image
 
-#region Script logic
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+
 # Add / Remove roles and features (requires reboot at end of deployment)
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     #region Windows Server
     "Microsoft Windows Server*" {
+        Write-LogFile -Message "Configuring Windows roles and features for Windows Server."
         $Features = @("Printing-XPSServices-Features", "AzureArcSetup", "WindowsServerBackupSnapin",
             "WindowsServerBackup", "WindowsAdminCenterSetup", "SystemDataArchiver", "WirelessNetworking")
         foreach ($Feature in $Features) {
+            Write-LogFile -Message "Disabling optional feature: $Feature"
             $params = @{
                 FeatureName   = $Feature
                 Online        = $true
@@ -30,6 +36,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
 
         $Features = @("RDS-RD-Server", "Server-Media-Foundation", "Search-Service", "Remote-Assistance") # "NET-Framework-Core"
         foreach ($Feature in $Features) {
+            Write-LogFile -Message "Enabling feature: $Feature"
             $params = @{
                 Name          = $Feature
                 WarningAction = "SilentlyContinue"
@@ -49,18 +56,22 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             "Microsoft.Windows.WordPad~~~~0.0.1.0",
             "XPS.Viewer~~~~0.0.1.0")
         foreach ($Capability in $Capabilities) {
+            Write-LogFile -Message "Removing capability: $Capability"
             & "$Env:SystemRoot\System32\dism.exe" /Online /Remove-Capability /CapabilityName:$Capability /NoRestart /Quiet
         }
 
         # Remove Azure Arc Setup from running at sign-in
+        Write-LogFile -Message "Delete: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\AzureArcSetup"
         reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "AzureArcSetup" /f | *> $null
 
         # Remove unnecessary shortcuts
+        Write-LogFile -Message "Removing unnecessary shortcuts."
         Remove-Item -Path "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\Microsoft Azure services.lnk" -ErrorAction "SilentlyContinue"
         Remove-Item -Path "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Azure Arc Setup.lnk" -ErrorAction "SilentlyContinue"
 
         # Enable services
         foreach ($service in "Audiosrv", "WSearch") {
+            Write-LogFile -Message "Enabling service: $service"
             $params = @{
                 Name          = $service
                 StartupType   = "Automatic"
@@ -73,6 +84,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
         # Uninstall unnecessary applications
         foreach ($Path in "$Env:SystemRoot\System32\mspaint.exe", "$Env:SystemRoot\System32\mstsc.exe", "$Env:SystemRoot\System32\SnippingTool.exe") {
             if (Test-Path -Path $Path) {
+                Write-LogFile -Message "Uninstalling application: $Path"
                 $params = @{
                     FilePath     = $Path
                     ArgumentList = "/uninstall /noPromptBeforeRestart"
@@ -92,6 +104,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*" {
         $Features = @("Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client", "MicrosoftWindowsPowerShellV2Root", "MicrosoftWindowsPowerShellV2")
         foreach ($Feature in $Features) {
+            Write-LogFile -Message "Disabling optional feature: $Feature"
             $params = @{
                 FeatureName   = $Feature
                 Online        = $true
@@ -111,6 +124,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
                 "FaxServicesClientPackage", "WindowsMediaPlayer", "MicrosoftWindowsPowerShellV2Root", `
                 "MicrosoftWindowsPowerShellV2")
         foreach ($Feature in $Features) {
+            Write-LogFile -Message "Disabling optional feature: $Feature"
             $params = @{
                 FeatureName   = $Feature
                 Online        = $true
@@ -125,6 +139,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
                 "App.Support.QuickAssist~~~~0.0.1.0", "MathRecognizer~~~~0.0.1.0", `
                 "Browser.InternetExplorer~~~~0.0.11.0", "Print.Fax.Scan~~~~0.0.1.0")
         foreach ($Feature in $Features) {
+            Write-LogFile -Message "Uninstall feature: $Feature"
             $params = @{
                 Name                   = $Feature
                 IncludeManagementTools = $true

@@ -25,11 +25,14 @@
 #tags: VcRedist, Microsoft
 #Requires -Modules VcRedist
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\VcRedist"
-
-#region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+
 # Run tasks/install apps
+Write-LogFile -Message "Installing Microsoft Visual C++ Redistributables"
 Import-Module -Name "VcRedist" -Force
 Get-VcList | Save-VcRedist -Path $Path | Install-VcRedist -Silent | Out-Null
-#endregion

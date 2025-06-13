@@ -23,24 +23,30 @@
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Edge"
 [System.String] $EdgeExe = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
 
 #region Script logic
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-
-#region Edge
 # Download
 Import-Module -Name "Evergreen" -Force
+Write-LogFile -Message "Downloading Microsoft Edge Stable Enterprise x64 version"
 $App = Get-EvergreenApp -Name "MicrosoftEdge" | `
     Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Stable" -and $_.Release -eq "Enterprise" } | `
     Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
+Write-LogFile -Message "Downloaded Microsoft Edge to: $($OutFile.FullName)"
 
 $File = Get-ChildItem -Path $EdgeExe
 if (!(Test-Path -Path $EdgeExe) -or ([System.Version]$File.VersionInfo.ProductVersion -lt [System.Version]$App.Version)) {
+    Write-LogFile -Message "Installing Microsoft Edge version: $($App.Version) from: $($OutFile.FullName)"
 
     # Install
-    $LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftEdge$($App.Version).log" -replace " ", ""
+    $LogFile = "$LogPath\ImageBuild\MicrosoftEdge$($App.Version).log" -replace " ", ""
+    Write-LogFile -Message "Installing Microsoft Edge from: $($OutFile.FullName)"
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true /log $LogFile"
@@ -115,6 +121,7 @@ $prefs = @"
     }
 }
 "@
+Write-LogFile -Message "Setting initial preferences for Microsoft Edge"
 $prefs | Set-Content -Path "${Env:ProgramFiles(x86)}\Microsoft\Edge\Application\initial_preferences" -Force -Encoding "utf8"
 $Shortcuts = @("$Env:Public\Desktop\Microsoft Edge*.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "SilentlyContinue"
@@ -126,8 +133,10 @@ Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftEdgeWebView2Runtime" | Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Stable" } | `
     Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -WarningAction "Ignore"
+Write-LogFile -Message "Downloaded Microsoft Edge WebView2 Runtime to: $($OutFile.FullName)"
 
 # Install
+Write-LogFile -Message "Installing Microsoft Edge WebView2 Runtime version: $($App.Version) from: $($OutFile.FullName)"
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/silent /install"

@@ -24,27 +24,25 @@
 #tags: Evergreen, Adobe, Acrobat, PDF
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Adobe\AcrobatReaderDC"
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
 
 #region Script logic
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-
 #region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
 if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
     [System.String] $Architecture = "x64"
     [System.String] $Language = "MUI"
+    Write-LogFile -Message "Using default values for Adobe Acrobat Reader: Architecture = $Architecture, Language = $Language"
 }
 else {
-
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-    $params = @{
-        Uri             = $SecureVars.VariablesList
-        UseBasicParsing = $true
-        ErrorAction     = "Stop"
-    }
-    $Variables = Invoke-RestMethod @params
+    $Variables = Get-NerdioVariablesList
     [System.String] $Architecture = $Variables.$AzureRegionName.AdobeAcrobatArchitecture
     [System.String] $Language = $Variables.$AzureRegionName.AdobeAcrobatLanguage
+    Write-LogFile -Message "Using secure variables for Adobe Acrobat Reader: Architecture = $Architecture, Language = $Language"
 }
 #endregion
 
@@ -54,13 +52,15 @@ else {
 
 # Download Reader installer
 Import-Module -Name "Evergreen" -Force
+Write-LogFile -Message "Downloading Adobe Acrobat Reader DC $Language $Architecture"
 $App = Get-EvergreenApp -Name "AdobeAcrobatReaderDC" | `
     Where-Object { $_.Language -eq $Language -and $_.Architecture -eq $Architecture } | `
     Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
+Write-LogFile -Message "Downloaded Adobe Acrobat Reader to: $($OutFile.FullName)"
 
 # Install Adobe Acrobat Reader
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\AdobeAcrobatReaderDC$($App.Version).log" -replace " ", ""
+$LogFile = "$LogPath\AdobeAcrobatReaderDC$($App.Version).log" -replace " ", ""
 $Options = "EULA_ACCEPT=YES
         ENABLE_CHROMEEXT=0
         DISABLE_BROWSER_INTEGRATION=1
@@ -76,17 +76,17 @@ $params = @{
     PassThru     = $true
     ErrorAction  = "Stop"
 }
+Write-LogFile -Message "Installing Adobe Acrobat Reader from: $($OutFile.FullName) with arguments: $ArgumentList"
 Start-Process @params
 
 #region Acrobat policies: # https://www.adobe.com/devnet-docs/acrobatetk/tools/PrefRef/Windows/FeatureLockDown.html
-# Force Reader into read-only mode
+# Force Reader into read-only mode; Disable Adobe Updater
+Write-LogFile -Message "Configuring Adobe Acrobat Reader policies to enforce read-only mode and disable updates"
 reg add "HKLM\SOFTWARE\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown" /v "bIsSCReducedModeEnforcedEx" /d 1 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\SOFTWARE\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown" /v "bAcroSuppressUpsell" /d 1 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\SOFTWARE\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown" /v "bDisableJavaScript" /d 1 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\SOFTWARE\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown" /v "bToggleDCAppCenter" /d 1 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\SOFTWARE\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cIPM" /v "bDontShowMsgWhenViewingDoc" /d 0 /t "REG_DWORD" /f | Out-Null
-
-# Disable Adobe Updater
 reg add "HKLM\SOFTWARE\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown" /v "bUpdater" /d 0 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\SOFTWARE\Adobe\Adobe Acrobat\DC\Installer" /v "DisableMaintenance" /d 1 /t "REG_DWORD" /f | Out-Null
 reg add "HKLM\SOFTWARE\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown" /v "bToggleShareFeedback" /d 0 /t "REG_DWORD" /f | Out-Null
@@ -102,10 +102,12 @@ reg add "HKLM\SOFTWARE\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown\cServices
 #endregion
 
 # Disable update tasks - assuming we're installing on a gold image or updates will be managed
+Write-LogFile -Message "Disabling Adobe Acrobat Reader update tasks and services"
 Get-Service -Name "AdobeARMservice" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
 Get-ScheduledTask -TaskName "Adobe Acrobat Update Task*" | Unregister-ScheduledTask -Confirm:$false -ErrorAction "SilentlyContinue"
 
 # Delete public desktop shortcut
+Write-LogFile -Message "Removing public desktop shortcut for Adobe Acrobat Reader"
 $Shortcuts = @("$Env:Public\Desktop\Adobe Acrobat.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "SilentlyContinue"
 #endregion

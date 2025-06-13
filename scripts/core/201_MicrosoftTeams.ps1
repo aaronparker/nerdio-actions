@@ -31,27 +31,12 @@
 #tags: Evergreen, Microsoft, Teams, per-machine
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Teams"
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-#region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
-if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
-    [System.String] $Language = "en-AU"
-}
-else {
-    try {
-        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-        $params = @{
-            Uri             = $SecureVars.VariablesList
-            UseBasicParsing = $true
-            ErrorAction     = "Stop"
-        }
-        $Variables = Invoke-RestMethod @params
-        [System.String] $Language = $Variables.$AzureRegionName.Language
-    }
-    catch {
-        throw $_
-    }
-}
-#endregion
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
 
 #region Functions
 function Get-InstalledSoftware {
@@ -81,31 +66,37 @@ function Get-InstalledSoftware {
 #endregion
 
 #region Script logic
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-
 # Download Teams v2 Bootstrap installer
 $App = [PSCustomObject]@{
     Version = "2.0.0"
     URI     = "https://statics.teams.cdn.office.net/production-teamsprovision/lkg/teamsbootstrapper.exe"
 }
 $TeamsExe = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
+Write-LogFile -Message "Downloaded Microsoft Teams Bootstrapper to: $($TeamsExe.FullName)"
 
 # Download Teams v2 MSIX installer
+Write-LogFile -Message "Downloading Microsoft Teams v2 MSIX package"
 $App = Get-EvergreenApp -Name "MicrosoftTeams" | `
     Where-Object { $_.Release -eq "Enterprise" -and $_.Architecture -eq "x64" }
 $TeamsMsix = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
+Write-LogFile -Message "Downloaded Microsoft Teams MSIX to: $($TeamsMsix.FullName)"
 
 # Remove any existing Teams AppX package
-Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq "MSTeams_8wekyb3d8bbwe" } | Remove-AppxPackage -ErrorAction "SilentlyContinue"
+Get-AppxPackage -AllUsers | Where-Object { $_.PackageFamilyName -eq "MSTeams_8wekyb3d8bbwe" } | ForEach-Object {
+    Write-LogFile -Message "Removing existing Teams AppX package: $($_.Name)"
+    $_ | Remove-AppxPackage -AllUsers -ErrorAction "SilentlyContinue"
+}
 
 # Install Teams
 # Set required IsWVDEnvironment registry value
+Write-LogFile -Message "Add: HKLM\SOFTWARE\Microsoft\Teams\IsWVDEnvironment"
 reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /d 1 /t "REG_DWORD" /f *> $null
 
 # Install steps based on the OS we're running on
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     "Microsoft Windows Server*" {
+        Write-LogFile -Message "Installing Microsoft Teams on Windows Server"
+        Write-LogFile -Message "Installing Microsoft Teams MSIX package: $($TeamsMsix.FullName)"
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\dism.exe"
             ArgumentList = "/Online /Add-ProvisionedAppxPackage /PackagePath:`"$($TeamsMsix.FullName)`" /SkipLicense"
@@ -118,6 +109,8 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     }
 
     "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*|Microsoft Windows 10 Enterprise*|Microsoft Windows 10 Pro*" {
+        Write-LogFile -Message "Installing Microsoft Teams on Windows 10/11"
+        Write-LogFile -Message "Installing Microsoft Teams MSIX package: $($TeamsMsix.FullName)"
         $params = @{
             FilePath     = $TeamsExe.FullName
             ArgumentList = "-p -o `"$($TeamsMsix.FullName)`""
@@ -131,6 +124,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
 }
 
 # Disable auto-update
+Write-LogFile -Message "Add: HKLM\SOFTWARE\Microsoft\Teams\DisableAutoUpdate"
 reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "DisableAutoUpdate" /d 1 /t "REG_DWORD" /f | Out-Null
 
 # Get the add-in path and version. Let's assume the Teams install has been successful
@@ -138,11 +132,13 @@ $TeamsPath = Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq "MSTeams_
 $AddInInstallerPath = Get-ChildItem -Path $TeamsPath -Recurse -Include "MicrosoftTeamsMeetingAddinInstaller.msi" | Select-Object -ExpandProperty "FullName"
 $Version = Get-AppLockerFileInformation -Path $AddInInstallerPath | Select-Object -ExpandProperty "Publisher"
 $AddInPath = "${Env:ProgramFiles(x86)}\Microsoft\TeamsMeetingAddin\$($Version.BinaryVersion.ToString())"
+Write-LogFile -Message "Teams Meeting Add-in path: $AddInPath"
 
 # Uninstall the old add-in if it's installed
 $PreviousInstall = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Teams Meeting Add-in*" }
 if ([System.String]::IsNullOrEmpty($PreviousInstall.PSChildName)) {}
 else {
+    Write-LogFile -Message "Uninstalling previous version of Microsoft Teams Meeting Add-in: $($PreviousInstall.PSChildName)"
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/uninstall `"$($PreviousInstall.PSChildName)`" /quiet /norestart"
@@ -155,6 +151,7 @@ else {
 }
 
 # Install the new version of the add-in
+Write-LogFile -Message "Installing Microsoft Teams Meeting Add-in from: $AddInInstallerPath"
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$AddInInstallerPath`" ALLUSERS=1 TARGETDIR=`"$AddInPath`" /quiet /norestart"

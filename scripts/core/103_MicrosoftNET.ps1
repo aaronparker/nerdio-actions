@@ -23,11 +23,14 @@
 #tags: Evergreen, Microsoft, .NET
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\NET"
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
 
 #region Script logic
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-
 # Download
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "Microsoft.NET" | `
@@ -35,7 +38,8 @@ $App = Get-EvergreenApp -Name "Microsoft.NET" | `
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 foreach ($File in $OutFile) {
-    $LogFile = "$Env:SystemRoot\Logs\ImageBuild\Microsoft.NET.log" -replace " ", ""
+    $LogFile = "$LogPath\Microsoft.NET.log" -replace " ", ""
+    Write-LogFile -Message "Installing Microsoft .NET Desktop LTS from: $($File.FullName)"
     $params = @{
         FilePath     = $File.FullName
         ArgumentList = "/install /quiet /norestart /log $LogFile"

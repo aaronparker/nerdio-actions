@@ -12,11 +12,16 @@
 #execution mode: Combined
 #tags: Evergreen, VcRedist, Image
 
-#region Script logic
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+
 # Trust the PSGallery for modules
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-# Install-PackageProvider -Name "NuGet" -MinimumVersion "2.8.5.208" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Install PowerShellGet"
 Install-PackageProvider -Name "PowerShellGet" -MinimumVersion "2.2.5" -Force -ErrorAction "SilentlyContinue"
+Write-LogFile -Message "Set PSGallery as trusted"
 Set-PSRepository -Name "PSGallery" -InstallationPolicy "Trusted"
 
 # Install the Evergreen module; https://github.com/aaronparker/Evergreen
@@ -33,8 +38,7 @@ foreach ($Module in "Evergreen", "VcRedist", "PSWindowsUpdate") {
             Force              = $true
             ErrorAction        = "Stop"
         }
-        Write-Host "Installing module: $Module"
+        Write-LogFile -Message "Installing module: $Module"
         Install-Module @params
     }
 }
-#endregion

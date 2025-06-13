@@ -24,49 +24,61 @@
 #execution mode: Combined
 #tags: Language, Image
 
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+
 #region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
 if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
+    Write-LogFile -Message "Using default language and time zone settings."
     [System.String] $Language = "en-AU"
     [System.String] $TimeZone = "AUS Eastern Standard Time"
+    Write-LogFile -Message "Using default language: $Language and time zone: $TimeZone"
 }
 else {
-    $ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-    $params = @{
-        Uri             = $SecureVars.VariablesList
-        UseBasicParsing = $true
-        ErrorAction     = "Stop"
-    }
-    $Variables = Invoke-RestMethod @params
+    $Variables = Get-NerdioVariablesList
     [System.String] $Language = $Variables.$AzureRegionName.Language
     [System.String] $TimeZone = $Variables.$AzureRegionName.TimeZone
+    Write-LogFile -Message "Using language: $Language and time zone: $TimeZone"
 }
 #endregion
 
 #region Only run if the LanguagePackManagement module is installed
 # Works for Windows 10 22H2, Windows 11, Windows Server 2025
 if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
+    Write-LogFile -Message "LanguagePackManagement module found. Proceeding with language pack installation."
 
     # Disable Language Pack Cleanup
     # https://learn.microsoft.com/en-us/azure/virtual-desktop/windows-11-language-packs
+    Write-LogFile -Message "Disabling Language Pack Cleanup tasks."
     Disable-ScheduledTask -TaskPath "\Microsoft\Windows\AppxDeploymentClient\" -TaskName "Pre-staged app cleanup"
     Disable-ScheduledTask -TaskPath "\Microsoft\Windows\MUI\" -TaskName "LPRemove"
     Disable-ScheduledTask -TaskPath "\Microsoft\Windows\LanguageComponentsInstaller" -TaskName "Uninstallation"
-    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Control Panel\International" /v "BlockCleanupOfUnusedPreinstalledLangPacks" /t REG_DWORD /d 1 /f *> $null
+    reg add "HKLM\SOFTWARE\Policies\Microsoft\Control Panel\International" /v "BlockCleanupOfUnusedPreinstalledLangPacks" /t REG_DWORD /d 1 /f *> $null
 
     # Ensure no Windows Update settings will block the installation of language packs
-    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DoNotConnectToWindowsUpdateInternetLocations" /d 0 /t REG_DWORD /f *> $null
-    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "UseWUServer" /d 0 /t REG_DWORD /f *> $null
+    Write-LogFile -Message "Set: HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate DoNotConnectToWindowsUpdateInternetLocations 0"
+    reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DoNotConnectToWindowsUpdateInternetLocations" /d 0 /t REG_DWORD /f *> $null
+    Write-LogFile -Message "Delete: HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
+    reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /f *> $null
 
     # Enable the WinRM rule as a workaround for VM provisioning DSC failure with: "Unable to check the status of the firewall"
     # https://github.com/Azure/RDS-Templates/issues/435
     # https://qiita.com/fujinon1109/items/440c614338fe2535b09e
-    Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Private"
+    Get-NetConnectionProfile | Where-Object { $_.NetworkCategory -eq "Public" } | ForEach-Object {
+        Write-LogFile -Message "Setting network category to Private for: $($_.Name)"
+        Set-NetConnectionProfile -Name $_.Name -NetworkCategory "Private"
+    }
+    Write-LogFile -Message "Enabling WinRM firewall rules."
     Get-NetFirewallRule -DisplayGroup "Windows Remote Management" | Enable-NetFirewallRule
+    Write-LogFile -Message "Enabling PS Remoting."
     Enable-PSRemoting -Force
+    Write-LogFile -Message "Setting network category to Public."
     Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Public"
 
     # Install the language pack
+    Write-LogFile -Message "Installing language pack: $Language"
     $params = @{
         Language        = $Language
         CopyToSettings  = $true
@@ -84,7 +96,9 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
 
 #region Set the locale
 Import-Module -Name "International"
+Write-LogFile -Message "Setting time zone to: $TimeZone"
 Set-TimeZone -Name $TimeZone
+Write-LogFile -Message "Setting locale to: $Language"
 Set-Culture -CultureInfo $Language
 Set-WinSystemLocale -SystemLocale $Language
 Set-WinUILanguageOverride -Language $Language
@@ -92,6 +106,7 @@ Set-WinUserLanguageList -LanguageList $Language -Force
 $RegionInfo = New-Object -TypeName "System.Globalization.RegionInfo" -ArgumentList $Language
 Set-WinHomeLocation -GeoId $RegionInfo.GeoId
 if (Get-Command -Name "Set-SystemPreferredUILanguage" -ErrorAction "SilentlyContinue") {
+    Write-LogFile -Message "Setting system preferred UI language to: $Language"
     Set-SystemPreferredUILanguage -Language $Language
 }
 #endregion

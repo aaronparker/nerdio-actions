@@ -23,17 +23,22 @@
 #tags: Evergreen, Microsoft, SQL Server
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Ssms"
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
 
 #region Script logic
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "MicrosoftSsms" | `
     Where-Object { $_.Language -eq "English" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
+Write-LogFile -Message "Microsoft SQL Server Management Studio $($App.Version) downloaded to: $($OutFile.FullName)"
 
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftSQLServerManagementStudio$($App.Version).log" -replace " ", ""
+$LogFile = "$LogPath\MicrosoftSQLServerManagementStudio$($App.Version).log" -replace " ", ""
+Write-LogFile -Message "Starting Microsoft SQL Server Management Studio installation from: $($OutFile.FullName)"
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/install /quiet /norestart DoNotInstallAzureDataStudio=1 /log $LogFile"

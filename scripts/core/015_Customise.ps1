@@ -11,41 +11,40 @@
     The path where the Windows Enterprise Defaults will be installed.
 
     .EXAMPLE
-    .\015_Customise.ps1 -Path "C:\Apps\image-customise"
+    .\015_Customise.ps1 -Path "C:\Apps\defaults"
 #>
 
-#description: Installs Windows Enterprise Defaults to customise the image and the default profile https://stealthpuppy.com/image-customise/
+#description: Installs Windows Enterprise Defaults to customise the image and the default profile https://stealthpuppy.com/defaults/
 #execution mode: Combined
 #tags: Evergreen, Customisation, Language, Image
 #Requires -Modules Evergreen
-[System.String] $Path = "$Env:SystemDrive\Apps\image-customise"
+[System.String] $Path = "$Env:SystemDrive\Apps\defaults"
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import the shared functions
+$LogPath = "$Env:ProgramData\ImageBuild"
+Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
 
 #region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
 if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
     [System.String] $Language = "en-AU"
     [System.String] $TimeZone = "AUS Eastern Standard Time"
-    [System.String] $AppxMode = "Block"
+    Write-LogFile -Message "Using default language: $Language and time zone: $TimeZone"
 }
 else {
-    $ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-    $params = @{
-        Uri             = $SecureVars.VariablesList
-        UseBasicParsing = $true
-        ErrorAction     = "Stop"
-    }
-    $Variables = Invoke-RestMethod @params
+    $Variables = Get-NerdioVariablesList
     [System.String] $Language = $Variables.$AzureRegionName.Language
     [System.String] $TimeZone = $Variables.$AzureRegionName.TimeZone
-    [System.String] $AppxMode = $Variables.$AzureRegionName.AppxMode
+    Write-LogFile -Message "Using language: $Language and time zone: $TimeZone"
 }
 #endregion
 
 #region Script logic
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 $Installer = Get-EvergreenApp -Name "WindowsEnterpriseDefaults" | Where-Object { $_.Type -eq "zip" } | `
     Select-Object -First 1 | `
     Save-EvergreenApp -CustomPath $Path
+Write-LogFile -Message "Installer downloaded to: $($Installer.FullName)"
 
 # Extract the installer
 Expand-Archive -Path $Installer.FullName -DestinationPath $Path -Force
@@ -53,6 +52,7 @@ $InstallFile = Get-ChildItem -Path $Path -Recurse -Include "Install-Defaults.ps1
 
 # Install the Windows Enterprise Defaults
 Push-Location -Path $InstallFile.Directory
+Write-LogFile -Message "Running Windows Enterprise Defaults from: $($InstallFile.Directory)"
 & "$($InstallFile.Directory.FullName)\Remove-AppXApps.ps1"
 Import-Module -Name "$($InstallFile.Directory.FullName)\Install-Defaults.psm1" -Force
 & "$($InstallFile.Directory.FullName)\Install-Defaults.ps1" -Language $Language -TimeZone $TimeZone
