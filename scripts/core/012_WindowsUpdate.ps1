@@ -13,7 +13,7 @@
 #>
 
 #description: Installs all available Windows updates with PSWindowsUpdate
-#execution mode: IndividualWithRestart
+#execution mode: Combined
 #tags: Update, Image
 #Requires -Modules PSWindowsUpdate
 

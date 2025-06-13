@@ -1,5 +1,5 @@
 #description: Downloads the Microsoft Virtual Desktop Optimization Tool and optimises the OS. Ensure 014_RolesFeatures.ps1 and 015_Customise.ps1 are run
-#execution mode: IndividualWithRestart
+#execution mode: Combined
 #tags: Image, Optimise
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Vdot"
