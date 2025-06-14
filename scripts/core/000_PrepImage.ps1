@@ -40,7 +40,8 @@ function Write-LogFile {
         `$Thread = `$([Threading.Thread]::CurrentThread.ManagedThreadId)
         `$LineFormat = `$Message, `$TimeGenerated, (Get-Date -Format "yyyy-MM-dd"), "`$(`$MyInvocation.ScriptName | Split-Path -Leaf -ErrorAction "SilentlyContinue"):`$(`$MyInvocation.ScriptLineNumber)", `$Context, `$LogLevel, `$Thread
         `$Line = '<![LOG[{0}]LOG]!><time="{1}" date="{2}" component="{3}" context="{4}" type="{5}" thread="{6}" file="">' -f `$LineFormat
-        Write-Information -MessageData "[`$TimeGenerated] `$Message" -InformationAction "Continue"
+        # Write-Information -MessageData "[`$TimeGenerated] `$Message" -InformationAction "Continue"
+        Write-Host "[`$TimeGenerated] `$Message"
         Add-Content -Value `$Line -Path `$LogFile
         if (`$LogLevel -eq 3 -or `$LogLevel -eq 2) {
             Write-Warning -Message "[`$TimeGenerated] `$Message"
