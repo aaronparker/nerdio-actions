@@ -25,10 +25,10 @@
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\NET"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-# Import the shared functions
-$LogPath = "$Env:ProgramData\ImageBuild"
-Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
-Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Script logic
 # Download
@@ -37,17 +37,14 @@ $App = Get-EvergreenApp -Name "Microsoft.NET" | `
     Where-Object { $_.Installer -eq "windowsdesktop" -and $_.Architecture -eq "x64" -and $_.Channel -match "LTS" }
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
+$LogPath = (Get-LogFile).Path
 foreach ($File in $OutFile) {
     $LogFile = "$LogPath\Microsoft.NET.log" -replace " ", ""
-    Write-LogFile -Message "Installing Microsoft .NET Desktop LTS from: $($File.FullName)"
+    Write-LogFile -Message "Installing Microsoft .NET Desktop LTS"
     $params = @{
         FilePath     = $File.FullName
         ArgumentList = "/install /quiet /norestart /log $LogFile"
-        NoNewWindow  = $true
-        PassThru     = $true
-        Wait         = $true
-        ErrorAction  = "Stop"
     }
-    Start-Process @params
+    Start-ProcessWithLog @params
 }
 #endregion

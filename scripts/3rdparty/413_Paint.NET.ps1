@@ -21,14 +21,18 @@
 #tags: Evergreen, Paint.NET
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Paint.NET"
-
-#region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 Import-Module -Name "Evergreen" -Force
+Write-LogFile -Message "Query Evergreen for Paint.NET 64-bit"
 $App = Get-EvergreenApp -Name "PaintDotNetOfflineInstaller" | `
     Where-Object { $_.Architecture -eq "x64" -and $_.URI -match "winmsi" } | Select-Object -First 1
+Write-LogFile -Message "Downloading Paint.NET version $($App.Version) to $Path"
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 $params = @{
@@ -39,17 +43,14 @@ $params = @{
 }
 Expand-Archive @params
 
+$LogPath = (Get-LogFile).Path
+$LogFile = "$LogPath\Paint.NET$($App.Version).log" -replace " ", ""
 $Installer = Get-ChildItem -Path $Path -Include "paint*.msi" -Recurse
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\Paint.NET$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($Installer.FullName)`" DESKTOPSHORTCUT=0 CHECKFORUPDATES=0 CHECKFORBETAS=0 /quiet /log $LogFile"
-    NoNewWindow  = $true
-    Wait         = $true
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 
 Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\Paint.NET.lnk")

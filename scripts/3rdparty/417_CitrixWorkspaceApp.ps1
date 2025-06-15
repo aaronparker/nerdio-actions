@@ -21,29 +21,35 @@
 #tags: Evergreen, Citrix
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Citrix\Workspace"
-
-#region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-Import-Module -Name "Evergreen" -Force
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 # Try current release and fall back to LTSR the download fails
 try {
+    Import-Module -Name "Evergreen" -Force
+    Write-LogFile -Message "Query Evergreen for Citrix Workspace app Current release"
     $App = Get-EvergreenApp -Name "CitrixWorkspaceApp" | `
         Where-Object { $_.Stream -eq "Current" } | `
         Select-Object -First 1
+    Write-LogFile -Message "Downloading Citrix Workspace app version $($App.Version) to $Path"
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 }
 catch {
+    Write-LogFile -Message "Failed to download Citrix Workspace app Current release, falling back to LTSR"
     $App = Get-EvergreenApp -Name "CitrixWorkspaceApp" | `
         Where-Object { $_.Stream -eq "LTSR" } | `
         Select-Object -First 1
+    Write-LogFile -Message "Downloading Citrix Workspace app version $($App.Version) to $Path"
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 }
 
 # Rename the installer
 if (!(Test-Path -Path $(Join-Path -Path $OutFile.DirectoryName -ChildPath "CitrixWorkspaceApp.exe"))) {
+    Write-LogFile -Message "Renaming Citrix Workspace app installer to CitrixWorkspaceApp.exe"
     Rename-Item -Path $OutFile -NewName "CitrixWorkspaceApp.exe"
     $OutFile = Get-ChildItem -Path $OutFile.DirectoryName -Filter "CitrixWorkspaceApp.exe"
 }
@@ -61,12 +67,9 @@ $Arguments = @("/silent /noreboot",
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = $($Arguments -join " ")
-    NoNewWindow  = $true
     Wait         = $false
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 
 # Wait for the installation to complete because Citrix can't work out how to write an installer correctly
 $ExePaths = $("${Env:ProgramFiles(x86)}\Citrix\ICA Client\appprotection.exe",
@@ -95,14 +98,15 @@ $ExePaths = $("${Env:ProgramFiles(x86)}\Citrix\ICA Client\appprotection.exe",
     "${Env:ProgramFiles(x86)}\Citrix\ICA Client\wfica32.exe")
 do {
     Start-Sleep -Seconds 15
+    Write-LogFile -Message "Waiting for Citrix Workspace app installation to complete."
 } while (!(Test-Path -Path $ExePaths))
 Start-Sleep -Seconds 30
 
 # Disable update tasks - assuming we're installing on a gold image or updates will be managed
+Write-LogFile -Message "Disabling Citrix Workspace app update tasks and services"
 Get-Service -Name "CWAUpdaterService" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
 
 # Remove startup items
-reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" /v "AnalyticsSrv" /f | Out-Null
-reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" /v "ConnectionCenter" /f | Out-Null
-reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" /v "Redirector" /f | Out-Null
-#endregion
+Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList "delete HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run /v AnalyticsSrv /f"
+Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList "delete HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run /v ConnectionCenter /f"
+Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList "delete HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run /v Redirector /f"

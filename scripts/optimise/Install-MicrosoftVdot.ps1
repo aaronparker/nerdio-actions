@@ -5,11 +5,12 @@
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Vdot"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-$LogPath = "$Env:ProgramData\ImageBuild"
-Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
-Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
+$LogFile = Get-LogFile
 
-#region Script logic
 # Download Microsoft Virtual Desktop Optimization Tool
 $App = Get-EvergreenApp -Name "MicrosoftVdot" | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
@@ -17,7 +18,8 @@ Write-LogFile -Message "Microsoft Virtual Desktop Optimization Tool $($App.Versi
 Write-LogFile -Message "Starting Microsoft Virtual Desktop Optimization Tool from: $($Installer.FullName)"
 
 # Compress the log files - the Virtual Desktop Optimization Tool will delete .log files
-Compress-Archive -Path $LogPath -DestinationPath "$LogPath\ImageBuildLogs.zip" -Force -ErrorAction "SilentlyContinue"
+Write-LogFile -Message "Compressing log files to $($LogFile.Path)\ImageBuildLogs.zip"
+Compress-Archive -Path $LogFile.Path -DestinationPath "$($LogFile.Path)\ImageBuildLogs.zip" -Force -ErrorAction "SilentlyContinue"
 
 # Run Microsoft Virtual Desktop Optimization Tool
 Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
@@ -34,8 +36,9 @@ $params = @{
 Pop-Location
 
 # Extract the logs back to the log path and remove the zip file
-Expand-Archive -Path "$LogPath\ImageBuildLogs.zip" -DestinationPath $LogPath -Force -ErrorAction "SilentlyContinue"
-Remove-Item -Path "$LogPath\ImageBuildLogs.zip" -Force -ErrorAction "SilentlyContinue"
+Write-LogFile -Message "Extracting logs from $($LogFile.Path)\ImageBuildLogs.zip to $($LogFile.Path)"
+Expand-Archive -Path "$($LogFile.Path)\ImageBuildLogs.zip" -DestinationPath $LogFile.Path -Force -ErrorAction "SilentlyContinue"
+Remove-Item -Path "$($LogFile.Path)\ImageBuildLogs.zip" -Force -ErrorAction "SilentlyContinue"
 
 # Other options for Optimizations:
 # Optimizations - "All", "WindowsMediaPlayer", "AppxPackages", "ScheduledTasks", "DefaultUserSettings", "LocalPolicy", "Autologgers", "Services", "NetworkOptimizations", "DiskCleanup"

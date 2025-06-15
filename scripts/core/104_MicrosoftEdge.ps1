@@ -25,17 +25,17 @@
 [System.String] $EdgeExe = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-# Import the shared functions
-$LogPath = "$Env:ProgramData\ImageBuild"
-Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
-Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Script logic
 # Download
 Import-Module -Name "Evergreen" -Force
 Write-LogFile -Message "Downloading Microsoft Edge Stable Enterprise x64 version"
 $App = Get-EvergreenApp -Name "MicrosoftEdge" | `
-    Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Stable" -and $_.Release -eq "Enterprise" } | `
+    Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Stable" } | `
     Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 Write-LogFile -Message "Downloaded Microsoft Edge to: $($OutFile.FullName)"
@@ -44,18 +44,15 @@ $File = Get-ChildItem -Path $EdgeExe
 if (!(Test-Path -Path $EdgeExe) -or ([System.Version]$File.VersionInfo.ProductVersion -lt [System.Version]$App.Version)) {
     Write-LogFile -Message "Installing Microsoft Edge version: $($App.Version) from: $($OutFile.FullName)"
 
-    # Install
+    # Install Edge
+    $LogPath = (Get-LogFile).Path
     $LogFile = "$LogPath\ImageBuild\MicrosoftEdge$($App.Version).log" -replace " ", ""
     Write-LogFile -Message "Installing Microsoft Edge from: $($OutFile.FullName)"
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true /log $LogFile"
-        NoNewWindow  = $true
-        Wait         = $true
-        PassThru     = $true
-        ErrorAction  = "Stop"
     }
-    Start-Process @params
+    Start-ProcessWithLog @params
 }
 
 # Post install configuration
@@ -137,13 +134,10 @@ Write-LogFile -Message "Downloaded Microsoft Edge WebView2 Runtime to: $($OutFil
 
 # Install
 Write-LogFile -Message "Installing Microsoft Edge WebView2 Runtime version: $($App.Version) from: $($OutFile.FullName)"
+
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/silent /install"
-    NoNewWindow  = $true
-    Wait         = $true
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 #endregion

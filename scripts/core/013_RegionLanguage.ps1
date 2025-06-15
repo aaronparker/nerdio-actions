@@ -24,10 +24,10 @@
 #execution mode: Combined
 #tags: Language, Image
 
-# Import the shared functions
-$LogPath = "$Env:ProgramData\ImageBuild"
-Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
-Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
 if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
@@ -55,13 +55,11 @@ if (Get-Module -Name "LanguagePackManagement" -ListAvailable) {
     Disable-ScheduledTask -TaskPath "\Microsoft\Windows\AppxDeploymentClient\" -TaskName "Pre-staged app cleanup"
     Disable-ScheduledTask -TaskPath "\Microsoft\Windows\MUI\" -TaskName "LPRemove"
     Disable-ScheduledTask -TaskPath "\Microsoft\Windows\LanguageComponentsInstaller" -TaskName "Uninstallation"
-    reg add "HKLM\SOFTWARE\Policies\Microsoft\Control Panel\International" /v "BlockCleanupOfUnusedPreinstalledLangPacks" /t REG_DWORD /d 1 /f *> $null
+    Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList 'add "HKLM\SOFTWARE\Policies\Microsoft\Control Panel\International" /v BlockCleanupOfUnusedPreinstalledLangPacks /t REG_DWORD /d 1 /f'
 
     # Ensure no Windows Update settings will block the installation of language packs
-    Write-LogFile -Message "Set: HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate DoNotConnectToWindowsUpdateInternetLocations 0"
-    reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DoNotConnectToWindowsUpdateInternetLocations" /d 0 /t REG_DWORD /f *> $null
-    Write-LogFile -Message "Delete: HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
-    reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /f *> $null
+    Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList 'add HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate /v DoNotConnectToWindowsUpdateInternetLocations /d 0 /t REG_DWORD /f'
+    Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList "delete HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU /f"
 
     # Enable the WinRM rule as a workaround for VM provisioning DSC failure with: "Unable to check the status of the firewall"
     # https://github.com/Azure/RDS-Templates/issues/435

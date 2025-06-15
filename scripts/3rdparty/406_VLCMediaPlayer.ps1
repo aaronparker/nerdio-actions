@@ -22,27 +22,29 @@
 #tags: Evergreen, VLC
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\VLC\MediaPlayer"
-
-#region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 Import-Module -Name "Evergreen" -Force
+Write-LogFile -Message "Query Evergreen for VLC media player x64 MSI"
 $App = Get-EvergreenApp -Name "VideoLanVlcPlayer" | Where-Object { $_.Architecture -eq "x64" -and $_.Type -eq "MSI" } | Select-Object -First 1
+Write-LogFile -Message "Downloading VLC media player version $($App.Version) to $Path"
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\VlcMediaPlayer$($App.Version).log" -replace " ", ""
+$LogPath = (Get-LogFile).Path
+$LogFile = "$LogPath\VlcMediaPlayer$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 /quiet /log $LogFile"
-    NoNewWindow  = $true
-    Wait         = $true
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 
 Start-Sleep -Seconds 5
+Write-LogFile -Message "Removing unnecessary shortcuts for VLC media player"
 $Shortcuts = @("$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\VideoLAN website.lnk",
     "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\Release Notes.lnk",
     "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\VLC\Documentation.lnk",

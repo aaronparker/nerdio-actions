@@ -20,16 +20,20 @@
 #tags: Evergreen, Remote Display Analyzer, Tools
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:ProgramFiles\RemoteDisplayAnalyzer"
-
-#region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 Import-Module -Name "Evergreen" -Force
-
+Write-LogFile -Message "Query Evergreen for Remote Display Analyzer and Connection Experience Indicator"
 $App = Get-EvergreenApp -Name "RDAnalyzer" | Select-Object -First 1
+Write-LogFile -Message "Downloading Remote Display Analyzer version $($App.Version) to $Path"
 Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -ErrorAction "Stop" | Out-Null
 
+Write-LogFile -Message "Query Evergreen for Connection Experience Indicator"
 $App = Get-EvergreenApp -Name "ConnectionExperienceIndicator" | Select-Object -First 1
+Write-LogFile -Message "Downloading Connection Experience Indicator version $($App.Version) to $Path"
 Save-EvergreenApp -InputObject $App -CustomPath $Path -Force -ErrorAction "Stop" | Out-Null
-#endregion

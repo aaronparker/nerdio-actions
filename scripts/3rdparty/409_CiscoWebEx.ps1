@@ -12,6 +12,9 @@
     - This script requires the Evergreen module.
     - The installer URL and version number are hard-coded in this script and may need to be updated in the future.
     - This script creates a log file in the ProgramData\Nerdio\Logs directory.
+
+    # https://www.webex.com/downloads/teams-vdi.html
+    # https://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cloudCollaboration/wbxt/vdi/wbx-vdi-deployment-guide/wbx-teams-vdi-deployment_chapter_010.html
 #>
 
 #description: Installs Cisco WebEx VDI client with automatic updates disabled. URL to the installer is hard coded in this script.
@@ -19,30 +22,26 @@
 #tags: Evergreen, Cisco, WebEx
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Cisco\WebEx"
-
-# https://www.webex.com/downloads/teams-vdi.html
-# https://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cloudCollaboration/wbxt/vdi/wbx-vdi-deployment-guide/wbx-teams-vdi-deployment_chapter_010.html
-
-#region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 $App = [PSCustomObject]@{
-    Version = "45.4.0.32217"
-    URI     = "https://binaries.webex.com/Webex-Desktop-Windows-x64-Combined-VDI-Gold/20250416220615/WebexBundle.msi"
+    Version = "45.6.0.32584"
+    URI     = "https://binaries.webex.com/WebexTeamsDesktop-Windows-VDI-gold-Production/20250613015941/WebexVDIPlugin.msi"
 }
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\CiscoWebEx$($App.Version).log" -replace " ", ""
+$LogPath = (Get-LogFile).Path
+$LogFile = "$LogPath\CiscoWebEx$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" ENABLEVDI=2 AUTOUPGRADEENABLED=0 ROAMINGENABLED=1 ALLUSERS=1 /quiet /log $LogFile"
-    NoNewWindow  = $true
-    Wait         = $true
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 
 Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\WebEx.lnk")

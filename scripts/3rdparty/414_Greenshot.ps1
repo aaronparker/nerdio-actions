@@ -26,49 +26,50 @@
 #tags: Evergreen, Greenshot
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Greenshot"
-
-#region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 Import-Module -Name "Evergreen" -Force
+Write-LogFile -Message "Query Evergreen for Greenshot"
 $App = Get-EvergreenApp -Name "Greenshot" | Where-Object { $_.Type -eq "exe" -and $_.InstallerType -eq "Default" } | Select-Object -First 1
+Write-LogFile -Message "Downloading Greenshot version $($App.Version) to $Path"
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\Greenshot$($App.Version).log" -replace " ", ""
+$LogPath = (Get-LogFile).Path
+$LogFile = "$LogPath\Greenshot$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /TASKS= /FORCECLOSEAPPLICATIONS /LOGCLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /LOG=$LogFile"
-    NoNewWindow  = $true
     Wait         = $false
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 
 # Close Greenshot
 Start-Sleep -Seconds 20
 Get-Process -ErrorAction "SilentlyContinue" | `
-    Where-Object { $_.Path -like "$Env:ProgramFiles\Greenshot\*" } | `
-    Stop-Process -Force -ErrorAction "SilentlyContinue"
+    Where-Object { $_.Path -like "$Env:ProgramFiles\Greenshot\*" } | ForEach-Object {
+    Write-LogFile -Message "Stopping Greenshot process: $($_.Name)"
+    $_ | Stop-Process -Force -ErrorAction "SilentlyContinue"
+}
 
 # Download the default settings
 if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {}
 else {
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-    $params = @{
-        Uri             = $SecureVars.VariablesList
-        UseBasicParsing = $true
-        ErrorAction     = "Continue"
+    $Variables = Get-NerdioVariablesList
+    if ($null -ne $Variables.$AzureRegionName.GreenshotDefaultsIni) {
+        Write-LogFile -Message "Downloading Greenshot defaults.ini from $($Variables.$AzureRegionName.GreenshotDefaultsIni)"
+        $params = @{
+            Uri             = $Variables.$AzureRegionName.GreenshotDefaultsIni
+            OutFile         = "$Env:ProgramFiles\Greenshot\greenshot-defaults.ini"
+            UseBasicParsing = $true
+            ErrorAction     = "Continue"
+        }
+        Invoke-WebRequest @params
     }
-    $Variables = Invoke-RestMethod @params
-    $params = @{
-        Uri             = $Variables.$AzureRegionName.GreenshotDefaultsIni
-        OutFile         = "$Env:ProgramFiles\Greenshot\greenshot-defaults.ini"
-        UseBasicParsing = $true
-        ErrorAction     = "Continue"
-    }
-    Invoke-WebRequest @params
 }
 
 # Remove unneeded shortcuts
@@ -76,5 +77,5 @@ $Shortcuts = @("$Env:Public\Desktop\Greenshot.lnk",
     "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\License.txt.lnk",
     "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\Readme.txt.lnk",
     "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Greenshot\Uninstall Greenshot.lnk")
+Write-LogFile -Message "Removing Greenshot shortcuts"
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
-#endregion

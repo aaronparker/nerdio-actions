@@ -27,10 +27,10 @@
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\VcRedist"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-# Import the shared functions
-$LogPath = "$Env:ProgramData\ImageBuild"
-Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
-Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 # Run tasks/install apps
 Write-LogFile -Message "Installing Microsoft Visual C++ Redistributables"

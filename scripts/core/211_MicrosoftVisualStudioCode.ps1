@@ -21,10 +21,10 @@
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\VisualStudioCode"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-# Import the shared functions
-$LogPath = "$Env:ProgramData\ImageBuild"
-Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
-Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Script logic
 Import-Module -Name "Evergreen" -Force
@@ -33,17 +33,14 @@ $App = Get-EvergreenApp -Name "MicrosoftVisualStudioCode" | `
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 Write-LogFile -Message "Microsoft Visual Studio Code $($App.Version) downloaded to: $($OutFile.FullName)"
 
+$LogPath = (Get-LogFile).Path
 $LogFile = "$LogPath\MicrosoftVisualStudioCode$($App.Version).log" -replace " ", ""
 Write-LogFile -Message "Starting Microsoft Visual Studio Code installation from: $($OutFile.FullName) with log file: $LogFile"
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/VERYSILENT /NOCLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /NORESTART /SP- /SUPPRESSMSGBOXES /MERGETASKS=!runcode /LOG=$LogFile"
-    NoNewWindow  = $true
-    Wait         = $true
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 
 Start-Sleep -Seconds 5
 Get-Process -ErrorAction "SilentlyContinue" | `

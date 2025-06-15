@@ -16,11 +16,6 @@
     5. Removes items from the Temp directory
 #>
 
-# Import the shared functions
-$LogPath = "$Env:ProgramData\ImageBuild"
-Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
-Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
-
 #region Functions
 function Get-InstalledSoftware {
     [CmdletBinding()]
@@ -53,13 +48,11 @@ function Get-InstalledSoftware {
 $Targets = @("Microsoft .NET.*Windows Server Hosting",
     "Microsoft .NET Runtime*",
     "Microsoft ASP.NET Core*",
-    "Microsoft OLE DB Driver for SQL Server",
-    "Microsoft ODBC Driver 17 for SQL Server",
     "Microsoft Windows Desktop Runtime - 8.0.6")
 $Targets | ForEach-Object {
     $Target = $_
     Get-InstalledSoftware | Where-Object { $_.Name -match $Target } | ForEach-Object {
-        Write-LogFile -Message "Uninstalling: $($_.Publisher) $($_.Name) $($_.Version)"
+        Write-Host "Uninstalling: $($_.Publisher) $($_.Name) $($_.Version)"
         
         if ($_.UninstallString -match "msiexec") {
             # Match the GUID in the uninstall string
@@ -99,6 +92,6 @@ Remove-Item -Path "$Env:SystemDrive\%userprofile%" -Recurse -Force -Confirm:$fal
 Remove-Item -Path "$Env:Public\Desktop\*.lnk" -Force -Confirm:$false -ErrorAction "SilentlyContinue"
 
 # Remove items from the Temp directory (note that scripts run as SYSTEM)
-Write-LogFile -Message "Cleaning up the Temp directory"
+Write-Host  "Cleaning up the Temp directory"
 Remove-Item -Path $Env:Temp -Recurse -Force -Confirm:$false -ErrorAction "SilentlyContinue"
 New-Item -Path $Env:Temp -ItemType "Directory" -ErrorAction "SilentlyContinue" | Out-Null

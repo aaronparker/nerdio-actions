@@ -20,25 +20,25 @@
 #execution mode: Combined
 #tags: Evergreen, Notepad++
 #Requires -Modules Evergreen
-[System.String] $Path = "$Env:SystemDrive\Apps\NotepadPlusPlus"
-
-#region Script logic
+[System.String] $Path = "$Env:SystemDrive\NotepadPlusPlus"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
+
+Write-LogFile -Message "Query Evergreen for Notepad++ x64"
 Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "NotepadPlusPlus" | Where-Object { $_.Architecture -eq "x64" -and $_.Type -eq "exe" } | Select-Object -First 1
+Write-LogFile -Message "Downloading Notepad++ version $($App.Version) to $Path"
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/S"
-    NoNewWindow  = $true
-    Wait         = $true
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 
 # Disable updater
 $UpdaterPath = "$Env:ProgramFiles\Notepad++\updater"
@@ -49,4 +49,3 @@ if (Test-Path -Path $UpdaterPath) {
     }
     Rename-Item -Path $UpdaterPath -NewName "updater.disabled" -Force -ErrorAction "SilentlyContinue"
 }
-#endregion

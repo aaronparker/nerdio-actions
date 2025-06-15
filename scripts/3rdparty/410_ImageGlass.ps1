@@ -21,29 +21,30 @@
 #tags: Evergreen, ImageGlass
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\ImageGlass"
-
-#region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 Import-Module -Name "Evergreen" -Force
+Write-LogFile -Message "Query Evergreen for ImageGlass 64-bit"
 $App = Get-EvergreenApp -Name "ImageGlass" | Where-Object { $_.Architecture -eq "x64" -and $_.Type -eq "msi" } | Select-Object -First 1
+Write-LogFile -Message "Downloading ImageGlass version $($App.Version) to $Path"
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\ImageGlass$($App.Version).log" -replace " ", ""
+$LogPath = (Get-LogFile).Path
+$LogFile = "$LogPath\ImageGlass$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" RUNAPPLICATION=0 ALLUSERS=1 /quiet /log $LogFile"
-    NoNewWindow  = $true
-    Wait         = $true
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 
 Start-Sleep -Seconds 5
+Write-LogFile -Message "Removing ImageGlass shortcuts."
 $Shortcuts = @("$Env:Public\Desktop\ImageGlass.lnk",
     "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\ImageGlass\ImageGlass' LICENSE.lnk",
     "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\ImageGlass\Uninstall ImageGlass*.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
-#endregion

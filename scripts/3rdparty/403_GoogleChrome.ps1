@@ -20,28 +20,29 @@
 #tags: Evergreen, Google, Chrome
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Google\Chrome"
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 # Configure policies for roaming and cache
 # https://cloud.google.com/blog/products/chrome-enterprise/configuring-chrome-browser-in-your-vdi-environment
 
-#region Script logic
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-
 Import-Module -Name "Evergreen" -Force
+Write-LogFile -Message "Query Evergreen for Google Chrome x64 stable MSI"
 $App = Get-EvergreenApp -Name "GoogleChrome" | Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "stable" -and $_.Type -eq "msi" } | Select-Object -First 1
+Write-LogFile -Message "Downloading Google Chrome version $($App.Version) to $Path"
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\GoogleChrome$($App.Version).log" -replace " ", ""
+$LogPath = (Get-LogFile).Path
+$LogFile = "$LogPath\GoogleChrome$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 /quiet /log $LogFile"
-    NoNewWindow  = $true
-    Wait         = $true
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 
 # Post install configuration
 $prefs = @{
@@ -74,13 +75,14 @@ $prefs = @{
         "verbose_logging"                           = $true
     }
 }
+Write-LogFile -Message "Writing master_preferences file to: $Env:ProgramFiles\Google\Chrome\Application\master_preferences"
 $prefs | ConvertTo-Json | Set-Content -Path "$Env:ProgramFiles\Google\Chrome\Application\master_preferences" -Force -Encoding "utf8"
 $Shortcuts = @("$Env:Public\Desktop\Google Chrome.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 
 # Disable update tasks - assuming we're installing on a gold image or updates will be managed
+Write-LogFile -Message "Disabling Google Chrome update tasks and services"
 Get-Service -Name "GoogleUpdaterInternalService*" -ErrorAction "SilentlyContinue" | ForEach-Object { Set-Service -Name $_.Name -StartupType "Disabled" -ErrorAction "SilentlyContinue" }
 Get-Service -Name "GoogleUpdaterService*" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
 Get-Service -Name "GoogleChromeElevationService" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
 Get-ScheduledTask -TaskName "GoogleUpdateTaskMachine*" | Unregister-ScheduledTask -Confirm:$false -ErrorAction "SilentlyContinue"
-#endregion

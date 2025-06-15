@@ -17,14 +17,13 @@
 #tags: Update, Image
 #Requires -Modules PSWindowsUpdate
 
-# Import the shared functions
-$LogPath = "$Env:ProgramData\ImageBuild"
-Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
-Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 # Delete the policy setting created by MDT
-Write-LogFile -Message "Delete: HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
-reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /f *> $null
+Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList "delete HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU /f"
 
 # Install updates
 Write-LogFile -Message "Installing all available Windows updates with PSWindowsUpdate"

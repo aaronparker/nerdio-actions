@@ -33,10 +33,10 @@
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Teams"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-# Import the shared functions
-$LogPath = "$Env:ProgramData\ImageBuild"
-Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
-Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Functions
 function Get-InstalledSoftware {
@@ -96,30 +96,20 @@ reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /d 1 /t "REG_DWORD
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     "Microsoft Windows Server*" {
         Write-LogFile -Message "Installing Microsoft Teams on Windows Server"
-        Write-LogFile -Message "Installing Microsoft Teams MSIX package: $($TeamsMsix.FullName)"
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\dism.exe"
             ArgumentList = "/Online /Add-ProvisionedAppxPackage /PackagePath:`"$($TeamsMsix.FullName)`" /SkipLicense"
-            NoNewWindow  = $true
-            Wait         = $true
-            PassThru     = $true
-            ErrorAction  = "Stop"
         }
-        Start-Process @params
+        Start-ProcessWithLog @params
     }
 
     "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*|Microsoft Windows 10 Enterprise*|Microsoft Windows 10 Pro*" {
         Write-LogFile -Message "Installing Microsoft Teams on Windows 10/11"
-        Write-LogFile -Message "Installing Microsoft Teams MSIX package: $($TeamsMsix.FullName)"
         $params = @{
             FilePath     = $TeamsExe.FullName
             ArgumentList = "-p -o `"$($TeamsMsix.FullName)`""
-            NoNewWindow  = $true
-            Wait         = $true
-            PassThru     = $true
-            ErrorAction  = "Stop"
         }
-        Start-Process @params
+        Start-ProcessWithLog @params
     }
 }
 
@@ -142,12 +132,8 @@ else {
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/uninstall `"$($PreviousInstall.PSChildName)`" /quiet /norestart"
-        NoNewWindow  = $true
-        Wait         = $true
-        PassThru     = $true
-        ErrorAction  = "Stop"
     }
-    Start-Process @params
+    Start-ProcessWithLog @params
 }
 
 # Install the new version of the add-in
@@ -155,10 +141,6 @@ Write-LogFile -Message "Installing Microsoft Teams Meeting Add-in from: $AddInIn
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$AddInInstallerPath`" ALLUSERS=1 TARGETDIR=`"$AddInPath`" /quiet /norestart"
-    NoNewWindow  = $true
-    Wait         = $true
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 #endregion

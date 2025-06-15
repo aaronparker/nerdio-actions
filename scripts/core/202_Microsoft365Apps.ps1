@@ -24,10 +24,10 @@
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Office"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-# Import the shared functions
-$LogPath = "$Env:ProgramData\ImageBuild"
-Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
-Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Script logic
 # Determine whether we should install with shared computer licensing
@@ -133,16 +133,10 @@ $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "S
 Write-LogFile -Message "Downloaded Microsoft 365 Apps setup to: $($OutFile.FullName)"
 
 # Install package
+Write-LogFile -Message "Installing Microsoft 365 Apps"
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/configure $XmlFile"
-    NoNewWindow  = $true
-    Wait         = $true
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Push-Location -Path $Path
-Write-LogFile -Message "Installing Microsoft 365 Apps with: $($OutFile.FullName) $($params.ArgumentList)"
-Start-Process @params
-Pop-Location
+Start-ProcessWithLog @params
 #endregion

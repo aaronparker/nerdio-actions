@@ -15,26 +15,25 @@
 #execution mode: Combined
 #tags: Evergreen, AgileBits, 1Password
 #Requires -Modules Evergreen
-
 [System.String] $Path = "$Env:SystemDrive\Apps\AgileBits\1Password"
-
-#region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 # Download
+Write-LogFile -Message "Query Evergreen for 1Password client"
 $App = Get-EvergreenApp -Name "1Password" | Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
+Write-LogFile -Message "Downloading 1Password version $($App.Version) to $Path"
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
 # Install package
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\1Password.log" -replace " ", ""
+$LogPath = (Get-LogFile).Path
+$LogFile = "$LogPath\1Password.log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" /quiet /log $LogFile"
-    NoNewWindow  = $true
-    PassThru     = $true
-    Wait         = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
-#endregion
+Start-ProcessWithLog @params

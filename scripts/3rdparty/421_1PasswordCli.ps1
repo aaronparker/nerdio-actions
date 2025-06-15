@@ -23,17 +23,22 @@
 #description: Installs the latest 1Password CLI
 #execution mode: Combined
 #tags: Evergreen, 1Password
-
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:ProgramFiles\1Password CLI"
-
-#region Script logic
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 # Download - update when Evergreen supports 1Password CLI
+Write-LogFile -Message "Query Evergreen for 1Password CLI"
 $App = Get-EvergreenApp -Name "1PasswordCLI" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
+Write-LogFile -Message "Downloading 1Password CLI version $($App.Version) to $Path"
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
+
+# Install package
 Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 Remove-Item -Path $OutFile.FullName -Force -ErrorAction "SilentlyContinue"
 

@@ -10,10 +10,10 @@
 #execution mode: Combined
 #tags: Roles, Features, Image
 
-# Import the shared functions
-$LogPath = "$Env:ProgramData\ImageBuild"
-Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
-Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 # Add / Remove roles and features (requires reboot at end of deployment)
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
@@ -61,8 +61,7 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
         }
 
         # Remove Azure Arc Setup from running at sign-in
-        Write-LogFile -Message "Delete: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\AzureArcSetup"
-        reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "AzureArcSetup" /f | *> $null
+        Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList "delete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v AzureArcSetup /f"
 
         # Remove unnecessary shortcuts
         Write-LogFile -Message "Removing unnecessary shortcuts."
@@ -88,11 +87,8 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
                 $params = @{
                     FilePath     = $Path
                     ArgumentList = "/uninstall /noPromptBeforeRestart"
-                    Wait         = $true
-                    NoNewWindow  = $true
-                    ErrorAction  = "SilentlyContinue"
                 }
-                Start-Process @params
+                Start-ProcessWithLog @params
             }
         }
 

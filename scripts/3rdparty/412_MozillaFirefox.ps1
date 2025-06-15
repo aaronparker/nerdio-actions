@@ -20,6 +20,12 @@
 #tags: Evergreen, Mozilla, Firefox
 #Requires -Modules Evergreen
 [System.String] $Path = "$Env:SystemDrive\Apps\Mozilla\Firefox"
+New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
 if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
@@ -27,29 +33,22 @@ if ([System.String]::IsNullOrEmpty($SecureVars.VariablesList)) {
     [System.String] $Channel = "Current"
 }
 else {
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-    $params = @{
-        Uri             = $SecureVars.VariablesList
-        UseBasicParsing = $true
-        ErrorAction     = "Stop"
-    }
-    $Variables = Invoke-RestMethod @params
+    $Variables = Get-NerdioVariablesList
     [System.String] $Language = $Variables.$AzureRegionName.FirefoxLanguage
     [System.String] $Channel = $Variables.$AzureRegionName.FirefoxChannel
 }
 #endregion
 
-#region Script logic
-New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-
 Import-Module -Name "Evergreen" -Force
+Write-LogFile -Message "Query Evergreen for Mozilla Firefox $Channel $Language x64"
 $App = Get-EvergreenApp -Name "MozillaFirefox" | `
     Where-Object { $_.Channel -eq $Channel -and $_.Architecture -eq "x64" -and $_.Language -eq $Language -and $_.Type -eq "msi" } | `
     Select-Object -First 1
+Write-LogFile -Message "Downloading Mozilla Firefox version $($App.Version) to $Path"
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\MozillaFirefox$($App.Version).log" -replace " ", ""
+$LogPath = (Get-LogFile).Path
+$LogFile = "$LogPath\MozillaFirefox$($App.Version).log" -replace " ", ""
 $Options = "DESKTOP_SHORTCUT=false
         TASKBAR_SHORTCUT=false
         INSTALL_MAINTENANCE_SERVICE=false
@@ -59,14 +58,9 @@ $Options = "DESKTOP_SHORTCUT=false
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" $($Options -replace "\s+", " ") /quiet /log $LogFile"
-    NoNewWindow  = $true
-    Wait         = $true
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 
 Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\Mozilla Firefox.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
-#endregion

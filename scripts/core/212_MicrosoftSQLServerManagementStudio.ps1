@@ -25,10 +25,10 @@
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\Ssms"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-# Import the shared functions
-$LogPath = "$Env:ProgramData\ImageBuild"
-Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
-Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Script logic
 Import-Module -Name "Evergreen" -Force
@@ -37,15 +37,12 @@ $App = Get-EvergreenApp -Name "MicrosoftSsms" | `
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 Write-LogFile -Message "Microsoft SQL Server Management Studio $($App.Version) downloaded to: $($OutFile.FullName)"
 
+$LogPath = (Get-LogFile).Path
 $LogFile = "$LogPath\MicrosoftSQLServerManagementStudio$($App.Version).log" -replace " ", ""
 Write-LogFile -Message "Starting Microsoft SQL Server Management Studio installation from: $($OutFile.FullName)"
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/install /quiet /norestart DoNotInstallAzureDataStudio=1 /log $LogFile"
-    NoNewWindow  = $true
-    Wait         = $true
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 #endregion

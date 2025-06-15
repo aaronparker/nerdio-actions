@@ -26,10 +26,10 @@
 [System.String] $Path = "$Env:SystemDrive\Apps\Microsoft\FSLogix"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
-# Import the shared functions
-$LogPath = "$Env:ProgramData\ImageBuild"
-Import-Module -Name "$LogPath\Functions.psm1" -Force -ErrorAction "Stop"
-Write-LogFile -Message "Functions imported from: $LogPath\Functions.psm1"
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Script logic
 # Download and unpack
@@ -44,20 +44,17 @@ Write-LogFile -Message "Expand file to: $Path"
 Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
 
 # Install
+$LogPath = (Get-LogFile).Path
 foreach ($File in "FSLogixAppsSetup.exe") {
     $Installers = Get-ChildItem -Path $Path -Recurse -Include $File | Where-Object { $_.Directory -match "x64" }
     foreach ($Installer in $Installers) {
         $LogFile = "$LogPath\$($Installer.Name)$($App.Version).log" -replace " ", ""
-        Write-LogFile -Message "Installing Microsoft FSLogix Apps agent from: $($Installer.FullName)"
+        Write-LogFile -Message "Installing Microsoft FSLogix Apps agent"
         $params = @{
             FilePath     = $Installer.FullName
             ArgumentList = "/install /quiet /norestart /log $LogFile"
-            NoNewWindow  = $true
-            Wait         = $true
-            PassThru     = $true
-            ErrorAction  = "Stop"
         }
-        Start-Process @params
+        Start-ProcessWithLog @params
     }
 }
 

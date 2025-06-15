@@ -20,28 +20,28 @@
 #execution mode: Combined
 #tags: Evergreen, draw.io
 #Requires -Modules Evergreen
-[System.String] $Path = "$Env:SystemDrive\Apps\draw.io"
-
-#region Script logic
+[System.String] $Path = "$Env:SystemDrive\Apps\drawio"
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
+
+# Import shared functions written to disk by 000_PrepImage.ps1
+$FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
+Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
+Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 Import-Module -Name "Evergreen" -Force
-$App = Get-EvergreenApp -Name "diagrams.net" | Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
+Write-LogFile -Message "Query Evergreen for JGraphDrawIO MSI"
+$App = Get-EvergreenApp -Name "JGraphDrawIO" | Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
+Write-LogFile -Message "Downloading draw.io version $($App.Version) to $Path"
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\diagrams.net$($App.Version).log" -replace " ", ""
+$LogPath = (Get-LogFile).Path
+$LogFile = "$LogPath\drawio$($App.Version).log" -replace " ", ""
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($OutFile.FullName)`" ALLUSERS=1 /quiet /log $LogFile"
-    NoNewWindow  = $true
-    Wait         = $true
-    PassThru     = $true
-    ErrorAction  = "Stop"
 }
-Start-Process @params
+Start-ProcessWithLog @params
 
 Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\draw.io.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
-#endregion
