@@ -15,15 +15,18 @@ $LogFile = Get-LogFile
 $App = Get-EvergreenApp -Name "MicrosoftVdot" | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 Write-LogFile -Message "Microsoft Virtual Desktop Optimization Tool $($App.Version) downloaded to: $($OutFile.FullName)"
+Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
+$Installer = Get-ChildItem -Path $Path -Recurse -Include "Windows_VDOT.ps1"
 Write-LogFile -Message "Starting Microsoft Virtual Desktop Optimization Tool from: $($Installer.FullName)"
 
 # Compress the log files - the Virtual Desktop Optimization Tool will delete .log files
 Write-LogFile -Message "Compressing log files to $($LogFile.Path)\ImageBuildLogs.zip"
-Compress-Archive -Path $LogFile.Path -DestinationPath "$($LogFile.Path)\ImageBuildLogs.zip" -Force -ErrorAction "SilentlyContinue"
+Compress-Archive -Path "$LogFile.Path\*.*" -DestinationPath "$($LogFile.Path)\ImageBuildLogs.zip" -Force -ErrorAction "SilentlyContinue"
 
 # Run Microsoft Virtual Desktop Optimization Tool
-Expand-Archive -Path $OutFile.FullName -DestinationPath $Path -Force
-$Installer = Get-ChildItem -Path $Path -Recurse -Include "Windows_VDOT.ps1"
+# Other options for Optimizations:
+# Optimizations - "All", "WindowsMediaPlayer", "AppxPackages", "ScheduledTasks", "DefaultUserSettings", "LocalPolicy", "Autologgers", "Services", "NetworkOptimizations", "DiskCleanup"
+# AdvancedOptimizations - "All", "Edge", "RemoveLegacyIE", "RemoveOneDrive"
 Push-Location -Path $Installer.Directory
 $params = @{
     Optimizations         = "WindowsMediaPlayer", "ScheduledTasks", "LocalPolicy", "Autologgers", "Services", "NetworkOptimizations", "DiskCleanup"
@@ -36,10 +39,6 @@ $params = @{
 Pop-Location
 
 # Extract the logs back to the log path and remove the zip file
-Write-LogFile -Message "Extracting logs from $($LogFile.Path)\ImageBuildLogs.zip to $($LogFile.Path)"
 Expand-Archive -Path "$($LogFile.Path)\ImageBuildLogs.zip" -DestinationPath $LogFile.Path -Force -ErrorAction "SilentlyContinue"
 Remove-Item -Path "$($LogFile.Path)\ImageBuildLogs.zip" -Force -ErrorAction "SilentlyContinue"
-
-# Other options for Optimizations:
-# Optimizations - "All", "WindowsMediaPlayer", "AppxPackages", "ScheduledTasks", "DefaultUserSettings", "LocalPolicy", "Autologgers", "Services", "NetworkOptimizations", "DiskCleanup"
-# AdvancedOptimizations - "All", "Edge", "RemoveLegacyIE", "RemoveOneDrive"
+Write-LogFile -Message "Extracted logs from $($LogFile.Path)\ImageBuildLogs.zip to $($LogFile.Path)"
