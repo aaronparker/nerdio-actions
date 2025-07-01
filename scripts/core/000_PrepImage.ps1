@@ -129,12 +129,12 @@ function Start-ProcessWithLog {
                 FilePath     = `$FilePath
                 ArgumentList = `$ArgumentList
                 NoNewWindow  = `$true
-                PassThru     = `$false
+                PassThru     = `$true
                 Wait         = `$Wait
                 ErrorAction  = "Stop"
             }
             Write-LogFile -Message "Execute: `$FilePath `$ArgumentList"
-            `$Result = Start-Process @params *> `$null
+            `$Result = Start-Process @params
             Write-LogFile -Message "Exit code: `$(`$Result.ExitCode)"
         }
         catch {
