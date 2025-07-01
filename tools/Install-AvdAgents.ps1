@@ -41,11 +41,11 @@
 #>
 [CmdletBinding(SupportsShouldProcess = $false)]
 param (
-    [Parameter(Position = 0, Mandatory = $false)]
-    [System.String] $TempPath = [System.IO.Path]::GetTempPath(),
+    [Parameter(Mandatory = $false)]
+    [System.Management.Automation.SwitchParameter] $InstallFSLogixAgent,
 
     [Parameter(Mandatory = $false)]
-    [System.Management.Automation.SwitchParameter] $InstallFSLogixAgent
+    [System.String] $TempPath = $(Join-Path -Path $([System.IO.Path]::GetTempPath()) -ChildPath $(New-Guid))
 )
 
 begin {
@@ -103,6 +103,7 @@ begin {
         )
 
         try {
+            Write-LogFile -Message "Resolving URL: $Uri"
             $httpWebRequest = [System.Net.WebRequest]::Create($Uri)
             $httpWebRequest.MaximumAutomaticRedirections = $MaximumRedirection
             $httpWebRequest.AllowAutoRedirect = $true
@@ -117,8 +118,10 @@ begin {
                 StatusCode    = $webResponse.StatusCode
             }
             Write-Output -InputObject $PSObject
+            Write-LogFile -Message "Resolved URL: $($webResponse.ResponseUri.AbsoluteUri)"
         }
         catch {
+            Write-LogFile -Message "Failed with: $($_.Exception.Message)" -LogLevel 3
             throw $_
         }
         finally {
@@ -144,6 +147,8 @@ begin {
         else {
             try {
                 $ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
+                Write-LogFile -Message "Downloading file from: $Uri"
+                Write-LogFile -Message "Saving file to: $OutFile"
                 $params = @{
                     Uri             = $Uri
                     OutFile         = $OutFile
@@ -156,7 +161,7 @@ begin {
                     return $OutFile
                 }
                 else {
-                    Write-LogFile -Message "Failed to download file to: $OutFile" -LogLevel 3
+                    Write-LogFile -Message "Failed with: $($_.Exception.Message)" -LogLevel 3
                     return $null
                 }
             }
@@ -179,15 +184,17 @@ begin {
                 FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
                 ArgumentList = "/package `"$Path`" ALLUSERS=1 /quiet /norestart"
                 NoNewWindow  = $true
-                PassThru     = $false
+                PassThru     = $true
                 Wait         = $true
                 ErrorAction  = "Continue"
                 Verbose      = $false
             }
-            Start-Process @params
+            $result = Start-Process @params
+            Write-LogFile -Message "Install result: $($result.ExitCode)" -LogLevel 1
+            return $result.ExitCode
         }
         catch {
-            Write-LogFile -Message "Failed to install MSI from: $Path" -LogLevel 3
+            Write-LogFile -Message "Failed with: $($_.Exception.Message)" -LogLevel 3
             throw $_
         }
     }
@@ -205,15 +212,17 @@ begin {
                 FilePath     = $Path
                 ArgumentList = "/install /quiet /norestart"
                 NoNewWindow  = $true
-                PassThru     = $false
+                PassThru     = $true
                 Wait         = $true
                 ErrorAction  = "Continue"
                 Verbose      = $false
             }
-            Start-Process @params
+            $result = Start-Process @params
+            Write-LogFile -Message "Install result: $($result.ExitCode)" -LogLevel 1
+            return $result.ExitCode
         }
         catch {
-            Write-LogFile -Message "Failed to install EXE from: $Path" -LogLevel 3
+            Write-LogFile -Message "Failed with: $($_.Exception.Message)" -LogLevel 3
             throw $_
         }
     }
@@ -221,93 +230,88 @@ begin {
 
     # Enable TLS 1.2
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+
+    # Create temporary directory if it does not exist
+    if (!(Test-Path -Path $TempPath -PathType "Container")) {
+        Write-LogFile -Message "Creating temporary directory: $TempPath"
+        New-Item -Path $TempPath -ItemType "Directory" -ErrorAction "SilentlyContinue" | Out-Null
+    }
+
+    $ReturnCodes = @()
 }
 
 process {
     #region Install the latest Microsoft Visual C++ Redistributable packages
-    Write-LogFile -Message "Installing Microsoft Visual C++ Redistributable."
+    Write-LogFile -Message ">> Installing Microsoft Visual C++ Redistributables."
     foreach ($Url in "https://aka.ms/vs/17/release/VC_redist.x64.exe", "https://aka.ms/vs/17/release/VC_redist.x86.exe") {
-        Write-LogFile -Message "Resolving URL: $Url"
         $VcRedist = Resolve-Url -Uri $Url
-        Write-LogFile -Message "URL resolved to: $($VcRedist.ResponseUri.AbsoluteUri)"
         $params = @{
             Uri     = $VcRedist.ResponseUri.AbsoluteUri
             OutFile = $(Join-Path -Path $TempPath -ChildPath $(Split-Path -Path $VcRedist.ResponseUri.AbsoluteUri -Leaf))
         }
-        Write-LogFile -Message "Downloading Visual C++ Redistributable from: $($params.Uri)"
         $Installer = Invoke-DownloadFile @params
         if ($Installer) {
-            Install-Exe -Path $Installer
+            $ReturnCodes += Install-Exe -Path $Installer
         }
-        Write-LogFile -Message "Remove file: $Installer"
-        Remove-Item -Path $Installer -Force -ErrorAction "SilentlyContinue"
     }
     #endregion
 
 
     # Set required IsWVDEnvironment registry value
-    Write-LogFile -Message "Setting registry value for IsWVDEnvironment."
+    Write-LogFile -Message ">> Setting registry value for IsWVDEnvironment."
     reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /d 1 /t "REG_DWORD" /f *> $null
 
     #region Install the Microsoft Azure Virtual Desktop WebRTC installer
-    Write-LogFile -Message "Installing Microsoft Azure Virtual Desktop WebRTC installer."
+    Write-LogFile -Message ">> Installing Microsoft Azure Virtual Desktop WebRTC."
     $WebRtcUrl = Resolve-Url -Uri "https://aka.ms/msrdcwebrtcsvc/msi"
-    Write-LogFile -Message "WebRTC URL resolved to: $($WebRtcUrl.ResponseUri.AbsoluteUri)"
     $params = @{
         Uri     = $WebRtcUrl.ResponseUri.AbsoluteUri
         OutFile = $(Join-Path -Path $TempPath -ChildPath $(Split-Path -Path $WebRtcUrl.ResponseUri.AbsoluteUri -Leaf))
     }
-    Write-LogFile -Message "Downloading WebRTC installer from: $($params.Uri)"
     $Installer = Invoke-DownloadFile @params
     if ($Installer) {
-        Write-LogFile -Message "Installing WebRTC installer from: $Installer"
-        Install-Msi -Path $Installer
+        $ReturnCodes += Install-Msi -Path $Installer
     }
-    Write-LogFile -Message "Remove file: $Installer"
-    Remove-Item -Path $Installer -Force -ErrorAction "SilentlyContinue"
     #endregion
 
 
     #region Install the Microsoft Azure Virtual Desktop Multimedia Redirection Extensions
-    Write-LogFile -Message "Installing Microsoft Azure Virtual Desktop Multimedia Redirection Extensions."
+    Write-LogFile -Message ">> Installing Microsoft Azure Virtual Desktop Multimedia Redirection Extensions."
     $WebMmrUrl = Resolve-Url -Uri "https://aka.ms/avdmmr/msi"
-    Write-LogFile -Message "Multimedia Redirection URL resolved to: $($WebMmrUrl.ResponseUri.AbsoluteUri)"
     $params = @{
         Uri     = $WebMmrUrl.ResponseUri.AbsoluteUri
         OutFile = $(Join-Path -Path $TempPath -ChildPath $(Split-Path -Path $WebMmrUrl.ResponseUri.AbsoluteUri -Leaf))
     }
-    Write-LogFile -Message "Downloading Multimedia Redirection Extensions installer from: $($params.Uri)"
     $Installer = Invoke-DownloadFile @params
     if ($Installer) {
-        Write-LogFile -Message "Installing Multimedia Redirection Extensions from: $Installer"
-        Install-Msi -Path $Installer
+        $ReturnCodes += Install-Msi -Path $Installer
     }
-    Write-LogFile -Message "Remove file: $Installer"
-    Remove-Item -Path $Installer -Force -ErrorAction "SilentlyContinue"
     #endregion
 
 
     #region Install the FSLogix agent
     if ($InstallFSLogixAgent) {
-        Write-LogFile -Message "Installing Microsoft FSLogix Agent."
-        $FslogixUrl = Resolve-Url -Uri "https://aka.ms/fslogix/download"
-        Write-LogFile -Message "FSLogix URL resolved to: $($FslogixUrl.ResponseUri.AbsoluteUri)"
+        Write-LogFile -Message ">> Installing Microsoft FSLogix Agent."
+        $FslogixUrl = Resolve-Url -Uri "https://aka.ms/fslogix/download" -MaximumRedirection 2
         $params = @{
             Uri     = $FslogixUrl.ResponseUri.AbsoluteUri
             OutFile = $(Join-Path -Path $TempPath -ChildPath $(Split-Path -Path $FslogixUrl.ResponseUri.AbsoluteUri -Leaf))
         }
-        Write-LogFile -Message "Downloading FSLogix installer from: $($params.Uri)"
         $Installer = Invoke-DownloadFile @params
+        Expand-Archive -Path $Installer -DestinationPath $TempPath -Force -ErrorAction "SilentlyContinue"
+        $Installer = Get-ChildItem -Path $TempPath -Filter "FSLogixAppsSetup.exe" -Recurse -File | Select-Object -First 1
         if ($Installer) {
-            Write-LogFile -Message "Installing FSLogix installer from: $Installer"
-            Install-Exe -Path $Installer
+            $ReturnCodes += Install-Exe -Path $Installer.FullName
         }
-        Write-LogFile -Message "Remove file: $Installer"
-        Remove-Item -Path $Installer -Force -ErrorAction "SilentlyContinue"
     }
     #endregion
 }
 
 end {
+    Write-LogFile -Message "Cleaning up files in: $TempPath"
+    Remove-Item -Path $TempPath -Recurse -Force -ErrorAction "SilentlyContinue"
     Write-LogFile -Message "Installation of AVD agents and dependencies completed."
+    if (3010 -in $ReturnCodes) {
+        Write-LogFile -Message "A reboot is required to complete the installation." -LogLevel 2
+    }
 }
