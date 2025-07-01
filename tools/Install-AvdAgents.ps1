@@ -42,7 +42,10 @@
 [CmdletBinding(SupportsShouldProcess = $false)]
 param (
     [Parameter(Position = 0, Mandatory = $false)]
-    [System.String] $TempPath = [System.IO.Path]::GetTempPath()
+    [System.String] $TempPath = [System.IO.Path]::GetTempPath(),
+
+    [Parameter(Mandatory = $false)]
+    [System.Management.Automation.SwitchParameter] $InstallFSLogixAgent
 )
 
 begin {
@@ -221,7 +224,7 @@ begin {
 }
 
 process {
-    # Install the latest Microsoft Visual C++ Redistributable packages
+    #region Install the latest Microsoft Visual C++ Redistributable packages
     Write-LogFile -Message "Installing Microsoft Visual C++ Redistributable."
     foreach ($Url in "https://aka.ms/vs/17/release/VC_redist.x64.exe", "https://aka.ms/vs/17/release/VC_redist.x86.exe") {
         Write-LogFile -Message "Resolving URL: $Url"
@@ -239,12 +242,14 @@ process {
         Write-LogFile -Message "Remove file: $Installer"
         Remove-Item -Path $Installer -Force -ErrorAction "SilentlyContinue"
     }
+    #endregion
+
 
     # Set required IsWVDEnvironment registry value
     Write-LogFile -Message "Setting registry value for IsWVDEnvironment."
     reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /d 1 /t "REG_DWORD" /f *> $null
 
-    # Install the Microsoft Azure Virtual Desktop WebRTC installer
+    #region Install the Microsoft Azure Virtual Desktop WebRTC installer
     Write-LogFile -Message "Installing Microsoft Azure Virtual Desktop WebRTC installer."
     $WebRtcUrl = Resolve-Url -Uri "https://aka.ms/msrdcwebrtcsvc/msi"
     Write-LogFile -Message "WebRTC URL resolved to: $($WebRtcUrl.ResponseUri.AbsoluteUri)"
@@ -260,8 +265,10 @@ process {
     }
     Write-LogFile -Message "Remove file: $Installer"
     Remove-Item -Path $Installer -Force -ErrorAction "SilentlyContinue"
+    #endregion
 
-    # Install the Microsoft Azure Virtual Desktop Multimedia Redirection Extensions
+
+    #region Install the Microsoft Azure Virtual Desktop Multimedia Redirection Extensions
     Write-LogFile -Message "Installing Microsoft Azure Virtual Desktop Multimedia Redirection Extensions."
     $WebMmrUrl = Resolve-Url -Uri "https://aka.ms/avdmmr/msi"
     Write-LogFile -Message "Multimedia Redirection URL resolved to: $($WebMmrUrl.ResponseUri.AbsoluteUri)"
@@ -277,6 +284,28 @@ process {
     }
     Write-LogFile -Message "Remove file: $Installer"
     Remove-Item -Path $Installer -Force -ErrorAction "SilentlyContinue"
+    #endregion
+
+
+    #region Install the FSLogix agent
+    if ($InstallFSLogixAgent) {
+        Write-LogFile -Message "Installing Microsoft FSLogix Agent."
+        $FslogixUrl = Resolve-Url -Uri "https://aka.ms/fslogix/download"
+        Write-LogFile -Message "FSLogix URL resolved to: $($FslogixUrl.ResponseUri.AbsoluteUri)"
+        $params = @{
+            Uri     = $FslogixUrl.ResponseUri.AbsoluteUri
+            OutFile = $(Join-Path -Path $TempPath -ChildPath $(Split-Path -Path $FslogixUrl.ResponseUri.AbsoluteUri -Leaf))
+        }
+        Write-LogFile -Message "Downloading FSLogix installer from: $($params.Uri)"
+        $Installer = Invoke-DownloadFile @params
+        if ($Installer) {
+            Write-LogFile -Message "Installing FSLogix installer from: $Installer"
+            Install-Exe -Path $Installer
+        }
+        Write-LogFile -Message "Remove file: $Installer"
+        Remove-Item -Path $Installer -Force -ErrorAction "SilentlyContinue"
+    }
+    #endregion
 }
 
 end {
