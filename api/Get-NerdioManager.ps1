@@ -9,16 +9,16 @@ $params = @{
 }
 Connect-Nme @params
 
-$params = @{
-    SubscriptionId = $creds.SubscriptionId
-    ResourceGroup  = "rg-AvdManagement-australiaeast"
-    HostPoolName   = "vdpool-Pooled-australiaeast"
-}
-Get-NmeHostPool @params
+# $params = @{
+#     SubscriptionId = $creds.SubscriptionId
+#     ResourceGroup  = "rg-AvdManagement-australiaeast"
+#     HostPoolName   = "vdpool-Pooled-australiaeast"
+# }
+# Get-NmeHostPool @params
 
-$params = @{
-    SubscriptionId = $creds.SubscriptionId
-    ResourceGroup  = "rg-AvdManagement-australiaeast"
-    HostPoolName   = "vdpool-Pooled-australiaeast"
-}
-Get-NmeHostPoolAutoScaleConfig @params
+# $params = @{
+#     SubscriptionId = $creds.SubscriptionId
+#     ResourceGroup  = "rg-AvdManagement-australiaeast"
+#     HostPoolName   = "vdpool-Pooled-australiaeast"
+# }
+# Get-NmeHostPoolAutoScaleConfig @params

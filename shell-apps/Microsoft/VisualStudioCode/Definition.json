@@ -1,0 +1,26 @@
+{
+    "name": "Visual Studio Code",
+    "description": "Visual Studio Code is a code editor redefined and optimized for building and debugging modern web and cloud applications.",
+    "isPublic": true,
+    "publisher": "Microsoft",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Evergreen",
+        "app": "MicrosoftVisualStudioCode",
+        "filter": "$_.Architecture -eq \"x64\" -and $_.Channel -eq \"Stable\" -and $_.Platform -eq \"win32-x64\""
+    }
+}

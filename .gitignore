@@ -69,4 +69,5 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,powershell,windows
 NerdioManagerVariables.json
-api/creds.json
+creds.json
+environment.json
