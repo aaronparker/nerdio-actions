@@ -4,7 +4,8 @@ $params = @{
     ArgumentList = "/VERYSILENT /NOCLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /NORESTART /SP- /SUPPRESSMSGBOXES /MERGETASKS=!runcode"
     Wait         = $true
     NoNewWindow  = $true
+    PassThru     = $true
     ErrorAction  = "Stop"
 }
-Start-Process @params
-$Context.Log("Install complete")
+$result = Start-Process @params
+$Context.Log("Install complete. Return code: $($result.ExitCode)")

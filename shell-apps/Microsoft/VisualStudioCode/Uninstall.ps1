@@ -1,4 +1,3 @@
-
 function Get-InstalledSoftware {
     [CmdletBinding()]
     param ()
