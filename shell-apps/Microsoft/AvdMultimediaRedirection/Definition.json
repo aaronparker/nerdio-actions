@@ -1,0 +1,26 @@
+{
+    "name": "Multimedia Redirection Extensions",
+    "description": "This extension enables multimedia redirection for Azure Virtual Desktop, allowing for enhanced media playback performance.",
+    "isPublic": true,
+    "publisher": "Microsoft",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Evergreen",
+        "app": "MicrosoftWvdMultimediaRedirection",
+        "filter": "$_.Architecture -eq \"x64\""
+    }
+}

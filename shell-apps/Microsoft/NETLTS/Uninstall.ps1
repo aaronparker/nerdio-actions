@@ -23,7 +23,7 @@ function Get-InstalledSoftware {
     return $Apps
 }
 
-Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft SQL Server Management Studio*" } | ForEach-Object {
+Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Windows Desktop Runtime - $($Context.TargetVersion)*" } | ForEach-Object {
     $Context.Log("Uninstalling Windows Installer: $($_.PSChildName)")
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -34,12 +34,4 @@ Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft SQL Server Mana
     }
     Start-Process @params
     $Context.Log("Uninstall complete")
-}
-
-$Shortcuts = @("$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft SQL Server Tools 20")
-foreach ($Shortcut in $Shortcuts) {
-    if (Test-Path -Path $Shortcut) {
-        $Context.Log("Remove path: $($_.PSChildName)")
-        Remove-Item -Path $Shortcut -Recurse -Force
-    }
 }

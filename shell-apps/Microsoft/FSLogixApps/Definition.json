@@ -1,0 +1,26 @@
+{
+    "name": "FSLogix Apps",
+    "description": "FSLogix Apps is a set of solutions that enhance the user experience in virtual desktop environments by providing advanced profile management, application masking, and Office 365 containerization.",
+    "isPublic": true,
+    "publisher": "Microsoft",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Evergreen",
+        "app": "MicrosoftFSLogixApps",
+        "filter": "$_.Channel -eq \"Production\""
+    }
+}
