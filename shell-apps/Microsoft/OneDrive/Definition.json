@@ -1,0 +1,26 @@
+{
+    "name": "OneDrive",
+    "description": "OneDrive is a file hosting service that allows users to store files and data in the cloud.",
+    "isPublic": true,
+    "publisher": "Microsoft",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Evergreen",
+        "app": "MicrosoftOneDrive",
+        "filter": "$_.Ring -eq \"Enterprise\" -and $_.Architecture -eq \"x64\""
+    }
+}
