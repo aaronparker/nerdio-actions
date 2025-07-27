@@ -1,0 +1,26 @@
+{
+    "name": "Edge",
+    "description": "Microsoft Edge is a cross-platform web browser developed by Microsoft, based on the Chromium open-source project.",
+    "isPublic": true,
+    "publisher": "Microsoft",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Evergreen",
+        "app": "MicrosoftEdge",
+        "filter": "$_.Channel -eq \"Stable\" -and $_.Architecture -eq \"x64\""
+    }
+}
