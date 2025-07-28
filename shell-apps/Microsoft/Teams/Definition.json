@@ -1,0 +1,26 @@
+{
+    "name": "Teams",
+    "description": "Microsoft Teams is a collaboration app that helps your team stay organized and has conversations all in one place.",
+    "isPublic": true,
+    "publisher": "Microsoft",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Evergreen",
+        "app": "MicrosoftTeams",
+        "filter": "$_.Architecture -eq \"x64\" -and $_.Release -eq \"Enterprise\""
+    }
+}
