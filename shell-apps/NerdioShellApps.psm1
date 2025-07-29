@@ -88,6 +88,9 @@ function Get-TempDirectory {
         'Darwin' {
             return $env:TMPDIR ?? '/tmp'
         }
+        'Ubuntu' {
+            return $env:TMPDIR ?? '/tmp'
+        }
         'Linux' {
             return $env:TMPDIR ?? '/tmp'
         }

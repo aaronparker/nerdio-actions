@@ -1,0 +1,155 @@
+# Automate the import of Nerdio Manager Shell Apps with Evergreen
+trigger:
+    branches:
+        include: [ main ]
+    paths:
+        include: [ "shell-apps/**" ]
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: 'Credentials'
+- name: service
+  value: 'sc-rg-Avd1Images-aue' #'sc-rg-Avd-Images-wus3'
+
+jobs:
+- job: Import
+  displayName: 'Import Nerdio Shell Apps'
+
+  steps:
+  - checkout: self
+    displayName: 'Checkout repository'
+
+  - task: Cache@2
+    displayName: 'Restore PowerShell Modules Cache'
+    inputs:
+      key: 'pwsh-modules | "$(Agent.OS)" | "$(Build.SourcesDirectory)/pipeline.yml"'
+      path: ~/.local/share/powershell/Modules
+      restoreKeys: |
+        pwsh-modules | "$(Agent.OS)"
+    continueOnError: true
+
+  - pwsh: |
+      #Install-Module -Name "Az.Accounts", "Az.Storage", "Evergreen" -AllowClobber -Force -Scope CurrentUser
+      Install-Module -Name "Evergreen" -AllowClobber -Force -Scope CurrentUser
+    name: modules
+    displayName: 'Install Modules'
+    workingDirectory: $(build.sourcesDirectory)
+    errorActionPreference: stop
+
+  - task: Cache@2
+    displayName: 'Save PowerShell Modules Cache'
+    inputs:
+      key: 'pwsh-modules | "$(Agent.OS)" | "$(Build.SourcesDirectory)/pipeline.yml"'
+      path: ~/.local/share/powershell/Modules
+      restoreKeys: |
+        pwsh-modules | "$(Agent.OS)"
+    continueOnError: true
+
+  - task: AzurePowerShell@5
+    name: auth
+    displayName: 'Azure Login'
+    inputs:
+      azureSubscription: '$(service)'
+      ScriptType: 'InlineScript'
+      Inline: |
+        Write-Host "Authenticated to Azure using service connection: $(service)"
+        Set-AzContext -SubscriptionId $(SubscriptionId) -TenantId $(TenantId)
+      azurePowerShellVersion: 'LatestVersion'
+      errorActionPreference: stop
+      pwsh: true
+      workingDirectory: $(build.sourcesDirectory)
+
+  - task: AzurePowerShell@5
+    name: import
+    displayName: 'Import Shell Apps'
+    inputs:
+      azureSubscription: '$(service)'
+      ScriptType: 'InlineScript'
+      Inline: |
+        Import-Module -Name "Az.Accounts", "Az.Storage", "Evergreen" -Force
+        Import-Module -Name "./NerdioShellApps.psm1" -Force
+        Set-AzContext -SubscriptionId $(SubscriptionId) -TenantId $(TenantId)
+        $params = @{
+            ClientId           = "$(ClientId)"
+            ClientSecret       = "$(ClientSecret)"
+            TenantId           = "$(TenantId)"
+            ApiScope           = "$(ApiScope)"
+            SubscriptionId     = "$(SubscriptionId)"
+            OAuthToken         = "$(OAuthToken)"
+            ResourceGroupName  = "$(resourceGroupName)"
+            StorageAccountName = "$(storageAccountName)"
+            ContainerName      = "$(containerName)"
+            NmeHost            = "$(nmeHost)"
+        }
+        Set-NmeCredentials @params
+        Connect-Nme
+        $Path = Join-Path -Path $(build.sourcesDirectory) -ChildPath "apps"
+        $Paths = Get-ChildItem -Path $Path -Include "Definition.json" -Recurse | ForEach-Object { $_ | Select-Object -ExpandProperty "DirectoryName" }
+        foreach ($Path in $Paths) {
+            $Def = Get-ShellAppDefinition -Path $Path
+            $App = Get-EvergreenAppDetail -Definition $Def
+            $ShellApp = Get-ShellApp | ForEach-Object {
+                $_.items | Where-Object { $_.name -eq $Def.name }
+            }
+            if ($null -eq $ShellApp) {
+                New-ShellApp -Definition $Def -AppDetail $App
+            }
+            else {
+                $ExistingVersions = Get-ShellAppVersion -Id $ShellApp.Id | ForEach-Object {
+                    $_.items | Where-Object { $_.name -eq $App.Version }
+                }
+                if ($null -eq $ExistingVersions -or [System.Version]$ExistingVersions.name -lt [System.Version]$App.Version) {
+                    New-ShellAppVersion -Id $ShellApp.Id -AppDetail $App
+                }
+                else {
+                    Write-Host -ForegroundColor "Yellow" "Shell app $($Def.name) already exists with version $($App.Version). No action taken."
+                }
+            }
+        }
+      azurePowerShellVersion: 'LatestVersion'
+      errorActionPreference: stop
+      pwsh: true
+      workingDirectory: $(build.sourcesDirectory)
+
+  - task: AzurePowerShell@5
+    name: list
+    displayName: 'List Shell Apps'
+    inputs:
+      azureSubscription: '$(service)'
+      ScriptType: 'InlineScript'
+      Inline: |
+        Set-AzContext -SubscriptionId $(SubscriptionId) -TenantId $(TenantId)
+        $params = @{
+            ClientId           = "$(ClientId)"
+            ClientSecret       = "$(ClientSecret)"
+            TenantId           = "$(TenantId)"
+            ApiScope           = "$(ApiScope)"
+            SubscriptionId     = "$(SubscriptionId)"
+            OAuthToken         = "$(OAuthToken)"
+            ResourceGroupName  = "$(resourceGroupName)"
+            StorageAccountName = "$(storageAccountName)"
+            ContainerName      = "$(containerName)"
+            NmeHost            = "$(nmeHost)"
+        }
+        Set-NmeCredentials @params
+        Connect-Nme
+        (Get-ShellApp).items | ForEach-Object {
+            [PSCustomObject]@{
+                publisher     = $_.publisher
+                name          = $_.name
+                latestVersion = ((Get-ShellAppVersion -Id $_.id).items | `
+                        Where-Object { $_.isPreview -eq $false } | `
+                        Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | `
+                        Select-Object -First 1).name
+                createdAt     = $_.createdAt
+                fileUnzip      = $_.fileUnzip
+                isPublic      = $_.isPublic
+                id            = $_.id
+            }
+        } | Format-Table -AutoSize
+      azurePowerShellVersion: 'LatestVersion'
+      errorActionPreference: stop
+      pwsh: true
+      workingDirectory: $(build.sourcesDirectory)
