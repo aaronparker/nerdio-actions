@@ -1,5 +1,7 @@
 # Nerdio Manager Shell Apps
 
+    Note: this code is provided as-is, without warranty or support of any kind.
+
 A list of definitions for Nerdio Manager Shell Apps - these include detection, install and uninstall scripts.
 
 ## Automation
