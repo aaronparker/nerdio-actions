@@ -120,7 +120,7 @@ jobs:
       azureSubscription: '$(service)'
       ScriptType: 'InlineScript'
       Inline: |
-        Set-AzContext -SubscriptionId $(SubscriptionId) -TenantId $(TenantId)
+        Import-Module -Name "./NerdioShellApps.psm1" -Force
         $params = @{
             ClientId           = "$(ClientId)"
             ClientSecret       = "$(ClientSecret)"
