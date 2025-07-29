@@ -24,7 +24,7 @@ $script:env = [PSCustomObject] @{
 function Set-NmeCredentials {
     param (
         [System.String] $ClientId = $null,
-        [SecureString] $ClientSecret = $null,
+        [System.String] $ClientSecret = $null,
         [System.String] $TenantId = $null,
         [System.String] $ApiScope = $null,
         [System.String] $SubscriptionId = $null,
@@ -61,7 +61,7 @@ function Connect-Nme {
                 "grant_type"  = "client_credentials"
                 scope         = $script:creds.ApiScope
                 client_id     = $script:creds.ClientId
-                client_secret = (ConvertFrom-SecureString -SecureString $script:creds.ClientSecret -AsPlainText)
+                client_secret = $script:creds.ClientSecret
             }
             Headers         = @{
                 "Accept"        = "application/json, text/plain, */*"
@@ -77,6 +77,23 @@ function Connect-Nme {
     }
     catch {
         throw "Failed to authenticate to Nerdio Manager: $($_.Exception.Message)"
+    }
+}
+
+function Get-TempDirectory {
+    switch -Regex ($PSVersionTable.OS) {
+        'Windows' {
+            return $env:TEMP ?? $env:TMP ?? "$env:USERPROFILE\AppData\Local\Temp"
+        }
+        'Darwin' {
+            return $env:TMPDIR ?? '/tmp'
+        }
+        'Linux' {
+            return $env:TMPDIR ?? '/tmp'
+        }
+        default {
+            throw "Unsupported OS: $($PSVersionTable.OS)"
+        }
     }
 }
 
@@ -218,7 +235,7 @@ function New-ShellAppFile {
         [System.Management.Automation.SwitchParameter] $UseRemoteUrl,
 
         [Parameter(Mandatory = $false)]
-        [System.String] $TempPath = "/Users/aaron/Temp/shell-apps"
+        [System.String] $TempPath = (Get-TempDirectory)
     )
 
     if ($UseRemoteUrl) {
@@ -274,6 +291,7 @@ function New-ShellAppFile {
         # Permissions required: "Storage Blob Data Contributor"
         $BlobName = "$(Get-MD5Hash -InputString $Sha256).$(Split-Path -Path $File.FullName -Leaf)"
         Write-Host -ForegroundColor "Cyan" "Uploading file to blob: $BlobName"
+        $ProgressPreference = "Continue"
         $params = @{
             File      = $File.FullName
             Container = $script:env.containerName
