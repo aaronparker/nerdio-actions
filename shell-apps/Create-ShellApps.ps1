@@ -1,11 +1,31 @@
 Import-Module -Name "./NerdioShellApps.psm1" -Force
+
+# Read environment variables and credentials
+$EnvironmentFile = "/Users/aaron/projects/nerdio-actions/api/environment.json"
+$CredentialsFile = "/Users/aaron/projects/nerdio-actions/api/creds.json"
+$Env = Get-Content -Path $EnvironmentFile | ConvertFrom-Json
+$Creds = Get-Content -Path $CredentialsFile | ConvertFrom-Json
+
+$params = @{
+    ClientId           = $Creds.ClientId
+    ClientSecret       = (ConvertTo-SecureString -String $Creds.ClientSecret -AsPlainText -Force)
+    TenantId           = $Creds.TenantId
+    ApiScope           = $Creds.ApiScope
+    SubscriptionId     = $Creds.SubscriptionId
+    OAuthToken         = $Creds.OAuthToken
+    ResourceGroupName  = $Env.resourceGroupName
+    StorageAccountName = $Env.storageAccountName
+    ContainerName      = $Env.containerName
+    NmeHost            = $Env.nmeHost
+}
+Set-NmeCredentials @params
 Connect-Nme
 
 # Authenticate to Azure (manual authentication - update in a pipeline to use a managed identity)
-$creds = Get-Content -Path "/Users/aaron/projects/nerdio-actions/api/creds.json" | ConvertFrom-Json
-if ($null -eq (Get-AzContext | Where-Object { $_.Subscription.Id -eq $creds.SubscriptionId })) {
+$Creds = Get-Content -Path "/Users/aaron/projects/nerdio-actions/api/creds.json" | ConvertFrom-Json
+if ($null -eq (Get-AzContext | Where-Object { $_.Subscription.Id -eq $Creds.SubscriptionId })) {
     Write-Host -ForegroundColor "Cyan" "Authenticate to Azure"
-    Connect-AzAccount -UseDeviceAuthentication -TenantId $creds.tenantId -Subscription $creds.subscriptionId
+    Connect-AzAccount -UseDeviceAuthentication -TenantId $Creds.tenantId -Subscription $Creds.subscriptionId
 }
 
 $Paths = @("/Users/aaron/projects/nerdio-actions/shell-apps/Audacity",

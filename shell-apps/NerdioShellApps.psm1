@@ -1,18 +1,57 @@
 #Requires -Module Az.Accounts, Az.Storage, Evergreen
 [CmdletBinding()]
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "", Justification = "Credentials are protected locally.")]
-param (
-    [Parameter(Mandatory = $false)]
-    [System.String] $EnvironmentFile = "/Users/aaron/projects/nerdio-actions/api/environment.json",
-
-    [Parameter(Mandatory = $false)]
-    [System.String] $CredentialsFile = "/Users/aaron/projects/nerdio-actions/api/creds.json"
-)
-
-# Read environment variables and credentials
+$ProgressPreference = "SilentlyContinue"
 $ErrorActionPreference = "Stop"
-$script:env = Get-Content -Path $EnvironmentFile | ConvertFrom-Json
-$script:creds = Get-Content -Path $CredentialsFile | ConvertFrom-Json
+
+# Set up global variables for credentials and environment
+$script:creds = [PSCustomObject] @{
+    ClientId       = $null
+    ClientSecret   = $null
+    TenantId       = $null
+    ApiScope       = $null
+    NmeUri         = $null
+    SubscriptionId = $null
+    OAuthToken     = $null
+}
+
+$script:env = [PSCustomObject] @{
+    resourceGroupName  = $null
+    storageAccountName = $null
+    containerName      = $null
+    nmeHost            = $null
+}
+
+function Set-NmeCredentials {
+    param (
+        [System.String] $ClientId = $null,
+        [SecureString] $ClientSecret = $null,
+        [System.String] $TenantId = $null,
+        [System.String] $ApiScope = $null,
+        [System.String] $SubscriptionId = $null,
+        [System.String] $OAuthToken = $null,
+        [System.String] $ResourceGroupName = $null,
+        [System.String] $StorageAccountName = $null,
+        [System.String] $ContainerName = $null,
+        [System.String] $NmeHost = $null
+    )
+
+    $script:creds = [PSCustomObject] @{
+        ClientId       = $ClientId
+        ClientSecret   = $ClientSecret
+        TenantId       = $TenantId
+        ApiScope       = $ApiScope
+        NmeUri         = $null
+        SubscriptionId = $SubscriptionId
+        OAuthToken     = $OAuthToken
+    }
+
+    $script:env = [PSCustomObject] @{
+        resourceGroupName  = $ResourceGroupName
+        storageAccountName = $StorageAccountName
+        containerName      = $ContainerName
+        nmeHost            = $NmeHost
+    }
+}
 
 function Connect-Nme {
     try {
@@ -22,7 +61,7 @@ function Connect-Nme {
                 "grant_type"  = "client_credentials"
                 scope         = $script:creds.ApiScope
                 client_id     = $script:creds.ClientId
-                client_secret = $script:creds.ClientSecret
+                client_secret = (ConvertFrom-SecureString -SecureString $script:creds.ClientSecret -AsPlainText)
             }
             Headers         = @{
                 "Accept"        = "application/json, text/plain, */*"
@@ -183,7 +222,7 @@ function New-ShellAppFile {
     )
 
     if ($UseRemoteUrl) {
-        # Use the remote URL to get the file
+        # Use the remote URL to get the file. This assumes an object passed from Get-EvergreenAppDetail
         if ($null -eq $AppDetail.Sha256) {
             $Sha256 = Get-RemoteFileHash -Url $AppDetail.URI
         }
@@ -201,10 +240,22 @@ function New-ShellAppFile {
         return $Output
     }
     else {
-        # Download the application binary
-        New-Item -Path $TempPath -ItemType "Directory" -Force | Out-Null
-        $File = $AppDetail | Save-EvergreenApp -LiteralPath $TempPath
-        Write-Host -ForegroundColor "Cyan" "Downloaded file: $($File.FullName)"
+        if ([System.String]::IsNullOrEmpty($AppDetail.URI)) {
+            # Assume $AppDetail.File is provided on the object
+            try {
+                $File = Get-Item -Path $AppDetail.File
+            }
+            catch {
+                Write-Error -Message "File not found: $($AppDetail.File). Ensure the file exists."
+                exit 1
+            }
+        }
+        else {
+            # If the URI is provided, download the file with Evergreen
+            New-Item -Path $TempPath -ItemType "Directory" -Force | Out-Null
+            $File = $AppDetail | Save-EvergreenApp -LiteralPath $TempPath
+            Write-Host -ForegroundColor "Cyan" "Downloaded file: $($File.FullName)"
+        }
 
         # Determine the SHA256 hash of the file
         if ($null -eq $AppDetail.Sha256) {
