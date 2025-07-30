@@ -23,21 +23,12 @@ Connect-Nme
 # Authenticate to Azure (manual authentication - update in a pipeline to use a managed identity)
 $Creds = Get-Content -Path "/Users/aaron/projects/nerdio-actions/api/creds.json" | ConvertFrom-Json
 if ($null -eq (Get-AzContext | Where-Object { $_.Subscription.Id -eq $Creds.SubscriptionId })) {
-    Write-Host -ForegroundColor "Cyan" "Authenticate to Azure"
+    Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Authenticate to Azure"
     Connect-AzAccount -UseDeviceAuthentication -TenantId $Creds.tenantId -Subscription $Creds.subscriptionId
 }
 
 $Path = "/Users/aaron/projects/nerdio-actions/shell-apps"
 $Paths = Get-ChildItem -Path $Path -Include "Definition.json" -Recurse | ForEach-Object { $_ | Select-Object -ExpandProperty "DirectoryName" }
-# $Paths = @("/Users/aaron/projects/nerdio-actions/shell-apps/Audacity",
-#     "/Users/aaron/projects/nerdio-actions/shell-apps/Microsoft/AvdMultimediaRedirection",
-#     "/Users/aaron/projects/nerdio-actions/shell-apps/Microsoft/AvdRtcService",
-#     "/Users/aaron/projects/nerdio-actions/shell-apps/Microsoft/Edge",
-#     "/Users/aaron/projects/nerdio-actions/shell-apps/Microsoft/FSLogixApps",
-#     "/Users/aaron/projects/nerdio-actions/shell-apps/Microsoft/NETLTS",
-#     "/Users/aaron/projects/nerdio-actions/shell-apps/Microsoft/OneDrive",
-#     "/Users/aaron/projects/nerdio-actions/shell-apps/Microsoft/SQLServerManagementStudio",
-#     "/Users/aaron/projects/nerdio-actions/shell-apps/Microsoft/VisualStudioCode")
 
 foreach ($Path in $Paths) {
     $Def = Get-ShellAppDefinition -Path $Path
@@ -46,6 +37,7 @@ foreach ($Path in $Paths) {
         $_.items | Where-Object { $_.name -eq $Def.name }
     }
     if ($null -eq $ShellApp) {
+        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Importing: $($Def.name)"
         New-ShellApp -Definition $Def -AppDetail $App
     }
     else {
@@ -56,7 +48,7 @@ foreach ($Path in $Paths) {
             New-ShellAppVersion -Id $ShellApp.Id -AppDetail $App
         }
         else {
-            Write-Host -ForegroundColor "Yellow" "Shell app $($Def.name) already exists with version $($App.Version). No action taken."
+            Write-Information -MessageData "$($PSStyle.Foreground.Yellow)Shell app version exists: '$($Def.name) $($App.Version)'. No action taken."
         }
     }
 }

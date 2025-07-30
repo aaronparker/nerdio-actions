@@ -1,6 +1,7 @@
 #Requires -Module Az.Accounts, Az.Storage, Evergreen
 [CmdletBinding()]
 $ProgressPreference = "SilentlyContinue"
+$InformationPreference = "Continue"
 $ErrorActionPreference = "Stop"
 
 # Set up global variables for credentials and environment
@@ -72,8 +73,8 @@ function Connect-Nme {
             UseBasicParsing = $true
         }
         $script:Token = Invoke-RestMethod @params
-        Write-Host -ForegroundColor "Green" "Authenticated to Nerdio Manager."
-        Write-Host -ForegroundColor "Cyan" "Token expires: $((Get-Date).AddSeconds($script:Token.expires_in).ToString())"
+        Write-Information -MessageData "$($PSStyle.Foreground.Green)Authenticated to Nerdio Manager."
+        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Token expires: $((Get-Date).AddSeconds($script:Token.expires_in).ToString())"
     }
     catch {
         throw "Failed to authenticate to Nerdio Manager: $($_.Exception.Message)"
@@ -119,14 +120,14 @@ function Get-RemoteFileHash {
     )
     try {
         $WebClient = [System.Net.WebClient]::new()
-        Write-Host -ForegroundColor "Cyan" "Opening remote stream: $Url"
+        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Opening remote stream: $Url"
         $Stream = $WebClient.OpenRead($Url)
         if ($null -eq $Stream) {
             throw "Failed to open remote stream. Stream is null."
         }
-        Write-Host -ForegroundColor "Cyan" "Calculating SHA256 hash."
+        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Calculating SHA256 hash."
         $hash = Get-FileHash -Algorithm "SHA256" -InputStream $Stream
-        Write-Host -ForegroundColor "Cyan" "Hash: $($hash.Hash)"
+        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Hash: $($hash.Hash)"
         return $hash.Hash
     }
     catch {
@@ -144,12 +145,10 @@ function Get-EvergreenAppDetail {
         [Parameter(Mandatory = $true, ValueFromPipeline)]
         [PSCustomObject] $Definition
     )
-
     process {
-        Write-Host -ForegroundColor "Cyan" "Query Evergreen: $($Definition.source.app)"
-        Write-Host -ForegroundColor "Cyan" "Filter: $($Definition.source.filter)"
+        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Query: Get-EvergreenApp -Name $($Definition.source.app) | Where-Object { $($Definition.source.filter) }"
         $AppDetail = Get-EvergreenApp -Name $Definition.source.app | Where-Object { Invoke-Expression "$($Definition.source.filter)" }
-        Write-Host -ForegroundColor "Cyan" "Found version $($AppDetail.Version)"
+        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Found version: $($AppDetail.Version)"
         return $AppDetail
     }
 }
@@ -160,13 +159,9 @@ function Get-ShellAppDefinition {
         [Parameter(Mandatory = $true)]
         [System.String] $Path
     )
-
-    begin {
-        $ErrorActionPreference = "Stop"
-    }
     process {
         if (Test-Path -Path $Path -PathType "Container") {
-            Write-Host -ForegroundColor "Cyan" "Reading Shell App definition from: $Path"
+            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Reading Shell App definition from: $Path"
             $Definition = Get-Content -Path (Join-Path -Path $Path -ChildPath "Definition.json") | ConvertFrom-Json
             $InstallScript = Get-Content -Path (Join-Path -Path $Path -ChildPath "Install.ps1") -Raw
             $UninstallScript = Get-Content -Path (Join-Path -Path $Path -ChildPath "Uninstall.ps1") -Raw
@@ -209,8 +204,6 @@ function Get-ShellAppVersion {
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName, ValueFromPipeline)]
         [System.String] $Id
     )
-    begin {
-    }
     process {
         # Get versions of existing Shell App
         $params = @{
@@ -247,7 +240,7 @@ function New-ShellAppFile {
             $Sha256 = Get-RemoteFileHash -Url $AppDetail.URI
         }
         else {
-            Write-Host -ForegroundColor "Cyan" "Using provided SHA256 hash: $($AppDetail.Sha256)"
+            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Using provided SHA256 hash: $($AppDetail.Sha256)"
             $Sha256 = $AppDetail.Sha256
         }
 
@@ -274,7 +267,7 @@ function New-ShellAppFile {
             # If the URI is provided, download the file with Evergreen
             New-Item -Path $TempPath -ItemType "Directory" -Force | Out-Null
             $File = $AppDetail | Save-EvergreenApp -LiteralPath $TempPath
-            Write-Host -ForegroundColor "Cyan" "Downloaded file: $($File.FullName)"
+            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Downloaded file: $($File.FullName)"
         }
 
         # Determine the SHA256 hash of the file
@@ -286,14 +279,14 @@ function New-ShellAppFile {
         }
 
         # Get storage account key; Create storage context
-        Write-Host -ForegroundColor "Cyan" "Get storage acccount key from: $($script:env.resourceGroupName) / $($script:env.storageAccountName)"
+        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Get storage acccount key from: $($script:env.resourceGroupName) / $($script:env.storageAccountName)"
         $StorageAccountKey = (Get-AzStorageAccountKey -ResourceGroupName $script:env.resourceGroupName -Name $script:env.storageAccountName)[0].Value
         $Context = New-AzStorageContext -StorageAccountName $script:env.storageAccountName -StorageAccountKey $StorageAccountKey
 
         # Upload file to blob container
         # Permissions required: "Storage Blob Data Contributor"
         $BlobName = "$(Get-MD5Hash -InputString $Sha256).$(Split-Path -Path $File.FullName -Leaf)"
-        Write-Host -ForegroundColor "Cyan" "Uploading file to blob: $BlobName"
+        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Uploading file to blob: $BlobName"
         $ProgressPreference = "Continue"
         $params = @{
             File      = $File.FullName
@@ -308,27 +301,27 @@ function New-ShellAppFile {
             exit 1
         }
         else {
-            Write-Host -ForegroundColor "Cyan" "Uploaded file to blob: $($BlobFile.ICloudBlob.Uri.AbsoluteUri)"
+            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Uploaded file to blob: $($BlobFile.ICloudBlob.Uri.AbsoluteUri)"
         }
 
-        # Get a SAS token for the blob
+        # Get a read-only SAS token for the blob with a long expiry time
         $params = @{
             Context    = $Context
             Container  = $script:env.containerName
             Blob       = $BlobName
             Permission = "r"
-            ExpiryTime = (Get-Date).AddYears(10)
+            ExpiryTime = (Get-Date).AddYears(5)
             FullUri    = $true
         }
         $SasToken = New-AzStorageBlobSASToken @params
 
         # Determine the source URL, if a SAS token is provided, use it; otherwise, use the blob URI
         if ($SasToken) {
-            Write-Host -ForegroundColor "Cyan" "Using SAS token for source URL."
+            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Using SAS token for source URL."
             $SourceUrl = $SasToken
         }
         else {
-            Write-Host -ForegroundColor "Cyan" "Using blob URI for source URL."
+            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Using blob URI for source URL."
             $SourceUrl = $BlobFile.ICloudBlob.Uri.AbsoluteUri
         }
 
@@ -405,7 +398,7 @@ function New-ShellApp {
 
             # Update the app definition
             if ($File.FileType -eq "zip") {
-                Write-Host -ForegroundColor "Cyan" "Using fileUnzip: true for zip files."
+                Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Using fileUnzip: true for zip files."
                 $Definition.fileUnzip = $true
             }
             $Definition.versions[0].name = $AppDetail.Version
@@ -428,10 +421,10 @@ function New-ShellApp {
                 }
                 $Result = Invoke-RestMethod @params
                 if ($Result.job.status -eq "Completed") {
-                    Write-Host -ForegroundColor "Green" "Shell App created successfully. Id: $($Result.job.id)"
+                    Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App created successfully. Id: $($Result.job.id)"
                 }
                 else {
-                    Write-Host -ForegroundColor "Red" "Failed to create Shell App. Status: $($Result.job.status)"
+                    Write-Error -Message "Failed to create Shell App. Status: $($Result.job.status)"
                 }
             }
         }
@@ -499,10 +492,10 @@ function New-ShellAppVersion {
                 }
                 $Result = Invoke-RestMethod @params
                 if ($Result.job.status -eq "Completed") {
-                    Write-Host -ForegroundColor "Green" "Shell App version created successfully. Id: $($Result.job.id)"
+                    Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App version created successfully. Id: $($Result.job.id)"
                 }
                 else {
-                    Write-Host -ForegroundColor "Red" "Failed to create Shell App version. Status: $($Result.job.status)"
+                    Write-Error -Message "Failed to create Shell App version. Status: $($Result.job.status)"
                 }
             }
         }
