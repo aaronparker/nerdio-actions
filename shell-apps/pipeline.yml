@@ -1,10 +1,13 @@
 # Automate the import of Nerdio Manager Shell Apps with Evergreen
+
+# Trigger the pipeline on change to the 'apps' directory
 trigger:
     branches:
         include: [ main ]
     paths:
         include: [ "apps/**" ]
 
+# Also run the pipeline on a schedule to update new versions of apps
 schedules:
   - cron: "0 17 * * *"
     displayName: Daily 2AM Run (AEST)
@@ -13,9 +16,11 @@ schedules:
         - main
     always: true
 
+# Run the pipeline on an Ubuntu runner (and in PowerShell 7)
 pool:
   vmImage: ubuntu-latest
 
+# Variables - the credentials group and the service connection name
 variables:
 - group: 'Credentials'
 - name: service
@@ -26,9 +31,11 @@ jobs:
   displayName: 'Import Nerdio Shell Apps'
 
   steps:
+  # Checkout the repository so we have access to the module and app definitions
   - checkout: self
     displayName: 'Checkout repository'
 
+  # Install the required PowerShell modules
   - pwsh: |
       Install-Module -Name "Evergreen" -AllowClobber -Force -Scope CurrentUser
     name: modules
@@ -36,6 +43,7 @@ jobs:
     workingDirectory: $(build.sourcesDirectory)
     errorActionPreference: stop
 
+  # Validate connection to Azure using the service connection
   - task: AzurePowerShell@5
     name: auth
     displayName: 'Azure Login'
@@ -50,6 +58,8 @@ jobs:
       pwsh: true
       workingDirectory: $(build.sourcesDirectory)
 
+  # Authenticate to Nerdio Manager, set the Azure conext, and import the shell apps
+  # This code checks whether the app already exists before importing or updating it
   - task: AzurePowerShell@5
     name: import
     displayName: 'Import Shell Apps'
@@ -104,6 +114,7 @@ jobs:
       pwsh: true
       workingDirectory: $(build.sourcesDirectory)
 
+  # List the Shell Apps in Nerdio Manager
   - task: AzurePowerShell@5
     name: list
     displayName: 'List Shell Apps'
