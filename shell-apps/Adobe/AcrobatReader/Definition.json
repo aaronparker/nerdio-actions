@@ -1,0 +1,26 @@
+{
+    "name": "Acrobat Reader",
+    "description": "Adobe Acrobat Reader is a free PDF viewer that allows you to view, print, and annotate PDF documents.",
+    "isPublic": true,
+    "publisher": "Adobe",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Evergreen",
+        "app": "AdobeAcrobatReader",
+        "filter": "$_.Architecture -eq \"x64\" -and $_.Language -eq \"MUI\""
+    }
+}

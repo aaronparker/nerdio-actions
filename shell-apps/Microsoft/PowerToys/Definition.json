@@ -1,0 +1,26 @@
+{
+    "name": "PowerToys",
+    "description": "PowerToys is a set of utilities for power users to tune and streamline their Windows experience for greater productivity.",
+    "isPublic": true,
+    "publisher": "Microsoft",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Evergreen",
+        "app": "MicrosoftPowerToys",
+        "filter": "$_.Architecture -eq \"x64\" -and $_.InstallerType -eq \"Default\""
+    }
+}
