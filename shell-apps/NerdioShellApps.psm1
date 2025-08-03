@@ -1,8 +1,11 @@
 #Requires -Module Az.Accounts, Az.Storage, Evergreen
 [CmdletBinding()]
+
+# Configure the environment
 $ProgressPreference = "SilentlyContinue"
 $InformationPreference = "Continue"
 $ErrorActionPreference = "Stop"
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 
 # Set up global variables for credentials and environment
 $script:creds = [PSCustomObject] @{
@@ -24,16 +27,35 @@ $script:env = [PSCustomObject] @{
 
 function Set-NmeCredentials {
     param (
-        [System.String] $ClientId = $null,
-        [System.String] $ClientSecret = $null,
-        [System.String] $TenantId = $null,
-        [System.String] $ApiScope = $null,
-        [System.String] $SubscriptionId = $null,
-        [System.String] $OAuthToken = $null,
-        [System.String] $ResourceGroupName = $null,
-        [System.String] $StorageAccountName = $null,
-        [System.String] $ContainerName = $null,
-        [System.String] $NmeHost = $null
+        [Parameter(Mandatory = $true)]
+        [System.String] $ClientId,
+
+        [Parameter(Mandatory = $true)]
+        [System.String] $ClientSecret,
+
+        [Parameter(Mandatory = $true)]
+        [System.String] $TenantId,
+
+        [Parameter(Mandatory = $true)]
+        [System.String] $ApiScope,
+
+        [Parameter(Mandatory = $true)]
+        [System.String] $SubscriptionId,
+
+        [Parameter(Mandatory = $true)]
+        [System.String] $OAuthToken,
+
+        [Parameter(Mandatory = $true)]
+        [System.String] $ResourceGroupName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String] $StorageAccountName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String] $ContainerName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String] $NmeHost
     )
 
     $script:creds = [PSCustomObject] @{
@@ -55,6 +77,11 @@ function Set-NmeCredentials {
 }
 
 function Connect-Nme {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $false)]
+        [System.Management.Automation.SwitchParameter] $PassThru
+    )
     try {
         $params = @{
             Uri             = "https://login.microsoftonline.com/$($script:creds.TenantId)/oauth2/v2.0/token"
@@ -75,6 +102,9 @@ function Connect-Nme {
         $script:Token = Invoke-RestMethod @params
         Write-Information -MessageData "$($PSStyle.Foreground.Green)Authenticated to Nerdio Manager."
         Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Token expires: $((Get-Date).AddSeconds($script:Token.expires_in).ToString())"
+        if ($PassThru) {
+            return $script:Token
+        }
     }
     catch {
         throw "Failed to authenticate to Nerdio Manager: $($_.Exception.Message)"
@@ -182,19 +212,24 @@ function Get-ShellApp {
     [CmdletBinding()]
     param ()
     process {
-        # Get existing Shell Apps
-        $params = @{
-            Uri             = "https://$($env.nmeHost)/api/v1/shell-app"
-            Headers         = @{
-                "Accept"        = "application/json; utf-8"
-                "Authorization" = "Bearer $($script:Token.access_token)"
-                "Content-Type"  = "application/x-www-form-urlencoded"
-                "Cache-Control" = "no-cache"
+        try {
+            # Get existing Shell Apps
+            $params = @{
+                Uri             = "https://$($script:env.nmeHost)/api/v1/shell-app"
+                Headers         = @{
+                    "Accept"        = "application/json; utf-8"
+                    "Authorization" = "Bearer $($script:Token.access_token)"
+                    "Content-Type"  = "application/x-www-form-urlencoded"
+                    "Cache-Control" = "no-cache"
+                }
+                Method          = "GET"
+                UseBasicParsing = $true
             }
-            Method          = "GET"
-            UseBasicParsing = $true
+            Invoke-RestMethod @params
         }
-        Invoke-RestMethod @params
+        catch {
+            throw $_
+        }
     }
 }
 
@@ -207,7 +242,7 @@ function Get-ShellAppVersion {
     process {
         # Get versions of existing Shell App
         $params = @{
-            Uri             = "https://$($env.nmeHost)/api/v1/shell-app/$Id/version"
+            Uri             = "https://$($script:env.nmeHost)/api/v1/shell-app/$Id/version"
             Headers         = @{
                 "Accept"        = "application/json; utf-8"
                 "Authorization" = "Bearer $($script:Token.access_token)"
@@ -504,6 +539,91 @@ function New-ShellAppVersion {
             $scriptName = $_.InvocationInfo.ScriptName
             $errorMsg = $_.Exception.Message
             Write-Error -Message "Error on line $lineNumber in ${scriptName}: $errorMsg"
+        }
+    }
+}
+
+function Remove-ShellApp {
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
+    param (
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName)]
+        [System.String] $Id
+    )
+    process {
+        if ($PSCmdlet.ShouldProcess("Shell App: $Id", "Remove")) {
+            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Removing Shell App Id: $Id"
+            try {
+                $params = @{
+                    Uri             = "https://$($script:env.nmeHost)/api/v1/shell-app/$Id"
+                    Headers         = @{
+                        "Accept"        = "application/json; utf-8"
+                        "Authorization" = "Bearer $($script:Token.access_token)"
+                        "Cache-Control" = "no-cache"
+                    }
+                    Method          = "DELETE"
+                    UseBasicParsing = $true
+                }
+                $Result = Invoke-RestMethod @params
+                if ($Result.job.status -eq "Completed") {
+                    Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App ($Id) removed successfully. Id: $($Result.job.id)"
+                }
+                elseif ($Result.job.status -eq "Pending") {
+                    Write-Information -MessageData "$($PSStyle.Foreground.Yellow)Shell App ($Id) removal status: $($Result.job.status)."
+                }
+                elseif ($Result.job.status -eq "Failed") {
+                    Write-Error -Message "Failed to remove Shell App ($Id). Status: $($Result.job.status)"
+                }
+                return $Result
+            }
+            catch {
+                throw "Failed to remove Shell App: $($_.Exception.Message)"
+            }
+        }
+    }
+}
+
+function Remove-ShellAppVersion {
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
+    param (
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName)]
+        [System.String] $Id,
+
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName)]
+        [System.String] $Name
+    )
+    process {
+        if ($PSCmdlet.ShouldProcess("Shell App: $Name", "Remove")) {
+            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Removing Shell App version: $Id, $Name"
+            try {
+                $params = @{
+                    Uri             = "https://$($script:env.nmeHost)/api/v1/shell-app/$Id/version/$Name"
+                    Headers         = @{
+                        "Accept"        = "application/json; utf-8"
+                        "Authorization" = "Bearer $($script:Token.access_token)"
+                        "Cache-Control" = "no-cache"
+                    }
+                    Method          = "DELETE"
+                    UseBasicParsing = $true
+                }
+                $Result = Invoke-RestMethod @params
+                if ($Result.job.status -eq "Completed") {
+                    Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App version ($Id, $Name) removed successfully. Id: $($Result.job.id)"
+                }
+                elseif ($Result.job.status -eq "Pending") {
+                    Write-Information -MessageData "$($PSStyle.Foreground.Yellow)Shell App version ($Id, $Name) removal status: $($Result.job.status)."
+                }
+                elseif ($Result.job.status -eq "Failed") {
+                    Write-Error -Message "Failed to remove Shell App version ($Id, $Name). Status: $($Result.job.status)"
+                }
+                return $Result
+            }
+            catch {
+                throw "Failed to remove Shell App: $($_.Exception.Message)"
+            }
+        }
+        else {
+            Write-Information -MessageData "$($PSStyle.Foreground.Yellow)Skipping removal of Shell App Id: $Id with version: $Name"
+            return
         }
     }
 }
