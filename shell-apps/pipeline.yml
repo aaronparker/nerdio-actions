@@ -114,6 +114,58 @@ jobs:
       pwsh: true
       workingDirectory: $(build.sourcesDirectory)
 
+  # Prune Shell Apps versions
+  - task: AzurePowerShell@5
+    name: prune
+    displayName: 'Prune Shell Apps versions'
+    inputs:
+      azureSubscription: '$(service)'
+      ScriptType: 'InlineScript'
+      Inline: |
+        $InformationPreference = "Continue"
+        Import-Module -Name "Az.Accounts", "Az.Storage", "Evergreen" -Force
+        Import-Module -Name "./NerdioShellApps.psm1" -Force
+        Set-AzContext -SubscriptionId $(SubscriptionId) -TenantId $(TenantId)
+        $params = @{
+            ClientId           = "$(ClientId)"
+            ClientSecret       = "$(ClientSecret)"
+            TenantId           = "$(TenantId)"
+            ApiScope           = "$(ApiScope)"
+            SubscriptionId     = "$(SubscriptionId)"
+            OAuthToken         = "$(OAuthToken)"
+            ResourceGroupName  = "$(resourceGroupName)"
+            StorageAccountName = "$(storageAccountName)"
+            ContainerName      = "$(containerName)"
+            NmeHost            = "$(nmeHost)"
+        }
+        Set-NmeCredentials @params
+        Connect-Nme
+        $KeepCount = 2
+        (Get-ShellApp).items | ForEach-Object {
+            $ExistingVersions = (Get-ShellAppVersion -Id $_.id).items | `
+                Where-Object { $_.isPreview -eq $false } | `
+                Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true }
+            if ($ExistingVersions.Count -gt $KeepCount) {
+                $VersionsToRemove = $ExistingVersions | Select-Object -Skip ($ExistingVersions.Count - $KeepCount)
+                foreach ($Version in $VersionsToRemove) {
+                    Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Removing Shell App Version: $($_.id) $($Version.name)"
+                    $Result = Remove-ShellAppVersion -Id $_.id -Version $Version.name
+                    if ($Result.job.status -eq "Completed") {
+                        $File = $Version.file.sourceUrl -split "\?"
+                        $FileName = $File -split "/" | Select-Object -Last 1
+                        Remove-AzStorageBlob -Container $Env.containerName -Blob $FileName -Confirm:$false
+                    }
+                }
+            }
+            else {
+                Write-Information -MessageData "$($PSStyle.Foreground.Yellow)No versions to remove for Shell App: $($_.id)"
+            }
+        }
+      azurePowerShellVersion: 'LatestVersion'
+      errorActionPreference: stop
+      pwsh: true
+      workingDirectory: $(build.sourcesDirectory)
+
   # List the Shell Apps in Nerdio Manager
   - task: AzurePowerShell@5
     name: list
@@ -138,13 +190,14 @@ jobs:
         Set-NmeCredentials @params
         Connect-Nme
         (Get-ShellApp).items | ForEach-Object {
+            $ExistingVersions = (Get-ShellAppVersion -Id $_.id).items | `
+                Where-Object { $_.isPreview -eq $false } | `
+                Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true }
             [PSCustomObject]@{
                 publisher     = $_.publisher
                 name          = $_.name
-                latestVersion = ((Get-ShellAppVersion -Id $_.id).items | `
-                        Where-Object { $_.isPreview -eq $false } | `
-                        Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } | `
-                        Select-Object -First 1).name
+                versionCount  = $ExistingVersions | Measure-Object | Select-Object -ExpandProperty "Count"
+                latestVersion = ($ExistingVersions | Select-Object -First 1).name
                 createdAt     = $_.createdAt
                 fileUnzip      = $_.fileUnzip
                 isPublic      = $_.isPublic
