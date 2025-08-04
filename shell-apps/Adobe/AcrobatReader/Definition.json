@@ -20,7 +20,7 @@
     ],
     "source": {
         "type": "Evergreen",
-        "app": "AdobeAcrobatReader",
+        "app": "AdobeAcrobatReaderDC",
         "filter": "$_.Architecture -eq \"x64\" -and $_.Language -eq \"MUI\""
     }
 }
