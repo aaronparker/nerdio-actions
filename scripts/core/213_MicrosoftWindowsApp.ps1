@@ -36,7 +36,12 @@ $App = Get-EvergreenApp -Name "MicrosoftWindowsApp" | `
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"
 Write-LogFile -Message "Microsoft Windows App $($App.Version) downloaded to: $($OutFile.FullName)"
 
-# $LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftWindowsApp$($App.Version).log" -replace " ", ""
 Write-LogFile -Message "Starting Microsoft Windows App installation from: $($OutFile.FullName)"
-Add-AppxPackage -Path $OutFile.FullName
+$params = @{
+    PackagePath = $OutFile.FullName
+    Online      = $true
+    SkipLicense = $true
+    ErrorAction = "Stop"
+}
+Add-AppxProvisionedPackage @params
 #endregion

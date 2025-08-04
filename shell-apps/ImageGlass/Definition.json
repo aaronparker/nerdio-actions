@@ -1,0 +1,26 @@
+{
+    "name": "ImageGlass",
+    "description": "ImageGlass is a lightweight, versatile image viewer that supports a wide range of image formats and provides a user-friendly interface for viewing and managing images.",
+    "isPublic": true,
+    "publisher": "Duong Dieu Phap",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Evergreen",
+        "app": "ImageGlass",
+        "filter": "$_.Architecture -eq \"x64\""
+    }
+}

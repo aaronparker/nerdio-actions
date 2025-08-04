@@ -1,0 +1,26 @@
+{
+    "name": "Zoom Workplace",
+    "description": "Zoom Workplace is a collaboration platform that brings together chat, video, and file sharing in one place.",
+    "isPublic": true,
+    "publisher": "Zoom",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Evergreen",
+        "app": "Zoom",
+        "filter": "$_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\" -and $_.Platform -eq \"Desktop\""
+    }
+}

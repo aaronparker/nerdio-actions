@@ -1,6 +1,3 @@
-# Variables
-[System.String] $PackageFamilyName = "MSTeams_8wekyb3d8bbwe"
-
 function Get-InstalledSoftware {
     [CmdletBinding()]
     param ()
@@ -26,7 +23,7 @@ function Get-InstalledSoftware {
     return $Apps
 }
 
-Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Teams Meeting Add-in*" } | ForEach-Object {
+Get-InstalledSoftware | Where-Object { $_.Name -match "ImageGlass*" } | ForEach-Object {
     $Context.Log("Uninstalling Windows Installer: $($_.PSChildName)")
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
@@ -36,10 +33,5 @@ Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Teams Meeting A
         ErrorAction  = "Stop"
     }
     Start-Process @params
+    $Context.Log("Uninstall complete")
 }
-
-Get-AppxPackage -AllUsers | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | ForEach-Object {
-    $Context.Log("Removing existing AppX package: $($_.Name)")
-    $_ | Remove-AppxPackage -AllUsers -ErrorAction "Stop"
-}
-$Context.Log("Uninstall complete")
