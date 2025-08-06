@@ -109,6 +109,7 @@ jobs:
                 }
             }
         }
+        Remove-NerdioManagerSecretsFromMemory
       azurePowerShellVersion: 'LatestVersion'
       errorActionPreference: stop
       pwsh: true
@@ -161,6 +162,7 @@ jobs:
                 Write-Information -MessageData "$($PSStyle.Foreground.Yellow)No versions to remove for Shell App: $($_.id)"
             }
         }
+        Remove-NerdioManagerSecretsFromMemory
       azurePowerShellVersion: 'LatestVersion'
       errorActionPreference: stop
       pwsh: true
@@ -204,6 +206,7 @@ jobs:
                 id            = $_.id
             }
         } | Format-Table -AutoSize
+        Remove-NerdioManagerSecretsFromMemory
       azurePowerShellVersion: 'LatestVersion'
       errorActionPreference: stop
       pwsh: true
