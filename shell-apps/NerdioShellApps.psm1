@@ -627,3 +627,13 @@ function Remove-ShellAppVersion {
         }
     }
 }
+
+function Remove-NerdioManagerSecretsFromMemory {
+    [CmdletBinding()]
+    param ()
+    process {
+        if (!([System.String]::IsNullOrEmpty($script:creds.ClientSecret))) { $script:creds.ClientSecret = $null }
+        if (!([System.String]::IsNullOrEmpty($script:Token.access_token))) { $script:Token.access_token = $null }
+        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Client secret and access token cleared from memory. Use 'Set-NmeCredentials' and 'Connect-Nme' to re-authenticate."
+    }
+}
