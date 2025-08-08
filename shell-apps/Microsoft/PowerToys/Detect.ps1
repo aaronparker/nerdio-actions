@@ -1,5 +1,5 @@
 # Variables
-[System.String] $FilePath = "${Env:ProgramFiles(x86)}\PowerToys\PowerToys.exe"
+[System.String] $FilePath = "${Env:ProgramFiles}\PowerToys\PowerToys.exe"
 
 # Detection logic
 if (Test-Path -Path $FilePath) {
@@ -12,10 +12,10 @@ if (Test-Path -Path $FilePath) {
     }
     else {
         $Context.Log("Update required. Found '$($FileInfo.ProductVersion)' less than '$($Context.TargetVersion)'.")
-        return $false
+        if ($Context.Versions -is [System.Array]) { return $null } else { return $false }
     }
 }
 else {
     $Context.Log("File does not exist at: $($FilePath)")
-    return $false
+    if ($Context.Versions -is [System.Array]) { return $null } else { return $false }
 }

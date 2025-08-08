@@ -1,21 +1,13 @@
 # Variables
-[System.String] $FilePath = "${Env:ProgramFiles}\dotnet\x64\host\fxr\$($Context.TargetVersion)\hostfxr.dll"
+[System.String] $FilePath = "${Env:ProgramFiles}\dotnet\host\fxr\$($Context.TargetVersion)\hostfxr.dll"
 
 # Detection logic
 if (Test-Path -Path $FilePath) {
-    $FileItem = Get-ChildItem -Path $FilePath -ErrorAction "SilentlyContinue"
-    $Context.Log("File found: $($FileItem.FullName)")
-    $FileInfo = [Diagnostics.FileVersionInfo]::GetVersionInfo($FileItem.FullName)
-    if ([System.Version]::Parse($FileInfo.ProductVersion) -ge [System.Version]::Parse($Context.TargetVersion)) {
-        $Context.Log("No update required. Found '$($FileInfo.ProductVersion)' against '$($Context.TargetVersion)'.")
-        return $true
-    }
-    else {
-        $Context.Log("Update required. Found '$($FileInfo.ProductVersion)' less than '$($Context.TargetVersion)'.")
-        return $false
-    }
+    # Version on the file won't match the version of the .NET runtime, so we need to check the file's existence only.
+    $Context.Log("File exists at: $($FilePath)")
+    return $true
 }
 else {
     $Context.Log("File does not exist at: $($FilePath)")
-    return $false
+    if ($Context.Versions -is [System.Array]) { return $null } else { return $false }
 }

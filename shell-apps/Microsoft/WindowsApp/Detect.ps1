@@ -5,7 +5,7 @@
 $App = Get-AppxPackage -AllUsers | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName }
 if ($null -eq $App) {
     $Context.Log("Microsoft Windows App is not installed.")
-    return $false
+    if ($Context.Versions -is [System.Array]) { return $null } else { return $false }
 }
 else {
     $Context.Log("Found version: $($App.Version)")
@@ -15,6 +15,6 @@ else {
     }
     else {
         $Context.Log("Update required. Found '$($App.Version)' less than '$($Context.TargetVersion)'.")
-        return $false
+        if ($Context.Versions -is [System.Array]) { return $null } else { return $false }
     }
 }

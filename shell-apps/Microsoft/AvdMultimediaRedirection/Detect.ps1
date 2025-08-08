@@ -12,10 +12,10 @@ if (Test-Path -Path $FilePath) {
     }
     else {
         $Context.Log("Update required. Found '$($FileInfo.ProductVersion)' less than '$($Context.TargetVersion)'.")
-        return $false
+        if ($Context.Versions -is [System.Array]) { return $null } else { return $false }
     }
 }
 else {
     $Context.Log("File does not exist at: $($FilePath)")
-    return $false
+    if ($Context.Versions -is [System.Array]) { return $null } else { if ($Context.Versions -is [System.Array]) { return $null } else { return $false } }
 }

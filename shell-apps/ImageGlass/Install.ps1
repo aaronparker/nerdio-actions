@@ -12,7 +12,7 @@ Start-Process @params
 $Context.Log("Install complete")
 
 Start-Sleep -Seconds 5
-Write-LogFile -Message "Removing ImageGlass shortcuts."
+$Context.Log("Removing ImageGlass shortcuts.")
 $Shortcuts = @("$Env:Public\Desktop\ImageGlass.lnk",
     "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\ImageGlass\ImageGlass' LICENSE.lnk",
     "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\ImageGlass\Uninstall ImageGlass*.lnk")
