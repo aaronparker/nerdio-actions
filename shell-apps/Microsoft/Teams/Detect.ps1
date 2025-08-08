@@ -11,7 +11,7 @@ else {
     $Context.Log("Found version: $($App.Version)")
     if ([System.Version]::Parse($App.Version) -ge [System.Version]::Parse($Context.TargetVersion)) {
         $Context.Log("No update required. Found '$($App.Version)' against '$($Context.TargetVersion)'.")
-        return $true
+        if ($Context.Versions -is [System.Array]) { return $App.Version } else { return $true }
     }
     else {
         $Context.Log("Update required. Found '$($App.Version)' less than '$($Context.TargetVersion)'.")

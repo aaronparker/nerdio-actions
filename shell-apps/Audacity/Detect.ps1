@@ -9,7 +9,7 @@ if (Test-Path -Path $FilePath) {
     $FileVersion = [System.Version]::Parse(($FileInfo.ProductVersion -replace ",", "."))
     if ([System.Version]::Parse(($FileVersion.Major, $FileVersion.Minor, $FileVersion.Build -join ".")) -ge [System.Version]::Parse($Context.TargetVersion)) {
         $Context.Log("No update required. Found '$($FileInfo.ProductVersion)' against '$($Context.TargetVersion)'.")
-        return $true
+        if ($Context.Versions -is [System.Array]) { return $FileInfo.ProductVersion } else { return $true }
     }
     else {
         $Context.Log("Update required. Found '$($FileInfo.ProductVersion)' less than '$($Context.TargetVersion)'.")
