@@ -4,7 +4,7 @@ $LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftFSLogixApps.log"
 foreach ($File in "FSLogixAppsSetup.exe") {
     $Installers = Get-ChildItem -Path $PWD -Recurse -Include $File | Where-Object { $_.Directory -match "x64" }
     foreach ($Installer in $Installers) {
-        $LogFile = "$LogPath\$($Installer.Name)$($App.Version).log" -replace " ", ""
+        $LogFile = "$Env:Windows\Logs\$($Installer.Name)$($App.Version).log" -replace " ", ""
         $Context.Log("Installing Microsoft FSLogix Apps agent from: $($Installer.FullName)")
         $params = @{
             FilePath     = $Installer.FullName
