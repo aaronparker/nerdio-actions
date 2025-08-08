@@ -1,5 +1,5 @@
 # Variables
-[System.String] $FilePath = "${Env:ProgramFiles(x86)}\Microsoft SQL Server Management Studio 20\Common7\IDE\Ssms.exe"
+[System.String] $FilePath = "${Env:ProgramFiles}\FSLogix\Apps\frxsvc.exe"
 
 # Detection logic
 if (Test-Path -Path $FilePath) {
