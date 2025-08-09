@@ -628,6 +628,44 @@ function Remove-ShellAppVersion {
     }
 }
 
+function Update-ShellApp {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName)]
+        [System.String] $Id,
+
+        [Parameter(Mandatory = $true)]
+        [PSCustomObject] $Definition
+    )
+    process {
+        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Updating Shell App Id: $Id"
+        try {
+            $DefinitionJson = $Definition | ConvertTo-Json -Depth 10
+            $params = @{
+                Uri             = "https://$($script:env.nmeHost)/api/v1/shell-app/$Id"
+                Method          = "PATCH"
+                Headers         = @{
+                    "accept"        = "application/json"
+                    "Authorization" = "Bearer $($script:Token.access_token)"
+                }
+                Body            = $DefinitionJson
+                ContentType     = "application/json"
+                UseBasicParsing = $true
+            }
+            $Result = Invoke-RestMethod @params
+            if ($Result.job.status -eq "Completed") {
+                Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App updated successfully. Id: $($Result.job.id)"
+            }
+            else {
+                Write-Error -Message "Failed to update Shell App. Status: $($Result.job.status)"
+            }
+        }
+        catch {
+            throw "Failed to update Shell App: $($_.Exception.Message)"
+        }
+    }
+}
+
 function Remove-NerdioManagerSecretsFromMemory {
     [CmdletBinding()]
     param ()

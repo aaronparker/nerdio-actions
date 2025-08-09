@@ -47,10 +47,13 @@ foreach ($Path in $Paths) {
         New-ShellApp -Definition $Def -AppDetail $App
     }
     else {
+        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Updating Shell App: $($Def.name)"
+        Update-ShellApp -Id $ShellApp.Id -Definition $Def
         $ExistingVersions = Get-ShellAppVersion -Id $ShellApp.Id | ForEach-Object {
             $_.items | Where-Object { $_.name -eq $App.Version }
         }
         if ($null -eq $ExistingVersions -or [System.Version]$ExistingVersions.name -lt [System.Version]$App.Version) {
+            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Updating with new version: $($Def.name)"
             New-ShellAppVersion -Id $ShellApp.Id -AppDetail $App
         }
         else {
