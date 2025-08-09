@@ -1,4 +1,4 @@
-#Requires -Module Az.Accounts, Az.Storage, Evergreen
+#Requires -Module Az.Accounts, Az.Storage, Evergreen, VcRedist
 [CmdletBinding()]
 
 # Configure the environment
@@ -169,17 +169,36 @@ function Get-RemoteFileHash {
     }
 }
 
-function Get-EvergreenAppDetail {
+function Get-AppMetadata {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline)]
         [PSCustomObject] $Definition
     )
     process {
-        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Query: Get-EvergreenApp -Name $($Definition.source.app) | Where-Object { $($Definition.source.filter) }"
-        $AppDetail = Get-EvergreenApp -Name $Definition.source.app | Where-Object { Invoke-Expression "$($Definition.source.filter)" }
-        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Found version: $($AppDetail.Version)"
-        return $AppDetail
+        switch ($Definition.source.type) {
+            "Evergreen" {
+                Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Query: Get-EvergreenApp -Name $($Definition.source.app) | Where-Object { $($Definition.source.filter) }"
+                $Metadata = Get-EvergreenApp -Name $Definition.source.app | Where-Object { Invoke-Expression "$($Definition.source.filter)" }
+                Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Found version: $($Metadata.Version)"
+                return $Metadata
+            }
+            "VcRedist" {
+                Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Query: Get-VcList | Where-Object { $($Definition.source.filter) }"
+                $Metadata = Get-VcList | Where-Object { Invoke-Expression "$($Definition.source.filter)" }
+                Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Found version: $($Metadata.Version)"
+                return $Metadata
+            }
+            "Direct" {
+                Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Using direct source URL: $($Definition.source.url)"
+                $Metadata = [PSCustomObject] @{
+                    Version = $Definition.source.version
+                    Sha256  = $Definition.source.sha256
+                    File    = $Definition.source.url
+                }
+                return $Metadata
+            }
+        }
     }
 }
 
@@ -260,7 +279,7 @@ function New-ShellAppFile {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
-        [PSCustomObject] $AppDetail,
+        [PSCustomObject] $AppMetadata,
 
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter] $UseRemoteUrl,
@@ -270,47 +289,47 @@ function New-ShellAppFile {
     )
 
     if ($UseRemoteUrl) {
-        # Use the remote URL to get the file. This assumes an object passed from Get-EvergreenAppDetail
-        if ($null -eq $AppDetail.Sha256) {
-            $Sha256 = Get-RemoteFileHash -Url $AppDetail.URI
+        # Use the remote URL to get the file. This assumes an object passed from Get-AppMetadata
+        if ($null -eq $AppMetadata.Sha256) {
+            $Sha256 = Get-RemoteFileHash -Url $AppMetadata.URI
         }
         else {
-            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Using provided SHA256 hash: $($AppDetail.Sha256)"
-            $Sha256 = $AppDetail.Sha256
+            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Using provided SHA256 hash: $($AppMetadata.Sha256)"
+            $Sha256 = $AppMetadata.Sha256
         }
 
         # Create a PSCustomObject with the file details
         $Output = [PSCustomObject] @{
             Sha256    = $Sha256
-            FileType  = [System.IO.Path]::GetExtension($AppDetail.URI).TrimStart('.')
-            SourceUrl = $AppDetail.URI
+            FileType  = [System.IO.Path]::GetExtension($AppMetadata.URI).TrimStart('.')
+            SourceUrl = $AppMetadata.URI
         }
         return $Output
     }
     else {
-        if ([System.String]::IsNullOrEmpty($AppDetail.URI)) {
-            # Assume $AppDetail.File is provided on the object
+        if ([System.String]::IsNullOrEmpty($AppMetadata.URI)) {
+            # Assume $AppMetadata.File is provided on the object
             try {
-                $File = Get-Item -Path $AppDetail.File
+                $File = Get-Item -Path $AppMetadata.File
             }
             catch {
-                Write-Error -Message "File not found: $($AppDetail.File). Ensure the file exists."
+                Write-Error -Message "File not found: $($AppMetadata.File). Ensure the file exists."
                 exit 1
             }
         }
         else {
             # If the URI is provided, download the file with Evergreen
             New-Item -Path $TempPath -ItemType "Directory" -Force | Out-Null
-            $File = $AppDetail | Save-EvergreenApp -LiteralPath $TempPath
+            $File = $AppMetadata | Save-EvergreenApp -LiteralPath $TempPath
             Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Downloaded file: $($File.FullName)"
         }
 
         # Determine the SHA256 hash of the file
-        if ($null -eq $AppDetail.Sha256) {
+        if ($null -eq $AppMetadata.Sha256) {
             $Sha256 = (Get-FileHash -Path $File.FullName -Algorithm "SHA256").Hash
         }
         else {
-            $Sha256 = $AppDetail.Sha256
+            $Sha256 = $AppMetadata.Sha256
         }
 
         # Get storage account key; Create storage context
@@ -417,7 +436,7 @@ function New-ShellApp {
         [PSCustomObject] $Definition,
 
         [Parameter(Mandatory = $true)]
-        [PSCustomObject] $AppDetail,
+        [PSCustomObject] $AppMetadata,
 
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter] $UseRemoteUrl
@@ -426,7 +445,7 @@ function New-ShellApp {
         try {
             # Create a file object for the Shell App
             $params = @{
-                AppDetail    = $AppDetail
+                AppMetadata  = $AppMetadata
                 UseRemoteUrl = $UseRemoteUrl
             }
             $File = New-ShellAppFile @params
@@ -436,7 +455,7 @@ function New-ShellApp {
                 Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Using fileUnzip: true for zip files."
                 $Definition.fileUnzip = $true
             }
-            $Definition.versions[0].name = $AppDetail.Version
+            $Definition.versions[0].name = $AppMetadata.Version
             $Definition.versions[0].file.sourceUrl = $File.SourceUrl
             $Definition.versions[0].file.sha256 = $File.Sha256
             $DefinitionJson = $Definition | Select-Object -ExcludeProperty "source" | ConvertTo-Json -Depth 10
@@ -479,7 +498,7 @@ function New-ShellAppVersion {
         [System.String] $Id,
 
         [Parameter(Mandatory = $true)]
-        [PSCustomObject] $AppDetail,
+        [PSCustomObject] $AppMetadata,
 
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter] $UseRemoteUrl
@@ -489,7 +508,7 @@ function New-ShellAppVersion {
         try {
             # Create a file object for the Shell App version
             $params = @{
-                AppDetail    = $AppDetail
+                AppMetadata  = $AppMetadata
                 UseRemoteUrl = $UseRemoteUrl
             }
             $File = New-ShellAppFile @params
@@ -508,7 +527,7 @@ function New-ShellAppVersion {
 "@ | ConvertFrom-Json -Depth 10
 
             # Update the app definition with the new version details
-            $Definition.name = $AppDetail.Version
+            $Definition.name = $AppMetadata.Version
             $Definition.file.sourceUrl = $File.SourceUrl
             $Definition.file.sha256 = $File.Sha256
             $DefinitionJson = $Definition | ConvertTo-Json -Depth 10

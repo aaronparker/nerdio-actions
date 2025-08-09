@@ -1,0 +1,25 @@
+{
+    "name": "Visual C++ Redistributable 2022 x86",
+    "description": "The Visual C++ Redistributable installs runtime components that are required to run applications developed with Visual C++.",
+    "isPublic": true,
+    "publisher": "Microsoft",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "VcRedist",
+        "filter": "$_.Architecture -eq \"x86\" -and $_.Release -eq \"2022\""
+    }
+}
