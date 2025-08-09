@@ -95,7 +95,7 @@ jobs:
             }
             if ($null -eq $ShellApp) {
                 Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Importing: $($Def.name)"
-                New-ShellApp -Definition $Def -AppDetail $App
+                New-ShellApp -Definition $Def -AppMetadata $App
             }
             else {
                 $ExistingVersions = Get-ShellAppVersion -Id $ShellApp.Id | ForEach-Object {

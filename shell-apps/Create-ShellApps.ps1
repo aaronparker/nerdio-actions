@@ -38,13 +38,13 @@ if ($null -eq (Get-AzContext | Where-Object { $_.Subscription.Id -eq $Creds.Subs
 $Paths = Get-ChildItem -Path $Path -Include "Definition.json" -Recurse | ForEach-Object { $_ | Select-Object -ExpandProperty "DirectoryName" }
 foreach ($Path in $Paths) {
     $Def = Get-ShellAppDefinition -Path $Path
-    $App = Get-EvergreenAppDetail -Definition $Def
+    $App = Get-AppMetadata -Definition $Def
     $ShellApp = Get-ShellApp | ForEach-Object {
         $_.items | Where-Object { $_.name -eq $Def.name }
     }
     if ($null -eq $ShellApp) {
         Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Importing: $($Def.name)"
-        New-ShellApp -Definition $Def -AppDetail $App
+        New-ShellApp -Definition $Def -AppMetadata $App
     }
     else {
         Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Updating Shell App: $($Def.name)"
