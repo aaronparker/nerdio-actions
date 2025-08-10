@@ -1,6 +1,6 @@
 {
-    "name": "Acrobat Reader",
-    "description": "Adobe Acrobat Reader is a free PDF viewer that allows you to view, print, and annotate PDF documents.",
+    "name": "Acrobat Reader DC",
+    "description": "Adobe Acrobat Reader DC is a free PDF viewer that allows you to view, print, and annotate PDF documents.",
     "isPublic": true,
     "publisher": "Adobe",
     "detectScript": "#detectScript",
