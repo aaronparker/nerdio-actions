@@ -5,7 +5,10 @@
 $ProgressPreference = "SilentlyContinue"
 $InformationPreference = "Continue"
 $ErrorActionPreference = "Stop"
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+#[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+if ([System.Enum]::IsDefined([System.Net.SecurityProtocolType], "Tls13")) {
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls13
+}
 
 # Set up global variables for credentials and environment
 $script:creds = [PSCustomObject] @{
@@ -244,7 +247,8 @@ function Get-ShellApp {
                 Method          = "GET"
                 UseBasicParsing = $true
             }
-            Invoke-RestMethod @params
+            $Result = Invoke-RestMethod @params
+            return $Result.items
         }
         catch {
             throw $_
@@ -271,7 +275,8 @@ function Get-ShellAppVersion {
             Method          = "GET"
             UseBasicParsing = $true
         }
-        Invoke-RestMethod @params
+        $Result = Invoke-RestMethod @params
+        return $Result.items
     }
 }
 
@@ -475,11 +480,12 @@ function New-ShellApp {
                 }
                 $Result = Invoke-RestMethod @params
                 if ($Result.job.status -eq "Completed") {
-                    Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App created successfully. Id: $($Result.job.id)"
+                    Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App created successfully. Job Id: $($Result.job.id)"
                 }
                 else {
                     Write-Error -Message "Failed to create Shell App. Status: $($Result.job.status)"
                 }
+                return $Result
             }
         }
         catch {
@@ -546,11 +552,12 @@ function New-ShellAppVersion {
                 }
                 $Result = Invoke-RestMethod @params
                 if ($Result.job.status -eq "Completed") {
-                    Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App version created successfully. Id: $($Result.job.id)"
+                    Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App version created successfully. Job Id: $($Result.job.id)"
                 }
                 else {
                     Write-Error -Message "Failed to create Shell App version. Status: $($Result.job.status)"
                 }
+                return $Result
             }
         }
         catch {
@@ -584,7 +591,7 @@ function Remove-ShellApp {
                 }
                 $Result = Invoke-RestMethod @params
                 if ($Result.job.status -eq "Completed") {
-                    Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App ($Id) removed successfully. Id: $($Result.job.id)"
+                    Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App ($Id) removed successfully. Job Id: $($Result.job.id)"
                 }
                 elseif ($Result.job.status -eq "Pending") {
                     Write-Information -MessageData "$($PSStyle.Foreground.Yellow)Shell App ($Id) removal status: $($Result.job.status)."
@@ -626,7 +633,7 @@ function Remove-ShellAppVersion {
                 }
                 $Result = Invoke-RestMethod @params
                 if ($Result.job.status -eq "Completed") {
-                    Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App version ($Id, $Name) removed successfully. Id: $($Result.job.id)"
+                    Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App version ($Id, $Name) removed successfully. Job Id: $($Result.job.id)"
                 }
                 elseif ($Result.job.status -eq "Pending") {
                     Write-Information -MessageData "$($PSStyle.Foreground.Yellow)Shell App version ($Id, $Name) removal status: $($Result.job.status)."
@@ -657,8 +664,8 @@ function Update-ShellApp {
         [PSCustomObject] $Definition
     )
     process {
-        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Updating Shell App Id: $Id"
         try {
+            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Updating Shell App Id: $Id"
             $DefinitionJson = $Definition | ConvertTo-Json -Depth 10
             $params = @{
                 Uri             = "https://$($script:env.nmeHost)/api/v1/shell-app/$Id"
@@ -673,11 +680,12 @@ function Update-ShellApp {
             }
             $Result = Invoke-RestMethod @params
             if ($Result.job.status -eq "Completed") {
-                Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App updated successfully. Id: $($Result.job.id)"
+                Write-Information -MessageData "$($PSStyle.Foreground.Green)Shell App updated successfully. Job Id: $($Result.job.id)"
             }
             else {
                 Write-Error -Message "Failed to update Shell App. Status: $($Result.job.status)"
             }
+            return $Result
         }
         catch {
             throw "Failed to update Shell App: $($_.Exception.Message)"
@@ -692,5 +700,120 @@ function Remove-NerdioManagerSecretsFromMemory {
         if (!([System.String]::IsNullOrEmpty($script:creds.ClientSecret))) { $script:creds.ClientSecret = $null }
         if (!([System.String]::IsNullOrEmpty($script:Token.access_token))) { $script:Token.access_token = $null }
         Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Client secret and access token cleared from memory. Use 'Set-NmeCredentials' and 'Connect-Nme' to re-authenticate."
+    }
+}
+
+function Get-AppGroup {
+    [CmdletBinding()]
+    param ()
+    process {
+        try {
+            $params = @{
+                Uri             = "https://$($script:env.nmeHost)/api/v1/app-management/app-group"
+                Headers         = @{
+                    "Accept"        = "application/json; utf-8"
+                    "Authorization" = "Bearer $($script:Token.access_token)"
+                    "Cache-Control" = "no-cache"
+                }
+                Method          = "GET"
+                UseBasicParsing = $true
+            }
+            $Result = Invoke-RestMethod @params
+            return $Result.items
+        }
+        catch {
+            throw "Failed to get App Group: $($_.Exception.Message)"
+        }
+    }
+}
+
+function Get-UamRepository {
+    [CmdletBinding()]
+    param ()
+    process {
+        try {
+            $params = @{
+                Uri             = "https://$($script:env.nmeHost)/api/v1/app-management/repository"
+                Headers         = @{
+                    "Accept"        = "application/json; utf-8"
+                    "Authorization" = "Bearer $($script:Token.access_token)"
+                    "Cache-Control" = "no-cache"
+                }
+                Method          = "GET"
+                UseBasicParsing = $true
+            }
+            $Result = Invoke-RestMethod @params
+            return $Result
+        }
+        catch {
+            throw "Failed to get UAM Repository: $($_.Exception.Message)"
+        }
+    }
+}
+
+function New-AppGroupPayload {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.String] $RepoId,
+
+        [Parameter(Mandatory = $true, ValueFromPipeline)]
+        [Object[]] $ShellApp
+    )
+    process {
+        foreach ($App in $ShellApp) {
+            [PSCustomObject]@{
+                repoId     = $RepoId
+                externalId = $App.publicId
+                version    = "latest"
+                cachedName = $App.name
+                reboot     = $false
+            }
+        }
+    }
+}
+
+function New-AppGroup {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.String] $Name,
+
+        [Parameter(Mandatory = $true)]
+        [Object] $Payload
+    )
+    process {
+        try {
+            $Body = [Ordered]@{
+                name  = $Name
+                items = $Payload
+            } | ConvertTo-Json -Depth 10
+            $params = @{
+                Uri             = "https://$($script:env.nmeHost)/api/v1/app-management/app-group"
+                Method          = "POST"
+                Headers         = @{
+                    "Accept"        = "application/json; utf-8"
+                    "Authorization" = "Bearer $($script:Token.access_token)"
+                    "Cache-Control" = "no-cache"
+                }
+                Body            = $Body
+                ContentType     = "application/json"
+                UseBasicParsing = $true
+            }
+            $Result = Invoke-RestMethod @params
+            return $Result
+        }
+        catch {
+            throw "Failed to create App Group: $($_.Exception.Message)"
+        }
+    }
+}
+
+function Get-ShellAppsRepositoryId {
+    [CmdletBinding()]
+    param ()
+    process {
+        $Id = Get-UamRepository | Where-Object { $_.type -eq "Shell" } | Select-Object -ExpandProperty "id"
+        return $Id
     }
 }

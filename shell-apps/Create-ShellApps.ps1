@@ -40,7 +40,7 @@ foreach ($Path in $Paths) {
     $Def = Get-ShellAppDefinition -Path $Path
     $App = Get-AppMetadata -Definition $Def
     $ShellApp = Get-ShellApp | ForEach-Object {
-        $_.items | Where-Object { $_.name -eq $Def.name }
+        $_ | Where-Object { $_.name -eq $Def.name }
     }
     if ($null -eq $ShellApp) {
         Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Importing: $($Def.name)"
@@ -50,7 +50,7 @@ foreach ($Path in $Paths) {
         Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Updating Shell App: $($Def.name)"
         Update-ShellApp -Id $ShellApp.Id -Definition $Def
         $ExistingVersions = Get-ShellAppVersion -Id $ShellApp.Id | ForEach-Object {
-            $_.items | Where-Object { $_.name -eq $App.Version }
+            $_ | Where-Object { $_.name -eq $App.Version }
         }
         if ($null -eq $ExistingVersions -or [System.Version]$ExistingVersions.name -lt [System.Version]$App.Version) {
             Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Updating with new version: $($Def.name)"
@@ -63,8 +63,8 @@ foreach ($Path in $Paths) {
 }
 
 # Export the list of Shell Apps, showing the latest version for each app
-(Get-ShellApp).items | ForEach-Object {
-    $ExistingVersions = (Get-ShellAppVersion -Id $_.id).items | `
+Get-ShellApp | ForEach-Object {
+    $ExistingVersions = Get-ShellAppVersion -Id $_.id | `
         Where-Object { $_.isPreview -eq $false } | `
         Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true }
     [PSCustomObject]@{
@@ -81,8 +81,8 @@ foreach ($Path in $Paths) {
 
 # Remove the latest version of each Shell App if there are more than 2 versions
 $KeepCount = 2
-(Get-ShellApp).items | ForEach-Object {
-    $ExistingVersions = (Get-ShellAppVersion -Id $_.id).items | `
+Get-ShellApp | ForEach-Object {
+    $ExistingVersions = Get-ShellAppVersion -Id $_.id | `
         Where-Object { $_.isPreview -eq $false } | `
         Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true }
     if ($ExistingVersions.Count -gt $KeepCount) {
