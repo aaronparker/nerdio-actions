@@ -1,0 +1,59 @@
+# Remove all Shell Apps versions from Nerdio Manager
+trigger:
+- none
+
+# Run the pipeline on an Ubuntu runner (and in PowerShell 7)
+pool:
+  vmImage: ubuntu-latest
+
+# Variables - the credentials group and the service connection name
+variables:
+- group: 'Credentials'
+- name: service
+  value: 'sc-rg-Avd1Images-aue'
+
+jobs:
+- job: Remove
+  displayName: 'Remove Nerdio Shell Apps'
+
+  steps:
+  # Checkout the repository so we have access to the module and app definitions
+  - checkout: self
+    displayName: 'Checkout repository'
+
+  # Install the required PowerShell modules
+  - pwsh: |
+        Install-Module -Name "Az.Accounts", "Az.Storage", "Evergreen", "VcRedist" -Force -Scope CurrentUser
+    name: modules
+    displayName: 'Install Modules'
+    workingDirectory: $(build.sourcesDirectory)
+    errorActionPreference: stop
+
+  # This code checks whether the app already exists before importing or updating it
+  - task: PowerShell@2
+    name: removeapps
+    displayName: 'Remove Shell Apps'
+    inputs:
+      targetType: 'inline'
+      pwsh: true
+      script: |
+        $InformationPreference = "Continue"
+        Import-Module -Name "./NerdioShellApps.psm1" -Force
+        $params = @{
+            ClientId           = "$(ClientId)"
+            ClientSecret       = "$(ClientSecret)"
+            TenantId           = "$(TenantId)"
+            ApiScope           = "$(ApiScope)"
+            SubscriptionId     = "$(SubscriptionId)"
+            OAuthToken         = "$(OAuthToken)"
+            ResourceGroupName  = "$(resourceGroupName)"
+            StorageAccountName = "$(storageAccountName)"
+            ContainerName      = "$(containerName)"
+            NmeHost            = "$(nmeHost)"
+        }
+        Set-NmeCredentials @params
+        Connect-Nme
+        Get-ShellApp | Select-Object -ExpandProperty "items" | ForEach-Object { Remove-ShellApp -Id $_.Id -Confirm:$false }
+        Remove-NerdioManagerSecretsFromMemory
+      errorActionPreference: stop
+      workingDirectory: $(build.sourcesDirectory)

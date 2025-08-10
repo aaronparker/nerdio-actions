@@ -1,0 +1,71 @@
+# Create App Group with Shell Apps
+
+# Trigger the pipeline on change to the 'apps' directory
+trigger:
+- none
+
+# Run the pipeline on an Ubuntu runner (and in PowerShell 7)
+pool:
+  vmImage: ubuntu-latest
+
+# Variables - the credentials group and the service connection name
+variables:
+- group: 'Credentials'
+- name: service
+  value: 'sc-rg-Avd1Images-aue'
+
+parameters:
+- name: appGroupName
+  type: string
+  default: 'All Shell Apps'
+
+jobs:
+- job: Create
+  displayName: 'Create App Group'
+
+  steps:
+  # Checkout the repository so we have access to the module and app definitions
+  - checkout: self
+    displayName: 'Checkout repository'
+
+  # Install the required PowerShell modules
+  - pwsh: |
+        Install-Module -Name "Az.Accounts", "Az.Storage", "Evergreen", "VcRedist" -Force -Scope CurrentUser
+    name: modules
+    displayName: 'Install Modules'
+    workingDirectory: $(build.sourcesDirectory)
+    errorActionPreference: stop
+
+  # Authenticate to Nerdio Manager, and create the app group
+  - task: PowerShell@2
+    name: newappgroup
+    displayName: 'Create App Group'
+    inputs:
+      targetType: 'inline'
+      pwsh: true
+      script: |
+        $InformationPreference = "Continue"
+        Import-Module -Name "./NerdioShellApps.psm1" -Force
+        $params = @{
+            ClientId           = "$(ClientId)"
+            ClientSecret       = "$(ClientSecret)"
+            TenantId           = "$(TenantId)"
+            ApiScope           = "$(ApiScope)"
+            SubscriptionId     = "$(SubscriptionId)"
+            OAuthToken         = "$(OAuthToken)"
+            ResourceGroupName  = "$(resourceGroupName)"
+            StorageAccountName = "$(storageAccountName)"
+            ContainerName      = "$(containerName)"
+            NmeHost            = "$(nmeHost)"
+        }
+        Set-NmeCredentials @params
+        Connect-Nme
+        $ShellApps = Get-ShellApp
+        $params = @{
+            Name    = "${{ parameters.appGroupName }}"
+            Payload = (New-AppGroupPayload -RepoId (Get-ShellAppsRepositoryId) -ShellApp $ShellApps)
+        }
+        New-AppGroup @params
+        Remove-NerdioManagerSecretsFromMemory
+      errorActionPreference: stop
+      workingDirectory: $(build.sourcesDirectory)

@@ -37,7 +37,7 @@ jobs:
 
   # Install the required PowerShell modules
   - pwsh: |
-      Install-Module -Name "Evergreen" -AllowClobber -Force -Scope CurrentUser
+      Install-Module -Name "Evergreen", "VcRedist" -AllowClobber -Force -Scope CurrentUser
     name: modules
     displayName: 'Install Modules'
     workingDirectory: $(build.sourcesDirectory)
@@ -68,7 +68,6 @@ jobs:
       ScriptType: 'InlineScript'
       Inline: |
         $InformationPreference = "Continue"
-        Import-Module -Name "Az.Accounts", "Az.Storage", "Evergreen" -Force
         Import-Module -Name "./NerdioShellApps.psm1" -Force
         Set-AzContext -SubscriptionId $(SubscriptionId) -TenantId $(TenantId)
         $params = @{
@@ -89,9 +88,9 @@ jobs:
         $Paths = Get-ChildItem -Path $Path -Include "Definition.json" -Recurse | ForEach-Object { $_ | Select-Object -ExpandProperty "DirectoryName" }
         foreach ($Path in $Paths) {
             $Def = Get-ShellAppDefinition -Path $Path
-            $App = Get-EvergreenAppDetail -Definition $Def
+            $App = Get-AppMetadata -Definition $Def
             $ShellApp = Get-ShellApp | ForEach-Object {
-                $_.items | Where-Object { $_.name -eq $Def.name }
+                $_ | Where-Object { $_.name -eq $Def.name }
             }
             if ($null -eq $ShellApp) {
                 Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Importing: $($Def.name)"
@@ -99,10 +98,10 @@ jobs:
             }
             else {
                 $ExistingVersions = Get-ShellAppVersion -Id $ShellApp.Id | ForEach-Object {
-                    $_.items | Where-Object { $_.name -eq $App.Version }
+                    $_ | Where-Object { $_.name -eq $App.Version }
                 }
                 if ($null -eq $ExistingVersions -or [System.Version]$ExistingVersions.name -lt [System.Version]$App.Version) {
-                    New-ShellAppVersion -Id $ShellApp.Id -AppDetail $App
+                    New-ShellAppVersion -Id $ShellApp.Id -AppMetadata $App
                 }
                 else {
                     Write-Information -MessageData "$($PSStyle.Foreground.Yellow)Shell app version exists: '$($Def.name) $($App.Version)'. No action taken."
@@ -124,7 +123,7 @@ jobs:
       ScriptType: 'InlineScript'
       Inline: |
         $InformationPreference = "Continue"
-        Import-Module -Name "Az.Accounts", "Az.Storage", "Evergreen" -Force
+        Import-Module -Name "Az.Accounts", "Az.Storage", "Evergreen", "VcRedist" -Force
         Import-Module -Name "./NerdioShellApps.psm1" -Force
         Set-AzContext -SubscriptionId $(SubscriptionId) -TenantId $(TenantId)
         $params = @{
@@ -142,8 +141,8 @@ jobs:
         Set-NmeCredentials @params
         Connect-Nme
         $KeepCount = 2
-        (Get-ShellApp).items | ForEach-Object {
-            $ExistingVersions = (Get-ShellAppVersion -Id $_.id).items | `
+        Get-ShellApp | ForEach-Object {
+            $ExistingVersions = Get-ShellAppVersion -Id $_.id | `
                 Where-Object { $_.isPreview -eq $false } | `
                 Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true }
             if ($ExistingVersions.Count -gt $KeepCount) {
@@ -191,8 +190,8 @@ jobs:
         }
         Set-NmeCredentials @params
         Connect-Nme
-        (Get-ShellApp).items | ForEach-Object {
-            $ExistingVersions = (Get-ShellAppVersion -Id $_.id).items | `
+        Get-ShellApp | ForEach-Object {
+            $ExistingVersions = Get-ShellAppVersion -Id $_.id | `
                 Where-Object { $_.isPreview -eq $false } | `
                 Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true }
             [PSCustomObject]@{
