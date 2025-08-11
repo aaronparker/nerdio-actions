@@ -62,6 +62,7 @@ jobs:
         Connect-Nme
         $AppGroup = Get-AppGroup | Where-Object { $_.Name -eq "${{ parameters.appGroupName }}" }
         if ($AppGroup) {
+            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Updating existing app group."
             $ShellApps = Get-ShellApp
             $ShellAppsRepoId = Get-ShellAppsRepositoryId
             if ($ShellApps.Name.Count -gt $AppGroup.items.cachedName.Count) {
@@ -77,6 +78,7 @@ jobs:
             }
         }
         else {
+            Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Create new app group."
             $ShellApps = Get-ShellApp
             $params = @{
                 Name    = "${{ parameters.appGroupName }}"
