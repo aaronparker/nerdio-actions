@@ -755,7 +755,7 @@ function New-AppGroupPayload {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
-        [System.String] $RepoId,
+        [System.Int32] $RepoId,
 
         [Parameter(Mandatory = $true, ValueFromPipeline)]
         [Object[]] $ShellApp
@@ -770,6 +770,15 @@ function New-AppGroupPayload {
                 reboot     = $false
             }
         }
+    }
+}
+
+function Get-ShellAppsRepositoryId {
+    [CmdletBinding()]
+    param ()
+    process {
+        $Id = Get-UamRepository | Where-Object { $_.type -eq "Shell" } | Select-Object -ExpandProperty "id"
+        return $Id
     }
 }
 
@@ -809,11 +818,41 @@ function New-AppGroup {
     }
 }
 
-function Get-ShellAppsRepositoryId {
+function Update-AppGroup {
     [CmdletBinding()]
-    param ()
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.Int32] $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String] $Name,
+
+        [Parameter(Mandatory = $true)]
+        [Object] $Payload
+    )
     process {
-        $Id = Get-UamRepository | Where-Object { $_.type -eq "Shell" } | Select-Object -ExpandProperty "id"
-        return $Id
+        try {
+            $Body = [Ordered]@{
+                name  = $Name
+                items = $Payload
+            } | ConvertTo-Json -Depth 10
+            $params = @{
+                Uri             = "https://$($script:env.nmeHost)/api/v1/app-management/app-group/$Id"
+                Method          = "PATCH"
+                Headers         = @{
+                    "Accept"        = "application/json; utf-8"
+                    "Authorization" = "Bearer $($script:Token.access_token)"
+                    "Cache-Control" = "no-cache"
+                }
+                Body            = $Body
+                ContentType     = "application/json"
+                UseBasicParsing = $true
+            }
+            $Result = Invoke-RestMethod @params
+            return $Result
+        }
+        catch {
+            throw "Failed to update App Group: $($_.Exception.Message)"
+        }
     }
 }

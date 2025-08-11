@@ -39,7 +39,7 @@ jobs:
   # Authenticate to Nerdio Manager, and create the app group
   - task: PowerShell@2
     name: newappgroup
-    displayName: 'Create App Group'
+    displayName: 'Create or Update App Group'
     inputs:
       targetType: 'inline'
       pwsh: true
@@ -60,12 +60,30 @@ jobs:
         }
         Set-NmeCredentials @params
         Connect-Nme
-        $ShellApps = Get-ShellApp
-        $params = @{
-            Name    = "${{ parameters.appGroupName }}"
-            Payload = (New-AppGroupPayload -RepoId (Get-ShellAppsRepositoryId) -ShellApp $ShellApps)
+        $AppGroup = Get-AppGroup | Where-Object { $_.Name -eq "${{ parameters.appGroupName }}" }
+        if ($AppGroup) {
+            $ShellApps = Get-ShellApp
+            $ShellAppsRepoId = Get-ShellAppsRepositoryId
+            if ($ShellApps.Name.Count -gt $AppGroup.items.cachedName.Count) {
+                $Payload = $ShellApps.Name | Where-Object { $_ -notin $AppGroup.items.cachedName } | ForEach-Object {
+                    $Name = $_
+                    $ShellApp = $ShellApps | Where-Object { $_.name -eq $Name }
+                    New-AppGroupPayload -RepoId $ShellAppsRepoId -ShellApp $ShellApp
+                }
+              $Apps = [System.Collections.ArrayList]@()
+              $AppGroup.items | ForEach-Object { $Apps.Add($_) | Out-Null }
+              $Payload | ForEach-Object { $Apps.Add($_) | Out-Null }
+              Update-AppGroup -Id $AppGroup.id -Name $AppGroup.Name -Payload $Apps
+            }
         }
-        New-AppGroup @params
+        else {
+            $ShellApps = Get-ShellApp
+            $params = @{
+                Name    = "${{ parameters.appGroupName }}"
+                Payload = (New-AppGroupPayload -RepoId (Get-ShellAppsRepositoryId) -ShellApp $ShellApps)
+            }
+            New-AppGroup @params
+        }
         Remove-NerdioManagerSecretsFromMemory
       errorActionPreference: stop
       workingDirectory: $(build.sourcesDirectory)

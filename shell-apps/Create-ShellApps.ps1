@@ -35,6 +35,7 @@ if ($null -eq (Get-AzContext | Where-Object { $_.Subscription.Id -eq $Creds.Subs
     Connect-AzAccount -UseDeviceAuthentication -TenantId $Creds.tenantId -Subscription $Creds.subscriptionId
 }
 
+# Read the app definitions and create Shell Apps
 $Paths = Get-ChildItem -Path $Path -Include "Definition.json" -Recurse | ForEach-Object { $_ | Select-Object -ExpandProperty "DirectoryName" }
 foreach ($Path in $Paths) {
     $Def = Get-ShellAppDefinition -Path $Path
@@ -73,11 +74,36 @@ Get-ShellApp | ForEach-Object {
         versionCount  = $ExistingVersions | Measure-Object | Select-Object -ExpandProperty "Count"
         latestVersion = ($ExistingVersions | Select-Object -First 1).name
         createdAt     = $_.createdAt
-        fileUnzip      = $_.fileUnzip
+        fileUnzip     = $_.fileUnzip
         isPublic      = $_.isPublic
         id            = $_.id
     }
 } | Format-Table -AutoSize
+
+# Create an App Group with the Shell Apps
+$AppGroupName = "All Shell Apps"
+$ShellApps = Get-ShellApp
+$params = @{
+    Name    = $AppGroupName
+    Payload = (New-AppGroupPayload -RepoId (Get-ShellAppsRepositoryId) -ShellApp $ShellApps)
+}
+New-AppGroup @params
+
+# Update the Shell App group to include all Shell Apps
+$AppGroup = Get-AppGroup | Where-Object { $_.Name -eq $AppGroupName }
+$ShellApps = Get-ShellApp
+$ShellAppsRepoId = Get-ShellAppsRepositoryId
+if ($ShellApps.Name.Count -gt $AppGroup.items.cachedName.Count) {
+    $Payload = $ShellApps.Name | Where-Object { $_ -notin $AppGroup.items.cachedName } | ForEach-Object {
+        $Name = $_
+        $ShellApp = $ShellApps | Where-Object { $_.name -eq $Name }
+        New-AppGroupPayload -RepoId $ShellAppsRepoId -ShellApp $ShellApp
+    }
+    $Apps = [System.Collections.ArrayList]@()
+    $AppGroup.items | ForEach-Object { $Apps.Add($_) | Out-Null }
+    $Payload | ForEach-Object { $Apps.Add($_) | Out-Null }
+    Update-AppGroup -Id $AppGroup.id -Name $AppGroup.Name -Payload $Apps
+}
 
 # Remove the latest version of each Shell App if there are more than 2 versions
 $KeepCount = 2
