@@ -1,0 +1,26 @@
+{
+    "name": "Chrome",
+    "description": "The browser built by Google. Browse with the power of Google.",
+    "isPublic": true,
+    "publisher": "Microsoft",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Evergreen",
+        "app": "GoogleChrome",
+        "filter": "$_.Channel -eq \"Stable\" -and $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\""
+    }
+}

@@ -46,7 +46,7 @@ Start-ProcessWithLog @params
 
 # Post install configuration
 $prefs = @{
-    "homepage"               = "https://www.microsoft365.com"
+    "homepage"               = "https://m365.cloud.microsoft/?auth=2"
     "homepage_is_newtabpage" = $false
     "browser"                = @{
         "show_home_button" = $true

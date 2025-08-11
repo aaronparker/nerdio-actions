@@ -1,0 +1,26 @@
+{
+    "name": "draw.io",
+    "description": "Work offline on your diagrams and save locally using the draw.io Desktop app for Windows.",
+    "isPublic": true,
+    "publisher": "JGraph",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Evergreen",
+        "app": "JGraphDrawIO",
+        "filter": "$_.Architecture -eq \"x86\" -and $_.Type -eq \"msi\""
+    }
+}
