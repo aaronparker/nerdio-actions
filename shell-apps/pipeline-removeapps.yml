@@ -30,14 +30,16 @@ jobs:
     errorActionPreference: stop
 
   # This code checks whether the app already exists before importing or updating it
-  - task: PowerShell@2
+  - task: AzurePowerShell@5
     name: removeapps
     displayName: 'Remove Shell Apps'
     inputs:
-      targetType: 'inline'
-      pwsh: true
-      script: |
+      ScriptType: 'InlineScript'
+      Inline: |
         $InformationPreference = "Continue"
+        Import-Module -Name "Az.Accounts", "Az.Storage", "Evergreen", "VcRedist" -Force
+        Import-Module -Name "./NerdioShellApps.psm1" -Force
+        Set-AzContext -SubscriptionId $(SubscriptionId) -TenantId $(TenantId)
         Import-Module -Name "./NerdioShellApps.psm1" -Force
         $params = @{
             ClientId           = "$(ClientId)"
@@ -53,7 +55,9 @@ jobs:
         }
         Set-NmeCredentials @params
         Connect-Nme
-        Get-ShellApp | Select-Object -ExpandProperty "items" | ForEach-Object { Remove-ShellApp -Id $_.Id -Confirm:$false }
+        Get-ShellApp | ForEach-Object { Remove-ShellApp -Id $_.Id -Confirm:$false }
         Remove-NerdioManagerSecretsFromMemory
+      azurePowerShellVersion: 'LatestVersion'
       errorActionPreference: stop
+      pwsh: true
       workingDirectory: $(build.sourcesDirectory)
