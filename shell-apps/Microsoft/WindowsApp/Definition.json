@@ -1,6 +1,6 @@
 {
     "name": "Windows App",
-    "description": "Windows App is your gateway to securely connect to Windows across Windows 365, Azure Virtual Desktop, Microsoft Dev Box, and more",
+    "description": "Securely connect to Windows across Windows 365, Azure Virtual Desktop, Microsoft Dev Box, and more.",
     "isPublic": true,
     "publisher": "Microsoft",
     "detectScript": "#detectScript",

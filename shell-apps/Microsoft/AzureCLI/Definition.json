@@ -1,6 +1,6 @@
 {
     "name": "Azure CLI",
-    "description": "Azure Command-Line Interface",
+    "description": "Azure CLI is a cross-platform command-line tool for managing Azure resources with interactive commands or scripts.",
     "isPublic": true,
     "publisher": "Microsoft",
     "detectScript": "#detectScript",
