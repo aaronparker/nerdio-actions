@@ -1,0 +1,27 @@
+{
+    "name": "Aptos Font",
+    "description": "Microsoft Aptos fonts for local installation for use in applications that do not have access to the Office Font Service.",
+    "isPublic": true,
+    "publisher": "Microsoft",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": true,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Static",
+        "version": "4.40",
+        "url": "https://stavddsplbxulhzmac.blob.core.windows.net/binaries/MicrosoftAptosFonts.zip",
+        "path": null
+    }
+}

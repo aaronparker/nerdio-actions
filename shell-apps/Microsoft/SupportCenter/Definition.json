@@ -1,0 +1,27 @@
+{
+    "name": "Configuration Manager Support Center",
+    "description": "Support Center has powerful capabilities including troubleshooting and real-time log viewing.",
+    "isPublic": true,
+    "publisher": "Microsoft",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Static",
+        "version": "5.2403.1209.1000",
+        "url": "https://stavddsplbxulhzmac.blob.core.windows.net/binaries/SupportCenterInstaller.msi",
+        "path": null
+    }
+}
