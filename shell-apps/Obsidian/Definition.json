@@ -1,0 +1,26 @@
+{
+    "name": "Obsidian",
+    "description": "The free and flexible app for your private thoughts.",
+    "isPublic": true,
+    "publisher": "Obsidian",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "type": "Evergreen",
+        "app": "Obsidian",
+        "filter": "$_.Type -eq \"exe\""
+    }
+}
