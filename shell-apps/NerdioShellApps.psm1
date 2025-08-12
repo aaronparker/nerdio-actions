@@ -1,3 +1,4 @@
+#Requires -PSEdition Core
 #Requires -Module Az.Accounts, Az.Storage, Evergreen, VcRedist
 [CmdletBinding()]
 
@@ -5,9 +6,11 @@
 $ProgressPreference = "SilentlyContinue"
 $InformationPreference = "Continue"
 $ErrorActionPreference = "Stop"
-#[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 if ([System.Enum]::IsDefined([System.Net.SecurityProtocolType], "Tls13")) {
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls13
+}
+else {
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 }
 
 # Set up global variables for credentials and environment
@@ -192,14 +195,19 @@ function Get-AppMetadata {
                 Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Found version: $($Metadata.Version)"
                 return $Metadata
             }
-            "Direct" {
-                Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Using direct source URL: $($Definition.source.url)"
-                $Metadata = [PSCustomObject] @{
-                    Version = $Definition.source.version
-                    Sha256  = $Definition.source.sha256
-                    File    = $Definition.source.url
+            "Static" {
+                if ([System.String]::IsNullOrEmpty($Definition.source.url)) {
+                    # TODO - add an object that uses local file system
+                    return $null
                 }
-                return $Metadata
+                else {
+                    Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Using direct source URL: $($Definition.source.url)"
+                    $Metadata = [PSCustomObject] @{
+                        Version = $Definition.source.version
+                        URI     = $Definition.source.url
+                    }
+                    return $Metadata
+                }
             }
         }
     }
@@ -854,5 +862,24 @@ function Update-AppGroup {
         catch {
             throw "Failed to update App Group: $($_.Exception.Message)"
         }
+    }
+}
+
+function Get-MsiVersion {
+    param (
+        [Parameter(Mandatory)]
+        [System.String]$Path
+    )
+    try {
+        $installer = New-Object -ComObject "WindowsInstaller.Installer"
+        $database = $installer.GetType().InvokeMember("OpenDatabase", 'InvokeMethod', $null, $installer, @($Path, 0))
+        $view = $database.GetType().InvokeMember("OpenView", 'InvokeMethod', $null, $database, @("SELECT `Value` FROM `Property` WHERE `Property` = 'ProductVersion'"))
+        $view.GetType().InvokeMember("Execute", 'InvokeMethod', $null, $view, $null)
+        $record = $view.GetType().InvokeMember("Fetch", 'InvokeMethod', $null, $view, $null)
+        $version = $record.GetType().InvokeMember("StringData", 'GetProperty', $null, $record, 1)
+        return $version
+    }
+    catch {
+        throw "Failed to read MSI version: $_"
     }
 }
