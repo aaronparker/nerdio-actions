@@ -5,8 +5,9 @@
 if (Test-Path -Path $FilePath) {
     $FileItem = Get-ChildItem -Path $FilePath -ErrorAction "SilentlyContinue"
     $Context.Log("File found: $($FileItem.FullName)")
-    $FileInfo = [Diagnostics.FileVersionInfo]::GetVersionInfo($FileItem.FullName)
-    if ([System.Version]::Parse($FileInfo.ProductVersion) -ge [System.Version]::Parse($Context.TargetVersion)) {
+    $ProductVersion = [System.Version]::Parse($FileInfo.ProductVersion)
+    $ContextVersion = [System.Version]::Parse($Context.TargetVersion)
+    if ([System.Version]::Parse("$($ProductVersion.Major).$($ProductVersion.Minor)") -ge [System.Version]::Parse("3.$($ContextVersion.Major)")) {
         $Context.Log("No update required. Found '$($FileInfo.ProductVersion)' against '$($Context.TargetVersion)'.")
         if ($Context.Versions -is [System.Array]) { return $FileInfo.ProductVersion } else { return $true }
     }
