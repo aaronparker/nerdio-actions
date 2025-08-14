@@ -29,17 +29,15 @@ Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft SQL Server Mana
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/uninstall `"$($_.PSChildName)`" /quiet /norestart"
         Wait         = $true
+        PassThru     = $true
         NoNewWindow  = $true
         ErrorAction  = "Stop"
     }
-    Start-Process @params
-    $Context.Log("Uninstall complete")
+    $result = Start-Process @params
+    $Context.Log("Uninstall complete. Return code: $($result.ExitCode)")
 }
 
+# Remove shortcuts
 $Shortcuts = @("$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft SQL Server Tools 20")
-foreach ($Shortcut in $Shortcuts) {
-    if (Test-Path -Path $Shortcut) {
-        $Context.Log("Remove path: $($_.PSChildName)")
-        Remove-Item -Path $Shortcut -Recurse -Force
-    }
-}
+Get-Item -Path $Shortcuts | `
+    ForEach-Object { $Context.Log("Remove file: $($_.FullName)"); Remove-Item -Path $_.FullName -Force -ErrorAction "SilentlyContinue" }

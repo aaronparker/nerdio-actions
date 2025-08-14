@@ -3,11 +3,12 @@ $params = @{
     FilePath     = $Context.GetAttachedBinary()
     ArgumentList = "-silent"
     Wait         = $true
+    PassThru     = $true
     NoNewWindow  = $true
     ErrorAction  = "Stop"
 }
-Start-Process @params
-$Context.Log("Install complete")
+$result = Start-Process @params
+$Context.Log("Install complete. Return code: $($result.ExitCode)")
 
 # Configure PowerToys settings appropriate for VDI environments
 Start-Process -Wait -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList "add HKLM\Software\Policies\PowerToys /v AllowExperimentation /d 0 /t REG_DWORD /f"

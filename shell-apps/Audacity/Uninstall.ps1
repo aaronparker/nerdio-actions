@@ -28,16 +28,13 @@ $params = @{
     FilePath     = "${Env:ProgramFiles}\Audacity\unins000.exe"
     ArgumentList = "/VERYSILENT"
     Wait         = $true
+    PassThru     = $true
     NoNewWindow  = $true
     ErrorAction  = "Stop"
 }
-Start-Process @params
-$Context.Log("Uninstall complete")
+$result = Start-Process @params
+$Context.Log("Uninstall complete. Return code: $($result.ExitCode)")
 
 $Shortcuts = @("$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Audacity.lnk")
-foreach ($Shortcut in $Shortcuts) {
-    if (Test-Path -Path $Shortcut) {
-        $Context.Log("Remove path: $($_.PSChildName)")
-        Remove-Item -Path $Shortcut -Recurse -Force
-    }
-}
+Get-Item -Path $Shortcuts | `
+    ForEach-Object { $Context.Log("Remove file: $($_.FullName)"); Remove-Item -Path $_.FullName -Force -ErrorAction "SilentlyContinue" }

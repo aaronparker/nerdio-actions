@@ -54,10 +54,12 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             FilePath     = "$Env:SystemRoot\System32\dism.exe"
             ArgumentList = "/Online /Add-ProvisionedAppxPackage /PackagePath:`"$($Context.GetAttachedBinary())`" /SkipLicense"
             Wait         = $true
+            PassThru     = $true
             NoNewWindow  = $true
             ErrorAction  = "Stop"
         }
-        Start-Process @params
+        $result = Start-Process @params
+        $Context.Log("Install complete. Return code: $($result.ExitCode)")
     }
 
     "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*|Microsoft Windows 10 Enterprise*|Microsoft Windows 10 Pro*" {
@@ -66,10 +68,12 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             FilePath     = $TeamsExe
             ArgumentList = "-p -o `"$($Context.GetAttachedBinary())`""
             Wait         = $true
+            PassThru     = $true
             NoNewWindow  = $true
             ErrorAction  = "Stop"
         }
-        Start-Process @params
+        $result = Start-Process @params
+        $Context.Log("Install complete. Return code: $($result.ExitCode)")
     }
 }
 
@@ -93,10 +97,12 @@ else {
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/uninstall `"$($PreviousInstall.PSChildName)`" /quiet /norestart"
         Wait         = $true
+        PassThru     = $true
         NoNewWindow  = $true
         ErrorAction  = "Stop"
     }
-    Start-Process @params
+    $result = Start-Process @params
+    $Context.Log("Uninstall complete. Return code: $($result.ExitCode)")
 }
 
 # Install the new version of the add-in
@@ -105,7 +111,9 @@ $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$AddInInstallerPath`" ALLUSERS=1 TARGETDIR=`"$AddInPath`" /quiet /norestart"
     Wait         = $true
+    PassThru     = $true
     NoNewWindow  = $true
     ErrorAction  = "Stop"
 }
-Start-Process @params
+$result = Start-Process @params
+$Context.Log("Install complete. Return code: $($result.ExitCode)")

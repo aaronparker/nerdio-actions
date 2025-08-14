@@ -10,15 +10,16 @@ $params = @{
     FilePath     = $Context.GetAttachedBinary()
     ArgumentList = $ArgumentList
     Wait         = $true
+    PassThru     = $true
     NoNewWindow  = $true
     ErrorAction  = "Stop"
 }
-Start-Process @params
-$Context.Log("Install complete")
+$result = Start-Process @params
+$Context.Log("Install complete. Return code: $($result.ExitCode)")
 
 #region Acrobat policies: # https://www.adobe.com/devnet-docs/acrobatetk/tools/PrefRef/Windows/FeatureLockDown.html
 # Force Reader into read-only mode; Disable Adobe Updater
-$Context.Log("Configuring Adobe Acrobat Reader policies to enforce read-only mode and disable updates")
+$Context.Log("Configure Adobe Acrobat Reader settings")
 Start-Process -Wait -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList 'add "HKLM\SOFTWARE\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown" /v "bIsSCReducedModeEnforcedEx" /d 1 /t "REG_DWORD" /f'
 Start-Process -Wait -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList 'add "HKLM\SOFTWARE\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown" /v "bAcroSuppressUpsell" /d 1 /t "REG_DWORD" /f'
 Start-Process -Wait -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList 'add "HKLM\SOFTWARE\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown" /v "bDisableJavaScript" /d 1 /t "REG_DWORD" /f'
@@ -39,13 +40,20 @@ Start-Process -Wait -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList '
 #endregion
 
 # Disable update tasks - assuming we're installing on a gold image or updates will be managed
-$Context.Log("Wait for install to complete."
+$Context.Log("Wait for install to complete.")
 Start-Sleep -Seconds 30
-$Context.Log("Disabling Adobe Acrobat Reader update tasks and services")
+Get-Service -Name "AdobeARMservice" -ErrorAction "SilentlyContinue" | `
+    ForEach-Object { $Context.Log("Disable service: $($_.Name)"); Set-Service -Name $_.Name -StartupType "Disabled" -ErrorAction "SilentlyContinue" }
+Get-ScheduledTask -TaskName "Adobe Acrobat Update Task*" -ErrorAction "SilentlyContinue" | `
+    ForEach-Object { $Context.Log("Unregister task: $($_.TaskName)"); Unregister-ScheduledTask -TaskName $_.TaskName -Confirm:$false -ErrorAction "SilentlyContinue" }
+
+
+$Context.Log("Disabling Adobe AdobeARMservice service.")
 Get-Service -Name "AdobeARMservice" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
+$Context.Log("Disabling Adobe AdobeARMservice service.")
 Get-ScheduledTask -TaskName "Adobe Acrobat Update Task*" | Unregister-ScheduledTask -Confirm:$false -ErrorAction "SilentlyContinue"
 
 # Delete public desktop shortcut
-$Context.Log("Removing public desktop shortcut for Adobe Acrobat Reader")
 $Shortcuts = @("$Env:Public\Desktop\Adobe Acrobat.lnk")
-Remove-Item -Path $Shortcuts -Force -ErrorAction "SilentlyContinue"
+Get-Item -Path $Shortcuts | `
+    ForEach-Object { $Context.Log("Remove file: $($_.FullName)"); Remove-Item -Path $_.FullName -Force -ErrorAction "SilentlyContinue" }

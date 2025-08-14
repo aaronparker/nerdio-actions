@@ -8,8 +8,11 @@ $params = @{
     FilePath     = $SetupExe.FullName
     ArgumentList = "setup.exe --uninstall --system-level --verbose-logging --force-uninstall"
     Wait         = $true
+    PassThru     = $true
     NoNewWindow  = $true
     ErrorAction  = "Stop"
 }
 Start-Process @params
+$result = Start-Process @params
+$Context.Log("Install complete. Return code: $($result.ExitCode)")
 $Context.Log("Uninstall complete")

@@ -28,8 +28,9 @@ $params = @{
     FilePath     = "${Env:ProgramFiles}\Obsidian\Uninstall Obsidian.exe"
     ArgumentList = "/allusers /S"
     Wait         = $true
+    PassThru     = $true
     NoNewWindow  = $true
     ErrorAction  = "Stop"
 }
-Start-Process @params
-$Context.Log("Uninstall complete")
+$result = Start-Process @params
+$Context.Log("Uninstall complete. Return code: $($result.ExitCode)")

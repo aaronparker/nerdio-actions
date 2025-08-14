@@ -3,10 +3,12 @@ $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package $($Context.GetAttachedBinary()) /quiet /norestart ALLUSERS=1"
     Wait         = $true
+    PassThru     = $true
     NoNewWindow  = $true
     ErrorAction  = "Stop"
 }
-Start-Process @params
+$result = Start-Process @params
+$Context.Log("Install complete. Return code: $($result.ExitCode)")
 
 # Post install configuration
 $prefs = @{
@@ -39,12 +41,16 @@ $prefs = @{
         "verbose_logging"                           = $true
     }
 }
+$Context.Log("Write file: '$Env:ProgramFiles\Google\Chrome\Application\master_preferences'.")
 $prefs | ConvertTo-Json | Set-Content -Path "$Env:ProgramFiles\Google\Chrome\Application\master_preferences" -Force -Encoding "utf8"
+
+# Remove shortcuts
 $Shortcuts = @("$Env:Public\Desktop\Google Chrome.lnk")
-Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
+Get-Item -Path $Shortcuts | `
+    ForEach-Object { $Context.Log("Remove file: $($_.FullName)"); Remove-Item -Path $_.FullName -Force -ErrorAction "SilentlyContinue" }
 
 # Disable update tasks - assuming we're installing on a gold image or updates will be managed
-Get-Service -Name "GoogleUpdaterInternalService*" -ErrorAction "SilentlyContinue" | ForEach-Object { Set-Service -Name $_.Name -StartupType "Disabled" -ErrorAction "SilentlyContinue" }
-Get-Service -Name "GoogleUpdaterService*" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
-Get-Service -Name "GoogleChromeElevationService" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
-Get-ScheduledTask -TaskName "GoogleUpdateTaskMachine*" | Unregister-ScheduledTask -Confirm:$false -ErrorAction "SilentlyContinue"
+Get-Service -Name "GoogleUpdater*", "GoogleChromeElevationService" -ErrorAction "SilentlyContinue" | `
+    ForEach-Object { $Context.Log("Disable service: $($_.Name)"); Set-Service -Name $_.Name -StartupType "Disabled" -ErrorAction "SilentlyContinue" }
+Get-ScheduledTask -TaskName "GoogleUpdateTaskMachine*" -ErrorAction "SilentlyContinue" | `
+    ForEach-Object { $Context.Log("Unregister task: $($_.TaskName)"); Unregister-ScheduledTask -TaskName $_.TaskName -Confirm:$false -ErrorAction "SilentlyContinue" }

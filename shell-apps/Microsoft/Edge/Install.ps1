@@ -3,10 +3,12 @@ $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package $($Context.GetAttachedBinary()) /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true"
     Wait         = $true
+    PassThru     = $true
     NoNewWindow  = $true
     ErrorAction  = "Stop"
 }
-Start-Process @params
+$result = Start-Process @params
+$Context.Log("Install complete. Return code: $($result.ExitCode)")
 
 # Post install configuration
 $prefs = @"
@@ -71,7 +73,10 @@ $prefs = @"
     }
 }
 "@
+$Context.Log("Write file: '${Env:ProgramFiles(x86)}\Microsoft\Edge\Application\initial_preferences'.")
 $prefs | Set-Content -Path "${Env:ProgramFiles(x86)}\Microsoft\Edge\Application\initial_preferences" -Force -Encoding "utf8"
+
+# Remove shortcuts
 $Shortcuts = @("$Env:Public\Desktop\Microsoft Edge*.lnk")
-Remove-Item -Path $Shortcuts -Force -ErrorAction "SilentlyContinue"
-$Context.Log("Install complete")
+Get-Item -Path $Shortcuts | `
+    ForEach-Object { $Context.Log("Remove file: $($_.FullName)"); Remove-Item -Path $_.FullName -Force -ErrorAction "SilentlyContinue" }
