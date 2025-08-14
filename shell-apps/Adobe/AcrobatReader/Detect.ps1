@@ -1,5 +1,5 @@
 # Variables
-[System.String] $FilePath = "${Env:ProgramFiles}\Acrobat Reader DC\Reader\AcroRd32.exe"
+[System.String] $FilePath = "${Env:ProgramFiles}\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
 
 # Detection logic
 if (Test-Path -Path $FilePath) {
