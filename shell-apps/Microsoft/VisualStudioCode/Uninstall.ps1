@@ -39,5 +39,5 @@ Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Visual Studio C
 
 # Remove shortcuts
 $Shortcuts = @("$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\Visual Studio Code\Visual Studio Code.lnk")
-Get-Item -Path $Shortcuts | `
+Get-Item -Path $Shortcuts -ErrorAction "SilentlyContinue" | `
     ForEach-Object { $Context.Log("Remove file: $($_.FullName)"); Remove-Item -Path $_.FullName -Force -ErrorAction "SilentlyContinue" }

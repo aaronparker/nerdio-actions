@@ -14,5 +14,5 @@ $Context.Log("Install complete")
 
 # Delete public desktop shortcut
 $Shortcuts = @("$Env:Public\Desktop\Obsidian.lnk")
-Get-Item -Path $Shortcuts | `
+Get-Item -Path $Shortcuts -ErrorAction "SilentlyContinue" | `
     ForEach-Object { $Context.Log("Remove file: $($_.FullName)"); Remove-Item -Path $_.FullName -Force -ErrorAction "SilentlyContinue" }

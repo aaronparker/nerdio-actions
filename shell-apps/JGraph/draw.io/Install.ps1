@@ -12,5 +12,5 @@ $Context.Log("Install complete. Return code: $($result.ExitCode)")
 
 # Post install configuration
 $Shortcuts = @("$Env:Public\Desktop\draw.io.lnk")
-Get-Item -Path $Shortcuts | `
+Get-Item -Path $Shortcuts -ErrorAction "SilentlyContinue" | `
     ForEach-Object { $Context.Log("Remove file: $($_.FullName)"); Remove-Item -Path $_.FullName -Force -ErrorAction "SilentlyContinue" }

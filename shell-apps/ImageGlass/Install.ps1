@@ -14,5 +14,5 @@ Start-Sleep -Seconds 5
 $Shortcuts = @("$Env:Public\Desktop\ImageGlass.lnk",
     "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\ImageGlass\ImageGlass' LICENSE.lnk",
     "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\ImageGlass\Uninstall ImageGlass*.lnk")
-Get-Item -Path $Shortcuts | `
+Get-Item -Path $Shortcuts -ErrorAction "SilentlyContinue" | `
     ForEach-Object { $Context.Log("Remove file: $($_.FullName)"); Remove-Item -Path $_.FullName -Force -ErrorAction "SilentlyContinue" }

@@ -55,5 +55,5 @@ Get-ScheduledTask -TaskName "Adobe Acrobat Update Task*" | Unregister-ScheduledT
 
 # Delete public desktop shortcut
 $Shortcuts = @("$Env:Public\Desktop\Adobe Acrobat.lnk")
-Get-Item -Path $Shortcuts | `
+Get-Item -Path $Shortcuts -ErrorAction "SilentlyContinue" | `
     ForEach-Object { $Context.Log("Remove file: $($_.FullName)"); Remove-Item -Path $_.FullName -Force -ErrorAction "SilentlyContinue" }

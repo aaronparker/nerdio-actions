@@ -8,7 +8,7 @@ if (Test-Path -Path $FilePath) {
     $FileInfo = [Diagnostics.FileVersionInfo]::GetVersionInfo($FileItem.FullName)
     if ([System.Version]::Parse($FileInfo.ProductVersion) -ge [System.Version]::Parse($Context.TargetVersion)) {
         $Context.Log("No update required. Found '$($FileInfo.ProductVersion)' against '$($Context.TargetVersion)'.")
-        if ($Context.Versions -is [System.Array]) { return $FileInfo.ProductVersion } else { return $true }
+        if ($Context.Versions -is [System.Array]) { return ($FileInfo.ProductVersion.Substring(0, $FileInfo.ProductVersion.LastIndexOf('.'))) } else { return $true }
     }
     else {
         $Context.Log("Update required. Found '$($FileInfo.ProductVersion)' less than '$($Context.TargetVersion)'.")

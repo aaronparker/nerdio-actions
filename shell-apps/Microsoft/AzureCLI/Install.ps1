@@ -1,7 +1,7 @@
 $Context.Log("Installing Microsoft Azure CLI")
 $params = @{
-    FilePath     = $Context.GetAttachedBinary()
-    ArgumentList = "/install /quiet /norestart ALLUSERS=1"
+    FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
+    ArgumentList = "/package $($Context.GetAttachedBinary()) /quiet /norestart ALLUSERS=1"
     Wait         = $true
     PassThru     = $true
     NoNewWindow  = $true

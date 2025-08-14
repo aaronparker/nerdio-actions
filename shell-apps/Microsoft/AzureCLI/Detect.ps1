@@ -27,18 +27,9 @@ function Get-InstalledSoftware {
 
 $Installed = Get-InstalledSoftware | Where-Object { $_.Name -match "$Name*" }
 if ($Installed) {
-    $Installed | ForEach-Object {
-        if ([System.Version]::Parse($_.Version) -ge [System.Version]::Parse($Context.TargetVersion)) {
-            $Context.Log("No update required. Found '$($_.Version)' against '$($Context.TargetVersion)'.")
-            if ($Context.Versions -is [System.Array]) { return $_.Version } else { return $true }
-        }
-        else {
-            $Context.Log("Update required. Found '$($_.Version)' less than '$($Context.TargetVersion)'.")
-            if ($Context.Versions -is [System.Array]) { return $null } else { return $false }
-        }
-    }
+    if ($Context.Versions -is [System.Array]) { return $_.Version } else { return $true }
 }
 else {
-    $Context.Log("No installation found for '$Name'.")
-    return $Null
+    $Context.Log("Application not installed: $Name")
+    if ($Context.Versions -is [System.Array]) { return $null } else { return $false }
 }
