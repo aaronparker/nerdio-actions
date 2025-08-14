@@ -39,6 +39,8 @@ Start-Process -Wait -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList '
 #endregion
 
 # Disable update tasks - assuming we're installing on a gold image or updates will be managed
+$Context.Log("Wait for install to complete."
+Start-Sleep -Seconds 30
 $Context.Log("Disabling Adobe Acrobat Reader update tasks and services")
 Get-Service -Name "AdobeARMservice" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
 Get-ScheduledTask -TaskName "Adobe Acrobat Update Task*" | Unregister-ScheduledTask -Confirm:$false -ErrorAction "SilentlyContinue"
