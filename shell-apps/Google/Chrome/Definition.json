@@ -19,6 +19,7 @@
         }
     ],
     "source": {
+        "import": true,
         "type": "Evergreen",
         "app": "GoogleChrome",
         "filter": "$_.Channel -eq \"Stable\" -and $_.Architecture -eq \"x64\" -and $_.Type -eq \"msi\""

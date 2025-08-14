@@ -1,9 +1,7 @@
 $Context.Log("Installing Google Chrome")
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\GoogleChrome.log"
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-    ArgumentList = "/install $($Context.GetAttachedBinary()) /quiet /norestart ALLUSERS=1 /log $LogFile"
+    ArgumentList = "/package $($Context.GetAttachedBinary()) /quiet /norestart ALLUSERS=1"
     Wait         = $true
     NoNewWindow  = $true
     ErrorAction  = "Stop"

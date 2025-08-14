@@ -19,6 +19,7 @@
         }
     ],
     "source": {
+        "import": true,
         "type": "Evergreen",
         "app": "MicrosoftTeams",
         "filter": "$_.Architecture -eq \"x64\" -and $_.Release -eq \"Enterprise\""

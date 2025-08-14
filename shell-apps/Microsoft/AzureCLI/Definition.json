@@ -19,6 +19,7 @@
         }
     ],
     "source": {
+        "import": true,
         "type": "Evergreen",
         "app": "MicrosoftAzureCLI",
         "filter": "$_.Architecture -eq \"x64\""

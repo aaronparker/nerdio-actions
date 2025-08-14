@@ -1,7 +1,7 @@
 $Context.Log("Installing Microsoft Configuration Manager Support Center")
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-    ArgumentList = "/package `"$($Context.GetAttachedBinary())`" /quiet /log $LogFile"
+    ArgumentList = "/package `"$($Context.GetAttachedBinary())`" /quiet"
     Wait         = $true
     NoNewWindow  = $true
     PassThru     = $true

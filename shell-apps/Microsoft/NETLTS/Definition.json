@@ -19,6 +19,7 @@
         }
     ],
     "source": {
+        "import": true,
         "type": "Evergreen",
         "app": "Microsoft.NET",
         "filter": "$_.Installer -eq \"windowsdesktop\" -and $_.Architecture -eq \"x64\" -and $_.Channel -match \"LTS\""

@@ -19,6 +19,7 @@
         }
     ],
     "source": {
+        "import": true,
         "type": "Evergreen",
         "app": "Obsidian",
         "filter": "$_.Type -eq \"exe\""

@@ -19,6 +19,7 @@
         }
     ],
     "source": {
+        "import": true,
         "type": "Evergreen",
         "app": "JGraphDrawIO",
         "filter": "$_.Architecture -eq \"x86\" -and $_.Type -eq \"msi\""

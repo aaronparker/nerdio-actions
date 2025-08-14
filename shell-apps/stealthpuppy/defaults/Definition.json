@@ -19,6 +19,7 @@
         }
     ],
     "source": {
+        "import": true,
         "type": "Evergreen",
         "app": "WindowsEnterpriseDefaults",
         "filter": "$_.Type -eq \"zip\""

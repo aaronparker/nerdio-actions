@@ -19,6 +19,7 @@
         }
     ],
     "source": {
+        "import": true,
         "type": "Evergreen",
         "app": "AdobeAcrobatReaderDC",
         "filter": "$_.Architecture -eq \"x64\" -and $_.Language -eq \"MUI\""

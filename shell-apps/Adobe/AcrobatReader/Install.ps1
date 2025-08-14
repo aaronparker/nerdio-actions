@@ -1,13 +1,11 @@
 $Context.Log("Installing Adobe Acrobat Reader DC")
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\AdobeAcrobatReaderDC.log" -replace " ", ""
 $Options = "EULA_ACCEPT=YES
         ENABLE_CHROMEEXT=0
         DISABLE_BROWSER_INTEGRATION=1
         ENABLE_OPTIMIZATION=YES
         ADD_THUMBNAILPREVIEW=0
         DISABLEDESKTOPSHORTCUT=1"
-$ArgumentList = "-sfx_nu /sALL /rps /l /msi $($Options -replace "\s+", " ") /log $LogFile"
+$ArgumentList = "-sfx_nu /sALL /rps /l /msi $($Options -replace "\s+", " ")"
 $params = @{
     FilePath     = $Context.GetAttachedBinary()
     ArgumentList = $ArgumentList
@@ -42,7 +40,7 @@ Start-Process -Wait -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList '
 
 # Disable update tasks - assuming we're installing on a gold image or updates will be managed
 $Context.Log("Disabling Adobe Acrobat Reader update tasks and services")
-Get-Service -Name "AdobeARMservice" -ErrorAction "SilentlyContinue" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
+Get-Service -Name "AdobeARMservice" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
 Get-ScheduledTask -TaskName "Adobe Acrobat Update Task*" | Unregister-ScheduledTask -Confirm:$false -ErrorAction "SilentlyContinue"
 
 # Delete public desktop shortcut

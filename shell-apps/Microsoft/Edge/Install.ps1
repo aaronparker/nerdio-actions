@@ -1,9 +1,7 @@
 $Context.Log("Installing Edge")
-New-Item -Path "$Env:SystemRoot\Logs\ImageBuild" -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
-$LogFile = "$Env:SystemRoot\Logs\ImageBuild\MicrosoftEdge.log"
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-    ArgumentList = "/install $($Context.GetAttachedBinary()) /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true /log $LogFile"
+    ArgumentList = "/package $($Context.GetAttachedBinary()) /quiet /norestart DONOTCREATEDESKTOPSHORTCUT=true"
     Wait         = $true
     NoNewWindow  = $true
     ErrorAction  = "Stop"

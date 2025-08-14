@@ -19,6 +19,7 @@
         }
     ],
     "source": {
+        "import": true,
         "type": "Evergreen",
         "app": "MicrosoftFSLogixApps",
         "filter": "$_.Channel -eq \"Production\""

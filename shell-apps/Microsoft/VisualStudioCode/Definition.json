@@ -19,6 +19,7 @@
         }
     ],
     "source": {
+        "import": true,
         "type": "Evergreen",
         "app": "MicrosoftVisualStudioCode",
         "filter": "$_.Architecture -eq \"x64\" -and $_.Channel -eq \"Stable\" -and $_.Platform -eq \"win32-x64\""
