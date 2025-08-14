@@ -97,6 +97,8 @@ jobs:
                 New-ShellApp -Definition $Def -AppMetadata $App
             }
             else {
+                Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Updating Shell App: $($Def.name)"
+                Update-ShellApp -Id $ShellApp.Id -Definition $Def
                 $ExistingVersions = Get-ShellAppVersion -Id $ShellApp.Id | ForEach-Object {
                     $_ | Where-Object { $_.name -eq $App.Version }
                 }
