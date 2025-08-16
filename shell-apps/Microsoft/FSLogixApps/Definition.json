@@ -6,7 +6,7 @@
     "detectScript": "#detectScript",
     "installScript": "#installScript",
     "uninstallScript": "#uninstallScript",
-    "fileUnzip": false,
+    "fileUnzip": true,
     "versions": [
         {
             "name": "#version",

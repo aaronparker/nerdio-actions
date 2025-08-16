@@ -1,4 +1,3 @@
-$Context.Log("Installing Obsidian")
 $params = @{
     FilePath     = $Context.GetAttachedBinary()
     ArgumentList = "/S /D=`"${Env:ProgramFiles}\Obsidian`""

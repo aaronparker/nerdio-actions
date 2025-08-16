@@ -1,4 +1,3 @@
-$Context.Log("Installing Audacity")
 $params = @{
     FilePath     = $Context.GetAttachedBinary()
     ArgumentList = "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /MERGETASKS=`"!desktopicon`""

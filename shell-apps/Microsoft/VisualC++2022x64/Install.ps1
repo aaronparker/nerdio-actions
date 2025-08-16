@@ -1,4 +1,3 @@
-$Context.Log("Installing Visual C++ Redistributable 2022 x64")
 $params = @{
     FilePath     = $Context.GetAttachedBinary()
     ArgumentList = "/install /passive /norestart"

@@ -1,4 +1,3 @@
-$Context.Log("Installing Adobe Acrobat Reader DC")
 $Options = "EULA_ACCEPT=YES
         ENABLE_CHROMEEXT=0
         DISABLE_BROWSER_INTEGRATION=1

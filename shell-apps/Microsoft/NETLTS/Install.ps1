@@ -1,4 +1,3 @@
-$Context.Log("Installing Microsoft .NET LTS")
 $params = @{
     FilePath     = $Context.GetAttachedBinary()
     ArgumentList = "/install /quiet /norestart"

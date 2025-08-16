@@ -5,4 +5,5 @@ Get-AppxPackage -AllUsers | Where-Object { $_.PackageFamilyName -eq $PackageFami
     $Context.Log("Removing existing AppX package: $($_.Name)")
     $_ | Remove-AppxPackage -AllUsers -ErrorAction "Stop"
 }
+Start-Sleep -Seconds 10
 $Context.Log("Uninstall complete")

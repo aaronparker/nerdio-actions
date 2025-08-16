@@ -1,4 +1,3 @@
-$Context.Log("Installing FSLogix Apps")
 foreach ($File in "FSLogixAppsSetup.exe") {
     $Installers = Get-ChildItem -Path $PWD -Recurse -Include $File | Where-Object { $_.Directory -match "x64" }
     foreach ($Installer in $Installers) {
@@ -15,4 +14,3 @@ foreach ($File in "FSLogixAppsSetup.exe") {
         $Context.Log("Install complete. Return code: $($result.ExitCode)")
     }
 }
-$Context.Log("Install complete")

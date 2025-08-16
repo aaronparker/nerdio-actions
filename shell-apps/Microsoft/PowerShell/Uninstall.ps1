@@ -31,9 +31,10 @@ Get-InstalledSoftware | Where-Object { $_.Name -match "$Name*" } | ForEach-Objec
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/uninstall `"$($_.PSChildName)`" /quiet /norestart"
         Wait         = $true
+        PassThru     = $true
         NoNewWindow  = $true
         ErrorAction  = "Stop"
     }
-    Start-Process @params
-    $Context.Log("Uninstall complete")
+    $result = Start-Process @params
+    $Context.Log("Uninstall complete. Return code: $($result.ExitCode)")
 }

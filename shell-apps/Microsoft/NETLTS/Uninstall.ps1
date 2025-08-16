@@ -23,15 +23,21 @@ function Get-InstalledSoftware {
     return $Apps
 }
 
-Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Windows Desktop Runtime - $($Context.TargetVersion)*" } | ForEach-Object {
-    $Context.Log("Uninstalling Windows Installer: $($_.PSChildName)")
-    $params = @{
-        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/uninstall `"$($_.PSChildName)`" /quiet /norestart"
-        Wait         = $true
-        NoNewWindow  = $true
-        ErrorAction  = "Stop"
+Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Windows Desktop Runtime*" } | ForEach-Object {
+    if ($_.UninstallString -match '"([^"]+)"') {
+        $Context.Log("Uninstall with: $($Matches[1])")
+        $params = @{
+            FilePath     = $Matches[1]
+            ArgumentList = "/uninstall /quiet /norestart"
+            Wait         = $true
+            PassThru     = $true
+            NoNewWindow  = $true
+            ErrorAction  = "Stop"
+        }
+        $result = Start-Process @params
+        $Context.Log("Uninstall complete. Return code: $($result.ExitCode)")
     }
-    Start-Process @params
-    $Context.Log("Uninstall complete")
+    else {
+        $Context.Log("Failed to parse UninstallString")
+    }
 }

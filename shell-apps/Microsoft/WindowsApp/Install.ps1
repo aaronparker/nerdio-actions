@@ -1,4 +1,3 @@
-$Context.Log("Installing Microsoft Windows App")
 $params = @{
     PackagePath = $Context.GetAttachedBinary()
     Online      = $true

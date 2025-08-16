@@ -1,4 +1,3 @@
-$Context.Log("Installing Google Chrome")
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package $($Context.GetAttachedBinary()) /quiet /norestart ALLUSERS=1"
@@ -41,8 +40,8 @@ $prefs = @{
         "verbose_logging"                           = $true
     }
 }
-$Context.Log("Write file: '$Env:ProgramFiles\Google\Chrome\Application\master_preferences'.")
-$prefs | ConvertTo-Json | Set-Content -Path "$Env:ProgramFiles\Google\Chrome\Application\master_preferences" -Force -Encoding "utf8"
+$Context.Log("Write file: '$Env:ProgramFiles\Google\Chrome\Application\initial_preferences'.")
+$prefs | ConvertTo-Json | Set-Content -Path "$Env:ProgramFiles\Google\Chrome\Application\initial_preferences" -Force -Encoding "utf8"
 
 # Remove shortcuts
 $Shortcuts = @("$Env:Public\Desktop\Google Chrome.lnk")

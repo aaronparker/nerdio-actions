@@ -30,11 +30,14 @@ Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Visual C\+\+ 20
             FilePath     = $Matches[1]
             ArgumentList = "/uninstall /quiet /norestart"
             Wait         = $true
+            PassThru     = $true
             NoNewWindow  = $true
             ErrorAction  = "Stop"
         }
-        Start-Process @params
-        $Context.Log("Uninstall complete")
+        $result = Start-Process @params
+        $Context.Log("Remove file: ${Env:SystemRoot}\SysWOW64\vcruntime140.dll")
+        Remove-Item -Path "${Env:SystemRoot}\SysWOW64\vcruntime140.dll" -ErrorAction "SilentlyContinue"
+        $Context.Log("Uninstall complete. Return code: $($result.ExitCode)")
     }
     else {
         $Context.Log("Failed to parse UninstallString")

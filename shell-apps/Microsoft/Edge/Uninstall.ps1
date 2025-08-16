@@ -12,7 +12,5 @@ $params = @{
     NoNewWindow  = $true
     ErrorAction  = "Stop"
 }
-Start-Process @params
 $result = Start-Process @params
-$Context.Log("Install complete. Return code: $($result.ExitCode)")
-$Context.Log("Uninstall complete")
+$Context.Log("Uninstall complete. Return code: $($result.ExitCode)")

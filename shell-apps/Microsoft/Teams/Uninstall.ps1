@@ -32,14 +32,17 @@ Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Teams Meeting A
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
         ArgumentList = "/uninstall `"$($_.PSChildName)`" /quiet /norestart"
         Wait         = $true
+        PassThru     = $true
         NoNewWindow  = $true
         ErrorAction  = "Stop"
     }
-    Start-Process @params
+    $result = Start-Process @params
+    $Context.Log("Uninstall complete. Return code: $($result.ExitCode)")
 }
 
 Get-AppxPackage -AllUsers | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | ForEach-Object {
     $Context.Log("Removing existing AppX package: $($_.Name)")
     $_ | Remove-AppxPackage -AllUsers -ErrorAction "Stop"
 }
+Start-Sleep -Seconds 10
 $Context.Log("Uninstall complete")

@@ -23,18 +23,6 @@ function Get-InstalledSoftware {
     return $Apps
 }
 
-# Download the Microsoft Teams Bootstrapper
-$ProgressPreference = "SilentlyContinue"
-$TeamsExe = "$PWD\teamsbootstrapper.exe"
-$params = @{
-    URI             = "https://statics.teams.cdn.office.net/production-teamsprovision/lkg/teamsbootstrapper.exe"
-    OutFile         = $TeamsExe
-    UseBasicParsing = $true
-    ErrorAction     = "Stop"
-}
-Invoke-WebRequest @params
-$Context.Log("Downloaded Microsoft Teams Bootstrapper to: $TeamsExe")
-
 # Remove any existing Teams AppX package
 Get-AppxPackage -AllUsers | Where-Object { $_.PackageFamilyName -eq "MSTeams_8wekyb3d8bbwe" } | ForEach-Object {
     $Context.Log("Removing existing Teams AppX package: $($_.Name)")
@@ -49,7 +37,8 @@ reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "IsWVDEnvironment" /d 1 /t "REG_DWORD
 # Install steps based on the OS we're running on
 switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     "Microsoft Windows Server*" {
-        $Context.Log("Installing Microsoft Teams on Windows Server")
+        $Context.Log("Installing Microsoft Teams via dism")
+        $Context.Log("Using attached binary: $($Context.GetAttachedBinary())")
         $params = @{
             FilePath     = "$Env:SystemRoot\System32\dism.exe"
             ArgumentList = "/Online /Add-ProvisionedAppxPackage /PackagePath:`"$($Context.GetAttachedBinary())`" /SkipLicense"
@@ -64,6 +53,20 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
 
     "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*|Microsoft Windows 10 Enterprise*|Microsoft Windows 10 Pro*" {
         $Context.Log("Installing Microsoft Teams on Windows 10/11")
+        # Download the Microsoft Teams Bootstrapper
+        $ProgressPreference = "SilentlyContinue"
+        $TeamsExe = "$PWD\teamsbootstrapper.exe"
+        $params = @{
+            URI             = "https://statics.teams.cdn.office.net/production-teamsprovision/lkg/teamsbootstrapper.exe"
+            OutFile         = $TeamsExe
+            UseBasicParsing = $true
+            ErrorAction     = "Stop"
+        }
+        Invoke-WebRequest @params
+        $Context.Log("Downloaded Microsoft Teams Bootstrapper to: $TeamsExe")
+
+        $Context.Log("Installing Microsoft Teams via bootstrapper: $TeamsExe")
+        $Context.Log("Using attached binary: $($Context.GetAttachedBinary())")
         $params = @{
             FilePath     = $TeamsExe
             ArgumentList = "-p -o `"$($Context.GetAttachedBinary())`""
@@ -83,19 +86,24 @@ reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "DisableAutoUpdate" /d 1 /t "REG_DWOR
 
 # Get the add-in path and version. Let's assume the Teams install has been successful
 $TeamsPath = Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq "MSTeams_8wekyb3d8bbwe" } | Select-Object -ExpandProperty "InstallLocation"
-$AddInInstallerPath = Get-ChildItem -Path $TeamsPath -Recurse -Include "MicrosoftTeamsMeetingAddinInstaller.msi" | Select-Object -ExpandProperty "FullName"
-$Version = Get-AppLockerFileInformation -Path $AddInInstallerPath | Select-Object -ExpandProperty "Publisher"
-$AddInPath = "${Env:ProgramFiles(x86)}\Microsoft\TeamsMeetingAddin\$($Version.BinaryVersion.ToString())"
-$Context.Log("Teams Meeting Add-in path: $AddInPath")
+if ($TeamsPath) {
+    $Context.Log("Found Teams install location: $TeamsPath.")
+    $AddInInstallerPath = Get-ChildItem -Path $TeamsPath -Recurse -Include "MicrosoftTeamsMeetingAddinInstaller.msi" | Select-Object -ExpandProperty "FullName"
+    $Context.Log("Found Teams Meeting Add-in installer: $AddInInstallerPath.")
+    $Version = Get-AppLockerFileInformation -Path $AddInInstallerPath | Select-Object -ExpandProperty "Publisher"
+    $AddInPath = "${Env:ProgramFiles(x86)}\Microsoft\TeamsMeetingAddin\$($Version.BinaryVersion.ToString())"
+    $Context.Log("Teams Meeting Add-in path: $AddInPath")
+}
+else {
+    $Context.Log("Teams Meeting Add-in not found.")
+}
 
 # Uninstall the old add-in if it's installed
-$PreviousInstall = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Teams Meeting Add-in*" }
-if ([System.String]::IsNullOrEmpty($PreviousInstall.PSChildName)) {}
-else {
-    $Context.Log("Uninstalling previous version of Microsoft Teams Meeting Add-in: $($PreviousInstall.PSChildName)")
+Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Teams Meeting Add-in*" } | ForEach-Object {
+    $Context.Log("Uninstalling previous version of Microsoft Teams Meeting Add-in: $($_.PSChildName)")
     $params = @{
         FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/uninstall `"$($PreviousInstall.PSChildName)`" /quiet /norestart"
+        ArgumentList = "/uninstall `"$($_.PSChildName)`" /quiet /norestart"
         Wait         = $true
         PassThru     = $true
         NoNewWindow  = $true
@@ -106,14 +114,19 @@ else {
 }
 
 # Install the new version of the add-in
-$Context.Log("Installing Microsoft Teams Meeting Add-in from: $AddInInstallerPath")
-$params = @{
-    FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-    ArgumentList = "/package `"$AddInInstallerPath`" ALLUSERS=1 TARGETDIR=`"$AddInPath`" /quiet /norestart"
-    Wait         = $true
-    PassThru     = $true
-    NoNewWindow  = $true
-    ErrorAction  = "Stop"
+if ($AddInInstallerPath) {
+    $Context.Log("Installing Microsoft Teams Meeting Add-in from: $AddInInstallerPath")
+    $params = @{
+        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
+        ArgumentList = "/package `"$AddInInstallerPath`" ALLUSERS=1 TARGETDIR=`"$AddInPath`" /quiet /norestart"
+        Wait         = $true
+        PassThru     = $true
+        NoNewWindow  = $true
+        ErrorAction  = "Stop"
+    }
+    $result = Start-Process @params
+    $Context.Log("Install complete. Return code: $($result.ExitCode)")
 }
-$result = Start-Process @params
-$Context.Log("Install complete. Return code: $($result.ExitCode)")
+else {
+    $Context.Log("No Teams Meeting Add-in installer found. Skipping installation.")
+}

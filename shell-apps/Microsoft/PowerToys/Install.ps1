@@ -1,4 +1,3 @@
-$Context.Log("Installing Microsoft PowerToys")
 $params = @{
     FilePath     = $Context.GetAttachedBinary()
     ArgumentList = "-silent"
@@ -11,6 +10,7 @@ $result = Start-Process @params
 $Context.Log("Install complete. Return code: $($result.ExitCode)")
 
 # Configure PowerToys settings appropriate for VDI environments
+$Context.Log("Configure PowerToys registry settings to optimise for virtual desktops.")
 Start-Process -Wait -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList "add HKLM\Software\Policies\PowerToys /v AllowExperimentation /d 0 /t REG_DWORD /f"
 Start-Process -Wait -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList "add HKLM\Software\Policies\PowerToys /v ConfigureEnabledUtilityAwake /d 0 /t REG_DWORD /f"
 Start-Process -Wait -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList "add HKLM\Software\Policies\PowerToys /v ConfigureEnabledUtilityEnvironmentVariables /d 0 /t REG_DWORD /f"
@@ -37,4 +37,7 @@ Start-Process -Wait -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList "
 Start-Sleep -Seconds 5
 Get-Process -ErrorAction "SilentlyContinue" | `
     Where-Object { $_.Path -like "$Env:ProgramFiles\PowerToys\*" } | `
+    ForEach-Object {
+    $Context.Log("Stopping process: $($_.Name)")
     Stop-Process -Force -ErrorAction "SilentlyContinue"
+}

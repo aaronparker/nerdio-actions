@@ -1,7 +1,6 @@
-$Context.Log("Installing Microsoft Azure Virtual Desktop Remote Desktop WebRTC Redirector Service")
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-    ArgumentList = "/package `"$($Context.GetAttachedBinary())`" /quiet"
+    ArgumentList = "/package `"$($Context.GetAttachedBinary())`" /quiet /norestart"
     Wait         = $true
     NoNewWindow  = $true
     PassThru     = $true

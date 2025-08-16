@@ -1,4 +1,3 @@
-$Context.Log("Installing Visual Studio Code")
 $params = @{
     FilePath     = $Context.GetAttachedBinary()
     ArgumentList = "/VERYSILENT /NOCLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /NORESTART /SP- /SUPPRESSMSGBOXES /MERGETASKS=!runcode"

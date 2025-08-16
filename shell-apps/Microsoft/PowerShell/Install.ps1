@@ -1,4 +1,3 @@
-$Context.Log("Installing Microsoft PowerShell")
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package $($Context.GetAttachedBinary()) /quiet /norestart"

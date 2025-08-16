@@ -60,6 +60,5 @@ function Install-Font {
     }
 }
 
-$Context.Log("Installing Microsoft Aptos Font")
 Install-Font -Path $PWD
-$Context.Log("Install complete. Return code: $($result.ExitCode)")
+$Context.Log("Install complete.")
