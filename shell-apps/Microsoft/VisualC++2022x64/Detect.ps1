@@ -1,6 +1,6 @@
 # Variables
 [System.String] $FilePath = "${Env:SystemRoot}\System32\vcruntime140.dll"
-[System.String] $DisplayName = "Microsoft Visual C\+\+ 2015-2022 Redistributable (x64)*"
+[System.String] $DisplayName = "Microsoft Visual C\+\+ 2015-2022 Redistributable \(x64\)*"
 
 function Get-InstalledSoftware {
     [CmdletBinding()]

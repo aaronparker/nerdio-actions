@@ -1,3 +1,4 @@
+$Context.Log("Installing package: $($Context.GetAttachedBinary())")
 $params = @{
     FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
     ArgumentList = "/package `"$($Context.GetAttachedBinary())`" RUNAPPLICATION=0 ALLUSERS=1 ALLUSERS=1 /quiet"
