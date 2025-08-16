@@ -1,12 +1,11 @@
 $params = @{
     FilePath     = $Context.GetAttachedBinary()
-    ArgumentList = "/S /D=`"${Env:ProgramFiles}\Obsidian`""
+    ArgumentList = "/S /ALLUSERS=1 /D=`"${Env:ProgramFiles}\Obsidian`""
     Wait         = $true
     PassThru     = $true
     NoNewWindow  = $true
     ErrorAction  = "Stop"
 }
-Start-Process @params
 $result = Start-Process @params
 $Context.Log("Install complete. Return code: $($result.ExitCode)")
 $Context.Log("Install complete")
