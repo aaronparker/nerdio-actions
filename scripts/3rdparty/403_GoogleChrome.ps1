@@ -75,8 +75,8 @@ $prefs = @{
         "verbose_logging"                           = $true
     }
 }
-Write-LogFile -Message "Writing master_preferences file to: $Env:ProgramFiles\Google\Chrome\Application\master_preferences"
-$prefs | ConvertTo-Json | Set-Content -Path "$Env:ProgramFiles\Google\Chrome\Application\master_preferences" -Force -Encoding "utf8"
+Write-LogFile -Message "Writing initial_preferences file to: $Env:ProgramFiles\Google\Chrome\Application\initial_preferences"
+$prefs | ConvertTo-Json | Set-Content -Path "$Env:ProgramFiles\Google\Chrome\Application\initial_preferences" -Force -Encoding "utf8"
 $Shortcuts = @("$Env:Public\Desktop\Google Chrome.lnk")
 Remove-Item -Path $Shortcuts -Force -ErrorAction "Ignore"
 
