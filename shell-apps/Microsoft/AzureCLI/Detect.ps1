@@ -1,4 +1,4 @@
-[System.String] $Name = "Microsoft Azure CLI"
+[System.String] $DisplayName = "Microsoft Azure CLI"
 
 function Get-InstalledSoftware {
     [CmdletBinding()]
@@ -25,11 +25,11 @@ function Get-InstalledSoftware {
     return $Apps
 }
 
-$Installed = Get-InstalledSoftware | Where-Object { $_.Name -match "$Name*" }
-if ($Installed) {
+$App = Get-InstalledSoftware | Where-Object { $_.Name -match "$DisplayName*" }
+if ($App) {
     if ($Context.Versions -is [System.Array]) { return $_.Version } else { return $true }
 }
 else {
-    $Context.Log("Application not installed: $Name")
+    $Context.Log("Application not installed: $DisplayName")
     if ($Context.Versions -is [System.Array]) { return $null } else { return $false }
 }
