@@ -19,26 +19,23 @@ Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 # Trust the PSGallery for modules
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+Install-PackageProvider -Name "NuGet" -Force
 Write-LogFile -Message "Install PowerShellGet"
-Install-PackageProvider -Name "PowerShellGet" -MinimumVersion "2.2.5" -Force -ErrorAction "SilentlyContinue"
+Install-PackageProvider -Name "PowerShellGet" -MinimumVersion "2.2.5" -Force
+Install-Module -Name "PackageManagement" -Force -Scope "AllUsers" -AllowClobber -SkipPublisherCheck
 Write-LogFile -Message "Set PSGallery as trusted"
+Write-LogFile -Message "Install PackageManagement"
 Set-PSRepository -Name "PSGallery" -InstallationPolicy "Trusted"
 
 # Install the Evergreen module; https://github.com/aaronparker/Evergreen
 # Install the VcRedist module; https://docs.stealthpuppy.com/vcredist/
 foreach ($Module in "Evergreen", "VcRedist", "PSWindowsUpdate") {
-    $InstalledModule = Get-Module -Name $Module -ListAvailable -ErrorAction "SilentlyContinue" | `
-        Sort-Object -Property @{ Expression = { [System.Version]$_.Version }; Descending = $true } -ErrorAction "SilentlyContinue" | `
-        Select-Object -First 1
-    $PublishedModule = Find-Module -Name $Module -ErrorAction "SilentlyContinue"
-    if (($null -eq $InstalledModule) -or ([System.Version]$PublishedModule.Version -gt [System.Version]$InstalledModule.Version)) {
-        $params = @{
-            Name               = $Module
-            SkipPublisherCheck = $true
-            Force              = $true
-            ErrorAction        = "Stop"
-        }
-        Write-LogFile -Message "Installing module: $Module"
-        Install-Module @params
+    $params = @{
+        Name               = $Module
+        SkipPublisherCheck = $true
+        Force              = $true
+        ErrorAction        = "Stop"
     }
+    Write-LogFile -Message "Installing module: $Module"
+    Install-Module @params
 }
