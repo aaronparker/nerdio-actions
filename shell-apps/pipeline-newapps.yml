@@ -142,7 +142,7 @@ jobs:
         }
         Set-NmeCredentials @params
         Connect-Nme
-        $KeepCount = 2
+        $KeepCount = 3
         Get-ShellApp | ForEach-Object {
             $ExistingVersions = Get-ShellAppVersion -Id $_.id | `
                 Where-Object { $_.isPreview -eq $false } | `
@@ -151,7 +151,7 @@ jobs:
                 $VersionsToRemove = $ExistingVersions | Select-Object -Skip ($ExistingVersions.Count - $KeepCount)
                 foreach ($Version in $VersionsToRemove) {
                     Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Removing Shell App Version: $($_.id) $($Version.name)"
-                    $Result = Remove-ShellAppVersion -Id $_.id -Version $Version.name
+                    $Result = Remove-ShellAppVersion -Id $_.id -Name $Version.name
                     if ($Result.job.status -eq "Completed") {
                         $File = $Version.file.sourceUrl -split "\?"
                         $FileName = $File -split "/" | Select-Object -Last 1
