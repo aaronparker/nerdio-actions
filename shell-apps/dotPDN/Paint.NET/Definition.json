@@ -1,0 +1,27 @@
+{
+    "name": "Paint.NET",
+    "description": "Paint.NET is a free image and photo editing software for Windows.",
+    "isPublic": true,
+    "publisher": "dotPDN",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": true,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "import": true,
+        "type": "Evergreen",
+        "app": "PaintDotNetOfflineInstaller",
+        "filter": "$_.Architecture -eq \"x64\" -and $_.URI -match \"winmsi\""
+    }
+}

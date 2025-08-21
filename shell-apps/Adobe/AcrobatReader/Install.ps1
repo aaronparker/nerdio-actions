@@ -49,7 +49,7 @@ Get-ScheduledTask -TaskName "Adobe Acrobat Update Task*" -ErrorAction "SilentlyC
 
 $Context.Log("Disabling Adobe AdobeARMservice service.")
 Get-Service -Name "AdobeARMservice" | Set-Service -StartupType "Disabled" -ErrorAction "SilentlyContinue"
-$Context.Log("Disabling Adobe AdobeARMservice service.")
+$Context.Log("Disabling Adobe Acrobat Update Task.")
 Get-ScheduledTask -TaskName "Adobe Acrobat Update Task*" | Unregister-ScheduledTask -Confirm:$false -ErrorAction "SilentlyContinue"
 
 # Delete public desktop shortcut
