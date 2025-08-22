@@ -22,9 +22,9 @@ pool:
 
 # Variables - the credentials group and the service connection name
 variables:
-- group: 'Credentials'
+- group: 'Credentials' # Update to match your environment
 - name: service
-  value: 'sc-rg-Avd1Images-aue'
+  value: 'sc-rg-Avd1Images-aue' # Update to match your environment
 
 jobs:
 - job: Import
@@ -94,16 +94,19 @@ jobs:
             }
             if ($null -eq $ShellApp) {
                 Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Importing: $($Def.name)"
-                New-ShellApp -Definition $Def -AppMetadata $App
+                $NewApp = New-ShellApp -Definition $Def -AppMetadata $App
+                $NewApp.job.status
             }
             else {
                 Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Updating Shell App: $($Def.name)"
-                Update-ShellApp -Id $ShellApp.Id -Definition $Def
+                $UpdateApp = Update-ShellApp -Id $ShellApp.Id -Definition $Def
+                $UpdateApp.job.status
                 $ExistingVersions = Get-ShellAppVersion -Id $ShellApp.Id | ForEach-Object {
                     $_ | Where-Object { $_.name -eq $App.Version }
                 }
                 if ($null -eq $ExistingVersions -or [System.Version]$ExistingVersions.name -lt [System.Version]$App.Version) {
-                    New-ShellAppVersion -Id $ShellApp.Id -AppMetadata $App
+                    $NewAppVersion = New-ShellAppVersion -Id $ShellApp.Id -AppMetadata $App
+                    $NewAppVersion.job.status
                 }
                 else {
                     Write-Information -MessageData "$($PSStyle.Foreground.Yellow)Shell app version exists: '$($Def.name) $($App.Version)'. No action taken."
@@ -151,11 +154,12 @@ jobs:
                 $VersionsToRemove = $ExistingVersions | Select-Object -Skip ($ExistingVersions.Count - $KeepCount)
                 foreach ($Version in $VersionsToRemove) {
                     Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Removing Shell App Version: $($_.id) $($Version.name)"
-                    $Result = Remove-ShellAppVersion -Id $_.id -Name $Version.name
+                    $Result = Remove-ShellAppVersion -Id $_.id -Name $Version.name -Confirm:$false
+                    $Result.job.status
                     if ($Result.job.status -eq "Completed") {
                         $File = $Version.file.sourceUrl -split "\?"
                         $FileName = $File -split "/" | Select-Object -Last 1
-                        Remove-AzStorageBlob -Container $Env.containerName -Blob $FileName -Confirm:$false
+                        Remove-AzStorageBlob -Container $(containerName) -Blob $FileName -Confirm:$false
                     }
                 }
             }
