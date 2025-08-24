@@ -185,7 +185,9 @@ function Get-AppMetadata {
         switch ($Definition.source.type) {
             "Evergreen" {
                 Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Query: Get-EvergreenApp -Name $($Definition.source.app) | Where-Object { $($Definition.source.filter) }"
-                $Metadata = Get-EvergreenApp -Name $Definition.source.app | Where-Object { Invoke-Expression "$($Definition.source.filter)" }
+                $Metadata = Get-EvergreenApp -Name $Definition.source.app | `
+                    Where-Object { Invoke-Expression "$($Definition.source.filter)" } | `
+                    Select-Object -First 1
                 Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Found version: $($Metadata.Version)"
                 return $Metadata
             }

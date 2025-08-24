@@ -22,6 +22,6 @@
         "import": true,
         "type": "Evergreen",
         "app": "MicrosoftOneDrive",
-        "filter": "$_.Ring -eq \"Enterprise\" -and $_.Architecture -eq \"x64\""
+        "filter": "$_.Ring -eq \"Production\" -and $_.Architecture -eq \"x64\" -and $_.Throttle -eq \"1\""
     }
 }

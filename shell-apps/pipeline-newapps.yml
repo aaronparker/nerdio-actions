@@ -159,7 +159,8 @@ jobs:
                     if ($Result.job.status -eq "Completed") {
                         $File = $Version.file.sourceUrl -split "\?"
                         $FileName = $File -split "/" | Select-Object -Last 1
-                        Remove-AzStorageBlob -Container $(containerName) -Blob $FileName -Confirm:$false
+                        $StorageContext = New-AzStorageContext -StorageAccountName $(storageAccountName) -StorageAccountKey $(storageAccountKey)
+                        Remove-AzStorageBlob -Container $(containerName) -Blob $FileName -Context $StorageContext -Confirm:$false
                     }
                 }
             }
