@@ -131,6 +131,8 @@ jobs:
         Import-Module -Name "Az.Accounts", "Az.Storage", "Evergreen", "VcRedist" -Force
         Import-Module -Name "./NerdioShellApps.psm1" -Force
         Set-AzContext -SubscriptionId $(SubscriptionId) -TenantId $(TenantId)
+        $StorageAccountKey = (Get-AzStorageAccountKey -ResourceGroupName $(resourceGroupName) -Name $(storageAccountName))[0].Value
+        $StorageContext = New-AzStorageContext -StorageAccountName $(storageAccountName) -StorageAccountKey $StorageAccountKey
         $params = @{
             ClientId           = "$(ClientId)"
             ClientSecret       = "$(ClientSecret)"
@@ -157,9 +159,9 @@ jobs:
                     $Result = Remove-ShellAppVersion -Id $_.id -Name $Version.name -Confirm:$false
                     $Result.job.status
                     if ($Result.job.status -eq "Completed") {
-                        $File = $Version.file.sourceUrl -split "\?"
+                        $File = $Version.file.sourceUrl -split "\?" | Select-Object -First 1
                         $FileName = $File -split "/" | Select-Object -Last 1
-                        $StorageContext = New-AzStorageContext -StorageAccountName $(storageAccountName) -StorageAccountKey $(storageAccountKey)
+                        Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Removing Shell App Blob: $FileName"
                         Remove-AzStorageBlob -Container $(containerName) -Blob $FileName -Context $StorageContext -Confirm:$false
                     }
                 }

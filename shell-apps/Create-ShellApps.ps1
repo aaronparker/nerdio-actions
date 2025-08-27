@@ -74,7 +74,7 @@ Get-ShellApp | ForEach-Object {
         versionCount  = $ExistingVersions | Measure-Object | Select-Object -ExpandProperty "Count"
         latestVersion = ($ExistingVersions | Select-Object -First 1).name
         createdAt     = $_.createdAt
-        fileUnzip     = $_.fileUnzip
+        fileUnzip      = $_.fileUnzip
         isPublic      = $_.isPublic
         id            = $_.id
     }
