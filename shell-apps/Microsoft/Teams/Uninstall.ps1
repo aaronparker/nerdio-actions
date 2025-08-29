@@ -17,7 +17,7 @@ function Get-InstalledSoftware {
                 . { process { if ($null -ne $_.DisplayName) { $_ } } } | `
                 Where-Object { $_.SystemComponent -ne 1 } | `
                 Select-Object -Property @{n = "Name"; e = { $_.DisplayName } }, @{n = "Version"; e = { $_.DisplayVersion } }, "Publisher", "UninstallString", @{n = "RegistryPath"; e = { $_.PSPath -replace "Microsoft.PowerShell.Core\\Registry::", "" } }, "PSChildName", "WindowsInstaller", "InstallDate", "InstallSource", "HelpLink", "Language", "EstimatedSize" | `
-                Sort-Object -Property "DisplayName", "Publisher"
+                Sort-Object -Property "Name", "Publisher"
         }
         catch {
             throw $_.Exception.Message
