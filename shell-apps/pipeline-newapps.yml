@@ -155,7 +155,6 @@ jobs:
             if ($ExistingVersions.Count -gt $KeepCount) {
                 $VersionsToRemove = $ExistingVersions | Select-Object -Skip ($ExistingVersions.Count - $KeepCount)
                 foreach ($Version in $VersionsToRemove) {
-                    Write-Information -MessageData "$($PSStyle.Foreground.Cyan)Removing Shell App Version: $($_.id) $($Version.name)"
                     $Result = Remove-ShellAppVersion -Id $_.id -Name $Version.name -Confirm:$false
                     $Result.job.status
                     if ($Result.job.status -eq "Completed") {
