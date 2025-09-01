@@ -1,0 +1,27 @@
+{
+    "name": "Edge WebView2",
+    "description": "Microsoft Edge WebView2 is a control that allows you to embed web content in your applications using the Edge rendering engine.",
+    "isPublic": true,
+    "publisher": "Microsoft",
+    "detectScript": "#detectScript",
+    "installScript": "#installScript",
+    "uninstallScript": "#uninstallScript",
+    "fileUnzip": false,
+    "versions": [
+        {
+            "name": "#version",
+            "isPreview": false,
+            "installScriptOverride": null,
+            "file": {
+                "sourceUrl": "#sourceUrl",
+                "sha256": "#sha256"
+            }
+        }
+    ],
+    "source": {
+        "import": true,
+        "type": "Evergreen",
+        "app": "MicrosoftEdgeWebView2Runtime",
+        "filter": "$_.Channel -eq \"Stable\" -and $_.Architecture -eq \"x64\""
+    }
+}
