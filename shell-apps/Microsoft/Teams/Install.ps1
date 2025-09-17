@@ -1,3 +1,10 @@
+# Configure the environment
+$ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop
+$InformationPreference = [System.Management.Automation.ActionPreference]::Continue
+$ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+
+# Functions
 function Get-InstalledSoftware {
     $PropertyNames = "DisplayName", "DisplayVersion", "Publisher", "UninstallString", "PSPath", "WindowsInstaller",
     "InstallDate", "InstallSource", "HelpLink", "Language", "EstimatedSize", "SystemComponent"
@@ -45,7 +52,6 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
     "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*|Microsoft Windows 10 Enterprise*|Microsoft Windows 10 Pro*" {
         $Context.Log("Installing Microsoft Teams on Windows 10/11")
         # Download the Microsoft Teams Bootstrapper
-        $ProgressPreference = "SilentlyContinue"
         $TeamsExe = "$PWD\teamsbootstrapper.exe"
         $params = @{
             URI             = "https://statics.teams.cdn.office.net/production-teamsprovision/lkg/teamsbootstrapper.exe"
