@@ -101,13 +101,40 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
             ArgumentList = "/Online /Add-ProvisionedAppxPackage /PackagePath:`"$($TeamsMsix.FullName)`" /SkipLicense"
         }
         Start-ProcessWithLog @params
+
+        # Get the add-in path and version. Let's assume the Teams install has been successful
+        $TeamsPath = Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq "MSTeams_8wekyb3d8bbwe" } | Select-Object -ExpandProperty "InstallLocation"
+        $AddInInstallerPath = Get-ChildItem -Path $TeamsPath -Recurse -Include "MicrosoftTeamsMeetingAddinInstaller.msi" | Select-Object -ExpandProperty "FullName"
+        $Version = Get-AppLockerFileInformation -Path $AddInInstallerPath | Select-Object -ExpandProperty "Publisher"
+        $AddInPath = "${Env:ProgramFiles(x86)}\Microsoft\TeamsMeetingAddin\$($Version.BinaryVersion.ToString())"
+        Write-LogFile -Message "Teams Meeting Add-in path: $AddInPath"
+
+        # Uninstall the old add-in if it's installed
+        $PreviousInstall = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Teams Meeting Add-in*" }
+        if ([System.String]::IsNullOrEmpty($PreviousInstall.PSChildName)) {}
+        else {
+            Write-LogFile -Message "Uninstalling previous version of Microsoft Teams Meeting Add-in: $($PreviousInstall.PSChildName)"
+            $params = @{
+                FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
+                ArgumentList = "/uninstall `"$($PreviousInstall.PSChildName)`" /quiet /norestart"
+            }
+            Start-ProcessWithLog @params
+        }
+
+        # Install the new version of the add-in
+        Write-LogFile -Message "Installing Microsoft Teams Meeting Add-in from: $AddInInstallerPath"
+        $params = @{
+            FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
+            ArgumentList = "/package `"$AddInInstallerPath`" ALLUSERS=1 TARGETDIR=`"$AddInPath`" /quiet /norestart"
+        }
+        Start-ProcessWithLog @params
     }
 
     "Microsoft Windows 11 Enterprise*|Microsoft Windows 11 Pro*|Microsoft Windows 10 Enterprise*|Microsoft Windows 10 Pro*" {
-        Write-LogFile -Message "Installing Microsoft Teams on Windows 10/11"
+        Write-LogFile -Message "Installing Microsoft Teams and Outlook meeting add-in on Windows 10/11"
         $params = @{
             FilePath     = $TeamsExe.FullName
-            ArgumentList = "-p -o `"$($TeamsMsix.FullName)`""
+            ArgumentList = "-p -o `"$($TeamsMsix.FullName)`" --installTMA"
         }
         Start-ProcessWithLog @params
     }
@@ -116,31 +143,4 @@ switch -Regex ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption) {
 # Disable auto-update
 Write-LogFile -Message "Add: HKLM\SOFTWARE\Microsoft\Teams\DisableAutoUpdate"
 reg add "HKLM\SOFTWARE\Microsoft\Teams" /v "DisableAutoUpdate" /d 1 /t "REG_DWORD" /f | Out-Null
-
-# Get the add-in path and version. Let's assume the Teams install has been successful
-$TeamsPath = Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq "MSTeams_8wekyb3d8bbwe" } | Select-Object -ExpandProperty "InstallLocation"
-$AddInInstallerPath = Get-ChildItem -Path $TeamsPath -Recurse -Include "MicrosoftTeamsMeetingAddinInstaller.msi" | Select-Object -ExpandProperty "FullName"
-$Version = Get-AppLockerFileInformation -Path $AddInInstallerPath | Select-Object -ExpandProperty "Publisher"
-$AddInPath = "${Env:ProgramFiles(x86)}\Microsoft\TeamsMeetingAddin\$($Version.BinaryVersion.ToString())"
-Write-LogFile -Message "Teams Meeting Add-in path: $AddInPath"
-
-# Uninstall the old add-in if it's installed
-$PreviousInstall = Get-InstalledSoftware | Where-Object { $_.Name -match "Microsoft Teams Meeting Add-in*" }
-if ([System.String]::IsNullOrEmpty($PreviousInstall.PSChildName)) {}
-else {
-    Write-LogFile -Message "Uninstalling previous version of Microsoft Teams Meeting Add-in: $($PreviousInstall.PSChildName)"
-    $params = @{
-        FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-        ArgumentList = "/uninstall `"$($PreviousInstall.PSChildName)`" /quiet /norestart"
-    }
-    Start-ProcessWithLog @params
-}
-
-# Install the new version of the add-in
-Write-LogFile -Message "Installing Microsoft Teams Meeting Add-in from: $AddInInstallerPath"
-$params = @{
-    FilePath     = "$Env:SystemRoot\System32\msiexec.exe"
-    ArgumentList = "/package `"$AddInInstallerPath`" ALLUSERS=1 TARGETDIR=`"$AddInPath`" /quiet /norestart"
-}
-Start-ProcessWithLog @params
 #endregion
