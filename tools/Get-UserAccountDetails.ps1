@@ -1,18 +1,16 @@
 <#
     Return details about the local system and last logged on user, including UPN and account provider if available.
-#>
 
-# Interesting registry keys
-# "HKLM:\SOFTWARE\Microsoft\Enrollments"
-# "HKLM:\SOFTWARE\Microsoft\IdentityStore\Cache"
-# "HKLM:\SOFTWARE\Microsoft\IdentityStore\LogonCache"
-# "HKLM:\SYSTEM\ControlSet001\Control\CloudDomainJoin\JoinInfo"
+    # Interesting registry keys
+    "HKLM:\SOFTWARE\Microsoft\Enrollments"
+    "HKLM:\SOFTWARE\Microsoft\IdentityStore\Cache"
+    "HKLM:\SOFTWARE\Microsoft\IdentityStore\LogonCache"
+    "HKLM:\SYSTEM\ControlSet001\Control\CloudDomainJoin\JoinInfo"
+#>
 
 # Configure the environment
 $ErrorActionPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
 $InformationPreference = [System.Management.Automation.ActionPreference]::Continue
-$ProgressPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 
 # Get details about the last logged on user
 $Properties = "LastLoggedOnDisplayName",
