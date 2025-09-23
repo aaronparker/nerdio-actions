@@ -26,8 +26,12 @@ begin {
         }
         $DsRegObject = [PSCustomObject]@{}
         foreach ($item in $DsRegTable) {
+            switch ($item.Value) {
+                "YES" { $item.Value = $true }
+                "NO" { $item.Value = $false }
+            }
             if ($item.Key -notlike "For more information*") {
-                $DsRegObject | Add-Member -MemberType "NoteProperty" -Name ($item.Key -replace "\s+", "") -Value $item.Value
+                $DsRegObject | Add-Member -MemberType "NoteProperty" -Name ($item.Key -replace "\s+|-", "") -Value $item.Value
             }
         }
         return $DsRegObject
