@@ -17,15 +17,14 @@ $FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
 Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
-# Install the Evergreen module; https://github.com/aaronparker/Evergreen
-# Install the VcRedist module; https://docs.stealthpuppy.com/vcredist/
-foreach ($Module in "Evergreen", "VcRedist", "PSWindowsUpdate") {
-    $params = @{
-        Name               = $Module
-        SkipPublisherCheck = $true
-        Force              = $true
-        ErrorAction        = "Stop"
-    }
-    Write-LogFile -Message "Installing module: $Module"
-    Install-Module @params
-}
+# Evergreen: https://eucpilots.com/evergreen-docs/
+# VcRedist: https://vcredist.com/
+# PSWindowsUpdate: https://www.powershellgallery.com/packages/PSWindowsUpdate
+Set-PSRepository -Name "PSGallery" -InstallationPolicy "Trusted"
+Write-LogFile -Message "Install-Module: PSWindowsUpdate" -LogLevel 1
+Install-Module -Name "PSWindowsUpdate" -Scope CurrentUser -Force
+Write-LogFile -Message "Install-Module: VcRedist" -LogLevel 1
+Install-Module -Name "VcRedist" -Scope CurrentUser -Force
+Write-LogFile -Message "Install-Module: Evergreen" -LogLevel 1
+Install-Module -Name "Evergreen" -AllowPrerelease
+Update-Evergreen
