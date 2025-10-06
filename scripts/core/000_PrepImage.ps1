@@ -202,7 +202,7 @@ Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList 
 Write-LogFile -Message "Install-PackageProvider: PowerShellGet" -LogLevel 1
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 Install-PackageProvider -Name "NuGet" -Force
-Install-PackageProvider -Name "PowerShellGet" -MinimumVersion "2.2.5" -AllowClobber -Force
+Install-PackageProvider -Name "PowerShellGet" -MinimumVersion "2.2.5" -Force
 Import-Module -Name "PowerShellGet" -Force
 Write-LogFile -Message "Set-PSRepository: PSGallery" -LogLevel 1
 Set-PSRepository -Name "PSGallery" -InstallationPolicy "Trusted"
