@@ -32,7 +32,7 @@
 #>
 
 #description: Preps a RDS / AVD image for customization.
-#execution mode: Combined
+#execution mode: Individual
 #tags: Image
 
 # Functions
@@ -197,3 +197,12 @@ Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList 
 # Disable remote keyboard layout to keep the locale settings configured in the image
 # https://dennisspan.com/solving-keyboard-layout-issues-in-an-ica-or-rdp-session/
 Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList 'add "HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout" /v IgnoreRemoteKeyboardLayout /d 1 /t REG_DWORD /f'
+
+# Trust the PSGallery for modules
+Write-LogFile -Message "Install-PackageProvider: PowerShellGet" -LogLevel 1
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+Install-PackageProvider -Name "NuGet" -Force
+Install-PackageProvider -Name "PowerShellGet" -MinimumVersion "2.2.5" -AllowClobber -Force
+Import-Module -Name "PowerShellGet" -Force
+Write-LogFile -Message "Set-PSRepository: PSGallery" -LogLevel 1
+Set-PSRepository -Name "PSGallery" -InstallationPolicy "Trusted"

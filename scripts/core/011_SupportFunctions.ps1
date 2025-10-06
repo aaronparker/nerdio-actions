@@ -17,16 +17,6 @@ $FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
 Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
-# Trust the PSGallery for modules
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-Install-PackageProvider -Name "NuGet" -Force
-Write-LogFile -Message "Install PowerShellGet"
-Install-PackageProvider -Name "PowerShellGet" -MinimumVersion "2.2.5" -Force
-Install-Module -Name "PackageManagement" -Force -Scope "AllUsers" -AllowClobber -SkipPublisherCheck
-Write-LogFile -Message "Set PSGallery as trusted"
-Write-LogFile -Message "Install PackageManagement"
-Set-PSRepository -Name "PSGallery" -InstallationPolicy "Trusted"
-
 # Install the Evergreen module; https://github.com/aaronparker/Evergreen
 # Install the VcRedist module; https://docs.stealthpuppy.com/vcredist/
 foreach ($Module in "Evergreen", "VcRedist", "PSWindowsUpdate") {
