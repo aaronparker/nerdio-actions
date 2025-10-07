@@ -22,9 +22,9 @@ Write-LogFile -Message "Functions imported from: $FunctionFile"
 # PSWindowsUpdate: https://www.powershellgallery.com/packages/PSWindowsUpdate
 Set-PSRepository -Name "PSGallery" -InstallationPolicy "Trusted"
 Write-LogFile -Message "Install-Module: PSWindowsUpdate" -LogLevel 1
-Install-Module -Name "PSWindowsUpdate" -Scope CurrentUser -Force
+Install-Module -Name "PSWindowsUpdate" -Force
 Write-LogFile -Message "Install-Module: VcRedist" -LogLevel 1
-Install-Module -Name "VcRedist" -Scope CurrentUser -Force
+Install-Module -Name "VcRedist" -Force
 Write-LogFile -Message "Install-Module: Evergreen" -LogLevel 1
 Install-Module -Name "Evergreen" -AllowPrerelease
 Update-Evergreen
