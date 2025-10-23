@@ -37,7 +37,7 @@
 [CmdletBinding(SupportsShouldProcess = $true)]
 param (
     [Parameter(Position = 0, Mandatory = $false)]
-    [System.String[]] $Publishers = @("Citrix Systems, Inc.", "vast limits GmbH"),
+    [System.String[]] $Publishers = @("Citrix", "Citrix Systems, Inc.", "vast limits GmbH"),
 
     [Parameter(Position = 1, Mandatory = $false)]
     [System.String[]] $Paths = @("$Env:ProgramFiles\Citrix",

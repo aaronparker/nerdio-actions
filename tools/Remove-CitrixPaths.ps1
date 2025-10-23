@@ -35,7 +35,10 @@ param (
         "$Env:ProgramData\Unidesk"),
 
     [Parameter(Position = 1, Mandatory = $false)]
-    [System.String] $RegMatch = "Citrix*|deviceTRUST*|Unidesk*"
+    [System.String] $RegMatch = "Citrix*|deviceTRUST*|Unidesk*",
+
+    [Parameter(Mandatory = $false)]
+    [System.Management.Automation.SwitchParameter] $RemoveRegistry
 )
 
 begin {
@@ -92,20 +95,22 @@ process {
         }
     }
 
-    # Search the registry for matching keys and remove
-    Write-LogFile -Message "Searching for registry keys matching: $RegMatch"
-    Get-ChildItem -Path "HKLM:\" -Recurse -ErrorAction "SilentlyContinue" | `
-        Where-Object { $_.PSPath -match $RegMatch } | `
-        Select-Object -ExpandProperty "PSPath" | ForEach-Object {
-        try {
-            $RegPath = $_
-            Write-LogFile -Message "Removing registry key: $($RegPath -replace 'Microsoft.PowerShell.Core\\Registry::', '')"
-            Remove-Item -Path $_ -Recurse -Force -ErrorAction "Stop"
-        }
-        catch {
-            Write-LogFile -Message "Failed to remove registry key: $RegPath" -LogLevel 3
-            Write-LogFile -Message "Exception reason: $($_.CategoryInfo.Reason)" -LogLevel 3
-            Write-LogFile -Message "Error message: $($_.Exception.Message)" -LogLevel 3
+    if ($RemoveRegistry.IsPresent -eq $true) {
+        # Search the registry for matching keys and remove
+        Write-LogFile -Message "Searching for registry keys matching: $RegMatch"
+        Get-ChildItem -Path "HKLM:\" -Recurse -ErrorAction "SilentlyContinue" | `
+            Where-Object { $_.PSPath -match $RegMatch } | `
+            Select-Object -ExpandProperty "PSPath" | ForEach-Object {
+            try {
+                $RegPath = $_
+                Write-LogFile -Message "Removing registry key: $($RegPath -replace 'Microsoft.PowerShell.Core\\Registry::', '')"
+                Remove-Item -Path $_ -Recurse -Force -ErrorAction "Stop"
+            }
+            catch {
+                Write-LogFile -Message "Failed to remove registry key: $RegPath" -LogLevel 3
+                Write-LogFile -Message "Exception reason: $($_.CategoryInfo.Reason)" -LogLevel 3
+                Write-LogFile -Message "Error message: $($_.Exception.Message)" -LogLevel 3
+            }
         }
     }
 }
