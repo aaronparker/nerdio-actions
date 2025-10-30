@@ -17,18 +17,18 @@ begin {
 
     # Supported Windows versions
     $SupportedVersions = @(
-        "Windows 11 Enterprise",
-        "Windows 11 Enterprise multi-session",
-        "Windows 10 Enterprise",
-        "Windows 10 Enterprise multi-session",
-        "Windows Server 2025 Datacenter",
-        "Windows Server 2025 Standard",
-        "Windows Server 2022 Datacenter",
-        "Windows Server 2022 Standard",
-        "Windows Server 2019 Datacenter",
-        "Windows Server 2019 Standard",
-        "Windows Server 2016 Datacenter",
-        "Windows Server 2016 Standard"
+        "Microsoft Windows 11 Enterprise",
+        "Microsoft Windows 11 Enterprise multi-session",
+        "Microsoft Windows 10 Enterprise",
+        "Microsoft Windows 10 Enterprise multi-session",
+        "Microsoft Windows Server 2025 Datacenter",
+        "Microsoft Windows Server 2025 Standard",
+        "Microsoft Windows Server 2022 Datacenter",
+        "Microsoft Windows Server 2022 Standard",
+        "Microsoft Windows Server 2019 Datacenter",
+        "Microsoft Windows Server 2019 Standard",
+        "Microsoft Windows Server 2016 Datacenter",
+        "Microsoft Windows Server 2016 Standard"
     )
 }
 
@@ -43,10 +43,10 @@ process {
     $Caption = (Get-CimInstance -ClassName "Win32_OperatingSystem").Caption
     # Check if OS is supported
     if ($SupportedVersions -contains $Caption) {
-        Write-Host "Windows OS is supported."
+        Write-Host "Windows OS is supported: $Caption."
     }
     else {
-        Write-Error -Message "Windows OS is not supported."
+        Write-Error -Message "Windows OS is not supported: $Caption."
         return 1
     }
 
@@ -60,9 +60,11 @@ process {
 
     # If no services are found, return 0; otherwise, return 1
     if ($Services.Count -ge 1) {
+        Write-Error -Message "Conflicting 3rd party agents found: $($Services.DisplayName -join ', ')."
         return 1
     }
     else {
+        Write-Host "No conflicting 3rd party agents found."
         return 0
     }
 }
