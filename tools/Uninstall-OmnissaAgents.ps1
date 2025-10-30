@@ -253,17 +253,17 @@ end {
         if ($FilesPending.RebootRequired -eq $true) {
             Write-LogFile -Message "$($FilesPending.Files.Count) files pending for deletion."
             Write-LogFile -Message "Please restart the system to finalize the process."
-            return 3010
+            exit 3010
         }
         else {
             Write-LogFile -Message "No pending file rename operations detected."
-            return 0
+            exit 0
         }
     }
     else {
         Write-LogFile -Message "No Omnissa agents found to uninstall."
         Write-LogFile -Message "The following directories still exist on the system:"
         $Paths | ForEach-Object { if (Test-Path -Path $_) { Write-LogFile -Message " $_" } }
-        return 0
+        exit 0
     }
 }

@@ -56,7 +56,7 @@ if ($result.compute.tagsList.name -match "ms.inv*") {
             Set-Service -Name $_.Name -StartupType "Automatic"
         }
     }
-    return 0
+    exit 0
 }
 else {
     # Azure Virtual Desktop
