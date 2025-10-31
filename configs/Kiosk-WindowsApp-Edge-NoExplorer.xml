@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AssignedAccessConfiguration xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AssignedAccess/2017/config" xmlns:default="http://schemas.microsoft.com/AssignedAccess/2017/config" xmlns:rs5="http://schemas.microsoft.com/AssignedAccess/201810/config" xmlns:v3="http://schemas.microsoft.com/AssignedAccess/2020/config" xmlns:v5="http://schemas.microsoft.com/AssignedAccess/2022/config">
+  <Profiles>
+    <Profile Id="{9A2A490F-10F6-4764-974A-43B19E722C23}">
+      <AllAppsList>
+        <AllowedApps>
+            <App AppUserModelId="MicrosoftCorporationII.Windows365_8wekyb3d8bbwe!Windows365" rs5:AutoLaunch="true" />
+            <App AppUserModelId="windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel" />
+            <App DesktopAppPath="%SystemRoot%\explorer.exe" />
+            <App DesktopAppPath="%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge.exe" />
+            <App DesktopAppPath="%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge_proxy.exe" />
+            <App AppUserModelId="Microsoft.MicrosoftEdge.Stable_8wekyb3d8bbwe!App"/>
+            <App DesktopAppPath="%ProgramFiles%\Microsoft OneDrive\OneDrive.exe" />
+            <App DesktopAppPath="%SystemRoot%\System32\SecurityHealthSystray.exe" />
+            <App DesktopAppPath="%ProgramFiles(x86)%\Microsoft\Edge\Application\141.0.3537.99\msedgewebview2.exe" />
+            <App DesktopAppPath="%ProgramFiles%\WindowsApps\MicrosoftCorporationII.Windows365_2.0.757.0_arm64__8wekyb3d8bbwe\Windows365.exe" />
+            <App DesktopAppPath="%ProgramFiles%\WindowsApps\MicrosoftCorporationII.Windows365_2.0.757.0_arm64__8wekyb3d8bbwe\msrdc\msrdc.exe" />
+        </AllowedApps>
+      </AllAppsList>
+      <rs5:FileExplorerNamespaceRestrictions>
+        <rs5:AllowedNamespace Name="Downloads" />
+        <v3:AllowRemovableDrives />
+      </rs5:FileExplorerNamespaceRestrictions>
+      <v5:StartPins>
+      <![CDATA[
+        {
+          "pinnedList":[
+            {"packagedAppId":"MicrosoftCorporationII.Windows365_8wekyb3d8bbwe!Windows365"},
+            {"packagedAppId": "windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel"},
+            {"desktopAppLink": "%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\File Explorer.lnk"},
+            {"desktopAppLink": "%ALLUSERSPROFILE%\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Edge.lnk"}
+          ]
+        }
+      ]]>
+      </v5:StartPins>
+      <Taskbar ShowTaskbar="true" />
+      <v5:TaskbarLayout><![CDATA[
+        <?xml version="1.0" encoding="utf-8"?>
+        <LayoutModificationTemplate
+            xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification"
+            xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout"
+            xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout"
+            xmlns:taskbar="http://schemas.microsoft.com/Start/2014/TaskbarLayout"
+            Version="1">
+        <CustomTaskbarLayoutCollection>
+          <defaultlayout:TaskbarLayout>
+          <taskbar:TaskbarPinList>
+              <taskbar:DesktopApp DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk"/>
+          </taskbar:TaskbarPinList>
+          </defaultlayout:TaskbarLayout>
+        </CustomTaskbarLayoutCollection>
+        </LayoutModificationTemplate>
+        ]]>
+      </v5:TaskbarLayout>
+    </Profile>
+  </Profiles>
+  <Configs>
+    <v3:GlobalProfile Id="{9A2A490F-10F6-4764-974A-43B19E722C23}"/>
+  </Configs>
+</AssignedAccessConfiguration>
