@@ -4,22 +4,20 @@
     <Profile Id="{9A2A490F-10F6-4764-974A-43B19E722C23}">
       <AllAppsList>
         <AllowedApps>
-            <App AppUserModelId="MicrosoftCorporationII.Windows365_8wekyb3d8bbwe!Windows365" rs5:AutoLaunch="true" />
+            <App DesktopAppPath="\??\C:\WINDOWS\system32\backgroundTaskHost.exe" />
             <App AppUserModelId="windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel" />
-            <App DesktopAppPath="%SystemRoot%\explorer.exe" />
-            <App DesktopAppPath="%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge.exe" />
+            <App AppUserModelId="Microsoft.MicrosoftEdge.Stable_8wekyb3d8bbwe!App" />
             <App DesktopAppPath="%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge_proxy.exe" />
-            <App AppUserModelId="Microsoft.MicrosoftEdge.Stable_8wekyb3d8bbwe!App"/>
-            <App DesktopAppPath="%ProgramFiles%\Microsoft OneDrive\OneDrive.exe" />
-            <App DesktopAppPath="%SystemRoot%\System32\SecurityHealthSystray.exe" />
-            <App DesktopAppPath="%ProgramFiles(x86)%\Microsoft\Edge\Application\141.0.3537.99\msedgewebview2.exe" />
+            <App DesktopAppPath="%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge.exe" />
+            <App DesktopAppPath="%ProgramFiles(x86)%\Microsoft\Edge\Application\pwahelper.exe" />
+            <App AppUserModelId="MicrosoftCorporationII.Windows365_8wekyb3d8bbwe!Windows365" rs5:AutoLaunch="true" />            
             <App DesktopAppPath="%ProgramFiles%\WindowsApps\MicrosoftCorporationII.Windows365_2.0.757.0_arm64__8wekyb3d8bbwe\Windows365.exe" />
+            <App DesktopAppPath="%ProgramFiles%\WindowsApps\MicrosoftCorporationII.Windows365_2.0.757.0_arm64__8wekyb3d8bbwe\wnc\Windows365.exe" />
+            <App DesktopAppPath="%ProgramFiles%\WindowsApps\MicrosoftCorporationII.Windows365_2.0.757.0_arm64__8wekyb3d8bbwe\triage-tool.exe" />
             <App DesktopAppPath="%ProgramFiles%\WindowsApps\MicrosoftCorporationII.Windows365_2.0.757.0_arm64__8wekyb3d8bbwe\msrdc\msrdc.exe" />
         </AllowedApps>
       </AllAppsList>
       <rs5:FileExplorerNamespaceRestrictions>
-        <rs5:AllowedNamespace Name="Downloads" />
-        <v3:AllowRemovableDrives />
       </rs5:FileExplorerNamespaceRestrictions>
       <v5:StartPins>
       <![CDATA[
@@ -27,8 +25,7 @@
           "pinnedList":[
             {"packagedAppId":"MicrosoftCorporationII.Windows365_8wekyb3d8bbwe!Windows365"},
             {"packagedAppId": "windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel"},
-            {"desktopAppLink": "%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\File Explorer.lnk"},
-            {"desktopAppLink": "%ALLUSERSPROFILE%\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Edge.lnk"}
+            {"desktopAppLink": "%ProgramData%\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Edge.lnk"}
           ]
         }
       ]]>
