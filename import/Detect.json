@@ -1,0 +1,31 @@
+[
+  {
+    "check32BitOn64System": false,
+    "detectionType": "version",
+    "detectionValue": "5.2203.1086.1000",
+    "keyPath": "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{69237C81-2AB9-4E98-B1AE-693DD9B070A8}",
+    "operator": "greaterThanOrEqual",
+    "valueName": "DisplayVersion"
+  },
+  {
+    "check32BitOn64System": false,
+    "detectionType": "version",
+    "detectionValue": "5.2203.1086.1000",
+    "fileOrFolderName": "ConfigMgrSupportCenterViewer.exe",
+    "operator": "greaterThanOrEqual",
+    "path": "C:\\Program Files (x86)\\Configuration Manager Support Center"
+  },
+  {
+    "check32BitOn64System": false,
+    "detectionType": "version",
+    "detectionValue": "5.2203.1086.1000",
+    "fileOrFolderName": "ConfigMgrSupportCenter.exe",
+    "operator": "greaterThanOrEqual",
+    "path": "C:\\Program Files (x86)\\Configuration Manager Support Center"
+  },
+  {
+    "productCode": "{69237C81-2AB9-4E98-B1AE-693DD9B070A8}",
+    "productVersion": "5.2203.1086.1000",
+    "productVersionOperator": "greaterThanOrEqual"
+  }
+]
