@@ -7,9 +7,9 @@ https://learn.microsoft.com/en-us/azure/virtual-desktop/configure-rdp-shortpath
 #>
 
 # Add registry keys
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations" /v "fUseUdpPortRedirector" /t "REG_DWORD" /d 1 /f | Out-Null
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations" /v "UdpPortNumber" /t "REG_DWORD" /d 3390 /f | Out-Null
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations" /v "ICEControl" /t "REG_DWORD" /d 2 /f | Out-Null
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations" /v "fUseUdpPortRedirector" /t "REG_DWORD" /d 1 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations" /v "UdpPortNumber" /t "REG_DWORD" /d 3390 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations" /v "ICEControl" /t "REG_DWORD" /d 2 /f
 
 # Add windows firewall rule
 $params = @{

@@ -1,4 +1,4 @@
-#description: Cleanup the image at the end of the build process
+#description: Cleanup the image at the end of the build process or after other scripted actions are run.
 #execution mode: Combined
 #tags: Cleanup, Optimise
 

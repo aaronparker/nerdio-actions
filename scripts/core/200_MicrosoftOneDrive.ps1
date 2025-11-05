@@ -53,13 +53,10 @@ $params = @{
     Wait         = $false
 }
 Start-ProcessWithLog @params
+$result = Start-Process @params
 do {
-    Start-Sleep -Seconds 5
     Write-LogFile -Message "Waiting for OneDrive Setup to complete."
-} while (Get-Process -Name "OneDriveSetup" -ErrorAction "SilentlyContinue")
-Write-LogFile -Message "OneDrive Setup completed."
-Get-Process -Name "OneDrive" -ErrorAction "SilentlyContinue" | ForEach-Object {
-    Write-LogFile -Message "Stopped OneDrive process: $($_.Name)"
-    Stop-Process -Name $_.Name -Force -ErrorAction "SilentlyContinue"
-}
+    Start-Sleep -Seconds 5
+} while (-not $result.HasExited)
+Write-LogFile -Message "OneDrive Setup completed with exit code: $($result.ExitCode)"
 #endregion

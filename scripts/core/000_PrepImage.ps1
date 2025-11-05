@@ -26,12 +26,9 @@
 
 .NOTES
     - Outputs function definitions to a temporary module file and imports them for use.
-    - Applies Windows 11 specific registry settings if detected.
-    - Enables time zone redirection and disables remote keyboard layout to preserve locale settings.
-    - Designed for use in automated image build and customization pipelines.
 #>
 
-#description: Preps a RDS / AVD image for customization.
+#description: Prepare the image or session host for scripted actions with shared functions.
 #execution mode: Individual
 #tags: Image
 
@@ -134,8 +131,7 @@ function Start-ProcessWithLog {
                 ErrorAction  = "Stop"
             }
             Write-LogFile -Message "Execute: `$FilePath `$ArgumentList"
-            `$Result = Start-Process @params
-            Write-LogFile -Message "Exit code: `$(`$Result.ExitCode)"
+            Start-Process @params
         }
         catch {
             Write-LogFile -Message "Execution error: `$(`$_.Exception.Message)" -LogLevel 3
@@ -178,6 +174,7 @@ $Functions | Out-File -FilePath $FunctionFile -Encoding "UTF8" -Force
 Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
+<#
 # If we're on Windows 11, configure the registry settings
 if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft Windows 1*") {
     Write-LogFile -Message "Configuring Windows 11 specific settings"
@@ -190,19 +187,4 @@ if ((Get-CimInstance -ClassName "CIM_OperatingSystem").Caption -like "Microsoft 
     # https://learn.microsoft.com/en-us/windows/deployment/update/waas-wu-settings#allow-windows-updates-to-install-before-initial-user-sign-in
     Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList "add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Orchestrator /v ScanBeforeInitialLogonAllowed /d 1 /t REG_DWORD /f"
 }
-
-# Enable time zone redirection - this can be configure via policy as well
-Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList 'add "HKLM\Software\Policies\Microsoft\Windows NT\Terminal Services" /v fEnableTimeZoneRedirection /d 1 /t REG_DWORD /f'
-
-# Disable remote keyboard layout to keep the locale settings configured in the image
-# https://dennisspan.com/solving-keyboard-layout-issues-in-an-ica-or-rdp-session/
-Start-ProcessWithLog -FilePath "$Env:SystemRoot\System32\reg.exe" -ArgumentList 'add "HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout" /v IgnoreRemoteKeyboardLayout /d 1 /t REG_DWORD /f'
-
-# Trust the PSGallery for modules
-Write-LogFile -Message "Install-PackageProvider: PowerShellGet" -LogLevel 1
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-Install-PackageProvider -Name "NuGet" -Force
-Install-PackageProvider -Name "PowerShellGet" -MinimumVersion "2.2.5" -Force
-Import-Module -Name "PowerShellGet" -Force
-Write-LogFile -Message "Set-PSRepository: PSGallery" -LogLevel 1
-Set-PSRepository -Name "PSGallery" -InstallationPolicy "Trusted"
+#>

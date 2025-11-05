@@ -17,6 +17,13 @@ $FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
 Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
+# Trust the PSGallery for modules
+Write-LogFile -Message "Install-PackageProvider: PowerShellGet" -LogLevel 1
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+Install-PackageProvider -Name "PowerShellGet" -MinimumVersion "2.2.5" -Force
+Write-LogFile -Message "Set-PSRepository: PSGallery" -LogLevel 1
+Set-PSRepository -Name "PSGallery" -InstallationPolicy "Trusted"
+
 # Evergreen: https://eucpilots.com/evergreen-docs/
 # VcRedist: https://vcredist.com/
 # PSWindowsUpdate: https://www.powershellgallery.com/packages/PSWindowsUpdate
