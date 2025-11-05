@@ -4,10 +4,7 @@ param (
     [System.String[]] $Publishers = @("Citrix*", "uberAgent*", "UniDesk*", "Omnissa*"),
 
     [Parameter(Mandatory = $false)]
-    [System.Management.Automation.SwitchParameter] $IgnoreClientApp,
-
-    [Parameter(Mandatory = $false)]
-    [System.Management.Automation.SwitchParameter] $IgnoreOmnissaHorizonClient
+    [System.Management.Automation.SwitchParameter] $IgnoreClientApp
 )
 
 begin {
