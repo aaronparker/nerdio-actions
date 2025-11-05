@@ -8,7 +8,6 @@
             <App AppUserModelId="Microsoft.Teams.SlimCoreVdiHost.win-arm64_8wekyb3d8bbwe!MsTeamsVdi" />
             <App AppUserModelId="Microsoft.Teams.SlimCoreVdiHost.win-x64_8wekyb3d8bbwe!MsTeamsVdi" />
             <App AppUserModelId="windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel" />
-            <App AppUserModelId="MSEdge" />
             <App DesktopAppPath="%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge.exe" />
             <App DesktopAppPath="%ProgramFiles%\WindowsApps\MicrosoftCorporationII.Windows365_2.0.757.0_arm64__8wekyb3d8bbwe\Windows365.exe" />
             <App DesktopAppPath="%ProgramFiles%\WindowsApps\MicrosoftCorporationII.Windows365_2.0.757.0_arm64__8wekyb3d8bbwe\wnc\Windows365.exe" />
@@ -20,16 +19,16 @@
         <v3:AllowRemovableDrives />
       </rs5:FileExplorerNamespaceRestrictions>
       <v5:StartPins>
-      <![CDATA[
-        {
-          "pinnedList":[
-            {"packagedAppId": "MicrosoftCorporationII.Windows365_8wekyb3d8bbwe!Windows365"},
-            {"desktopAppLink": "%ALLUSERSPROFILE%\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Edge.lnk"},
-            {"packagedAppId": "windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel"},
-            {"desktopAppLink": "%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\File Explorer.lnk"}
-          ]
-        }
-      ]]>
+        <![CDATA[
+          {
+            "pinnedList":[
+              {"packagedAppId": "MicrosoftCorporationII.Windows365_8wekyb3d8bbwe!Windows365"},
+              {"desktopAppLink": "%ALLUSERSPROFILE%\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Edge.lnk"},
+              {"packagedAppId": "windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel"},
+              {"desktopAppLink": "%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\File Explorer.lnk"}
+            ]
+          }
+        ]]>
       </v5:StartPins>
       <Taskbar ShowTaskbar="true" />
       <v5:TaskbarLayout><![CDATA[
@@ -44,7 +43,7 @@
           <defaultlayout:TaskbarLayout>
             <taskbar:TaskbarPinList>
               <taskbar:UWA AppUserModelID="MicrosoftCorporationII.Windows365_8wekyb3d8bbwe!Windows365" />
-              <taskbar:DesktopApp DesktopApplicationLinkPath="%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk"/>
+              <taskbar:DesktopApp DesktopApplicationId="MSEdge" />
             </taskbar:TaskbarPinList>
           </defaultlayout:TaskbarLayout>
         </CustomTaskbarLayoutCollection>

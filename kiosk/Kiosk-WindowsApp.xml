@@ -18,15 +18,15 @@
         <v3:AllowRemovableDrives />
       </rs5:FileExplorerNamespaceRestrictions>
       <v5:StartPins>
-      <![CDATA[
-        {
-          "pinnedList":[
-            {"packagedAppId": "MicrosoftCorporationII.Windows365_8wekyb3d8bbwe!Windows365"},
-            {"packagedAppId": "windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel"},
-            {"desktopAppLink": "%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\File Explorer.lnk"}
-          ]
-        }
-      ]]>
+        <![CDATA[
+          {
+            "pinnedList":[
+              {"packagedAppId": "MicrosoftCorporationII.Windows365_8wekyb3d8bbwe!Windows365"},
+              {"packagedAppId": "windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel"},
+              {"desktopAppLink": "%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\File Explorer.lnk"}
+            ]
+          }
+        ]]>
       </v5:StartPins>
       <Taskbar ShowTaskbar="true" />
       <v5:TaskbarLayout><![CDATA[
