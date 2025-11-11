@@ -33,5 +33,5 @@ Install-Module -Name "PSWindowsUpdate" -Force
 Write-LogFile -Message "Install-Module: VcRedist" -LogLevel 1
 Install-Module -Name "VcRedist" -Force
 Write-LogFile -Message "Install-Module: Evergreen" -LogLevel 1
-Install-Module -Name "Evergreen" -AllowPrerelease
+Install-Module -Name "Evergreen" -Force
 Update-Evergreen -Force

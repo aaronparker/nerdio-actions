@@ -35,7 +35,6 @@ Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Script logic
 # Run tasks/install apps
-Import-Module -Name "Evergreen" -Force
 Write-LogFile -Message "Downloading Microsoft OneDrive per-machine x64 version"
 $App = Get-EvergreenApp -Name "MicrosoftOneDrive" | `
     Where-Object { $_.Ring -eq "Production" -and $_.Throttle -eq "100" -and $_.Architecture -eq "x64" } | `
@@ -50,9 +49,9 @@ Write-LogFile -Message "Installing Microsoft OneDrive from: $($OutFile.FullName)
 $params = @{
     FilePath     = $OutFile.FullName
     ArgumentList = "/silent /allusers"
+    PassThru     = $true
     Wait         = $false
 }
-Start-ProcessWithLog @params
 $result = Start-Process @params
 do {
     Write-LogFile -Message "Waiting for OneDrive Setup to complete."
