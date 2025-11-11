@@ -30,7 +30,6 @@ Write-LogFile -Message "Functions imported from: $FunctionFile"
 # Configure policies for roaming and cache
 # https://cloud.google.com/blog/products/chrome-enterprise/configuring-chrome-browser-in-your-vdi-environment
 
-Import-Module -Name "Evergreen" -Force
 Write-LogFile -Message "Query Evergreen for Google Chrome x64 stable MSI"
 $App = Get-EvergreenApp -Name "GoogleChrome" | Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "stable" -and $_.Type -eq "msi" } | Select-Object -First 1
 Write-LogFile -Message "Downloading Google Chrome version $($App.Version) to $Path"

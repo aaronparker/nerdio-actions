@@ -23,7 +23,6 @@ $FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
 Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
-Import-Module -Name "Evergreen" -Force
 Write-LogFile -Message "Query Evergreen for 7-Zip ZS x64"
 $App = Get-EvergreenApp -Name "7ZipZS" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
 Write-LogFile -Message "Downloading 7-Zip ZS version $($App.Version) to $Path"

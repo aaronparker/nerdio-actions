@@ -27,7 +27,6 @@ $FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
 Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
-Import-Module -Name "Evergreen" -Force
 Write-LogFile -Message "Query Evergreen for Remote Display Analyzer and Connection Experience Indicator"
 $App = Get-EvergreenApp -Name "RDAnalyzer" | Select-Object -First 1
 Write-LogFile -Message "Downloading Remote Display Analyzer version $($App.Version) to $Path"

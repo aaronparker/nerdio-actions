@@ -51,7 +51,6 @@ else {
 # https://helpx.adobe.com/au/enterprise/kb/acrobat-64-bit-for-enterprises.html
 
 # Download Reader installer
-Import-Module -Name "Evergreen" -Force
 Write-LogFile -Message "Query Evergreen for Adobe Acrobat Reader DC $Language $Architecture"
 $App = Get-EvergreenApp -Name "AdobeAcrobatReaderDC" | `
     Where-Object { $_.Language -eq $Language -and $_.Architecture -eq $Architecture } | `

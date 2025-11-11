@@ -30,7 +30,7 @@ Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 # Try current release and fall back to LTSR the download fails
 try {
-    Import-Module -Name "Evergreen" -Force
+    
     Write-LogFile -Message "Query Evergreen for Citrix Workspace app Current release"
     $App = Get-EvergreenApp -Name "CitrixWorkspaceApp" | `
         Where-Object { $_.Stream -eq "Current" } | `

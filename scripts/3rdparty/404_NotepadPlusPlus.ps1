@@ -29,7 +29,6 @@ Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 Write-LogFile -Message "Query Evergreen for Notepad++ x64"
-Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "NotepadPlusPlus" | Where-Object { $_.Architecture -eq "x64" -and $_.Type -eq "exe" } | Select-Object -First 1
 Write-LogFile -Message "Downloading Notepad++ version $($App.Version) to $Path"
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"

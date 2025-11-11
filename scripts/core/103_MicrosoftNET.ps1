@@ -32,7 +32,7 @@ Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Script logic
 # Download
-Import-Module -Name "Evergreen" -Force
+
 $App = Get-EvergreenApp -Name "Microsoft.NET" | `
     Where-Object { $_.Installer -eq "windowsdesktop" -and $_.Architecture -eq "x64" -and $_.Channel -match "LTS" }
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"

@@ -10,7 +10,6 @@ $FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
 Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
-Import-Module -Name "Evergreen" -Force
 Write-LogFile -Message "Query Evergreen for PDFForge PDFCreator"
 $App = Get-EvergreenApp -Name "PDFForgePDFCreator" | Select-Object -First 1
 Write-LogFile -Message "Downloading PDFForge PDFCreator version $($App.Version) to $Path"

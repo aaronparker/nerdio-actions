@@ -31,7 +31,7 @@ Write-LogFile -Message "Functions imported from: $FunctionFile"
 # Run tasks/install apps
 #region Microsoft Azure Virtual Desktop Multimedia Redirection Extensions
 try {
-    Import-Module -Name "Evergreen" -Force
+    
     Write-LogFile -Message "Downloading Microsoft Azure Virtual Desktop Multimedia Redirection Extensions"
     $App = Get-EvergreenApp -Name "MicrosoftWvdMultimediaRedirection" | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"

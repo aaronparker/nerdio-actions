@@ -28,7 +28,7 @@ $FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
 Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
-Import-Module -Name "Evergreen" -Force
+
 Write-LogFile -Message "Query Evergreen for JGraphDrawIO MSI"
 $App = Get-EvergreenApp -Name "JGraphDrawIO" | Where-Object { $_.Type -eq "msi" } | Select-Object -First 1
 Write-LogFile -Message "Downloading draw.io version $($App.Version) to $Path"

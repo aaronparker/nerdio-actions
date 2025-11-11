@@ -29,7 +29,6 @@ $FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
 Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
-Import-Module -Name "Evergreen" -Force
 Write-LogFile -Message "Query Evergreen for VLC media player x64 MSI"
 $App = Get-EvergreenApp -Name "VideoLanVlcPlayer" | Where-Object { $_.Architecture -eq "x64" -and $_.Type -eq "MSI" } | Select-Object -First 1
 Write-LogFile -Message "Downloading VLC media player version $($App.Version) to $Path"

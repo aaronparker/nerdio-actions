@@ -41,7 +41,7 @@ else {
 
 #region Script logic
 # Create target folder
-Import-Module -Name "Evergreen" -Force
+
 Write-LogFile -Message "Query Evergreen for Foxit PDF Editor"
 $App = Get-EvergreenApp -Name "FoxitPDFEditor" | Where-Object { $_.Language -eq $Language } | Select-Object -First 1
 Write-LogFile -Message "Downloading Foxit PDF Editor version $($App.Version) to $Path"

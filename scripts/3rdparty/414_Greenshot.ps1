@@ -33,7 +33,7 @@ $FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
 Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
-Import-Module -Name "Evergreen" -Force
+
 Write-LogFile -Message "Query Evergreen for Greenshot"
 $App = Get-EvergreenApp -Name "Greenshot" | Where-Object { $_.Type -eq "exe" -and $_.InstallerType -eq "Default" } | Select-Object -First 1
 Write-LogFile -Message "Downloading Greenshot version $($App.Version) to $Path"

@@ -31,7 +31,7 @@ Write-LogFile -Message "Functions imported from: $FunctionFile"
 # Run tasks/install apps
 #region Microsoft Remote Desktop WebRTC Redirector Service
 try {
-    Import-Module -Name "Evergreen" -Force
+    
     Write-LogFile -Message "Downloading Microsoft Remote Desktop WebRTC Redirector Service"
     $App = Get-EvergreenApp -Name "MicrosoftWvdRtcService" | Where-Object { $_.Architecture -eq "x64" } | Select-Object -First 1
     $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"

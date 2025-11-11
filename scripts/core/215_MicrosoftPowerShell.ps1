@@ -32,7 +32,7 @@ Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Script logic
-Import-Module -Name "Evergreen" -Force
+
 $App = Get-EvergreenApp -Name "MicrosoftPowerShell" | `
     Where-Object { $_.Architecture -eq "x64" -and $_.Release -eq "Stable" } | `
     Select-Object -First 1

@@ -28,7 +28,7 @@ $FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
 Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
-Import-Module -Name "Evergreen" -Force
+
 Write-LogFile -Message "Query Evergreen for Paint.NET 64-bit"
 $App = Get-EvergreenApp -Name "PaintDotNetOfflineInstaller" | `
     Where-Object { $_.Architecture -eq "x64" -and $_.URI -match "winmsi" } | Select-Object -First 1

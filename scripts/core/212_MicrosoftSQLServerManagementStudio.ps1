@@ -31,7 +31,7 @@ Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Script logic
-Import-Module -Name "Evergreen" -Force
+
 $App = Get-EvergreenApp -Name "MicrosoftSsms" | `
     Where-Object { $_.Language -eq "English" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"

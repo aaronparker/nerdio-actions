@@ -27,7 +27,7 @@ Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Script logic
-Import-Module -Name "Evergreen" -Force
+
 $App = Get-EvergreenApp -Name "MicrosoftVisualStudioCode" | `
     Where-Object { $_.Architecture -eq "x64" -and $_.Platform -eq "win32-x64" -and $_.Channel -eq "Stable" } | Select-Object -First 1
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"

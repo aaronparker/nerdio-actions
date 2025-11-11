@@ -13,7 +13,7 @@ foreach ($Value in "DevOpsUrl", "DevOpsPat", "DevOpsPool", "DevOpsUser", "DevOps
 New-Item -Path $Path -ItemType "Directory" -Force -ErrorAction "SilentlyContinue" | Out-Null
 
 # Download
-Import-Module -Name "Evergreen" -Force
+
 $App = Get-EvergreenApp -Name "MicrosoftAzurePipelinesAgent" | `
     Where-Object { $_.Architecture -eq "x64" } | `
     Select-Object -First 1

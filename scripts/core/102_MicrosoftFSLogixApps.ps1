@@ -33,7 +33,7 @@ Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 #region Script logic
 # Download and unpack
-Import-Module -Name "Evergreen" -Force
+
 
 #region Use Secure variables in Nerdio Manager to pass a JSON file with the variables list
 # Use Evergreen to find the latest version

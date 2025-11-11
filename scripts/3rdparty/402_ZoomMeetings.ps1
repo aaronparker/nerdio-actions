@@ -28,7 +28,6 @@ Write-LogFile -Message "Functions imported from: $FunctionFile"
 
 # Download Zoom
 Write-LogFile -Message "Downloading Zoom Meetings VDI client"
-Import-Module -Name "Evergreen" -Force
 $App = Get-EvergreenApp -Name "ZoomVDI" | Where-Object { $_.Platform -eq "VDIClient" -and $_.Architecture -eq "x64" } | Select-Object -First 1
 Write-LogFile -Message "Downloading Zoom Meetings VDI client version $($App.Version) to $Path"
 $OutFile = Save-EvergreenApp -InputObject $App -CustomPath $Path -ErrorAction "Stop"

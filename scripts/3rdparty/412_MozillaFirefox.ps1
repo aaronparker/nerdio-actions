@@ -39,7 +39,7 @@ else {
 }
 #endregion
 
-Import-Module -Name "Evergreen" -Force
+
 Write-LogFile -Message "Query Evergreen for Mozilla Firefox $Channel $Language x64"
 $App = Get-EvergreenApp -Name "MozillaFirefox" | `
     Where-Object { $_.Channel -eq $Channel -and $_.Architecture -eq "x64" -and $_.Language -eq $Language -and $_.Type -eq "msi" } | `

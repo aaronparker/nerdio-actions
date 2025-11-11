@@ -28,7 +28,6 @@ $FunctionFile = "$Env:TEMP\NerdioFunctions.psm1"
 Import-Module -Name $FunctionFile -Force -ErrorAction "Stop"
 Write-LogFile -Message "Functions imported from: $FunctionFile"
 
-Import-Module -Name "Evergreen" -Force
 Write-LogFile -Message "Query Evergreen for ImageGlass 64-bit"
 $App = Get-EvergreenApp -Name "ImageGlass" | Where-Object { $_.Architecture -eq "x64" -and $_.Type -eq "msi" } | Select-Object -First 1
 Write-LogFile -Message "Downloading ImageGlass version $($App.Version) to $Path"
