@@ -180,7 +180,8 @@ process {
         LastLoggedOnUser    = $LastLoggedOnUser
         ProfilesList         = $ProfilesList
         Source              = $Source
-        InstalledSoftware   = (Get-InstalledSoftware | Select-Object -Property "Name", "Version", "Publisher")
+        Win32Apps           = (Get-InstalledSoftware | Select-Object -Property "Name", "Version", "Publisher")
+        AppXApps            = (Get-AppxPackage | Where-Object { $_.NonRemovable -eq $false -and $_.IsFramework -eq $false } | Select-Object -Property Name, PublisherId, PackageFamilyName, SignatureKind, Status)
         OSInfo              = Get-CimInstance -ClassName "Win32_OperatingSystem" | Select-Object -Property $OSProperties
     } | ConvertTo-Json -Depth 10 | Write-Output
 }
