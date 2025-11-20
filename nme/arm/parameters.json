@@ -1,0 +1,120 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "australiaeast"
+        },
+        "privateWebApp": {
+            "value": true
+        },
+        "appName": {
+            "value": "nmw-app"
+        },
+        "configurePrivateEndpoints": {
+            "value": true
+        },
+        "privateEndpointsVnetName": {
+            "value": "nmw-private-vnet"
+        },
+        "privateEndpointsVnetCidr": {
+            "value": "172.16.0.0/16"
+        },
+        "privateEndpointsSubnetName": {
+            "value": "nmw-privateendpoints-subnet"
+        },
+        "privateEndpointsSubnetCidr": {
+            "value": "172.16.0.0/24"
+        },
+        "appSubnetName": {
+            "value": "nmw-app-subnet"
+        },
+        "appSubnetCidr": {
+            "value": "172.16.1.0/27"
+        },
+        "tagsByResource": {
+            "value": {
+                "Microsoft.Web/sites": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.Web/serverfarms": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.Insights/components": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.Automation/automationAccounts": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.Insights/dataCollectionEndpoints": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.Insights/dataCollectionRules": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.KeyVault/vaults": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.OperationalInsights/workspaces": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.Network/privateDnsZones": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.Network/privateEndpoints": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.Automation/automationAccounts/runbooks": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.Sql/servers/databases": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.Sql/servers": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.Storage/storageAccounts": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.Network/virtualNetworks": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                },
+                "Microsoft.Network/privateDnsZones/virtualNetworkLinks": {
+                    "Application": "Nerdio Manager",
+                    "Function": "Azure Virtual Desktop management",
+                    "Environment": "Development"
+                }
+            }
+        }
+    }
+}
