@@ -1,0 +1,110 @@
+# Example Terraform variables file
+# Copy this file to terraform.tfvars and customize for your environment
+
+# Required: Name of existing resource group
+# resource_group_name = "nmw-prod-rg"
+
+# Azure region
+location = "australiaeast"
+
+# Application name prefix
+app_name = "nmw-app"
+
+# Private networking configuration
+configure_private_endpoints = true
+private_web_app             = true
+
+# Network CIDR blocks (customize as needed)
+private_endpoints_vnet_name   = "nmw-private-vnet"
+private_endpoints_vnet_cidr   = "172.16.0.0/16"
+private_endpoints_subnet_name = "nmw-privateendpoints-subnet"
+private_endpoints_subnet_cidr = "172.16.0.0/24"
+app_subnet_name               = "nmw-app-subnet"
+app_subnet_cidr               = "172.16.1.0/27"
+
+# App Service Plan SKU
+# Options: B1, B2, B3, S1, S2, S3, P1v2, P2v2, P3v2, P1v3, P2v3, P3v3
+app_service_plan_sku_name = "B3"
+
+# SQL Database configuration
+database_sku_name  = "S1"
+database_tier      = "Standard"
+database_max_size  = 268435456000 # 250 GB in bytes
+
+# Tags for all resources
+tags_by_resource = {
+  "Microsoft.Web/sites" = {
+    Application = "Nerdio Manager"
+    Function    = "Azure Virtual Desktop management"
+    Environment = "Development"
+  }
+  "Microsoft.Web/serverfarms" = {
+    Application = "Nerdio Manager"
+    Function    = "Azure Virtual Desktop management"
+    Environment = "Development"
+  }
+  "Microsoft.Insights/components" = {
+    Application = "Nerdio Manager"
+    Function    = "Azure Virtual Desktop management"
+    Environment = "Development"
+  }
+  "Microsoft.Automation/automationAccounts" = {
+    Application = "Nerdio Manager"
+    Function    = "Azure Virtual Desktop management"
+    Environment = "Development"
+  }
+  "Microsoft.KeyVault/vaults" = {
+    Application = "Nerdio Manager"
+    Function    = "Azure Virtual Desktop management"
+    Environment = "Development"
+  }
+  "Microsoft.OperationalInsights/workspaces" = {
+    Application = "Nerdio Manager"
+    Function    = "Azure Virtual Desktop management"
+    Environment = "Development"
+  }
+  "Microsoft.Sql/servers" = {
+    Application = "Nerdio Manager"
+    Function    = "Azure Virtual Desktop management"
+    Environment = "Development"
+  }
+  "Microsoft.Sql/servers/databases" = {
+    Application = "Nerdio Manager"
+    Function    = "Azure Virtual Desktop management"
+    Environment = "Development"
+  }
+  "Microsoft.Storage/storageAccounts" = {
+    Application = "Nerdio Manager"
+    Function    = "Azure Virtual Desktop management"
+    Environment = "Development"
+  }
+  "Microsoft.Network/virtualNetworks" = {
+    Application = "Nerdio Manager"
+    Function    = "Azure Virtual Desktop management"
+    Environment = "Development"
+  }
+  "Microsoft.Network/privateDnsZones" = {
+    Application = "Nerdio Manager"
+    Function    = "Azure Virtual Desktop management"
+    Environment = "Development"
+  }
+  "Microsoft.Network/privateEndpoints" = {
+    Application = "Nerdio Manager"
+    Function    = "Azure Virtual Desktop management"
+    Environment = "Development"
+  }
+}
+
+# Optional: Override default resource names
+# web_app_portal_name                  = "custom-web-app-name"
+# app_service_plan_name                = "custom-plan-name"
+# sql_server_name                      = "custom-sql-server"
+# database_name                        = "custom-db-name"
+# key_vault_name                       = "custom-kv-name"
+# automation_account_name              = "custom-automation"
+# scripted_action_account_name         = "custom-scripted-actions"
+# data_protection_storage_account_name = "customdpstorage"
+
+# Optional: Artifact location for runbooks
+# artifacts_location          = "https://yourstorage.blob.core.windows.net/artifacts/"
+# artifacts_location_sas_token = "?sv=2021-06-08&ss=b&srt=..."
